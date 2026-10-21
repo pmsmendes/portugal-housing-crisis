@@ -8,11 +8,149 @@
 #     url: ...            # or api indicator id
 #     format: csv|xlsx|json|gpkg
 #     notes: ...
+#
+# Checked 2026-10-21 against the live endpoints. `todo` = not located / not verified.
 
-ine: {}
-bportugal: {}
-eurostat: {}
-at: {}
-rnal: {}
-caop: {}
-aima: {}
+ine:
+  # INE JSON API: data  https://www.ine.pt/ine/json_indicador/pindica.jsp?op=2&varcd=<code>&Dim1=<period>&lang=EN
+  #               meta  https://www.ine.pt/ine/json_indicador/pindicaMeta.jsp?varcd=<code>&lang=EN
+  # Dim1=T returns all periods (large series can time out / return 503: request one period, e.g. Dim1=S3A202608).
+  # Period codes: S7A<yyyy> annual, S5A<yyyy><q> quarterly, S3A<yyyymm> monthly, S3A.. semi-annual per meta.
+  # `geocod`: 7 chars = NUTS III prefix (3) + 4-digit municipality code -> muni_code = geocod[3:];
+  #           9 chars = parish; Census series use the plain 4-char municipality code (6 = parish).
+  #           Rows with `-` / missing `valor` are suppressed cells. Several indicators mix NUTS-III-level
+  #           and municipality rows under the same 7-char width: filter against the CAOP municipality list.
+  # Series are split by NUTS vintage (2013 vs 2024) and methodology; see docs/data_quality.md before splicing.
+
+  ine_median_price_sqm:
+    # Quarterly last-12-months median, EUR/m2. All verified municipal (308 x 3 housing categories).
+    indicator_id: "0012234"          # Methodology 2022, NUTS 2024, 4Q2019 - 1Q2026
+    alt_indicator_ids:
+      methodology_2018: "0009490"    # NUTS 2013, 1Q2016 - 3Q2021 (308 municipalities)
+      methodology_2018_annual: "0010032"   # annual, 2016-2020
+      methodology_2022_nuts2013: "0011364" # 4Q2019 - 4Q2023, superseded by 0012234
+      sales_count_12m: "0014363"     # number of sales (12 months), 4Q2019 - 1Q2026, 308 municipalities
+      annual_median: "0012254"       # annual 2019-2025 (by dwelling typology)
+    format: json
+    notes: Methodology break 2018 -> 2022; do not splice the levels without an overlap check.
+  ine_median_rent_sqm:
+    indicator_id: "0012598"          # semi-annual last-12-months median, 2nd sem 2020 - 2nd sem 2024, NUTS 2024
+    alt_indicator_ids:
+      annual_median: "0012600"       # annual 2020-2024 (638 rows for 2024 incl. parishes)
+      new_leases_n: "0012601"        # annual number of new leases (thin-cell flag)
+    format: json
+    notes: Methodology 2021 only; earlier rent series not located.
+  ine_hpi:
+    indicator_id: "0014765"          # Housing price index, base 2025, quarterly 1Q2009 - 2Q2026
+    alt_indicator_ids:
+      base_2015: "0009201"           # 1Q2009 - 4Q2025
+      base_2010: "0007837"           # 1Q2009 - 4Q2016
+    format: json
+    notes: National only, split by dwelling category (existing / new). No NUTS II detail in this indicator.
+  ine_bank_valuation:
+    indicator_id: "0012248"          # monthly median EUR/m2, Jan 2011 - Aug 2026, municipality (2024) x construction type
+    alt_indicator_ids:
+      annual: "0012256"              # 2011 - 2025
+      monthly_municipality_2013: "0010042"   # Jan 2011 - Nov 2023 (older vintage)
+    format: json
+    notes: 308 municipalities x 3 types in last period; small municipalities suppressed (publishing threshold ~33 valuations).
+  ine_income:
+    indicator_id: "0012748"          # gross reported income per taxable person, annual 2018 - 2024, NUTS 2024 (308 municipalities)
+    alt_indicator_ids:
+      median: "0012749"              # median gross reported income per taxable person, 2018 - 2024
+      nuts2013: "0009933"            # 2015 - 2021 (NUTS 2013 vintage)
+      median_nuts2013: "0009934"
+    format: json
+    notes: IRS-based; unit is the tax household, not the person. Use the median series for affordability ratios.
+  ine_population:
+    indicator_id: "0008273"          # resident population by sex/age, annual 2011 - 2023, NUTS 2013
+    format: json
+    notes: A newer vintage through 2025 (NUTS 2024) exists; indicator id todo. Pre-2011 series todo.
+  ine_census:
+    # Decennial; municipality rows are 4-char codes, parishes 6-char.
+    indicator_ids:
+      vacant_pct_2021: "0012517"     # proportion of vacant conventional dwellings, 2021, NUTS 2024 (308 municipalities)
+      occupied_by_tenure_2021: "0012531"   # conventional dwellings of usual residence by tenure, 2021
+      vacant_pct_2011: "0008378"     # 2011 (NUTS 2013) - code taken from the catalogue, not yet checked
+      vacant_pct_2001: "0000772"     # 2001 - code taken from the catalogue, not yet checked
+    format: json
+    notes: 2021 verified; 2011 / 2001 / 1991 codes still to be checked.
+  ine_construction:
+    # Municipal (308 x 5 dwelling typologies verified for licensed dwellings).
+    licensed_dwellings: "0013235"    # new family dwellings licensed, annual 2002 - 2025, NUTS 2024
+    licensed_dwellings_1995: "0000087"   # annual 1995 - 2025, NUTS 2002 geography
+    completed_dwellings: "0013248"   # annual 2011 - 2025, NUTS 2024
+    completed_dwellings_1995: "0000076"  # annual 1995 - 2025, NUTS 2002 geography
+    licensed_monthly: "0008066"      # monthly series (geography not checked)
+    format: json
+    notes: New construction for family housing only; excludes renovation and non-residential.
+  ine_cpi:
+    indicator_id: "0014642"          # CPI base 2025, annual 1948 - 2025 (by geography and special aggregates)
+    alt_indicator_ids:
+      monthly: "0014640"             # Jan 1948 - Sep 2026
+      by_coicop_annual: "0014641"
+    format: json
+    notes: Verified national annual and monthly. Base-2025 re-referencing is handled in harmonize.py (BASE_YEAR=2024).
+
+bportugal:
+  # API base https://bpstat.bportugal.pt/data/v1 (301 -> trailing slash; send a User-Agent, urllib's default gets 403).
+  # Series metadata: /series/?series_ids=<id>&lang=EN ; dataset (JSON-stat with observations): /domains/<d>/datasets/<dataset_id>?lang=EN
+  bp_mortgage:
+    base_url: https://bpstat.bportugal.pt/data/v1
+    series:
+      new_housing_aprc: 12533714       # APRC, new pure operations, house purchase, individuals (dataset 5e42e781...), monthly 2003-01 - 2026-08
+      new_housing_rate_lt1y: 12533730  # annualised agreed rate, new business, <1y floating, house purchase (dataset 6eaa8db9...)
+      stock_housing_rate_gt5y: 12519759  # stock rate, loans >5y, house purchase (dataset 851facff...)
+      new_housing_volume_lt1y: 12533719  # new business volume, EUR m
+      new_fixed_rate_p50: 12710738     # median rate of new housing loans, fixed (dataset 6a83b46f..., domain 186, ~93 months only)
+    format: json
+    notes: Domains 21 (interest rates), 186 (loans for house purchase), 39 (housing prices). Household debt series (domain 18) not yet selected.
+
+eurostat:
+  # Dissemination API https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/<dataset>
+  eurostat_hpi:
+    dataset: prc_hpi_q
+    query: geo=PT&purchase=TOTAL&unit=I15_Q&format=JSON
+    format: json
+    notes: Verified; 2005-Q1 to 2026-Q2. Widen the geo filter for the EU comparison.
+  eurostat_hicp:
+    dataset: prc_hicp_aind
+    query: geo=PT&coicop=CP00&unit=INX_A_AVG&format=JSON
+    format: json
+    notes: Verified; annual average index 1996-2025. Cross-check for the INE CPI deflator.
+
+at:
+  # No official machine-readable municipal IMI/IMT revenue series found yet (DGAL / AT statistics: todo).
+  # Third-party only: Flat In Portugal, municipal IMI rates 2023-2025 (Zenodo DOI 10.5281/zenodo.22935147,
+  # https://flatin.pt/pt/ferramentas/dados-abertos-imi/) - not verified, 3 years only.
+  at_imi_imt: {}
+
+rnal:
+  # Turismo de Portugal open data, ArcGIS MapServer layer (public, updated 2026-10-21).
+  rnal_al:
+    url: https://geo.turismodeportugal.pt/server/rest/services/TDP/OpenData_AL/MapServer/6
+    query: "<url>/query?where=1=1&outFields=*&returnGeometry=true&f=json"   # 111,937 records, maxRecordCount 200000
+    format: json
+    notes: >
+      Fields incl. NrRNAL, DataRegisto, DataAberturaPublico, Modalidade, NrUtentes, DTMNFR (parish/municipality code),
+      Concelho, NUTSIII. Point geometry. Snapshot of currently registered units only.
+
+caop:
+  # DGT CAOP 2024, one GeoPackage zip per territory (HEAD checks returned 200).
+  caop_boundaries:
+    urls:
+      continente: https://geo2.dgterritorio.gov.pt/caop/CAOP_Continente_2024-gpkg.zip
+      madeira: https://geo2.dgterritorio.gov.pt/caop/CAOP_RAM_2024-gpkg.zip
+      azores: https://geo2.dgterritorio.gov.pt/caop/CAOP_RAA_2024-gpkg.zip   # 15.3 MB
+    format: gpkg
+    notes: Metadata published 2025-02-27. A later extraordinary CAOP2024.1 (restored parishes) exists; URL not found.
+
+aima:
+  # AIMA (ex-SEF) data reaches us through INE; municipal rows verified in 0010247.
+  aima_foreigners:
+    indicator_id: "0010247"          # foreign population with legal residence status by NUTS 2013 and nationality, 2014 - 2023
+    alt_indicator_ids:
+      nuts2024: "0013219"            # 2021 - 2023
+      national_by_sex: "0001274"     # national, 1980 - 2023
+    format: json
+    notes: INE series ends 2023 (AIMA data delay). AIMA "Relatório de Migrações e Asilo" has municipal 2024/2025 values but only as PDF.

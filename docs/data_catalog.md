@@ -9,21 +9,21 @@ Registry of every dataset. **Read this before opening any data file or source mo
 ## Datasets
 | dataset_id | source_id | Content | Geography | Frequency | Years | Interim file | Status |
 |---|---|---|---|---|---|---|---|
-| ine_hpi | ine | House Price Index | National / NUTS II | Quarterly | 2009– | | candidate |
-| ine_median_price_sqm | ine | Median sale value per m² (transactions) | Municipality | Quarterly | 2016– | | candidate |
-| ine_median_rent_sqm | ine | Median rent per m² of new leases | Municipality | Semiannual | 2017– | | candidate |
-| ine_bank_valuation | ine | Bank appraisal value by typology (T0–T4+) | Municipality / NUTS III | Monthly | 2008– | | candidate |
-| ine_income | ine | Household income (IRS-based taxable income) | Municipality | Annual | 2015– | | candidate |
-| ine_population | ine | Resident population estimates, natural change, migration | Municipality | Annual | 1991– | | candidate |
-| ine_census | ine | Census: dwellings (primary/secondary/vacant), households, household size | Municipality / parish | 1991, 2001, 2011, 2021 | | | candidate |
-| ine_construction | ine | Building permits, completions, dwellings licensed | Municipality | Monthly / Annual | 1995– | | candidate |
-| ine_cpi | ine | Consumer Price Index (deflator) | National | Monthly | 1990– | | candidate |
-| bp_mortgage | bportugal | Mortgage interest rates, new housing loans, household debt | National | Monthly | 2003– | | candidate |
-| eurostat_hpi | eurostat | HPI and HICP for EU comparison | Country | Quarterly | 2005– | | candidate |
-| at_imi_imt | at | IMI and IMT revenue and municipal IMI rates | Municipality | Annual | | | candidate |
-| rnal_al | rnal | Registered short-term rentals (Alojamento Local) | Municipality / point | Snapshot | 2014– | | candidate |
-| caop_boundaries | caop | Municipality boundaries (CAOP) | Municipality | Annual vintage | | | candidate |
-| aima_foreigners | aima | Foreign residents (ex-SEF statistical reports) | Municipality | Annual | 2008– | | candidate |
+| ine_hpi | ine | House Price Index (existing / new dwellings) | National only | Quarterly | 1Q2009–2Q2026 (0014765, base 2025) | | verified |
+| ine_median_price_sqm | ine | Median sale value per m² (transactions), last-12-months | Municipality | Quarterly | 1Q2016–3Q2021 (0009490, method. 2018) and 4Q2019–1Q2026 (0012234, method. 2022) | | verified (methodology break) |
+| ine_median_rent_sqm | ine | Median rent per m² of new leases | Municipality | Semiannual / annual | 2020–2024 (0012598 / 0012600) | | verified (short) |
+| ine_bank_valuation | ine | Bank appraisal median €/m² by construction type | Municipality | Monthly / annual | Jan 2011–Aug 2026 (0012248) | | verified |
+| ine_income | ine | Gross reported income per taxable person, mean and median (IRS) | Municipality | Annual | 2018–2024 (0012748/9, NUTS 2024); 2015–2021 (0009933/4, NUTS 2013) | | verified |
+| ine_population | ine | Resident population estimates, natural change, migration | Municipality | Annual | 2011–2023 (0008273; earlier + migration todo) | | verified (partial) |
+| ine_census | ine | Census: dwellings (primary/secondary/vacant), tenure, households | Municipality / parish | 1991, 2001, 2011, 2021 | 2021 verified (0012517, 0012531); earlier codes todo | | verified (2021 only) |
+| ine_construction | ine | New family dwellings licensed and completed | Municipality | Annual (monthly licensed) | Licensed 1995–2025 (0000087, 0013235); completed 1995–2025 (0000076, 0013248) | | verified |
+| ine_cpi | ine | Consumer Price Index (deflator) | National | Monthly / annual | 1948–2026 (0014640 / 0014642, base 2025) | | verified |
+| bp_mortgage | bportugal | Mortgage interest rates (APRC, agreed rate, stocks), new loan volumes | National | Monthly | Jan 2003–Aug 2026 (series 12533714, 12533730, 12519759) | | verified (household debt series todo) |
+| eurostat_hpi | eurostat | HPI (prc_hpi_q) and HICP (prc_hicp_aind) for EU comparison | Country | Quarterly / annual | 2005-Q1–2026-Q2 / 1996–2025 | | verified |
+| at_imi_imt | at | IMI and IMT revenue and municipal IMI rates | Municipality | Annual | no official source found; third-party IMI rates 2023–2025 | | candidate (unresolved) |
+| rnal_al | rnal | Registered short-term rentals (Alojamento Local), with registration date and coordinates | Point / parish / municipality | Snapshot (current registrations) | 111,937 units, `DataRegisto` | | verified (survivorship caveat) |
+| caop_boundaries | caop | Municipality boundaries (CAOP 2024) | Municipality | Annual vintage | 2024 | | verified (URLs respond) |
+| aima_foreigners | aima | Foreign residents with legal status (ex-SEF, via INE) | Municipality | Annual | 2014–2023 (0010247) | | verified (ends 2023) |
 
 ## Lookups (`data/external/`)
 | File | Content | Built by | Status |
