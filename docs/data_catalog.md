@@ -18,10 +18,10 @@ Registry of every dataset. **Read this before opening any data file or source mo
 | ine_census | ine | Census: dwellings (primary/secondary/vacant), tenure, households | Municipality / parish | 1991, 2001, 2011, 2021 | 2021 verified (0012517, 0012531); earlier codes todo | | verified (2021 only); raw fetched |
 | ine_construction | ine | New family dwellings licensed and completed | Municipality | Annual (monthly licensed) | Licensed 1995–2025 (0000087, 0013235); completed 1995–2025 (0000076, 0013248) | | verified; raw fetched |
 | ine_cpi | ine | Consumer Price Index (deflator) | National | Monthly / annual | 1948–2026 (0014640 / 0014642, base 2025) | | verified; raw fetched |
-| bp_mortgage | bportugal | Mortgage interest rates (APRC, agreed rate, stocks), new loan volumes | National | Monthly | Jan 2003–Aug 2026 (series 12533714, 12533730, 12519759) | | verified (household debt series todo) |
-| eurostat_hpi | eurostat | HPI (prc_hpi_q) and HICP (prc_hicp_aind) for EU comparison | Country | Quarterly / annual | 2005-Q1–2026-Q2 / 1996–2025 | | verified |
+| bp_mortgage | bportugal | Mortgage interest rates (APRC, agreed rate, stocks), new loan volumes | National | Monthly | Jan 2003–Aug 2026 (series 12533714, 12533730, 12519759, 12533719); fixed-rate median from Dec 2018 (12710738) | | verified; raw fetched (household debt series todo) |
+| eurostat_hpi | eurostat | HPI (prc_hpi_q) and HICP (prc_hicp_aind) for EU comparison | Country | Quarterly / annual | PT 2008-Q1–2026-Q2 (EU27 from 2005, IT from 2010) / PT 1996–2025 | | verified; raw fetched |
 | at_imi_imt | at | IMI and IMT revenue and municipal IMI rates | Municipality | Annual | no official source found; third-party IMI rates 2023–2025 | | candidate (unresolved) |
-| rnal_al | rnal | Registered short-term rentals (Alojamento Local), with registration date and coordinates | Point / parish / municipality | Snapshot (current registrations) | 111,937 units, `DataRegisto` | | verified (survivorship caveat) |
+| rnal_al | rnal | Registered short-term rentals (Alojamento Local), with registration date and coordinates | Point / parish / municipality | Snapshot (current registrations) | 111,937 registered units on 2026-10-21 (mainland only), `DataRegisto` | | verified; raw fetched (mainland only, survivorship caveat) |
 | caop_boundaries | caop | Municipality boundaries (CAOP 2024), 308 municipalities | Municipality | Annual vintage | 2024 | caop_municipalities.parquet | ingested |
 | aima_foreigners | aima | Foreign residents with legal status (ex-SEF, via INE) | Municipality | Annual | 2014–2023 (0010247) | | verified (ends 2023) |
 

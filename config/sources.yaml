@@ -118,18 +118,24 @@ bportugal:
       new_housing_volume_lt1y: 12533719  # new business volume, EUR m
       new_fixed_rate_p50: 12710738     # median rate of new housing loans, fixed (dataset 6a83b46f..., domain 186, ~93 months only)
     format: json
-    notes: Domains 21 (interest rates), 186 (loans for house purchase), 39 (housing prices). Household debt series (domain 18) not yet selected.
+    notes: >
+      Domains 21 (interest rates), 186 (loans for house purchase), 39 (housing prices). All five series verified and fetched
+      (284 months, Jan 2003-Aug 2026; the fixed-rate median 93 months from Dec 2018). Dataset and domain are looked up from the
+      series id at fetch time. Definitions differ (APRC vs agreed rate vs stock rate), see data_quality.md. Household debt (domain 18) todo.
 
 eurostat:
-  # Dissemination API https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/<dataset>
+  # Dissemination API https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/<dataset> (JSON-stat 2.0).
+  # `params` are sent as query parameters; `geo` is a list (repeated parameter).
   eurostat_hpi:
     dataset: prc_hpi_q
-    query: geo=PT&purchase=TOTAL&unit=I15_Q&format=JSON
+    params: {purchase: TOTAL, unit: I15_Q}      # index 2015=100, all dwellings purchased
+    geo: [PT, ES, IT, FR, DE, IE, EU27_2020]
     format: json
-    notes: Verified; 2005-Q1 to 2026-Q2. Widen the geo filter for the EU comparison.
+    notes: Verified; 2005-Q1 to 2026-Q2. Peer set for the EU comparison; add geo codes here to widen it.
   eurostat_hicp:
     dataset: prc_hicp_aind
-    query: geo=PT&coicop=CP00&unit=INX_A_AVG&format=JSON
+    params: {coicop: CP00, unit: INX_A_AVG}     # all-items, annual average index
+    geo: [PT, EU27_2020]
     format: json
     notes: Verified; annual average index 1996-2025. Cross-check for the INE CPI deflator.
 
@@ -147,7 +153,8 @@ rnal:
     format: json
     notes: >
       Fields incl. NrRNAL, DataRegisto, DataAberturaPublico, Modalidade, NrUtentes, DTMNFR (parish/municipality code),
-      Concelho, NUTSIII. Point geometry. Snapshot of currently registered units only.
+      Concelho, NUTSIII. Point geometry. Snapshot of currently registered units only; MAINLAND ONLY (no Azores / Madeira units).
+      Each download is kept as data/raw/rnal/rnal_<date>.json; names and addresses are not requested.
 
 caop:
   # DGT CAOP 2024, one GeoPackage zip per territory (HEAD checks returned 200).
