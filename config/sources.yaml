@@ -1,0 +1,18 @@
+# Dataset access details, keyed by source id (= module in src/pthousing/data/sources/
+# and folder in data/raw/). One entry per dataset; the human-readable registry with
+# coverage and caveats is docs/data_catalog.md (same dataset ids).
+#
+# Template:
+# <source_id>:
+#   <dataset_id>:
+#     url: ...            # or api indicator id
+#     format: csv|xlsx|json|gpkg
+#     notes: ...
+
+ine: {}
+bportugal: {}
+eurostat: {}
+at: {}
+rnal: {}
+caop: {}
+aima: {}

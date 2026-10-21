@@ -1,0 +1,22 @@
+# Environment
+.venv/
+uv.toml
+.env
+.claude/settings.local.json
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# Data: raw downloads and intermediate files are reproducible via scripts/run_pipeline.py
+data/raw/*
+data/interim/*
+!data/raw/.gitkeep
+!data/interim/.gitkeep
+
+# OS / editors
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

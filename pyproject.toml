@@ -1,0 +1,54 @@
+[project]
+name = "pthousing"
+version = "0.1.0"
+description = "Evidence, explanation, policy evaluation and scenario modelling of Portugal's housing affordability crisis."
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "pandas",
+    "numpy",
+    "pyarrow",
+    "geopandas",
+    "pyogrio",
+    "shapely",
+    "statsmodels",
+    "linearmodels",
+    "libpysal",
+    "esda",
+    "matplotlib",
+    "plotly",
+    "streamlit",
+    "pyyaml",
+    "requests",
+    "pandera",
+]
+
+[dependency-groups]
+dev = [
+    "pytest",
+    "ruff",
+    "jupyterlab",
+    "jupytext",
+    "ipykernel",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/pthousing"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py314"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
+ignore = ["E501"]  # line length is left to ruff format
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.jupytext]
+formats = "ipynb,py:percent"

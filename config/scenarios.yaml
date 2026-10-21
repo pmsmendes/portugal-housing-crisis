@@ -1,0 +1,35 @@
+# Scenario assumptions for the Phase 4 simulator (read by src/pthousing/simulation/scenarios.py).
+# Every number must cite its source or rationale in docs/decisions.md.
+# Values are placeholders (null) until estimated in Phases 2-4.
+
+horizon_years: 10
+base_year: 2024
+
+scenarios:
+  optimistic:
+    population_growth_pct: null
+    net_migration_per_year: null
+    household_income_growth_real_pct: null
+    mortgage_rate_pct: null
+    completions_per_year: null
+  baseline:
+    population_growth_pct: null
+    net_migration_per_year: null
+    household_income_growth_real_pct: null
+    mortgage_rate_pct: null
+    completions_per_year: null
+  pessimistic:
+    population_growth_pct: null
+    net_migration_per_year: null
+    household_income_growth_real_pct: null
+    mortgage_rate_pct: null
+    completions_per_year: null
+
+# Policy levers. "direct" = accounting effect; "behavioural" = requires an elasticity
+# estimated in Phase 2/3 or taken from literature (cite in docs/decisions.md).
+policies:
+  construction_boost: {extra_units_per_year: null, cost_per_unit_eur: null}
+  vacant_renovation: {units_per_year: null, cost_per_unit_eur: null}
+  public_housing: {units_per_year: null, cost_per_unit_eur: null}
+  imi_reform: {rate_change_pp: null}
+  imt_reform: {rate_change_pp: null, first_buyer_exemption_eur: null}
