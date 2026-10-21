@@ -107,3 +107,16 @@ def test_rate_effect_and_dumbbell_titles():
     assert "In Lagos a typical home now costs 32 years of income" == _title(
         charts.pti_dumbbell(rank, 2016, 2024)
     )
+
+
+def test_moran_trends_title_follows_the_data():
+    rows = [
+        {"year": y, "series": s, "I": v + 0.05 * i, "p_sim": 0.001}
+        for s, v in (("pti", 0.6), ("income", 0.5), ("price", 0.62))
+        for i, y in enumerate((2016, 2017, 2018))
+    ]
+    fig = charts.moran_trends(pd.DataFrame(rows), "Queen contiguity.")
+    assert "resemble each other more" in fig.texts[0].get_text()
+    assert "0.60 to 0.70" in fig.texts[0].get_text()
+    falling = pd.DataFrame(rows).assign(I=lambda d: d["I"].iloc[::-1].to_numpy())
+    assert "differ from each other less" in charts.moran_trends(falling, "").texts[0].get_text()

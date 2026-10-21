@@ -5,7 +5,7 @@ decades, what role supply, demographics, tourism and regional dynamics play, whe
 policies have worked, and what alternative interventions could achieve — and cost.
 
 > **Status:** phase 1 (evidence) is complete: data pipeline, municipal panels, affordability indicators, maps and trend
-> charts — see the [phase 1 report](reports/p1_evidence.md). Phases 2 to 4 and the dashboards are not started yet.
+> charts — see the [phase 1 report](reports/p1_evidence.md). Phase 2 has started (spatial autocorrelation); phases 3 and 4 and the dashboards are not started yet.
 
 ![Price-to-income by municipality, 2024](reports/figures/p1/pti_map_2024.png)
 

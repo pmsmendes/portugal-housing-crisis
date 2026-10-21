@@ -2,6 +2,12 @@
 
 Analytic and engineering choices, newest first. One short entry each: what, why, alternatives rejected.
 
+## 2026-10-21 — Spatial weights and tests (phase 2)
+- **What:** queen contiguity, row-standardised, built separately for the mainland, the Azores and Madeira so no link crosses the sea; a municipality with no land neighbour (an island with one municipality) is linked to its 2 nearest in the same territory. Robustness: 6 nearest centroids. Global Moran's I, LISA and Gi* use 999 conditional permutations, two-sided, `alpha` 0.05, fixed seed, one process (`n_jobs=1`).
+- **Why:** contiguity is the standard reading of "neighbouring municipality"; per-territory blocks avoid linking Corvo to Mainland by distance; k-nearest shows how much results depend on the weights (it matters for the within-region result: Moran's I 0.20 vs 0.08).
+- **Rejected:** inverse-distance weights (dense, dominated by the mainland's size); a multiple-testing correction on LISA (kept as exploratory, stated on the map); the municipality mean as the only fix for regional effects (the NUTS 3 mean is used for the within-region check, FE regressions come next).
+- **Reading:** Moran's I is a pattern, not proof of spillovers; Gi* and LISA flag the same municipalities (they are closely related), so their agreement is a consistency check.
+
 ## 2026-10-21 — Phase 1 figures and maps
 - **Style:** colors come from the validated reference palette of the dataviz method (blue and orange accents with colorblind separation dE 24.7, gray for context, a one-hue blue ramp for levels, a blue-red ramp with a gray midpoint for change). The red arm of the diverging ramp is built at the same OKLCH lightness and chroma as the blue arm. One axis per panel (no dual axes), emphasis form for single stories, a legend whenever two or more series, direct labels only where lines do not collide.
 - **Titles are computed from the plotted data** (functions in `viz/charts.py`, tested), so a title cannot disagree with its chart.

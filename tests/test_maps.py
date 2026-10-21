@@ -49,3 +49,13 @@ def test_choropleth_needs_one_color_per_class():
         maps.choropleth(
             pd.Series({"0101": 1.0}), _geometry(), [6, 10], ["#000000"], "t", "s", "src", "Years"
         )
+
+
+def test_choropleth_uses_custom_labels_for_categories():
+    values = pd.Series({"0101": 0, "3101": 1, "4201": 2, "0102": 0})
+    fig = maps.choropleth(
+        values, _geometry(), [0.5, 1.5], ["#ccc", "#00f", "#f00"], "t", "s", "src", "Cluster",
+        labels=["Not significant", "Low-low", "High-high"],
+    )  # fmt: skip
+    labels = [t.get_text() for t in fig.legends[0].get_texts()]
+    assert labels == ["Not significant   (2)", "Low-low   (1)", "High-high   (1)"]

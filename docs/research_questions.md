@@ -46,10 +46,10 @@ Reference questions by ID (e.g. `RQ2.3`) in notebooks, reports and commits.
 |---|---|---|---|
 | RQ4.1 | Which districts and municipalities had the largest price and rent increases? | done | `p1_01`: real growth tables by municipality and district (prices 2016-2025, rents 2020-2024) |
 | RQ4.2 | Which regions saw the greatest affordability deterioration relative to local incomes? | done | `p1_02`: change map and tables (PTI 2016-2024) |
-| RQ4.3 | Are prices rising faster in major urban centres than in surrounding municipalities? | — | |
-| RQ4.4 | Is there evidence of spatial spillovers between neighbouring municipalities? | — | |
+| RQ4.3 | Are prices rising faster in major urban centres than in surrounding municipalities? | partly | `p2_01`: no significant high-low/low-high outlier in the change in price-to-income; urban centres moved with their surroundings. Price growth itself by city/ring not yet compared |
+| RQ4.4 | Is there evidence of spatial spillovers between neighbouring municipalities? | partly | `p2_01`: strong, rising spatial autocorrelation (Moran's I of price-to-income 0.63 to 0.76, 2016-2024), mostly regional; spillovers themselves need the spatial-lag panel model (p2_03) |
 | RQ4.5 | Which regions show the largest imbalance between supply and household growth? | — | |
-| RQ4.6 | How do trends differ coastal vs inland, urban vs rural, tourist vs non-tourist? | — | |
+| RQ4.6 | How do trends differ coastal vs inland, urban vs rural, tourist vs non-tourist? | partly | `p2_01`: LISA clusters (Algarve, Lisboa, Setúbal, Porto high-high; interior low-low). Group comparisons not yet done |
 
 ## RQ5 — Tourism, foreign investment and the housing market (Phase 2)
 | ID | Question | Status | Where |

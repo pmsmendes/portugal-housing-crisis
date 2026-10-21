@@ -15,7 +15,17 @@ from matplotlib.lines import Line2D
 from matplotlib.patches import Patch
 
 from pthousing.viz import style
-from pthousing.viz.style import BLUE, GRID, INK, INK_2, LINE_WIDTH, MUTED, ORANGE, SURFACE
+from pthousing.viz.style import (
+    BLUE,
+    CONTEXT_WIDTH,
+    GRID,
+    INK,
+    INK_2,
+    LINE_WIDTH,
+    MUTED,
+    ORANGE,
+    SURFACE,
+)
 
 PEER_COLUMNS = {
     "hpi_de_b2015": "Germany",
@@ -329,4 +339,44 @@ def pti_dumbbell(rank: pd.DataFrame, start_year: int, end_year: int) -> Figure:
         f"Price-to-income in {start_year} and {end_year}: the {len(r)} least affordable municipalities in {end_year} (years of median income)",
         "Source: INE; own calculations. Price of a home of the municipality's average size.",
         foot_in=0.8,
+    )
+
+
+# ---- spatial autocorrelation ----------------------------------------------------------------------
+
+
+def moran_trends(table: pd.DataFrame, weights_note: str) -> Figure:
+    """Global Moran's I by year for price-to-income (story), median income (contrast) and price per m2.
+
+    ``table`` has columns ``year``, ``series`` ('pti', 'income', 'price'), ``I`` and ``p_sim``.
+    """
+    wide = table.pivot(index="year", columns="series", values="I")
+    years = wide.index
+    fig, ax = plt.subplots(figsize=(8, 4.4))
+    _line(ax, years, wide["price"], MUTED, width=CONTEXT_WIDTH, z=2)
+    _line(ax, years, wide["income"], ORANGE)
+    _line(ax, years, wide["pti"], BLUE)
+    for name, color in (("pti", BLUE), ("income", ORANGE)):
+        _end_dot(ax, years[-1], wide[name].iloc[-1], color)
+    _label(ax, years[-1], wide["pti"].iloc[-1], "Price-to-income")
+    _label(ax, years[-1], wide["income"].iloc[-1], "Median income")
+    ax.annotate(  # nearly on top of the price-to-income end: set it below
+        "Price per m2", (years[-1], wide["price"].iloc[-1]), xytext=(8, -12),
+        textcoords="offset points", va="center", ha="left", fontsize=9.5, color=INK_2,
+        annotation_clip=False,
+    )  # fmt: skip
+    _years(ax, years)
+    ax.set_ylim(0.4, 0.9)
+    ax.set_ylabel("Moran's I", color=INK_2)
+    first, last = years[0], years[-1]
+    rose = wide["pti"].iloc[-1] > wide["pti"].iloc[0]
+    p_max = table["p_sim"].max()
+    return style.finish(
+        fig,
+        f"Neighbouring municipalities {'resemble' if rose else 'differ from'} each other "
+        f"{'more' if rose else 'less'} on affordability: Moran's I of price-to-income "
+        f"{'rose' if rose else 'fell'} from {wide['pti'].iloc[0]:.2f} to {wide['pti'].iloc[-1]:.2f}",
+        f"Global Moran's I of price-to-income, median income and price per m2, {first} to {last}; "
+        f"0 = no spatial pattern, 1 = neighbours alike. {weights_note}",
+        f"Source: INE, CAOP 2024; own calculations. Largest permutation p-value across points: {p_max:.3f}.",
     )

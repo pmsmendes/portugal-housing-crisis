@@ -82,11 +82,13 @@ def choropleth(
     legend_title: str,
     fmt: str = "{:g}",
     suffix: str = "",
+    labels: list[str] | None = None,
 ) -> Figure:
     """Map of ``values`` (indexed by muni_code) in classes given by ``breaks`` and ``colors``.
 
     ``colors`` must have ``len(breaks) + 1`` entries (light to dark, or blue to red for a change).
-    The legend shows how many municipalities fall in each class and how many have no published value.
+    The legend shows how many municipalities fall in each class and how many have no published value;
+    ``labels`` replaces the numeric class labels (for categories coded as 0, 1, 2...).
     """
     if len(colors) != len(breaks) + 1:
         raise ValueError("need one color per class: len(colors) == len(breaks) + 1")
@@ -107,7 +109,7 @@ def choropleth(
                     color=MUTED,
                 )
     counts = classes.value_counts()
-    labels = class_labels(breaks, fmt, suffix)
+    labels = labels or class_labels(breaks, fmt, suffix)
     handles = [
         Patch(facecolor=c, edgecolor=SURFACE, label=f"{lab}   ({counts.get(i, 0)})")
         for i, (c, lab) in enumerate(zip(colors, labels, strict=True))
