@@ -10,13 +10,13 @@ Reference questions by ID (e.g. `RQ2.3`) in notebooks, reports and commits.
 ## RQ1 — Housing prices and affordability (Phase 1)
 | ID | Question | Status | Where |
 |---|---|---|---|
-| RQ1.1 | How have residential property prices evolved over the past 30 years, nationally and by district and municipality? | — | |
+| RQ1.1 | How have residential property prices evolved over the past 30 years, nationally and by district and municipality? | wip | `p1_01`: national index from 2009, municipal prices from 2016 only; no 30-year series yet |
 | RQ1.2 | How have purchase and rental prices evolved by property type (T0, T1, T2, T3, T4+)? | — | |
-| RQ1.3 | How have prices and rents evolved in real (inflation-adjusted) terms? | — | |
-| RQ1.4 | How has affordability changed relative to household income and wage growth? | — | |
-| RQ1.5 | How many years of gross household income are needed to buy a typical home in each region? | — | |
+| RQ1.3 | How have prices and rents evolved in real (inflation-adjusted) terms? | done | `p1_01`, `reports/p1_evidence.md` (national 2009-2026, municipal prices 2016-2025, rents 2020-2024) |
+| RQ1.4 | How has affordability changed relative to household income and wage growth? | wip | `p1_02`: relative to income (PTI, RTI, burden, 2016-2024); wage growth not covered |
+| RQ1.5 | How many years of gross household income are needed to buy a typical home in each region? | done | `p1_02`: map, municipality and district tables (2024); levels depend on the income concept |
 | RQ1.6 | How does the total cost of buying compare with renting (interest, down payment, taxes, maintenance, other costs)? | — | |
-| RQ1.7 | How have mortgage rates and lending conditions affected ownership affordability? | — | |
+| RQ1.7 | How have mortgage rates and lending conditions affected ownership affordability? | wip | `p1_01`, `p1_02`: rates and the rate effect on the burden; lending conditions (LTV, term, credit standards) not covered |
 | RQ1.8 | How has the gap between advertised and actual transaction prices evolved? | — | |
 
 ## RQ2 — Housing supply and construction (Phases 1–2)
@@ -44,8 +44,8 @@ Reference questions by ID (e.g. `RQ2.3`) in notebooks, reports and commits.
 ## RQ4 — Regional disparities (Phases 1–2)
 | ID | Question | Status | Where |
 |---|---|---|---|
-| RQ4.1 | Which districts and municipalities had the largest price and rent increases? | — | |
-| RQ4.2 | Which regions saw the greatest affordability deterioration relative to local incomes? | — | |
+| RQ4.1 | Which districts and municipalities had the largest price and rent increases? | done | `p1_01`: real growth tables by municipality and district (prices 2016-2025, rents 2020-2024) |
+| RQ4.2 | Which regions saw the greatest affordability deterioration relative to local incomes? | done | `p1_02`: change map and tables (PTI 2016-2024) |
 | RQ4.3 | Are prices rising faster in major urban centres than in surrounding municipalities? | — | |
 | RQ4.4 | Is there evidence of spatial spillovers between neighbouring municipalities? | — | |
 | RQ4.5 | Which regions show the largest imbalance between supply and household growth? | — | |

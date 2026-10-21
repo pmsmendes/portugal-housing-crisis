@@ -1,0 +1,309 @@
+muni_code,muni_name,district,territory,pti_years,pti_years_100sqm,rti_pct,mortgage_burden_pct,price_sqm_eur,rent_sqm_eur,income_median_eur,dwelling_area_sqm,pti_rank
+0807,Lagos,Faro,continente,31.65,28.77,111.23,151.5,3452.0,10.11,12000.0,110.02,1.0
+0803,Aljezur,Faro,continente,30.86,27.62,91.51,147.72,3059.0,7.56,11076.0,111.73,2.0
+0808,Loulé,Faro,continente,30.02,27.46,116.84,143.71,3333.0,10.81,12136.0,109.31,3.0
+1105,Cascais,Lisboa,continente,28.73,26.32,130.23,137.53,4053.0,15.31,15401.0,109.17,4.0
+0814,Tavira,Faro,continente,27.28,24.85,110.29,130.61,2853.0,9.61,11480.0,109.79,5.0
+0815,Vila do Bispo,Faro,continente,26.67,26.15,84.7,127.66,3030.0,8.02,11586.0,101.97,6.0
+0801,Albufeira,Faro,continente,25.99,25.46,109.32,124.4,2941.0,10.31,11550.0,102.06,7.0
+0806,Lagoa,Faro,continente,25.99,22.6,98.79,124.4,2762.0,8.75,12223.0,115.0,7.0
+1106,Lisboa,Lisboa,continente,24.81,26.66,109.3,118.79,4340.0,15.93,16278.0,93.07,9.0
+3103,Funchal,Ilha da Madeira,madeira,23.85,22.02,107.62,114.18,3061.0,11.51,13904.0,108.34,10.0
+1011,Nazaré,Leiria,continente,22.66,21.5,83.53,108.49,2559.0,7.86,11900.0,105.39,11.0
+0306,Esposende,Braga,continente,22.6,16.57,100.64,108.19,1986.0,7.37,11987.0,136.41,12.0
+0813,Silves,Faro,continente,22.37,20.6,93.57,107.07,2464.0,8.59,11961.0,108.58,13.0
+0811,Portimão,Faro,continente,22.1,21.49,107.17,105.77,2578.0,10.42,11999.0,102.84,14.0
+1312,Porto,Porto,continente,21.69,21.5,109.75,103.85,2984.0,12.58,13880.0,100.91,15.0
+0816,Vila Real de Santo António,Faro,continente,20.91,21.74,87.73,100.08,2548.0,8.91,11720.0,96.16,16.0
+0107,Espinho,Aveiro,continente,20.75,19.08,84.06,99.34,2382.0,8.04,12487.0,108.79,17.0
+1012,Óbidos,Leiria,continente,20.2,15.77,83.71,96.69,1914.0,6.61,12137.0,128.08,18.0
+1313,Póvoa de Varzim,Porto,continente,20.19,16.24,102.8,96.66,1921.0,8.15,11830.0,124.35,19.0
+1109,Mafra,Lisboa,continente,20.11,16.72,95.0,96.24,2410.0,9.49,14418.0,120.28,20.0
+0804,Castro Marim,Faro,continente,19.84,17.7,86.05,94.98,2078.0,7.51,11737.0,112.07,21.0
+3102,Câmara de Lobos,Ilha da Madeira,madeira,19.75,19.33,71.83,94.54,2237.0,6.78,11570.0,102.15,22.0
+0812,São Brás de Alportel,Faro,continente,19.65,15.88,71.21,94.08,1997.0,6.03,12576.0,123.76,23.0
+1308,Matosinhos,Porto,continente,19.65,18.62,101.44,94.08,2583.0,11.11,13872.0,105.55,23.0
+0805,Faro,Faro,continente,19.6,18.52,78.24,93.83,2504.0,8.33,13519.0,105.82,25.0
+1116,Odivelas,Lisboa,continente,19.47,21.0,96.39,93.18,2765.0,11.41,13168.0,92.7,26.0
+0810,Olhão,Faro,continente,19.41,18.31,83.73,92.9,2250.0,8.09,12291.0,106.01,27.0
+1110,Oeiras,Lisboa,continente,19.06,18.56,90.94,91.24,3471.0,13.8,18706.0,102.72,28.0
+1316,Vila do Conde,Porto,continente,18.77,15.27,84.75,89.86,1911.0,7.19,12516.0,122.94,29.0
+3108,Santa Cruz,Ilha da Madeira,madeira,18.41,16.18,87.82,88.13,2269.0,9.02,14023.0,113.78,30.0
+3104,Machico,Ilha da Madeira,madeira,18.41,16.29,69.24,88.13,1908.0,5.98,11714.0,113.03,30.0
+0105,Aveiro,Aveiro,continente,18.06,14.45,84.58,86.45,2096.0,8.18,14502.0,124.95,32.0
+1107,Loures,Lisboa,continente,18.04,19.37,87.62,86.36,2609.0,10.56,13467.0,93.12,33.0
+1503,Almada,Setúbal,continente,17.85,18.84,95.26,85.44,2644.0,11.76,14033.0,94.73,34.0
+1317,Vila Nova de Gaia,Porto,continente,17.82,16.45,94.35,85.3,2128.0,9.39,12935.0,108.31,35.0
+1511,Sesimbra,Setúbal,continente,17.61,15.97,83.49,84.28,2295.0,9.07,14368.0,110.22,36.0
+1113,Torres Vedras,Lisboa,continente,16.96,14.49,92.31,81.2,1784.0,8.09,12311.0,117.06,37.0
+0118,Vagos,Aveiro,continente,16.76,11.64,85.85,80.25,1399.0,5.97,12020.0,144.04,38.0
+1108,Lourinhã,Lisboa,continente,16.75,13.87,76.04,80.2,1642.0,6.21,11838.0,120.79,39.0
+1505,Grândola,Setúbal,continente,16.61,15.49,96.75,79.52,1877.0,9.11,12117.0,107.24,40.0
+1306,Maia,Porto,continente,16.56,14.12,83.26,79.29,2046.0,8.57,14493.0,117.33,41.0
+1507,Montijo,Setúbal,continente,16.43,15.66,88.13,78.64,2040.0,9.12,13030.0,104.93,42.0
+1014,Peniche,Leiria,continente,16.27,15.3,71.62,77.88,1810.0,6.64,11833.0,106.36,43.0
+0303,Braga,Braga,continente,16.24,12.69,89.69,77.75,1671.0,7.69,13170.0,128.01,44.0
+1111,Sintra,Lisboa,continente,16.14,16.67,88.76,77.27,2226.0,10.2,13352.0,96.82,45.0
+0110,Ílhavo,Aveiro,continente,16.03,12.52,79.7,76.72,1706.0,7.07,13627.0,128.02,46.0
+1115,Amadora,Lisboa,continente,15.79,19.29,90.13,75.59,2481.0,11.8,12863.0,81.87,47.0
+1502,Alcochete,Setúbal,continente,15.76,13.42,82.97,75.44,2106.0,9.24,15696.0,117.45,48.0
+1510,Seixal,Setúbal,continente,15.73,15.37,86.41,75.28,2171.0,9.94,14122.0,102.3,49.0
+0608,Mira,Coimbra,continente,15.67,11.46,64.07,75.0,1344.0,4.58,11730.0,136.74,50.0
+1006,Caldas da Rainha,Leiria,continente,15.65,13.55,79.57,74.94,1662.0,7.04,12269.0,115.56,51.0
+1609,Viana do Castelo,Viana do Castelo,continente,15.65,12.53,82.49,74.9,1591.0,6.99,12695.0,124.85,51.0
+0302,Barcelos,Braga,continente,15.63,11.68,75.47,74.82,1347.0,5.42,11535.0,133.84,53.0
+3201,Porto Santo,Ilha de Porto Santo,madeira,15.59,13.09,,74.64,1873.0,,14307.0,119.1,54.0
+1508,Palmela,Setúbal,continente,15.51,13.61,80.44,74.27,1921.0,8.3,14115.0,114.0,55.0
+1318,Trofa,Porto,continente,15.24,12.06,84.06,72.93,1479.0,6.8,12262.0,126.31,56.0
+1304,Gondomar,Porto,continente,14.98,14.04,77.83,71.71,1746.0,7.56,12438.0,106.71,57.0
+1602,Caminha,Viana do Castelo,continente,14.95,12.26,73.4,71.57,1425.0,5.83,11620.0,121.91,58.0
+4203,Ponta Delgada,Ilha de São Miguel,azores,14.91,11.94,65.27,71.39,1667.0,6.08,13966.0,124.94,59.0
+1513,Sines,Setúbal,continente,14.87,14.43,100.41,71.19,2035.0,11.45,14099.0,103.03,60.0
+0312,Vila Nova de Famalicão,Braga,continente,14.86,11.4,72.62,71.13,1402.0,5.71,12302.0,130.38,61.0
+0313,Vila Verde,Braga,continente,14.84,10.86,73.03,71.02,1219.0,5.0,11223.0,136.6,62.0
+1512,Setúbal,Setúbal,continente,14.82,14.51,84.32,70.97,2036.0,9.65,14032.0,102.17,63.0
+1102,Arruda dos Vinhos,Lisboa,continente,14.75,12.3,67.12,70.61,1780.0,6.75,14474.0,119.94,64.0
+4201,Lagoa,Ilha de São Miguel,azores,14.61,11.79,57.06,69.91,1419.0,4.62,12035.0,123.87,65.0
+1315,Valongo,Porto,continente,14.58,13.5,77.82,69.78,1742.0,7.75,12899.0,107.94,66.0
+0115,Ovar,Aveiro,continente,14.39,11.87,70.57,68.9,1515.0,6.19,12765.0,121.27,67.0
+1607,Ponte de Lima,Viana do Castelo,continente,14.16,10.94,72.53,67.76,1246.0,5.32,11390.0,129.4,68.0
+1415,Salvaterra de Magos,Santarém,continente,14.14,11.65,72.5,67.71,1435.0,6.13,12322.0,121.45,69.0
+3105,Ponta do Sol,Ilha da Madeira,madeira,14.04,12.63,,67.21,1429.0,,11313.0,111.15,70.0
+1009,Leiria,Leiria,continente,14.04,10.99,72.8,67.22,1486.0,6.42,13525.0,127.81,70.0
+0109,Santa Maria da Feira,Aveiro,continente,14.0,11.05,74.17,67.01,1327.0,5.86,12006.0,126.64,72.0
+1114,Vila Franca de Xira,Lisboa,continente,13.94,14.32,77.67,66.73,2102.0,9.76,14680.0,97.35,73.0
+0705,Évora,Évora,continente,13.89,12.88,64.73,66.48,1882.0,7.31,14608.0,107.8,74.0
+0308,Guimarães,Braga,continente,13.81,11.5,70.16,66.1,1358.0,5.75,11808.0,120.06,75.0
+0211,Odemira,Beja,continente,13.81,14.17,74.13,66.09,1379.0,6.17,9731.0,97.43,75.0
+0603,Coimbra,Coimbra,continente,13.81,11.83,71.82,66.13,1791.0,7.76,15138.0,116.76,75.0
+1310,Paredes,Porto,continente,13.8,11.83,65.53,66.04,1311.0,5.19,11079.0,116.58,78.0
+3101,Calheta,Ilha da Madeira,madeira,13.75,11.55,71.33,65.82,1293.0,5.59,11192.0,119.01,79.0
+1509,Santiago do Cacém,Setúbal,continente,13.72,12.33,80.75,65.66,1751.0,8.59,14196.0,111.21,80.0
+1005,Bombarral,Leiria,continente,13.71,11.13,72.76,65.61,1311.0,5.8,11784.0,123.19,81.0
+0605,Figueira da Foz,Coimbra,continente,13.58,11.49,75.86,65.02,1534.0,7.14,13354.0,118.24,82.0
+1405,Benavente,Santarém,continente,13.5,11.66,74.79,64.62,1538.0,7.1,13196.0,115.83,83.0
+0301,Amares,Braga,continente,13.46,9.74,64.57,64.42,1118.0,4.47,11480.0,138.19,84.0
+1001,Alcobaça,Leiria,continente,13.33,10.99,74.09,63.83,1339.0,6.2,12180.0,121.29,85.0
+1101,Alenquer,Lisboa,continente,13.22,11.71,80.84,63.26,1534.0,7.82,13099.0,112.85,86.0
+3107,Ribeira Brava,Ilha da Madeira,madeira,13.22,12.72,,63.27,1467.0,,11535.0,103.93,86.0
+1714,Vila Real,Vila Real,continente,13.22,10.36,58.94,63.29,1335.0,4.96,12883.0,127.58,86.0
+1604,Monção,Viana do Castelo,continente,13.19,10.7,86.41,63.13,1205.0,6.58,11263.0,123.26,89.0
+0114,Oliveira do Bairro,Aveiro,continente,13.08,8.99,74.05,62.62,1130.0,5.33,12570.0,145.52,90.0
+1309,Paços de Ferreira,Porto,continente,13.0,10.55,61.36,62.23,1167.0,4.59,11063.0,123.24,91.0
+1501,Alcácer do Sal,Setúbal,continente,12.98,12.14,76.65,62.13,1475.0,7.26,12154.0,106.94,92.0
+1504,Barreiro,Setúbal,continente,12.94,14.31,80.25,61.93,1942.0,10.04,13571.0,90.4,93.0
+1305,Lousada,Porto,continente,12.85,10.15,58.52,61.5,1117.0,4.24,11003.0,126.56,94.0
+0604,Condeixa-a-Nova,Coimbra,continente,12.74,9.44,61.68,61.0,1366.0,5.51,14472.0,135.0,95.0
+1314,Santo Tirso,Porto,continente,12.59,10.13,64.98,60.25,1197.0,5.15,11816.0,124.24,96.0
+4206,Vila Franca do Campo,Ilha de São Miguel,azores,12.52,10.99,,59.94,1154.0,,10503.0,113.96,97.0
+4204,Povoação,Ilha de São Miguel,azores,12.31,11.06,,58.95,1164.0,,10523.0,111.32,98.0
+1823,Viseu,Viseu,continente,12.29,9.67,66.26,58.82,1273.0,5.72,13158.0,127.01,99.0
+1112,Sobral de Monte Agraço,Lisboa,continente,12.29,10.3,59.43,58.84,1313.0,5.29,12743.0,119.29,99.0
+0712,Vendas Novas,Évora,continente,12.25,10.57,63.36,58.62,1308.0,5.64,12370.0,115.81,101.0
+0102,Albergaria-a-Velha,Aveiro,continente,12.2,9.45,68.65,58.42,1184.0,5.55,12529.0,129.14,102.0
+1506,Moita,Setúbal,continente,12.13,13.33,77.31,58.05,1713.0,9.1,12848.0,90.96,103.0
+0112,Murtosa,Aveiro,continente,12.05,9.46,66.9,57.66,1117.0,5.17,11805.0,127.3,104.0
+4602,Madalena,Ilha do Pico,azores,12.03,9.76,50.76,57.58,1220.0,4.29,12506.0,123.3,105.0
+1311,Penafiel,Porto,continente,12.0,10.09,60.72,57.44,1124.0,4.74,11144.0,118.97,106.0
+0116,São João da Madeira,Aveiro,continente,11.95,10.44,71.04,57.21,1288.0,6.38,12336.0,114.46,107.0
+0113,Oliveira de Azeméis,Aveiro,continente,11.84,9.08,62.43,56.7,1111.0,4.88,12236.0,130.45,108.0
+1307,Marco de Canaveses,Porto,continente,11.75,9.74,57.92,56.26,991.0,4.07,10171.0,120.62,109.0
+0602,Cantanhede,Coimbra,continente,11.64,8.37,66.51,55.74,1000.0,4.76,11952.0,139.17,110.0
+0309,Póvoa de Lanhoso,Braga,continente,11.56,8.9,65.09,55.31,997.0,4.68,11196.0,129.76,111.0
+0307,Fafe,Braga,continente,11.49,9.68,52.7,55.0,1078.0,4.12,11139.0,118.73,112.0
+0104,Arouca,Aveiro,continente,11.41,9.1,67.74,54.64,1017.0,5.03,11177.0,125.44,113.0
+1416,Santarém,Santarém,continente,11.35,9.37,76.1,54.34,1194.0,6.67,12737.0,121.1,114.0
+0809,Monchique,Faro,continente,11.31,11.41,,54.12,1250.0,,10954.0,99.07,115.0
+0119,Vale de Cambra,Aveiro,continente,11.29,8.97,57.21,54.04,1101.0,4.65,12274.0,125.85,116.0
+1104,Cadaval,Lisboa,continente,11.26,9.12,61.31,53.91,1080.0,4.9,11838.0,123.44,117.0
+0314,Vizela,Braga,continente,11.18,9.46,59.5,53.51,1089.0,4.83,11511.0,118.16,118.0
+1403,Almeirim,Santarém,continente,11.16,9.32,70.24,53.41,1117.0,5.86,11980.0,119.67,119.0
+0108,Estarreja,Aveiro,continente,11.16,8.48,70.75,53.41,1071.0,5.66,12637.0,131.64,119.0
+1409,Coruche,Santarém,continente,11.09,10.01,63.31,53.09,1171.0,5.57,11700.0,110.82,121.0
+1703,Chaves,Vila Real,continente,11.05,8.71,64.2,52.92,1000.0,4.84,11480.0,126.9,122.0
+1301,Amarante,Porto,continente,10.97,9.0,57.07,52.52,962.0,4.17,10688.0,121.9,123.0
+1010,Marinha Grande,Leiria,continente,10.97,8.86,63.06,52.52,1186.0,5.68,13382.0,123.8,123.0
+1103,Azambuja,Lisboa,continente,10.95,10.15,61.68,52.41,1329.0,6.24,13090.0,107.83,125.0
+0101,Águeda,Aveiro,continente,10.92,8.01,68.96,52.28,990.0,5.21,12353.0,136.26,126.0
+1303,Felgueiras,Porto,continente,10.88,8.8,46.43,52.07,970.0,3.45,11028.0,123.67,127.0
+1015,Pombal,Leiria,continente,10.87,8.39,60.24,52.05,1031.0,4.76,12290.0,129.62,128.0
+4603,São Roque do Pico,Ilha do Pico,azores,10.83,8.87,,51.86,1116.0,,12577.0,122.1,129.0
+1414,Rio Maior,Santarém,continente,10.78,8.81,56.3,51.61,1041.0,4.53,11822.0,122.43,130.0
+1606,Ponte da Barca,Viana do Castelo,continente,10.76,9.21,49.35,51.49,952.0,3.64,10332.0,116.74,131.0
+1601,Arcos de Valdevez,Viana do Castelo,continente,10.74,9.14,62.41,51.4,958.0,4.64,10484.0,117.51,132.0
+4601,Lajes do Pico,Ilha do Pico,azores,10.68,8.52,,51.11,994.0,,11664.0,125.28,133.0
+0111,Mealhada,Aveiro,continente,10.61,7.56,64.33,50.81,984.0,4.97,13014.0,140.38,134.0
+1406,Cartaxo,Santarém,continente,10.51,8.86,55.52,50.3,1172.0,5.16,13228.0,118.6,135.0
+1404,Alpiarça,Santarém,continente,10.49,8.35,,50.23,977.0,,11706.0,125.72,136.0
+3110,São Vicente,Ilha da Madeira,madeira,10.42,9.3,,49.87,1050.0,,11286.0,111.97,137.0
+0706,Montemor-o-Novo,Évora,continente,10.33,9.27,54.38,49.46,1140.0,5.0,12300.0,111.47,138.0
+1421,Ourém,Santarém,continente,10.25,8.23,70.12,49.07,1000.0,5.7,12147.0,124.52,139.0
+1410,Entroncamento,Santarém,continente,10.19,8.66,67.68,48.79,1227.0,6.79,14161.0,117.63,140.0
+4302,Praia da Vitória,Ilha Terceira,azores,10.14,8.14,63.39,48.54,1046.0,5.45,12846.0,124.52,141.0
+1004,Batalha,Leiria,continente,10.03,7.36,76.62,47.99,950.0,6.05,12915.0,136.3,142.0
+0607,Lousã,Coimbra,continente,10.01,7.94,56.74,47.92,1012.0,4.78,12752.0,126.15,143.0
+4202,Nordeste,Ilha de São Miguel,azores,9.8,8.25,,46.91,866.0,,10501.0,118.82,144.0
+0610,Montemor-o-Velho,Coimbra,continente,9.76,7.36,61.05,46.71,955.0,4.98,12981.0,132.62,145.0
+4301,Angra do Heroísmo,Ilha Terceira,azores,9.71,8.02,53.93,46.5,1070.0,4.95,13341.0,121.12,146.0
+3109,Santana,Ilha da Madeira,madeira,9.68,9.0,,46.35,1023.0,,11367.0,107.59,147.0
+1610,Vila Nova de Cerveira,Viana do Castelo,continente,9.66,7.55,59.72,46.24,883.0,4.55,11689.0,127.86,148.0
+1608,Valença,Viana do Castelo,continente,9.57,7.78,61.62,45.83,893.0,4.79,11480.0,123.07,149.0
+0106,Castelo de Paiva,Aveiro,continente,9.46,8.29,44.96,45.27,886.0,3.51,10693.0,114.13,150.0
+4701,Horta,Ilha do Faial,azores,9.34,7.89,43.51,44.71,1069.0,4.15,13556.0,118.44,151.0
+1420,Vila Nova da Barquinha,Santarém,continente,9.27,7.66,,44.39,1097.0,,14328.0,121.12,152.0
+0402,Bragança,Bragança,continente,9.2,7.11,38.25,44.03,932.0,3.23,13104.0,129.33,153.0
+1713,Vila Pouca de Aguiar,Vila Real,continente,9.19,7.47,51.61,43.99,767.0,3.59,10263.0,122.95,154.0
+4101,Vila do Porto,Ilha de Santa Maria,azores,9.14,8.88,,43.73,1188.0,,13372.0,102.83,155.0
+0103,Anadia,Aveiro,continente,9.1,6.44,73.43,43.55,776.0,5.22,12056.0,141.33,156.0
+0509,Sertã,Castelo Branco,continente,9.03,7.8,52.75,43.25,857.0,4.17,10991.0,115.86,157.0
+0711,Reguengos de Monsaraz,Évora,continente,9.02,7.18,51.62,43.17,868.0,4.14,12090.0,125.62,158.0
+0614,Penela,Coimbra,continente,9.02,7.19,,43.19,828.0,,11513.0,125.46,158.0
+1810,Oliveira de Frades,Viseu,continente,8.97,7.1,53.37,42.93,847.0,4.2,11930.0,126.32,160.0
+1411,Ferreira do Zêzere,Santarém,continente,8.93,7.28,55.53,42.73,843.0,4.37,11584.0,122.66,161.0
+1016,Porto de Mós,Leiria,continente,8.86,6.68,53.88,42.43,833.0,4.22,12463.0,132.61,162.0
+1408,Constância,Santarém,continente,8.73,7.09,,41.8,938.0,,13231.0,123.16,163.0
+1418,Tomar,Santarém,continente,8.71,7.6,66.52,41.7,943.0,6.0,12407.0,114.62,164.0
+1709,Ribeira de Pena,Vila Real,continente,8.7,7.7,,41.66,758.0,,9840.0,112.98,165.0
+4205,Ribeira Grande,Ilha de São Miguel,azores,8.62,7.11,53.7,41.24,849.0,4.41,11936.0,121.12,166.0
+0407,Mirandela,Bragança,continente,8.61,7.01,35.68,41.22,805.0,2.78,11480.0,122.8,167.0
+0304,Cabeceiras de Basto,Braga,continente,8.59,7.12,58.17,41.14,750.0,4.23,10528.0,120.65,168.0
+0310,Terras de Bouro,Braga,continente,8.43,7.14,,40.36,763.0,,10693.0,118.15,169.0
+1419,Torres Novas,Santarém,continente,8.34,6.87,67.51,39.9,889.0,6.0,12944.0,121.36,170.0
+0305,Celorico de Basto,Braga,continente,8.32,6.6,53.46,39.85,669.0,3.58,10132.0,126.08,171.0
+1412,Golegã,Santarém,continente,8.23,6.76,54.98,39.38,851.0,4.74,12588.0,121.68,172.0
+1605,Paredes de Coura,Viana do Castelo,continente,8.1,6.56,52.73,38.78,708.0,3.84,10800.0,123.59,173.0
+1213,Ponte de Sor,Portalegre,continente,8.05,7.19,55.67,38.53,812.0,4.68,11297.0,111.98,174.0
+0205,Beja,Beja,continente,8.05,7.03,63.52,38.52,935.0,6.15,13306.0,114.52,174.0
+1814,Santa Comba Dão,Viseu,continente,8.02,6.57,50.6,38.4,763.0,4.01,11620.0,122.18,176.0
+1816,São Pedro do Sul,Viseu,continente,7.98,7.0,64.34,38.18,784.0,5.27,11204.0,113.99,177.0
+0503,Covilhã,Castelo Branco,continente,7.94,7.3,54.74,37.99,870.0,5.0,11915.0,108.7,178.0
+1820,Tarouca,Viseu,continente,7.93,6.36,,37.96,700.0,,11001.0,124.62,179.0
+0617,Vila Nova de Poiares,Coimbra,continente,7.9,6.02,50.07,37.83,714.0,3.77,11858.0,131.25,180.0
+0609,Miranda do Corvo,Coimbra,continente,7.9,6.06,67.53,37.83,733.0,5.22,12090.0,130.34,180.0
+0311,Vieira do Minho,Braga,continente,7.86,6.41,,37.63,669.0,,10436.0,122.63,182.0
+0117,Sever do Vouga,Aveiro,continente,7.79,5.91,51.22,37.31,703.0,3.85,11895.0,131.87,183.0
+1808,Mortágua,Viseu,continente,7.77,5.73,47.78,37.18,675.0,3.46,11785.0,135.61,184.0
+0702,Arraiolos,Évora,continente,7.77,6.42,47.75,37.19,820.0,4.2,12772.0,121.0,184.0
+1805,Lamego,Viseu,continente,7.72,6.46,47.86,36.97,730.0,3.77,11303.0,119.58,186.0
+1712,Valpaços,Vila Real,continente,7.71,6.12,50.53,36.91,564.0,3.08,9213.0,125.96,187.0
+0707,Mora,Évora,continente,7.68,6.82,,36.78,833.0,,12209.0,112.62,188.0
+1705,Mondim de Basto,Vila Real,continente,7.62,6.56,,36.49,662.0,,10096.0,116.25,189.0
+0405,Macedo de Cavaleiros,Bragança,continente,7.6,6.09,44.86,36.37,624.0,3.07,10239.0,124.68,190.0
+0207,Cuba,Beja,continente,7.44,5.3,,35.62,643.0,,12138.0,140.45,191.0
+0907,Guarda,Guarda,continente,7.37,6.2,44.19,35.3,835.0,4.17,13474.0,118.99,192.0
+0713,Viana do Alentejo,Évora,continente,7.33,5.73,,35.07,713.0,,12439.0,127.82,193.0
+1809,Nelas,Viseu,continente,7.32,5.78,49.81,35.06,690.0,3.91,11930.0,126.64,194.0
+1817,Sátão,Viseu,continente,7.27,5.42,41.04,34.8,593.0,2.79,10949.0,134.22,195.0
+1402,Alcanena,Santarém,continente,7.23,5.86,57.81,34.59,690.0,4.6,11783.0,123.4,196.0
+0701,Alandroal,Évora,continente,7.15,6.19,,34.25,711.0,,11480.0,115.52,197.0
+0504,Fundão,Castelo Branco,continente,7.13,6.34,51.91,34.14,742.0,4.5,11697.0,112.44,198.0
+0615,Soure,Coimbra,continente,7.12,5.63,52.09,34.07,723.0,4.41,12851.0,126.5,199.0
+0710,Redondo,Évora,continente,7.03,6.03,61.96,33.67,692.0,5.08,11479.0,116.67,200.0
+0611,Oliveira do Hospital,Coimbra,continente,7.02,6.02,47.06,33.6,682.0,3.81,11322.0,116.53,201.0
+1407,Chamusca,Santarém,continente,6.99,6.19,44.08,33.48,712.0,3.74,11509.0,113.05,202.0
+0704,Estremoz,Évora,continente,6.97,6.44,44.0,33.37,808.0,4.25,12538.0,108.17,203.0
+0206,Castro Verde,Beja,continente,6.97,5.62,,33.37,819.0,,14580.0,124.09,203.0
+0613,Penacova,Coimbra,continente,6.96,5.13,52.68,33.33,590.0,3.72,11498.0,135.68,205.0
+1207,Elvas,Portalegre,continente,6.89,6.29,50.89,33.0,777.0,4.78,12346.0,109.54,206.0
+0213,Serpa,Beja,continente,6.87,5.9,,32.89,677.0,,11480.0,116.51,207.0
+1302,Baião,Porto,continente,6.75,5.95,46.37,32.31,599.0,3.43,10073.0,113.49,208.0
+1401,Abrantes,Santarém,continente,6.65,5.87,58.67,31.82,715.0,5.26,12180.0,113.22,209.0
+1813,Resende,Viseu,continente,6.63,6.08,,31.74,550.0,,9041.0,109.0,210.0
+4502,Velas,Ilha de São Jorge,azores,6.59,6.19,,31.55,750.0,,12110.0,106.41,211.0
+0508,Proença-a-Nova,Castelo Branco,continente,6.59,5.47,53.7,31.53,627.0,4.26,11464.0,120.43,211.0
+0502,Castelo Branco,Castelo Branco,continente,6.58,5.73,48.24,31.49,743.0,4.54,12956.0,114.71,213.0
+1702,Boticas,Vila Real,continente,6.58,5.5,,31.52,542.0,,9848.0,119.62,213.0
+1821,Tondela,Viseu,continente,6.56,5.15,63.87,31.39,616.0,5.0,11968.0,127.4,215.0
+0214,Vidigueira,Beja,continente,6.53,4.77,,31.27,576.0,,12079.0,136.97,216.0
+1708,Peso da Régua,Vila Real,continente,6.52,5.72,53.38,31.21,642.0,4.38,11219.0,113.94,217.0
+1214,Portalegre,Portalegre,continente,6.49,5.78,37.74,31.07,780.0,3.78,13494.0,112.28,218.0
+0616,Tábua,Coimbra,continente,6.4,5.45,48.76,30.62,606.0,3.85,11118.0,117.34,219.0
+1002,Alvaiázere,Leiria,continente,6.31,5.19,,30.2,573.0,,11049.0,121.65,220.0
+1003,Ansião,Leiria,continente,6.28,4.9,48.93,30.06,562.0,3.65,11481.0,128.27,221.0
+0703,Borba,Évora,continente,6.2,5.59,35.19,29.66,657.0,3.11,11760.0,110.9,222.0
+1008,Figueiró dos Vinhos,Leiria,continente,6.14,5.27,,29.39,595.0,,11289.0,116.5,223.0
+1710,Sabrosa,Vila Real,continente,6.13,5.23,,29.32,558.0,,10660.0,117.02,224.0
+1013,Pedrógão Grande,Leiria,continente,6.11,5.27,,29.23,582.0,,11035.0,115.76,225.0
+0212,Ourique,Beja,continente,6.09,5.07,,29.13,601.0,,11863.0,120.12,226.0
+1706,Montalegre,Vila Real,continente,6.06,5.06,,29.02,487.0,,9616.0,119.72,227.0
+4501,Calheta de São Jorge,Ilha de São Jorge,azores,6.05,6.15,,28.96,691.0,,11230.0,98.32,228.0
+1215,Sousel,Portalegre,continente,6.01,4.77,,28.76,543.0,,11384.0,125.94,229.0
+0208,Ferreira do Alentejo,Beja,continente,5.94,5.04,56.7,28.42,539.0,4.29,10701.0,117.86,230.0
+1711,Santa Marta de Penaguião,Vila Real,continente,5.91,4.96,,28.31,458.0,,9239.0,119.28,231.0
+1417,Sardoal,Santarém,continente,5.9,4.86,,28.23,561.0,,11545.0,121.37,232.0
+0202,Almodôvar,Beja,continente,5.86,5.02,55.52,28.05,618.0,4.88,12310.0,116.7,233.0
+1806,Mangualde,Viseu,continente,5.83,4.65,53.72,27.92,559.0,4.29,12015.0,125.38,234.0
+1202,Arronches,Portalegre,continente,5.78,5.05,,27.65,616.0,,12189.0,114.31,235.0
+1208,Fronteira,Portalegre,continente,5.77,4.85,,27.64,565.0,,11639.0,118.96,236.0
+1803,Castro Daire,Viseu,continente,5.71,5.0,46.02,27.32,506.0,3.4,10123.0,114.19,237.0
+1822,Vila Nova de Paiva,Viseu,continente,5.71,4.49,,27.32,477.0,,10633.0,127.2,237.0
+0406,Miranda do Douro,Bragança,continente,5.7,4.02,43.12,27.28,471.0,2.97,11716.0,141.75,239.0
+1203,Avis,Portalegre,continente,5.64,4.8,,26.99,567.0,,11820.0,117.53,240.0
+0601,Arganil,Coimbra,continente,5.6,4.89,56.22,26.81,557.0,4.66,11387.0,114.48,241.0
+0501,Belmonte,Castelo Branco,continente,5.59,4.84,38.88,26.78,556.0,3.22,11480.0,115.51,242.0
+1824,Vouzela,Viseu,continente,5.5,4.45,44.0,26.33,516.0,3.44,11587.0,123.5,243.0
+0709,Portel,Évora,continente,5.43,4.46,,26.01,509.0,,11409.0,121.81,244.0
+1802,Carregal do Sal,Viseu,continente,5.4,4.54,46.49,25.84,528.0,3.79,11636.0,118.94,245.0
+1807,Moimenta da Beira,Viseu,continente,5.39,4.31,42.13,25.79,465.0,3.03,10787.0,124.98,246.0
+0714,Vila Viçosa,Évora,continente,5.3,4.75,38.9,25.35,588.0,3.6,12370.0,111.4,247.0
+0201,Aljustrel,Beja,continente,5.27,4.59,56.82,25.24,619.0,5.56,13492.0,114.91,248.0
+0210,Moura,Beja,continente,5.26,4.66,47.16,25.16,535.0,4.0,11480.0,112.79,249.0
+1210,Marvão,Portalegre,continente,5.26,4.6,,25.16,540.0,,11744.0,114.31,249.0
+0912,Seia,Guarda,continente,5.25,4.59,46.93,25.14,517.0,3.85,11259.0,114.37,251.0
+1704,Mesão Frio,Vila Real,continente,5.19,4.94,,24.85,500.0,,10118.0,105.06,252.0
+0403,Carrazeda de Ansiães,Bragança,continente,5.13,4.45,,24.54,448.0,,10076.0,115.29,253.0
+0901,Aguiar da Beira,Guarda,continente,5.12,4.07,,24.52,438.0,,10757.0,125.82,254.0
+1701,Alijó,Vila Real,continente,5.11,4.69,,24.47,460.0,,9810.0,109.01,255.0
+0401,Alfândega da Fé,Bragança,continente,5.0,4.08,,23.95,417.0,,10225.0,122.66,256.0
+1815,São João da Pesqueira,Viseu,continente,4.95,4.27,,23.71,420.0,,9840.0,116.05,257.0
+1205,Castelo de Vide,Portalegre,continente,4.9,4.64,,23.45,583.0,,12576.0,105.68,258.0
+1204,Campo Maior,Portalegre,continente,4.77,4.19,30.55,22.81,556.0,2.97,13276.0,113.79,259.0
+1007,Castanheira de Pêra,Leiria,continente,4.73,4.03,,22.65,430.0,,10671.0,117.41,260.0
+0909,Mêda,Guarda,continente,4.72,3.99,,22.6,416.0,,10420.0,118.24,261.0
+1811,Penalva do Castelo,Viseu,continente,4.7,3.81,,22.51,422.0,,11070.0,123.35,262.0
+0412,Vinhais,Bragança,continente,4.68,3.92,,22.42,391.0,,9977.0,119.5,263.0
+0410,Vila Flor,Bragança,continente,4.61,3.85,36.08,22.05,383.0,2.5,9942.0,119.57,264.0
+0913,Trancoso,Guarda,continente,4.6,3.78,,22.02,417.0,,11033.0,121.69,265.0
+0408,Mogadouro,Bragança,continente,4.56,3.59,,21.83,391.0,,10900.0,127.15,266.0
+0606,Góis,Coimbra,continente,4.54,3.95,,21.71,453.0,,11480.0,114.94,267.0
+0914,Vila Nova de Foz Côa,Guarda,continente,4.51,3.84,33.57,21.57,414.0,2.57,10791.0,117.46,268.0
+0506,Oleiros,Castelo Branco,continente,4.49,4.22,,21.49,460.0,,10912.0,106.5,269.0
+0906,Gouveia,Guarda,continente,4.49,3.77,38.57,21.51,418.0,2.99,11078.0,119.07,269.0
+1211,Monforte,Portalegre,continente,4.48,3.8,,21.43,440.0,,11578.0,117.78,271.0
+1603,Melgaço,Viana do Castelo,continente,4.41,3.6,43.57,21.13,400.0,3.29,11101.0,122.51,272.0
+1201,Alter do Chão,Portalegre,continente,4.39,3.79,,20.99,456.0,,12039.0,115.78,273.0
+0209,Mértola,Beja,continente,4.36,4.4,,20.89,500.0,,11374.0,99.25,274.0
+0510,Vila de Rei,Castelo Branco,continente,4.25,3.74,,20.37,433.0,,11593.0,113.91,275.0
+0910,Pinhel,Guarda,continente,3.97,3.33,,18.99,360.0,,10803.0,119.05,276.0
+1804,Cinfães,Viseu,continente,3.95,3.65,52.5,18.92,336.0,3.72,9193.0,108.12,277.0
+1819,Tabuaço,Viseu,continente,3.92,3.45,,18.78,334.0,,9692.0,113.87,278.0
+0404,Freixo de Espada à Cinta,Bragança,continente,3.86,3.26,,18.5,364.0,,11166.0,118.54,279.0
+1212,Nisa,Portalegre,continente,3.85,3.33,,18.44,395.0,,11866.0,115.74,280.0
+0411,Vimioso,Bragança,continente,3.84,2.96,,18.36,316.0,,10664.0,129.43,281.0
+0903,Celorico da Beira,Guarda,continente,3.79,3.17,,18.13,363.0,,11446.0,119.45,282.0
+1707,Murça,Vila Real,continente,3.73,3.27,,17.87,324.0,,9903.0,114.11,283.0
+0908,Manteigas,Guarda,continente,3.6,3.5,,17.22,389.0,,11120.0,102.85,284.0
+4401,Santa Cruz da Graciosa,Ilha da Graciosa,azores,3.57,3.06,,17.1,369.0,,12054.0,116.66,285.0
+0902,Almeida,Guarda,continente,3.47,2.84,,16.59,335.0,,11783.0,121.93,286.0
+1818,Sernancelhe,Viseu,continente,3.39,2.73,,16.21,287.0,,10530.0,124.26,287.0
+0409,Torre de Moncorvo,Bragança,continente,3.34,2.94,,16.0,313.0,,10644.0,113.63,288.0
+1209,Gavião,Portalegre,continente,3.17,2.89,,15.19,333.0,,11527.0,109.86,289.0
+1206,Crato,Portalegre,continente,3.07,2.63,,14.72,313.0,,11884.0,116.73,290.0
+0905,Fornos de Algodres,Guarda,continente,3.05,2.68,,14.61,291.0,,10843.0,113.75,291.0
+0511,Vila Velha de Ródão,Castelo Branco,continente,2.92,2.57,,13.97,325.0,,12667.0,113.71,292.0
+0911,Sabugal,Guarda,continente,2.92,2.51,42.66,13.97,289.0,3.52,11534.0,116.48,292.0
+1413,Mação,Santarém,continente,2.75,2.35,40.23,13.16,273.0,3.33,11630.0,117.08,294.0
+0612,Pampilhosa da Serra,Coimbra,continente,2.65,2.38,,12.7,274.0,,11506.0,111.38,295.0
+0507,Penamacor,Castelo Branco,continente,2.63,2.67,,12.61,300.0,,11234.0,98.65,296.0
+0904,Figueira de Castelo Rodrigo,Guarda,continente,2.52,2.22,,12.07,240.0,,10803.0,113.5,297.0
+0505,Idanha-a-Nova,Castelo Branco,continente,2.5,2.4,,11.98,274.0,,11439.0,104.47,298.0
+1801,Armamar,Viseu,continente,2.43,2.05,,11.61,208.0,,10168.0,118.57,299.0
+0203,Alvito,Beja,continente,,,,,764.0,,,133.63,
+0204,Barrancos,Beja,continente,,,,,,,,109.64,
+0708,Mourão,Évora,continente,,,,,711.0,,,144.57,
+0802,Alcoutim,Faro,continente,,,,,769.0,,,98.42,
+1812,Penedono,Viseu,continente,,,,,,,,125.3,
+3106,Porto Moniz,Ilha da Madeira,madeira,,,,,1028.0,,,100.83,
+4801,Lajes das Flores,Ilha das Flores,azores,,,,,,,,107.88,
+4802,Santa Cruz das Flores,Ilha das Flores,azores,,,,,,,,109.99,
+4901,Corvo,Ilha do Corvo,azores,,,,,,,,100.94,

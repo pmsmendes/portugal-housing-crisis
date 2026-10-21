@@ -2,6 +2,13 @@
 
 Analytic and engineering choices, newest first. One short entry each: what, why, alternatives rejected.
 
+## 2026-10-21 — Phase 1 figures and maps
+- **Style:** colors come from the validated reference palette of the dataviz method (blue and orange accents with colorblind separation dE 24.7, gray for context, a one-hue blue ramp for levels, a blue-red ramp with a gray midpoint for change). The red arm of the diverging ramp is built at the same OKLCH lightness and chroma as the blue arm. One axis per panel (no dual axes), emphasis form for single stories, a legend whenever two or more series, direct labels only where lines do not collide.
+- **Titles are computed from the plotted data** (functions in `viz/charts.py`, tested), so a title cannot disagree with its chart.
+- **Maps:** fixed class breaks per indicator (same breaks across years), the Azores and Madeira as insets, hatched fill for municipalities without a published value, counts per class in the legend. Geometry is simplified to 150 m for drawing only.
+- **Notebooks** (`notebooks/p1_evidence/`) only call `src/pthousing`; analysis helpers are in `analysis/descriptive.py`. They are committed with outputs so the figures render on GitHub.
+- **Comparisons across years use a fixed set of municipalities** (`balanced_sample`, `district_summary`) so that a changing sample is not read as a trend.
+
 ## 2026-10-21 — Panels, deflator and affordability indicators
 - **What:** `build_panel.py` writes `panel_municipality_year` (308 × 1995–2025) and `national_quarterly` (2005Q1+); `harmonize.annual_deflator` / `quarterly_deflator` / `to_real` deflate to 2024 euros; `features/affordability.py` holds PTI, RTI, mortgage burden and the supply gap, defined in `docs/methodology.md`.
 - **Dwelling size:** INE prices and rents are per m², so a dwelling is the per-m² value times the census mean useful area of the municipality (interpolated between 2011 and 2021). It describes occupied homes and biases levels upwards, hence the fixed 100 m² benchmark variants. Rejected: one invented national size without a source.
