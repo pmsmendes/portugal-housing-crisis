@@ -1,0 +1,327 @@
+"""Cleaned per-dataset interim tables: ``data/raw`` -> ``data/interim/<table>.parquet``.
+
+One builder per table. Municipal tables keep the full 308-municipality grid; cells that the source
+suppresses stay NaN (never zero). Values are nominal, in the unit given by the column suffix; real values
+and indicators are built later (``harmonize.py`` deflator, ``features/``).
+"""
+
+import re
+from collections.abc import Callable
+from pathlib import Path
+
+import pandas as pd
+
+from pthousing.config import INTERIM, MUNI_KEY
+from pthousing.data import harmonize
+from pthousing.data.sources import bportugal, caop, eurostat, ine, rnal
+
+SIZE = {"T": "total", "1": "br_0_1", "2": "br_2", "3": "br_3", "4": "br_4plus"}
+PRICE_CATEGORY = {"H1": "total", "H11": "new", "H12": "existing"}
+VALUATION_TYPE = {"T": "total", "1": "flats", "2": "villas"}
+SEX = {"T": "total", "1": "m", "2": "f"}
+BP_COLUMNS = {
+    "new_housing_aprc": "mortgage_aprc_new_pct",
+    "new_housing_rate_lt1y": "mortgage_rate_new_lt1y_pct",
+    "stock_housing_rate_gt5y": "mortgage_rate_stock_gt5y_pct",
+    "new_housing_volume_lt1y": "mortgage_new_lt1y_volume_eur_m",
+    "new_fixed_rate_p50": "mortgage_rate_new_fixed_p50_pct",
+}
+
+
+def _municipal(code: str) -> pd.DataFrame:
+    """Municipality rows (308 CAOP municipalities) of a raw INE indicator."""
+    return harmonize.keep_municipalities(ine.read_indicator(code))
+
+
+def _national(code: str, dim_3: str = "T") -> pd.DataFrame:
+    df = ine.read_indicator(code)
+    return df[(df["geocod"] == "PT") & (df["dim_3"] == dim_3)]
+
+
+def _quarter(df: pd.DataFrame) -> pd.DataFrame:
+    return df.assign(quarter=df["period_start"].dt.quarter)
+
+
+# ---- INE municipal tables ------------------------------------------------------------------------
+
+
+def build_ine_median_price_sqm() -> pd.DataFrame:
+    """Median sale price per m2 (last 12 months) by municipality, quarter and dwelling category.
+
+    Methodology 2018 until 3Q2019, methodology 2022 from 4Q2019 (the two agree on the overlap, median
+    ratio 1.002, so the overlap quarters are taken from the 2022 series). Only 'total' exists before 2019.
+    """
+    new = _municipal("0012234")
+    new = new.assign(category=new["dim_3"].map(PRICE_CATEGORY), method="2022")
+    old = _municipal("0009490")
+    old = old[old["period_start"] < new["period_start"].min()].assign(
+        category="total", method="2018"
+    )
+    prices = pd.concat([old, new], ignore_index=True).rename(columns={"value": "price_sqm_eur"})
+
+    sales = _municipal("0014363")[[MUNI_KEY, "period_start", "value"]].rename(
+        columns={"value": "sales_12m_n"}
+    )
+    sales["category"] = "total"
+    out = prices.merge(sales, on=[MUNI_KEY, "period_start", "category"], how="left")
+    out = _quarter(out)
+    cols = [MUNI_KEY, "period_start", "year", "quarter", "category", "method"]
+    return out[[*cols, "price_sqm_eur", "sales_12m_n"]].sort_values(cols, ignore_index=True)
+
+
+def build_ine_median_rent_sqm() -> pd.DataFrame:
+    """Median rent per m2 of new leases, annual, with the number of new leases (published from 33 leases)."""
+    rent = _municipal("0012600")[[MUNI_KEY, "year", "value"]].rename(
+        columns={"value": "rent_sqm_eur"}
+    )
+    leases = _municipal("0012601")[[MUNI_KEY, "year", "value"]].rename(
+        columns={"value": "new_leases_n"}
+    )
+    out = rent.merge(leases, on=[MUNI_KEY, "year"], how="outer", validate="one_to_one")
+    return out.sort_values([MUNI_KEY, "year"], ignore_index=True)
+
+
+def build_ine_income() -> pd.DataFrame:
+    """Gross reported income per tax household (IRS), mean and median, 2015-2024.
+
+    NUTS 2013 vintage up to 2017, NUTS 2024 vintage from 2018 (identical on 2018-2021).
+    """
+    parts = []
+    for mean_code, median_code, vintage, keep in (
+        ("0009933", "0009934", "2013", lambda y: y < 2018),
+        ("0012748", "0012749", "2024", lambda y: y >= 2018),
+    ):
+        mean = _municipal(mean_code)[[MUNI_KEY, "year", "value"]].rename(
+            columns={"value": "income_mean_eur"}
+        )
+        median = _municipal(median_code)[[MUNI_KEY, "year", "value"]].rename(
+            columns={"value": "income_median_eur"}
+        )
+        both = mean.merge(median, on=[MUNI_KEY, "year"], validate="one_to_one")
+        parts.append(both[keep(both["year"])].assign(vintage=vintage))
+    return pd.concat(parts, ignore_index=True).sort_values([MUNI_KEY, "year"], ignore_index=True)
+
+
+def build_ine_construction() -> pd.DataFrame:
+    """New family dwellings licensed and completed, by municipality, year and number of bedrooms.
+
+    1995-2025 series (NUTS 2002 geography; identical to the NUTS 2024 series on the overlap). Years before
+    Vizela, Trofa and Odivelas existed are NaN, not zero.
+    """
+    frames = []
+    for code, name in (("0000087", "licensed_n"), ("0000076", "completed_n")):
+        df = harmonize.mask_pre_creation(_municipal(code))
+        df = df.assign(size=df["dim_3"].map(SIZE)).rename(columns={"value": name})
+        frames.append(df[[MUNI_KEY, "year", "size", name]])
+    out = frames[0].merge(
+        frames[1], on=[MUNI_KEY, "year", "size"], how="outer", validate="one_to_one"
+    )
+    return out.sort_values([MUNI_KEY, "year", "size"], ignore_index=True)
+
+
+def build_ine_bank_valuation() -> pd.DataFrame:
+    """Median bank appraisal value per m2 by municipality and month (largely suppressed: ~64% NaN)."""
+    df = _municipal("0012248")
+    df = df.assign(type=df["dim_3"].map(VALUATION_TYPE), month=df["period_start"].dt.month)
+    df = df.rename(columns={"value": "valuation_sqm_eur"})
+    cols = [MUNI_KEY, "period_start", "year", "month", "type"]
+    return df[[*cols, "valuation_sqm_eur"]].sort_values(cols, ignore_index=True)
+
+
+def build_ine_bank_valuation_annual() -> pd.DataFrame:
+    """Annual median bank appraisal value per m2 by municipality (INE computes it on all the year's appraisals)."""
+    df = _municipal("0012256")
+    df = df.assign(type=df["dim_3"].map(VALUATION_TYPE)).rename(
+        columns={"value": "valuation_sqm_eur"}
+    )
+    cols = [MUNI_KEY, "year", "type"]
+    return df[[*cols, "valuation_sqm_eur"]].sort_values(cols, ignore_index=True)
+
+
+def build_ine_census() -> pd.DataFrame:
+    """Census 2021: vacant dwellings (% of classic dwellings) and occupied dwellings by tenure."""
+    vacant = _municipal("0012517")[[MUNI_KEY, "year", "value"]].rename(
+        columns={"year": "census_year", "value": "vacant_dwellings_pct"}
+    )
+    tenure = _municipal("0012531")
+    tenure = tenure[tenure["dim_4"] == "T"]  # total over years of residence
+    names = {
+        "T": "occupied_dwellings_n",
+        "1": "owner_occupied_n",
+        "3": "rented_n",
+        "4": "other_tenure_n",
+    }
+    wide = tenure.pivot(index=[MUNI_KEY, "year"], columns="dim_3", values="value").rename(
+        columns=names
+    )
+    wide = wide.reset_index().rename(columns={"year": "census_year"})
+    wide.columns.name = None
+    out = vacant.merge(wide, on=[MUNI_KEY, "census_year"], validate="one_to_one")
+    cols = [MUNI_KEY, "census_year", "vacant_dwellings_pct", *names.values()]
+    return out[cols].sort_values(MUNI_KEY, ignore_index=True)
+
+
+def _age_group(label: str) -> str:
+    if label == "Total":
+        return "total"
+    if m := re.fullmatch(r"(\d+) - (\d+) years", label):
+        return f"{m[1]}-{m[2]}"
+    if m := re.fullmatch(r"(\d+) and more years", label):
+        return f"{m[1]}+"
+    raise ValueError(f"Unrecognised age group label: {label!r}")
+
+
+def build_ine_population() -> pd.DataFrame:
+    """Resident population by municipality, year, sex and five-year age group (totals included)."""
+    df = _municipal("0008273")
+    df = df.assign(sex=df["dim_3"].map(SEX), age_group=df["dim_4_t"].map(_age_group))
+    df = df.rename(columns={"value": "population_n"})
+    cols = [MUNI_KEY, "year", "sex", "age_group"]
+    return df[[*cols, "population_n"]].sort_values(cols, ignore_index=True)
+
+
+# ---- INE national tables -------------------------------------------------------------------------
+
+
+def build_ine_cpi() -> pd.DataFrame:
+    """Consumer price index, all items, Portugal, annual (2025 = 100)."""
+    df = _national("0014642")
+    return df.rename(columns={"value": "cpi_index_b2025"})[["year", "cpi_index_b2025"]].sort_values(
+        "year", ignore_index=True
+    )
+
+
+def build_ine_cpi_monthly() -> pd.DataFrame:
+    """Consumer price index, all items, Portugal, monthly (2025 = 100)."""
+    df = _national("0014640").assign(month=lambda d: d["period_start"].dt.month)
+    return df.rename(columns={"value": "cpi_index_b2025"})[
+        ["period_start", "year", "month", "cpi_index_b2025"]
+    ].sort_values("period_start", ignore_index=True)
+
+
+def build_ine_hpi() -> pd.DataFrame:
+    """National house price index (2025 = 100), quarterly, total / new / existing dwellings."""
+    df = ine.read_indicator("0014765")
+    df = _quarter(df.assign(category=df["dim_3"].map(PRICE_CATEGORY)))
+    df = df.rename(columns={"value": "hpi_index_b2025"})
+    cols = ["period_start", "year", "quarter", "category"]
+    return df[[*cols, "hpi_index_b2025"]].sort_values(cols, ignore_index=True)
+
+
+# ---- other sources -------------------------------------------------------------------------------
+
+
+def build_bp_mortgage() -> pd.DataFrame:
+    """Monthly mortgage rates and new-loan volume, one column per series (month-end dates)."""
+    df = bportugal.read_all()
+    wide = df.pivot(index="date", columns="series_key", values="value").rename(columns=BP_COLUMNS)
+    wide = wide.reset_index()
+    wide.columns.name = None
+    wide.insert(1, "period_start", wide["date"].dt.to_period("M").dt.to_timestamp())
+    wide.insert(2, "year", wide["date"].dt.year)
+    wide.insert(3, "month", wide["date"].dt.month)
+    return wide.sort_values("date", ignore_index=True)
+
+
+def build_eurostat_hpi() -> pd.DataFrame:
+    """House price index (2015 = 100) for Portugal, peers and the EU27, quarterly."""
+    df = eurostat.read("eurostat_hpi")
+    df = _quarter(df).rename(columns={"value": "hpi_index_b2015"})
+    cols = ["geo", "period_start", "year", "quarter"]
+    return df[[*cols, "hpi_index_b2015"]].sort_values(cols, ignore_index=True)
+
+
+def build_eurostat_hicp() -> pd.DataFrame:
+    """HICP all-items annual average index (2015 = 100) for Portugal and the EU27."""
+    df = eurostat.read("eurostat_hicp").rename(columns={"value": "hicp_index_b2015"})
+    return df[["geo", "year", "hicp_index_b2015"]].sort_values(["geo", "year"], ignore_index=True)
+
+
+def build_rnal_al() -> pd.DataFrame:
+    """Registered short-term rental units of the latest snapshot (mainland only)."""
+    return rnal.read().sort_values("rnal_n", ignore_index=True)
+
+
+def build_caop_municipalities() -> pd.DataFrame:
+    return caop.read_municipalities()
+
+
+INE_CODES = (
+    "0012234", "0009490", "0014363",  # sale prices (2022 method, 2018 method, sales count)
+    "0012600", "0012601",  # rents, new leases
+    "0009933", "0009934", "0012748", "0012749",  # income, NUTS 2013 and 2024 vintages
+    "0000087", "0000076",  # dwellings licensed, completed (1995+)
+    "0012248", "0012256",  # bank valuation, monthly and annual
+    "0012517", "0012531",  # census 2021
+    "0008273", "0014642", "0014640", "0014765",  # population, CPI annual / monthly, HPI
+)  # fmt: skip
+SOURCES = ("ine", "bportugal", "eurostat", "rnal", "caop")
+
+
+def download(sources: list[str] | None = None, refresh: bool = False) -> None:
+    """Download the raw inputs of the interim tables (cached files are reused unless ``refresh``)."""
+    chosen = set(sources or SOURCES)
+    if unknown := chosen - set(SOURCES):
+        raise ValueError(f"Unknown source ids {sorted(unknown)}; choose from {list(SOURCES)}")
+    if "ine" in chosen:
+        for code in INE_CODES:
+            ine.fetch_indicator(code, refresh=refresh)
+    if "bportugal" in chosen:
+        bportugal.fetch_all(refresh=refresh)
+    if "eurostat" in chosen:
+        for dataset_id in ("eurostat_hpi", "eurostat_hicp"):
+            eurostat.fetch(dataset_id, refresh=refresh)
+    if "rnal" in chosen:
+        rnal.fetch(refresh=refresh)  # a new dated snapshot each day
+    if "caop" in chosen:
+        caop.download(refresh=refresh)
+
+
+BUILDERS: dict[str, Callable[[], pd.DataFrame]] = {
+    "ine_median_price_sqm": build_ine_median_price_sqm,
+    "ine_median_rent_sqm": build_ine_median_rent_sqm,
+    "ine_income": build_ine_income,
+    "ine_construction": build_ine_construction,
+    "ine_bank_valuation": build_ine_bank_valuation,
+    "ine_bank_valuation_annual": build_ine_bank_valuation_annual,
+    "ine_census": build_ine_census,
+    "ine_population": build_ine_population,
+    "ine_cpi": build_ine_cpi,
+    "ine_cpi_monthly": build_ine_cpi_monthly,
+    "ine_hpi": build_ine_hpi,
+    "bp_mortgage": build_bp_mortgage,
+    "eurostat_hpi": build_eurostat_hpi,
+    "eurostat_hicp": build_eurostat_hicp,
+    "rnal_al": build_rnal_al,
+    "caop_municipalities": build_caop_municipalities,
+}
+
+
+def interim_path(table: str) -> Path:
+    return INTERIM / f"{table}.parquet"
+
+
+def build(table: str) -> Path:
+    """Build one interim table and write it to ``data/interim/<table>.parquet``."""
+    df = BUILDERS[table]()
+    path = interim_path(table)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    df.to_parquet(path, index=False)
+    return path
+
+
+def build_all(tables: list[str] | None = None) -> dict[str, Path]:
+    return {name: build(name) for name in (tables or BUILDERS)}
+
+
+def read(table: str) -> pd.DataFrame:
+    path = interim_path(table)
+    if not path.exists():
+        raise FileNotFoundError(
+            f"{path.name} not in data/interim; run interim.build('{table}') first"
+        )
+    if table == "caop_municipalities":
+        import geopandas as gpd
+
+        return gpd.read_parquet(path)
+    return pd.read_parquet(path)

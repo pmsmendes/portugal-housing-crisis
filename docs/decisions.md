@@ -2,6 +2,12 @@
 
 Analytic and engineering choices, newest first. One short entry each: what, why, alternatives rejected.
 
+## 2026-10-21 — Interim tables and validation
+- **What:** `interim.py` builds one parquet per dataset in `data/interim/` (16 tables); `validate.py` checks them with pandera schemas (types, ranges, categories, unique keys, no unexpected columns), grid checks (308 municipalities in every period), consistency checks (totals = sum of parts, source publication rules) and cross-source checks (INE vs Eurostat HPI and CPI/HICP). `scripts/run_pipeline.py` runs download, build and validate.
+- **Conventions:** municipal tables keep the full grid, with suppressed cells NaN (not dropped, not zero); nominal values, unit in the column suffix; index base in the column name (`_b2025`, `_b2015`); splices made at table-build time (prices 2018 -> 2022 method; income 2013 -> 2024 vintage; construction masks pre-creation years); rents are annual only (the semi-annual series is not built).
+- **Thresholds come from the data:** a check is written for what the source guarantees, not tuned to pass. Examples: completions size split must never exceed the total and, from 2003, miss under 0.1% of dwellings (measured 0.008%); a published rent needs at least 33 new leases.
+- **Rejected:** dropping suppressed rows (hides the grid and the coverage), one check per file inside the builders (validation stays separate and re-runnable).
+
 ## 2026-10-21 — Rates, Eurostat and RNAL ingestion
 - **What:** one JSON-stat parser (`sources/jsonstat.py`) for Eurostat and BPstat; each BPstat series stored with its metadata and the dataset response filtered to it (dataset and domain are looked up from the series id, nothing hardcoded); Eurostat queries are parameter dicts in `sources.yaml` with a peer set (ES, IT, FR, DE, IE, EU27). RNAL is downloaded in pages and kept as a dated snapshot.
 - **Why:** the registry only lists live registrations, so history can only be built by keeping snapshots from now on. Business names and street addresses are not requested or stored (not needed; the project is public).
