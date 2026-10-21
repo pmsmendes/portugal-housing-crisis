@@ -80,3 +80,29 @@ def test_keep_municipalities_and_unmatched_codes():
     assert harmonize.keep_municipalities(df, cw)["muni_code"].tolist() == ["1106"]
     unmatched = harmonize.unmatched_codes(df, cw)
     assert unmatched["geo_name"].tolist() == ["Amadora city"]
+
+
+def test_crosswalk_marks_municipalities_created_after_1995():
+    cw = harmonize.build_crosswalk(
+        _caop().assign(muni_code=["0101", "0314"]),
+        _ine({"0101": "16D", "0314": "16B"}),
+        _ine({"0101": "191", "0314": "1D1"}),
+    )
+    valid_from = cw.set_index("muni_code")["valid_from_year"]
+    assert pd.isna(valid_from["0101"])
+    assert valid_from["0314"] == 1998
+
+
+def test_mask_pre_creation_only_touches_new_municipalities_before_their_first_year():
+    cw = pd.DataFrame({"muni_code": ["0101", "0314"], "valid_from_year": [None, "1998"]})
+    df = pd.DataFrame(
+        {
+            "muni_code": ["0101", "0101", "0314", "0314", "0314"],
+            "year": [1995, 1998, 1995, 1997, 1998],
+            "value": [5.0, 6.0, 0.0, 0.0, 8.0],
+        }
+    )
+    out = harmonize.mask_pre_creation(df, cw)
+    assert out["value"].isna().tolist() == [False, False, True, True, False]
+    assert out["value"].dropna().tolist() == [5.0, 6.0, 8.0]
+    assert df["value"].notna().all()  # input untouched

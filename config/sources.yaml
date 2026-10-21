@@ -32,7 +32,9 @@ ine:
       sales_count_12m: "0014363"     # number of sales (12 months), 4Q2019 - 1Q2026, 308 municipalities
       annual_median: "0012254"       # annual 2019-2025 (by dwelling typology)
     format: json
-    notes: Methodology break 2018 -> 2022; do not splice the levels without an overlap check.
+    notes: >
+      dim_3: H1 total, H11 new, H12 existing (2022 method). Overlap check done (median ratio 1.002): use 0009490 up to 3Q2019
+      and 0012234 from 4Q2019. 'New' is blank in 52% of municipality-quarters; use Total / Existing.
   ine_median_rent_sqm:
     indicator_id: "0012598"          # semi-annual last-12-months median, 2nd sem 2020 - 2nd sem 2024, NUTS 2024
     alt_indicator_ids:
@@ -53,7 +55,9 @@ ine:
       annual: "0012256"              # 2011 - 2025
       monthly_municipality_2013: "0010042"   # Jan 2011 - Nov 2023 (older vintage)
     format: json
-    notes: 308 municipalities x 3 types in last period; small municipalities suppressed (publishing threshold ~33 valuations).
+    notes: >
+      dim_3: T total, 1 flats, 2 villas. All 308 municipalities listed, but 64% of Total cells are blank (about 118
+      municipalities with a value in a typical month); annual 0012256 is still 44% blank.
   ine_income:
     indicator_id: "0012748"          # gross reported income per taxable person, annual 2018 - 2024, NUTS 2024 (308 municipalities)
     alt_indicator_ids:
@@ -61,11 +65,15 @@ ine:
       nuts2013: "0009933"            # 2015 - 2021 (NUTS 2013 vintage)
       median_nuts2013: "0009934"
     format: json
-    notes: IRS-based; unit is the tax household, not the person. Use the median series for affordability ratios.
+    notes: >
+      IRS-based; unit is the tax household, not the person. Use the median series for affordability ratios.
+      NUTS 2013 and 2024 vintages are identical on 2018-2021: take 0009933/4 for 2015-2017 and 0012748/9 from 2018.
   ine_population:
     indicator_id: "0008273"          # resident population by sex/age, annual 2011 - 2023, NUTS 2013
     format: json
-    notes: A newer vintage through 2025 (NUTS 2024) exists; indicator id todo. Pre-2011 series todo.
+    notes: >
+      dim_3 sex (T/M/F) x dim_4 five-year age groups. Total sex/age: 10.56 M (2011) to 11.20 M (2023), +2-3% a year
+      2021-2023. A newer vintage through 2025 (NUTS 2024) exists; indicator id todo. Pre-2011 series todo.
   ine_census:
     # Decennial; municipality rows are 4-char codes, parishes 6-char.
     indicator_ids:
@@ -74,7 +82,9 @@ ine:
       vacant_pct_2011: "0008378"     # 2011 (NUTS 2013) - code taken from the catalogue, not yet checked
       vacant_pct_2001: "0000772"     # 2001 - code taken from the catalogue, not yet checked
     format: json
-    notes: 2021 verified; 2011 / 2001 / 1991 codes still to be checked.
+    notes: >
+      2021 verified (308 municipalities, plain 4-char codes). Tenure 0012531 has dim_3 tenure (owner, lease, other) and
+      dim_4 years of residence. 2011 / 2001 / 1991 codes still to be checked.
   ine_construction:
     # Municipal (308 x 5 dwelling typologies verified for licensed dwellings).
     licensed_dwellings: "0013235"    # new family dwellings licensed, annual 2002 - 2025, NUTS 2024
@@ -83,14 +93,18 @@ ine:
     completed_dwellings_1995: "0000076"  # annual 1995 - 2025, NUTS 2002 geography
     licensed_monthly: "0008066"      # monthly series (geography not checked)
     format: json
-    notes: New construction for family housing only; excludes renovation and non-residential.
+    notes: >
+      New construction for family housing only. dim_3: T total, 1-4 bedrooms (0-1, 2, 3, 4+). 1995 series carry exact zeros
+      for Vizela/Trofa/Odivelas before they existed: use harmonize.mask_pre_creation.
   ine_cpi:
     indicator_id: "0014642"          # CPI base 2025, annual 1948 - 2025 (by geography and special aggregates)
     alt_indicator_ids:
       monthly: "0014640"             # Jan 1948 - Sep 2026
       by_coicop_annual: "0014641"
     format: json
-    notes: Verified national annual and monthly. Base-2025 re-referencing is handled in harmonize.py (BASE_YEAR=2024).
+    notes: >
+      Headline all-items = geocod PT, dim_3 T (1948-2025, 2025=100; 2024=97.717). Other dim_3 values are special aggregates.
+      Re-referencing to BASE_YEAR=2024 is done in harmonize.py.
 
 bportugal:
   # API base https://bpstat.bportugal.pt/data/v1 (301 -> trailing slash; send a User-Agent, urllib's default gets 403).

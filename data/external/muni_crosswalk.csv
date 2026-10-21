@@ -1,309 +1,309 @@
-muni_code,muni_name,district,territory,nuts3_name_2024,nuts2_name_2024,nuts3_2013,nuts2_2013,nuts3_2024,nuts2_2024
-0101,Águeda,Aveiro,continente,Região de Aveiro,Centro,16D,16,191,19
-0102,Albergaria-a-Velha,Aveiro,continente,Região de Aveiro,Centro,16D,16,191,19
-0103,Anadia,Aveiro,continente,Região de Aveiro,Centro,16D,16,191,19
-0104,Arouca,Aveiro,continente,Área Metropolitana do Porto,Norte,11A,11,11A,11
-0105,Aveiro,Aveiro,continente,Região de Aveiro,Centro,16D,16,191,19
-0106,Castelo de Paiva,Aveiro,continente,Tâmega e Sousa,Norte,11C,11,11C,11
-0107,Espinho,Aveiro,continente,Área Metropolitana do Porto,Norte,11A,11,11A,11
-0108,Estarreja,Aveiro,continente,Região de Aveiro,Centro,16D,16,191,19
-0109,Santa Maria da Feira,Aveiro,continente,Área Metropolitana do Porto,Norte,11A,11,11A,11
-0110,Ílhavo,Aveiro,continente,Região de Aveiro,Centro,16D,16,191,19
-0111,Mealhada,Aveiro,continente,Região de Coimbra,Centro,16E,16,192,19
-0112,Murtosa,Aveiro,continente,Região de Aveiro,Centro,16D,16,191,19
-0113,Oliveira de Azeméis,Aveiro,continente,Área Metropolitana do Porto,Norte,11A,11,11A,11
-0114,Oliveira do Bairro,Aveiro,continente,Região de Aveiro,Centro,16D,16,191,19
-0115,Ovar,Aveiro,continente,Região de Aveiro,Centro,16D,16,191,19
-0116,São João da Madeira,Aveiro,continente,Área Metropolitana do Porto,Norte,11A,11,11A,11
-0117,Sever do Vouga,Aveiro,continente,Região de Aveiro,Centro,16D,16,191,19
-0118,Vagos,Aveiro,continente,Região de Aveiro,Centro,16D,16,191,19
-0119,Vale de Cambra,Aveiro,continente,Área Metropolitana do Porto,Norte,11A,11,11A,11
-0201,Aljustrel,Beja,continente,Baixo Alentejo,Alentejo,184,18,1C2,1C
-0202,Almodôvar,Beja,continente,Baixo Alentejo,Alentejo,184,18,1C2,1C
-0203,Alvito,Beja,continente,Baixo Alentejo,Alentejo,184,18,1C2,1C
-0204,Barrancos,Beja,continente,Baixo Alentejo,Alentejo,184,18,1C2,1C
-0205,Beja,Beja,continente,Baixo Alentejo,Alentejo,184,18,1C2,1C
-0206,Castro Verde,Beja,continente,Baixo Alentejo,Alentejo,184,18,1C2,1C
-0207,Cuba,Beja,continente,Baixo Alentejo,Alentejo,184,18,1C2,1C
-0208,Ferreira do Alentejo,Beja,continente,Baixo Alentejo,Alentejo,184,18,1C2,1C
-0209,Mértola,Beja,continente,Baixo Alentejo,Alentejo,184,18,1C2,1C
-0210,Moura,Beja,continente,Baixo Alentejo,Alentejo,184,18,1C2,1C
-0211,Odemira,Beja,continente,Alentejo Litoral,Alentejo,181,18,1C1,1C
-0212,Ourique,Beja,continente,Baixo Alentejo,Alentejo,184,18,1C2,1C
-0213,Serpa,Beja,continente,Baixo Alentejo,Alentejo,184,18,1C2,1C
-0214,Vidigueira,Beja,continente,Baixo Alentejo,Alentejo,184,18,1C2,1C
-0301,Amares,Braga,continente,Cávado,Norte,112,11,112,11
-0302,Barcelos,Braga,continente,Cávado,Norte,112,11,112,11
-0303,Braga,Braga,continente,Cávado,Norte,112,11,112,11
-0304,Cabeceiras de Basto,Braga,continente,Ave,Norte,119,11,119,11
-0305,Celorico de Basto,Braga,continente,Tâmega e Sousa,Norte,11C,11,11C,11
-0306,Esposende,Braga,continente,Cávado,Norte,112,11,112,11
-0307,Fafe,Braga,continente,Ave,Norte,119,11,119,11
-0308,Guimarães,Braga,continente,Ave,Norte,119,11,119,11
-0309,Póvoa de Lanhoso,Braga,continente,Ave,Norte,119,11,119,11
-0310,Terras de Bouro,Braga,continente,Cávado,Norte,112,11,112,11
-0311,Vieira do Minho,Braga,continente,Ave,Norte,119,11,119,11
-0312,Vila Nova de Famalicão,Braga,continente,Ave,Norte,119,11,119,11
-0313,Vila Verde,Braga,continente,Cávado,Norte,112,11,112,11
-0314,Vizela,Braga,continente,Ave,Norte,119,11,119,11
-0401,Alfândega da Fé,Bragança,continente,Terras de Trás-os-Montes,Norte,11E,11,11E,11
-0402,Bragança,Bragança,continente,Terras de Trás-os-Montes,Norte,11E,11,11E,11
-0403,Carrazeda de Ansiães,Bragança,continente,Douro,Norte,11D,11,11D,11
-0404,Freixo de Espada à Cinta,Bragança,continente,Douro,Norte,11D,11,11D,11
-0405,Macedo de Cavaleiros,Bragança,continente,Terras de Trás-os-Montes,Norte,11E,11,11E,11
-0406,Miranda do Douro,Bragança,continente,Terras de Trás-os-Montes,Norte,11E,11,11E,11
-0407,Mirandela,Bragança,continente,Terras de Trás-os-Montes,Norte,11E,11,11E,11
-0408,Mogadouro,Bragança,continente,Terras de Trás-os-Montes,Norte,11E,11,11E,11
-0409,Torre de Moncorvo,Bragança,continente,Douro,Norte,11D,11,11D,11
-0410,Vila Flor,Bragança,continente,Terras de Trás-os-Montes,Norte,11E,11,11E,11
-0411,Vimioso,Bragança,continente,Terras de Trás-os-Montes,Norte,11E,11,11E,11
-0412,Vinhais,Bragança,continente,Terras de Trás-os-Montes,Norte,11E,11,11E,11
-0501,Belmonte,Castelo Branco,continente,Beiras e Serra da Estrela,Centro,16J,16,196,19
-0502,Castelo Branco,Castelo Branco,continente,Beira Baixa,Centro,16H,16,195,19
-0503,Covilhã,Castelo Branco,continente,Beiras e Serra da Estrela,Centro,16J,16,196,19
-0504,Fundão,Castelo Branco,continente,Beiras e Serra da Estrela,Centro,16J,16,196,19
-0505,Idanha-a-Nova,Castelo Branco,continente,Beira Baixa,Centro,16H,16,195,19
-0506,Oleiros,Castelo Branco,continente,Beira Baixa,Centro,16H,16,195,19
-0507,Penamacor,Castelo Branco,continente,Beira Baixa,Centro,16H,16,195,19
-0508,Proença-a-Nova,Castelo Branco,continente,Beira Baixa,Centro,16H,16,195,19
-0509,Sertã,Castelo Branco,continente,Beira Baixa,Centro,16I,16,195,19
-0510,Vila de Rei,Castelo Branco,continente,Beira Baixa,Centro,16I,16,195,19
-0511,Vila Velha de Ródão,Castelo Branco,continente,Beira Baixa,Centro,16H,16,195,19
-0601,Arganil,Coimbra,continente,Região de Coimbra,Centro,16E,16,192,19
-0602,Cantanhede,Coimbra,continente,Região de Coimbra,Centro,16E,16,192,19
-0603,Coimbra,Coimbra,continente,Região de Coimbra,Centro,16E,16,192,19
-0604,Condeixa-a-Nova,Coimbra,continente,Região de Coimbra,Centro,16E,16,192,19
-0605,Figueira da Foz,Coimbra,continente,Região de Coimbra,Centro,16E,16,192,19
-0606,Góis,Coimbra,continente,Região de Coimbra,Centro,16E,16,192,19
-0607,Lousã,Coimbra,continente,Região de Coimbra,Centro,16E,16,192,19
-0608,Mira,Coimbra,continente,Região de Coimbra,Centro,16E,16,192,19
-0609,Miranda do Corvo,Coimbra,continente,Região de Coimbra,Centro,16E,16,192,19
-0610,Montemor-o-Velho,Coimbra,continente,Região de Coimbra,Centro,16E,16,192,19
-0611,Oliveira do Hospital,Coimbra,continente,Região de Coimbra,Centro,16E,16,192,19
-0612,Pampilhosa da Serra,Coimbra,continente,Região de Coimbra,Centro,16E,16,192,19
-0613,Penacova,Coimbra,continente,Região de Coimbra,Centro,16E,16,192,19
-0614,Penela,Coimbra,continente,Região de Coimbra,Centro,16E,16,192,19
-0615,Soure,Coimbra,continente,Região de Coimbra,Centro,16E,16,192,19
-0616,Tábua,Coimbra,continente,Região de Coimbra,Centro,16E,16,192,19
-0617,Vila Nova de Poiares,Coimbra,continente,Região de Coimbra,Centro,16E,16,192,19
-0701,Alandroal,Évora,continente,Alentejo Central,Alentejo,187,18,1C4,1C
-0702,Arraiolos,Évora,continente,Alentejo Central,Alentejo,187,18,1C4,1C
-0703,Borba,Évora,continente,Alentejo Central,Alentejo,187,18,1C4,1C
-0704,Estremoz,Évora,continente,Alentejo Central,Alentejo,187,18,1C4,1C
-0705,Évora,Évora,continente,Alentejo Central,Alentejo,187,18,1C4,1C
-0706,Montemor-o-Novo,Évora,continente,Alentejo Central,Alentejo,187,18,1C4,1C
-0707,Mora,Évora,continente,Alentejo Central,Alentejo,187,18,1C4,1C
-0708,Mourão,Évora,continente,Alentejo Central,Alentejo,187,18,1C4,1C
-0709,Portel,Évora,continente,Alentejo Central,Alentejo,187,18,1C4,1C
-0710,Redondo,Évora,continente,Alentejo Central,Alentejo,187,18,1C4,1C
-0711,Reguengos de Monsaraz,Évora,continente,Alentejo Central,Alentejo,187,18,1C4,1C
-0712,Vendas Novas,Évora,continente,Alentejo Central,Alentejo,187,18,1C4,1C
-0713,Viana do Alentejo,Évora,continente,Alentejo Central,Alentejo,187,18,1C4,1C
-0714,Vila Viçosa,Évora,continente,Alentejo Central,Alentejo,187,18,1C4,1C
-0801,Albufeira,Faro,continente,Algarve,Algarve,150,15,150,15
-0802,Alcoutim,Faro,continente,Algarve,Algarve,150,15,150,15
-0803,Aljezur,Faro,continente,Algarve,Algarve,150,15,150,15
-0804,Castro Marim,Faro,continente,Algarve,Algarve,150,15,150,15
-0805,Faro,Faro,continente,Algarve,Algarve,150,15,150,15
-0806,Lagoa,Faro,continente,Algarve,Algarve,150,15,150,15
-0807,Lagos,Faro,continente,Algarve,Algarve,150,15,150,15
-0808,Loulé,Faro,continente,Algarve,Algarve,150,15,150,15
-0809,Monchique,Faro,continente,Algarve,Algarve,150,15,150,15
-0810,Olhão,Faro,continente,Algarve,Algarve,150,15,150,15
-0811,Portimão,Faro,continente,Algarve,Algarve,150,15,150,15
-0812,São Brás de Alportel,Faro,continente,Algarve,Algarve,150,15,150,15
-0813,Silves,Faro,continente,Algarve,Algarve,150,15,150,15
-0814,Tavira,Faro,continente,Algarve,Algarve,150,15,150,15
-0815,Vila do Bispo,Faro,continente,Algarve,Algarve,150,15,150,15
-0816,Vila Real de Santo António,Faro,continente,Algarve,Algarve,150,15,150,15
-0901,Aguiar da Beira,Guarda,continente,Viseu Dão Lafões,Centro,16G,16,194,19
-0902,Almeida,Guarda,continente,Beiras e Serra da Estrela,Centro,16J,16,196,19
-0903,Celorico da Beira,Guarda,continente,Beiras e Serra da Estrela,Centro,16J,16,196,19
-0904,Figueira de Castelo Rodrigo,Guarda,continente,Beiras e Serra da Estrela,Centro,16J,16,196,19
-0905,Fornos de Algodres,Guarda,continente,Beiras e Serra da Estrela,Centro,16J,16,196,19
-0906,Gouveia,Guarda,continente,Beiras e Serra da Estrela,Centro,16J,16,196,19
-0907,Guarda,Guarda,continente,Beiras e Serra da Estrela,Centro,16J,16,196,19
-0908,Manteigas,Guarda,continente,Beiras e Serra da Estrela,Centro,16J,16,196,19
-0909,Mêda,Guarda,continente,Beiras e Serra da Estrela,Centro,16J,16,196,19
-0910,Pinhel,Guarda,continente,Beiras e Serra da Estrela,Centro,16J,16,196,19
-0911,Sabugal,Guarda,continente,Beiras e Serra da Estrela,Centro,16J,16,196,19
-0912,Seia,Guarda,continente,Beiras e Serra da Estrela,Centro,16J,16,196,19
-0913,Trancoso,Guarda,continente,Beiras e Serra da Estrela,Centro,16J,16,196,19
-0914,Vila Nova de Foz Côa,Guarda,continente,Douro,Norte,11D,11,11D,11
-1001,Alcobaça,Leiria,continente,Oeste,Oeste e Vale do Tejo,16B,16,1D1,1D
-1002,Alvaiázere,Leiria,continente,Região de Leiria,Centro,16F,16,193,19
-1003,Ansião,Leiria,continente,Região de Leiria,Centro,16F,16,193,19
-1004,Batalha,Leiria,continente,Região de Leiria,Centro,16F,16,193,19
-1005,Bombarral,Leiria,continente,Oeste,Oeste e Vale do Tejo,16B,16,1D1,1D
-1006,Caldas da Rainha,Leiria,continente,Oeste,Oeste e Vale do Tejo,16B,16,1D1,1D
-1007,Castanheira de Pêra,Leiria,continente,Região de Leiria,Centro,16F,16,193,19
-1008,Figueiró dos Vinhos,Leiria,continente,Região de Leiria,Centro,16F,16,193,19
-1009,Leiria,Leiria,continente,Região de Leiria,Centro,16F,16,193,19
-1010,Marinha Grande,Leiria,continente,Região de Leiria,Centro,16F,16,193,19
-1011,Nazaré,Leiria,continente,Oeste,Oeste e Vale do Tejo,16B,16,1D1,1D
-1012,Óbidos,Leiria,continente,Oeste,Oeste e Vale do Tejo,16B,16,1D1,1D
-1013,Pedrógão Grande,Leiria,continente,Região de Leiria,Centro,16F,16,193,19
-1014,Peniche,Leiria,continente,Oeste,Oeste e Vale do Tejo,16B,16,1D1,1D
-1015,Pombal,Leiria,continente,Região de Leiria,Centro,16F,16,193,19
-1016,Porto de Mós,Leiria,continente,Região de Leiria,Centro,16F,16,193,19
-1101,Alenquer,Lisboa,continente,Oeste,Oeste e Vale do Tejo,16B,16,1D1,1D
-1102,Arruda dos Vinhos,Lisboa,continente,Oeste,Oeste e Vale do Tejo,16B,16,1D1,1D
-1103,Azambuja,Lisboa,continente,Lezíria do Tejo,Oeste e Vale do Tejo,185,18,1D3,1D
-1104,Cadaval,Lisboa,continente,Oeste,Oeste e Vale do Tejo,16B,16,1D1,1D
-1105,Cascais,Lisboa,continente,Grande Lisboa,Grande Lisboa,170,17,1A0,1A
-1106,Lisboa,Lisboa,continente,Grande Lisboa,Grande Lisboa,170,17,1A0,1A
-1107,Loures,Lisboa,continente,Grande Lisboa,Grande Lisboa,170,17,1A0,1A
-1108,Lourinhã,Lisboa,continente,Oeste,Oeste e Vale do Tejo,16B,16,1D1,1D
-1109,Mafra,Lisboa,continente,Grande Lisboa,Grande Lisboa,170,17,1A0,1A
-1110,Oeiras,Lisboa,continente,Grande Lisboa,Grande Lisboa,170,17,1A0,1A
-1111,Sintra,Lisboa,continente,Grande Lisboa,Grande Lisboa,170,17,1A0,1A
-1112,Sobral de Monte Agraço,Lisboa,continente,Oeste,Oeste e Vale do Tejo,16B,16,1D1,1D
-1113,Torres Vedras,Lisboa,continente,Oeste,Oeste e Vale do Tejo,16B,16,1D1,1D
-1114,Vila Franca de Xira,Lisboa,continente,Grande Lisboa,Grande Lisboa,170,17,1A0,1A
-1115,Amadora,Lisboa,continente,Grande Lisboa,Grande Lisboa,170,17,1A0,1A
-1116,Odivelas,Lisboa,continente,Grande Lisboa,Grande Lisboa,170,17,1A0,1A
-1201,Alter do Chão,Portalegre,continente,Alto Alentejo,Alentejo,186,18,1C3,1C
-1202,Arronches,Portalegre,continente,Alto Alentejo,Alentejo,186,18,1C3,1C
-1203,Avis,Portalegre,continente,Alto Alentejo,Alentejo,186,18,1C3,1C
-1204,Campo Maior,Portalegre,continente,Alto Alentejo,Alentejo,186,18,1C3,1C
-1205,Castelo de Vide,Portalegre,continente,Alto Alentejo,Alentejo,186,18,1C3,1C
-1206,Crato,Portalegre,continente,Alto Alentejo,Alentejo,186,18,1C3,1C
-1207,Elvas,Portalegre,continente,Alto Alentejo,Alentejo,186,18,1C3,1C
-1208,Fronteira,Portalegre,continente,Alto Alentejo,Alentejo,186,18,1C3,1C
-1209,Gavião,Portalegre,continente,Alto Alentejo,Alentejo,186,18,1C3,1C
-1210,Marvão,Portalegre,continente,Alto Alentejo,Alentejo,186,18,1C3,1C
-1211,Monforte,Portalegre,continente,Alto Alentejo,Alentejo,186,18,1C3,1C
-1212,Nisa,Portalegre,continente,Alto Alentejo,Alentejo,186,18,1C3,1C
-1213,Ponte de Sor,Portalegre,continente,Alto Alentejo,Alentejo,186,18,1C3,1C
-1214,Portalegre,Portalegre,continente,Alto Alentejo,Alentejo,186,18,1C3,1C
-1215,Sousel,Portalegre,continente,Alto Alentejo,Alentejo,186,18,1C3,1C
-1301,Amarante,Porto,continente,Tâmega e Sousa,Norte,11C,11,11C,11
-1302,Baião,Porto,continente,Tâmega e Sousa,Norte,11C,11,11C,11
-1303,Felgueiras,Porto,continente,Tâmega e Sousa,Norte,11C,11,11C,11
-1304,Gondomar,Porto,continente,Área Metropolitana do Porto,Norte,11A,11,11A,11
-1305,Lousada,Porto,continente,Tâmega e Sousa,Norte,11C,11,11C,11
-1306,Maia,Porto,continente,Área Metropolitana do Porto,Norte,11A,11,11A,11
-1307,Marco de Canaveses,Porto,continente,Tâmega e Sousa,Norte,11C,11,11C,11
-1308,Matosinhos,Porto,continente,Área Metropolitana do Porto,Norte,11A,11,11A,11
-1309,Paços de Ferreira,Porto,continente,Tâmega e Sousa,Norte,11C,11,11C,11
-1310,Paredes,Porto,continente,Área Metropolitana do Porto,Norte,11A,11,11A,11
-1311,Penafiel,Porto,continente,Tâmega e Sousa,Norte,11C,11,11C,11
-1312,Porto,Porto,continente,Área Metropolitana do Porto,Norte,11A,11,11A,11
-1313,Póvoa de Varzim,Porto,continente,Área Metropolitana do Porto,Norte,11A,11,11A,11
-1314,Santo Tirso,Porto,continente,Área Metropolitana do Porto,Norte,11A,11,11A,11
-1315,Valongo,Porto,continente,Área Metropolitana do Porto,Norte,11A,11,11A,11
-1316,Vila do Conde,Porto,continente,Área Metropolitana do Porto,Norte,11A,11,11A,11
-1317,Vila Nova de Gaia,Porto,continente,Área Metropolitana do Porto,Norte,11A,11,11A,11
-1318,Trofa,Porto,continente,Área Metropolitana do Porto,Norte,11A,11,11A,11
-1401,Abrantes,Santarém,continente,Médio Tejo,Oeste e Vale do Tejo,16I,16,1D2,1D
-1402,Alcanena,Santarém,continente,Médio Tejo,Oeste e Vale do Tejo,16I,16,1D2,1D
-1403,Almeirim,Santarém,continente,Lezíria do Tejo,Oeste e Vale do Tejo,185,18,1D3,1D
-1404,Alpiarça,Santarém,continente,Lezíria do Tejo,Oeste e Vale do Tejo,185,18,1D3,1D
-1405,Benavente,Santarém,continente,Lezíria do Tejo,Oeste e Vale do Tejo,185,18,1D3,1D
-1406,Cartaxo,Santarém,continente,Lezíria do Tejo,Oeste e Vale do Tejo,185,18,1D3,1D
-1407,Chamusca,Santarém,continente,Lezíria do Tejo,Oeste e Vale do Tejo,185,18,1D3,1D
-1408,Constância,Santarém,continente,Médio Tejo,Oeste e Vale do Tejo,16I,16,1D2,1D
-1409,Coruche,Santarém,continente,Lezíria do Tejo,Oeste e Vale do Tejo,185,18,1D3,1D
-1410,Entroncamento,Santarém,continente,Médio Tejo,Oeste e Vale do Tejo,16I,16,1D2,1D
-1411,Ferreira do Zêzere,Santarém,continente,Médio Tejo,Oeste e Vale do Tejo,16I,16,1D2,1D
-1412,Golegã,Santarém,continente,Lezíria do Tejo,Oeste e Vale do Tejo,185,18,1D3,1D
-1413,Mação,Santarém,continente,Médio Tejo,Oeste e Vale do Tejo,16I,16,1D2,1D
-1414,Rio Maior,Santarém,continente,Lezíria do Tejo,Oeste e Vale do Tejo,185,18,1D3,1D
-1415,Salvaterra de Magos,Santarém,continente,Lezíria do Tejo,Oeste e Vale do Tejo,185,18,1D3,1D
-1416,Santarém,Santarém,continente,Lezíria do Tejo,Oeste e Vale do Tejo,185,18,1D3,1D
-1417,Sardoal,Santarém,continente,Médio Tejo,Oeste e Vale do Tejo,16I,16,1D2,1D
-1418,Tomar,Santarém,continente,Médio Tejo,Oeste e Vale do Tejo,16I,16,1D2,1D
-1419,Torres Novas,Santarém,continente,Médio Tejo,Oeste e Vale do Tejo,16I,16,1D2,1D
-1420,Vila Nova da Barquinha,Santarém,continente,Médio Tejo,Oeste e Vale do Tejo,16I,16,1D2,1D
-1421,Ourém,Santarém,continente,Médio Tejo,Oeste e Vale do Tejo,16I,16,1D2,1D
-1501,Alcácer do Sal,Setúbal,continente,Alentejo Litoral,Alentejo,181,18,1C1,1C
-1502,Alcochete,Setúbal,continente,Península de Setúbal,Península de Setúbal,170,17,1B0,1B
-1503,Almada,Setúbal,continente,Península de Setúbal,Península de Setúbal,170,17,1B0,1B
-1504,Barreiro,Setúbal,continente,Península de Setúbal,Península de Setúbal,170,17,1B0,1B
-1505,Grândola,Setúbal,continente,Alentejo Litoral,Alentejo,181,18,1C1,1C
-1506,Moita,Setúbal,continente,Península de Setúbal,Península de Setúbal,170,17,1B0,1B
-1507,Montijo,Setúbal,continente,Península de Setúbal,Península de Setúbal,170,17,1B0,1B
-1508,Palmela,Setúbal,continente,Península de Setúbal,Península de Setúbal,170,17,1B0,1B
-1509,Santiago do Cacém,Setúbal,continente,Alentejo Litoral,Alentejo,181,18,1C1,1C
-1510,Seixal,Setúbal,continente,Península de Setúbal,Península de Setúbal,170,17,1B0,1B
-1511,Sesimbra,Setúbal,continente,Península de Setúbal,Península de Setúbal,170,17,1B0,1B
-1512,Setúbal,Setúbal,continente,Península de Setúbal,Península de Setúbal,170,17,1B0,1B
-1513,Sines,Setúbal,continente,Alentejo Litoral,Alentejo,181,18,1C1,1C
-1601,Arcos de Valdevez,Viana do Castelo,continente,Alto Minho,Norte,111,11,111,11
-1602,Caminha,Viana do Castelo,continente,Alto Minho,Norte,111,11,111,11
-1603,Melgaço,Viana do Castelo,continente,Alto Minho,Norte,111,11,111,11
-1604,Monção,Viana do Castelo,continente,Alto Minho,Norte,111,11,111,11
-1605,Paredes de Coura,Viana do Castelo,continente,Alto Minho,Norte,111,11,111,11
-1606,Ponte da Barca,Viana do Castelo,continente,Alto Minho,Norte,111,11,111,11
-1607,Ponte de Lima,Viana do Castelo,continente,Alto Minho,Norte,111,11,111,11
-1608,Valença,Viana do Castelo,continente,Alto Minho,Norte,111,11,111,11
-1609,Viana do Castelo,Viana do Castelo,continente,Alto Minho,Norte,111,11,111,11
-1610,Vila Nova de Cerveira,Viana do Castelo,continente,Alto Minho,Norte,111,11,111,11
-1701,Alijó,Vila Real,continente,Douro,Norte,11D,11,11D,11
-1702,Boticas,Vila Real,continente,Alto Tâmega e Barroso,Norte,11B,11,11B,11
-1703,Chaves,Vila Real,continente,Alto Tâmega e Barroso,Norte,11B,11,11B,11
-1704,Mesão Frio,Vila Real,continente,Douro,Norte,11D,11,11D,11
-1705,Mondim de Basto,Vila Real,continente,Ave,Norte,119,11,119,11
-1706,Montalegre,Vila Real,continente,Alto Tâmega e Barroso,Norte,11B,11,11B,11
-1707,Murça,Vila Real,continente,Douro,Norte,11D,11,11D,11
-1708,Peso da Régua,Vila Real,continente,Douro,Norte,11D,11,11D,11
-1709,Ribeira de Pena,Vila Real,continente,Alto Tâmega e Barroso,Norte,11B,11,11B,11
-1710,Sabrosa,Vila Real,continente,Douro,Norte,11D,11,11D,11
-1711,Santa Marta de Penaguião,Vila Real,continente,Douro,Norte,11D,11,11D,11
-1712,Valpaços,Vila Real,continente,Alto Tâmega e Barroso,Norte,11B,11,11B,11
-1713,Vila Pouca de Aguiar,Vila Real,continente,Alto Tâmega e Barroso,Norte,11B,11,11B,11
-1714,Vila Real,Vila Real,continente,Douro,Norte,11D,11,11D,11
-1801,Armamar,Viseu,continente,Douro,Norte,11D,11,11D,11
-1802,Carregal do Sal,Viseu,continente,Viseu Dão Lafões,Centro,16G,16,194,19
-1803,Castro Daire,Viseu,continente,Viseu Dão Lafões,Centro,16G,16,194,19
-1804,Cinfães,Viseu,continente,Tâmega e Sousa,Norte,11C,11,11C,11
-1805,Lamego,Viseu,continente,Douro,Norte,11D,11,11D,11
-1806,Mangualde,Viseu,continente,Viseu Dão Lafões,Centro,16G,16,194,19
-1807,Moimenta da Beira,Viseu,continente,Douro,Norte,11D,11,11D,11
-1808,Mortágua,Viseu,continente,Região de Coimbra,Centro,16E,16,192,19
-1809,Nelas,Viseu,continente,Viseu Dão Lafões,Centro,16G,16,194,19
-1810,Oliveira de Frades,Viseu,continente,Viseu Dão Lafões,Centro,16G,16,194,19
-1811,Penalva do Castelo,Viseu,continente,Viseu Dão Lafões,Centro,16G,16,194,19
-1812,Penedono,Viseu,continente,Douro,Norte,11D,11,11D,11
-1813,Resende,Viseu,continente,Tâmega e Sousa,Norte,11C,11,11C,11
-1814,Santa Comba Dão,Viseu,continente,Viseu Dão Lafões,Centro,16G,16,194,19
-1815,São João da Pesqueira,Viseu,continente,Douro,Norte,11D,11,11D,11
-1816,São Pedro do Sul,Viseu,continente,Viseu Dão Lafões,Centro,16G,16,194,19
-1817,Sátão,Viseu,continente,Viseu Dão Lafões,Centro,16G,16,194,19
-1818,Sernancelhe,Viseu,continente,Douro,Norte,11D,11,11D,11
-1819,Tabuaço,Viseu,continente,Douro,Norte,11D,11,11D,11
-1820,Tarouca,Viseu,continente,Douro,Norte,11D,11,11D,11
-1821,Tondela,Viseu,continente,Viseu Dão Lafões,Centro,16G,16,194,19
-1822,Vila Nova de Paiva,Viseu,continente,Viseu Dão Lafões,Centro,16G,16,194,19
-1823,Viseu,Viseu,continente,Viseu Dão Lafões,Centro,16G,16,194,19
-1824,Vouzela,Viseu,continente,Viseu Dão Lafões,Centro,16G,16,194,19
-3101,Calheta,Ilha da Madeira,madeira,Região Autónoma da Madeira,Região Autónoma da Madeira,300,30,300,30
-3102,Câmara de Lobos,Ilha da Madeira,madeira,Região Autónoma da Madeira,Região Autónoma da Madeira,300,30,300,30
-3103,Funchal,Ilha da Madeira,madeira,Região Autónoma da Madeira,Região Autónoma da Madeira,300,30,300,30
-3104,Machico,Ilha da Madeira,madeira,Região Autónoma da Madeira,Região Autónoma da Madeira,300,30,300,30
-3105,Ponta do Sol,Ilha da Madeira,madeira,Região Autónoma da Madeira,Região Autónoma da Madeira,300,30,300,30
-3106,Porto Moniz,Ilha da Madeira,madeira,Região Autónoma da Madeira,Região Autónoma da Madeira,300,30,300,30
-3107,Ribeira Brava,Ilha da Madeira,madeira,Região Autónoma da Madeira,Região Autónoma da Madeira,300,30,300,30
-3108,Santa Cruz,Ilha da Madeira,madeira,Região Autónoma da Madeira,Região Autónoma da Madeira,300,30,300,30
-3109,Santana,Ilha da Madeira,madeira,Região Autónoma da Madeira,Região Autónoma da Madeira,300,30,300,30
-3110,São Vicente,Ilha da Madeira,madeira,Região Autónoma da Madeira,Região Autónoma da Madeira,300,30,300,30
-3201,Porto Santo,Ilha de Porto Santo,madeira,Região Autónoma da Madeira,Região Autónoma da Madeira,300,30,300,30
-4101,Vila do Porto,Ilha de Santa Maria,azores,Região Autónoma dos Açores,Região Autónoma dos Açores,200,20,200,20
-4201,Lagoa,Ilha de São Miguel,azores,Região Autónoma dos Açores,Região Autónoma dos Açores,200,20,200,20
-4202,Nordeste,Ilha de São Miguel,azores,Região Autónoma dos Açores,Região Autónoma dos Açores,200,20,200,20
-4203,Ponta Delgada,Ilha de São Miguel,azores,Região Autónoma dos Açores,Região Autónoma dos Açores,200,20,200,20
-4204,Povoação,Ilha de São Miguel,azores,Região Autónoma dos Açores,Região Autónoma dos Açores,200,20,200,20
-4205,Ribeira Grande,Ilha de São Miguel,azores,Região Autónoma dos Açores,Região Autónoma dos Açores,200,20,200,20
-4206,Vila Franca do Campo,Ilha de São Miguel,azores,Região Autónoma dos Açores,Região Autónoma dos Açores,200,20,200,20
-4301,Angra do Heroísmo,Ilha Terceira,azores,Região Autónoma dos Açores,Região Autónoma dos Açores,200,20,200,20
-4302,Praia da Vitória,Ilha Terceira,azores,Região Autónoma dos Açores,Região Autónoma dos Açores,200,20,200,20
-4401,Santa Cruz da Graciosa,Ilha da Graciosa,azores,Região Autónoma dos Açores,Região Autónoma dos Açores,200,20,200,20
-4501,Calheta de São Jorge,Ilha de São Jorge,azores,Região Autónoma dos Açores,Região Autónoma dos Açores,200,20,200,20
-4502,Velas,Ilha de São Jorge,azores,Região Autónoma dos Açores,Região Autónoma dos Açores,200,20,200,20
-4601,Lajes do Pico,Ilha do Pico,azores,Região Autónoma dos Açores,Região Autónoma dos Açores,200,20,200,20
-4602,Madalena,Ilha do Pico,azores,Região Autónoma dos Açores,Região Autónoma dos Açores,200,20,200,20
-4603,São Roque do Pico,Ilha do Pico,azores,Região Autónoma dos Açores,Região Autónoma dos Açores,200,20,200,20
-4701,Horta,Ilha do Faial,azores,Região Autónoma dos Açores,Região Autónoma dos Açores,200,20,200,20
-4801,Lajes das Flores,Ilha das Flores,azores,Região Autónoma dos Açores,Região Autónoma dos Açores,200,20,200,20
-4802,Santa Cruz das Flores,Ilha das Flores,azores,Região Autónoma dos Açores,Região Autónoma dos Açores,200,20,200,20
-4901,Corvo,Ilha do Corvo,azores,Região Autónoma dos Açores,Região Autónoma dos Açores,200,20,200,20
+muni_code,muni_name,district,territory,nuts3_name_2024,nuts2_name_2024,nuts3_2013,nuts2_2013,nuts3_2024,nuts2_2024,valid_from_year
+0101,Águeda,Aveiro,continente,Região de Aveiro,Centro,16D,16,191,19,
+0102,Albergaria-a-Velha,Aveiro,continente,Região de Aveiro,Centro,16D,16,191,19,
+0103,Anadia,Aveiro,continente,Região de Aveiro,Centro,16D,16,191,19,
+0104,Arouca,Aveiro,continente,Área Metropolitana do Porto,Norte,11A,11,11A,11,
+0105,Aveiro,Aveiro,continente,Região de Aveiro,Centro,16D,16,191,19,
+0106,Castelo de Paiva,Aveiro,continente,Tâmega e Sousa,Norte,11C,11,11C,11,
+0107,Espinho,Aveiro,continente,Área Metropolitana do Porto,Norte,11A,11,11A,11,
+0108,Estarreja,Aveiro,continente,Região de Aveiro,Centro,16D,16,191,19,
+0109,Santa Maria da Feira,Aveiro,continente,Área Metropolitana do Porto,Norte,11A,11,11A,11,
+0110,Ílhavo,Aveiro,continente,Região de Aveiro,Centro,16D,16,191,19,
+0111,Mealhada,Aveiro,continente,Região de Coimbra,Centro,16E,16,192,19,
+0112,Murtosa,Aveiro,continente,Região de Aveiro,Centro,16D,16,191,19,
+0113,Oliveira de Azeméis,Aveiro,continente,Área Metropolitana do Porto,Norte,11A,11,11A,11,
+0114,Oliveira do Bairro,Aveiro,continente,Região de Aveiro,Centro,16D,16,191,19,
+0115,Ovar,Aveiro,continente,Região de Aveiro,Centro,16D,16,191,19,
+0116,São João da Madeira,Aveiro,continente,Área Metropolitana do Porto,Norte,11A,11,11A,11,
+0117,Sever do Vouga,Aveiro,continente,Região de Aveiro,Centro,16D,16,191,19,
+0118,Vagos,Aveiro,continente,Região de Aveiro,Centro,16D,16,191,19,
+0119,Vale de Cambra,Aveiro,continente,Área Metropolitana do Porto,Norte,11A,11,11A,11,
+0201,Aljustrel,Beja,continente,Baixo Alentejo,Alentejo,184,18,1C2,1C,
+0202,Almodôvar,Beja,continente,Baixo Alentejo,Alentejo,184,18,1C2,1C,
+0203,Alvito,Beja,continente,Baixo Alentejo,Alentejo,184,18,1C2,1C,
+0204,Barrancos,Beja,continente,Baixo Alentejo,Alentejo,184,18,1C2,1C,
+0205,Beja,Beja,continente,Baixo Alentejo,Alentejo,184,18,1C2,1C,
+0206,Castro Verde,Beja,continente,Baixo Alentejo,Alentejo,184,18,1C2,1C,
+0207,Cuba,Beja,continente,Baixo Alentejo,Alentejo,184,18,1C2,1C,
+0208,Ferreira do Alentejo,Beja,continente,Baixo Alentejo,Alentejo,184,18,1C2,1C,
+0209,Mértola,Beja,continente,Baixo Alentejo,Alentejo,184,18,1C2,1C,
+0210,Moura,Beja,continente,Baixo Alentejo,Alentejo,184,18,1C2,1C,
+0211,Odemira,Beja,continente,Alentejo Litoral,Alentejo,181,18,1C1,1C,
+0212,Ourique,Beja,continente,Baixo Alentejo,Alentejo,184,18,1C2,1C,
+0213,Serpa,Beja,continente,Baixo Alentejo,Alentejo,184,18,1C2,1C,
+0214,Vidigueira,Beja,continente,Baixo Alentejo,Alentejo,184,18,1C2,1C,
+0301,Amares,Braga,continente,Cávado,Norte,112,11,112,11,
+0302,Barcelos,Braga,continente,Cávado,Norte,112,11,112,11,
+0303,Braga,Braga,continente,Cávado,Norte,112,11,112,11,
+0304,Cabeceiras de Basto,Braga,continente,Ave,Norte,119,11,119,11,
+0305,Celorico de Basto,Braga,continente,Tâmega e Sousa,Norte,11C,11,11C,11,
+0306,Esposende,Braga,continente,Cávado,Norte,112,11,112,11,
+0307,Fafe,Braga,continente,Ave,Norte,119,11,119,11,
+0308,Guimarães,Braga,continente,Ave,Norte,119,11,119,11,
+0309,Póvoa de Lanhoso,Braga,continente,Ave,Norte,119,11,119,11,
+0310,Terras de Bouro,Braga,continente,Cávado,Norte,112,11,112,11,
+0311,Vieira do Minho,Braga,continente,Ave,Norte,119,11,119,11,
+0312,Vila Nova de Famalicão,Braga,continente,Ave,Norte,119,11,119,11,
+0313,Vila Verde,Braga,continente,Cávado,Norte,112,11,112,11,
+0314,Vizela,Braga,continente,Ave,Norte,119,11,119,11,1998
+0401,Alfândega da Fé,Bragança,continente,Terras de Trás-os-Montes,Norte,11E,11,11E,11,
+0402,Bragança,Bragança,continente,Terras de Trás-os-Montes,Norte,11E,11,11E,11,
+0403,Carrazeda de Ansiães,Bragança,continente,Douro,Norte,11D,11,11D,11,
+0404,Freixo de Espada à Cinta,Bragança,continente,Douro,Norte,11D,11,11D,11,
+0405,Macedo de Cavaleiros,Bragança,continente,Terras de Trás-os-Montes,Norte,11E,11,11E,11,
+0406,Miranda do Douro,Bragança,continente,Terras de Trás-os-Montes,Norte,11E,11,11E,11,
+0407,Mirandela,Bragança,continente,Terras de Trás-os-Montes,Norte,11E,11,11E,11,
+0408,Mogadouro,Bragança,continente,Terras de Trás-os-Montes,Norte,11E,11,11E,11,
+0409,Torre de Moncorvo,Bragança,continente,Douro,Norte,11D,11,11D,11,
+0410,Vila Flor,Bragança,continente,Terras de Trás-os-Montes,Norte,11E,11,11E,11,
+0411,Vimioso,Bragança,continente,Terras de Trás-os-Montes,Norte,11E,11,11E,11,
+0412,Vinhais,Bragança,continente,Terras de Trás-os-Montes,Norte,11E,11,11E,11,
+0501,Belmonte,Castelo Branco,continente,Beiras e Serra da Estrela,Centro,16J,16,196,19,
+0502,Castelo Branco,Castelo Branco,continente,Beira Baixa,Centro,16H,16,195,19,
+0503,Covilhã,Castelo Branco,continente,Beiras e Serra da Estrela,Centro,16J,16,196,19,
+0504,Fundão,Castelo Branco,continente,Beiras e Serra da Estrela,Centro,16J,16,196,19,
+0505,Idanha-a-Nova,Castelo Branco,continente,Beira Baixa,Centro,16H,16,195,19,
+0506,Oleiros,Castelo Branco,continente,Beira Baixa,Centro,16H,16,195,19,
+0507,Penamacor,Castelo Branco,continente,Beira Baixa,Centro,16H,16,195,19,
+0508,Proença-a-Nova,Castelo Branco,continente,Beira Baixa,Centro,16H,16,195,19,
+0509,Sertã,Castelo Branco,continente,Beira Baixa,Centro,16I,16,195,19,
+0510,Vila de Rei,Castelo Branco,continente,Beira Baixa,Centro,16I,16,195,19,
+0511,Vila Velha de Ródão,Castelo Branco,continente,Beira Baixa,Centro,16H,16,195,19,
+0601,Arganil,Coimbra,continente,Região de Coimbra,Centro,16E,16,192,19,
+0602,Cantanhede,Coimbra,continente,Região de Coimbra,Centro,16E,16,192,19,
+0603,Coimbra,Coimbra,continente,Região de Coimbra,Centro,16E,16,192,19,
+0604,Condeixa-a-Nova,Coimbra,continente,Região de Coimbra,Centro,16E,16,192,19,
+0605,Figueira da Foz,Coimbra,continente,Região de Coimbra,Centro,16E,16,192,19,
+0606,Góis,Coimbra,continente,Região de Coimbra,Centro,16E,16,192,19,
+0607,Lousã,Coimbra,continente,Região de Coimbra,Centro,16E,16,192,19,
+0608,Mira,Coimbra,continente,Região de Coimbra,Centro,16E,16,192,19,
+0609,Miranda do Corvo,Coimbra,continente,Região de Coimbra,Centro,16E,16,192,19,
+0610,Montemor-o-Velho,Coimbra,continente,Região de Coimbra,Centro,16E,16,192,19,
+0611,Oliveira do Hospital,Coimbra,continente,Região de Coimbra,Centro,16E,16,192,19,
+0612,Pampilhosa da Serra,Coimbra,continente,Região de Coimbra,Centro,16E,16,192,19,
+0613,Penacova,Coimbra,continente,Região de Coimbra,Centro,16E,16,192,19,
+0614,Penela,Coimbra,continente,Região de Coimbra,Centro,16E,16,192,19,
+0615,Soure,Coimbra,continente,Região de Coimbra,Centro,16E,16,192,19,
+0616,Tábua,Coimbra,continente,Região de Coimbra,Centro,16E,16,192,19,
+0617,Vila Nova de Poiares,Coimbra,continente,Região de Coimbra,Centro,16E,16,192,19,
+0701,Alandroal,Évora,continente,Alentejo Central,Alentejo,187,18,1C4,1C,
+0702,Arraiolos,Évora,continente,Alentejo Central,Alentejo,187,18,1C4,1C,
+0703,Borba,Évora,continente,Alentejo Central,Alentejo,187,18,1C4,1C,
+0704,Estremoz,Évora,continente,Alentejo Central,Alentejo,187,18,1C4,1C,
+0705,Évora,Évora,continente,Alentejo Central,Alentejo,187,18,1C4,1C,
+0706,Montemor-o-Novo,Évora,continente,Alentejo Central,Alentejo,187,18,1C4,1C,
+0707,Mora,Évora,continente,Alentejo Central,Alentejo,187,18,1C4,1C,
+0708,Mourão,Évora,continente,Alentejo Central,Alentejo,187,18,1C4,1C,
+0709,Portel,Évora,continente,Alentejo Central,Alentejo,187,18,1C4,1C,
+0710,Redondo,Évora,continente,Alentejo Central,Alentejo,187,18,1C4,1C,
+0711,Reguengos de Monsaraz,Évora,continente,Alentejo Central,Alentejo,187,18,1C4,1C,
+0712,Vendas Novas,Évora,continente,Alentejo Central,Alentejo,187,18,1C4,1C,
+0713,Viana do Alentejo,Évora,continente,Alentejo Central,Alentejo,187,18,1C4,1C,
+0714,Vila Viçosa,Évora,continente,Alentejo Central,Alentejo,187,18,1C4,1C,
+0801,Albufeira,Faro,continente,Algarve,Algarve,150,15,150,15,
+0802,Alcoutim,Faro,continente,Algarve,Algarve,150,15,150,15,
+0803,Aljezur,Faro,continente,Algarve,Algarve,150,15,150,15,
+0804,Castro Marim,Faro,continente,Algarve,Algarve,150,15,150,15,
+0805,Faro,Faro,continente,Algarve,Algarve,150,15,150,15,
+0806,Lagoa,Faro,continente,Algarve,Algarve,150,15,150,15,
+0807,Lagos,Faro,continente,Algarve,Algarve,150,15,150,15,
+0808,Loulé,Faro,continente,Algarve,Algarve,150,15,150,15,
+0809,Monchique,Faro,continente,Algarve,Algarve,150,15,150,15,
+0810,Olhão,Faro,continente,Algarve,Algarve,150,15,150,15,
+0811,Portimão,Faro,continente,Algarve,Algarve,150,15,150,15,
+0812,São Brás de Alportel,Faro,continente,Algarve,Algarve,150,15,150,15,
+0813,Silves,Faro,continente,Algarve,Algarve,150,15,150,15,
+0814,Tavira,Faro,continente,Algarve,Algarve,150,15,150,15,
+0815,Vila do Bispo,Faro,continente,Algarve,Algarve,150,15,150,15,
+0816,Vila Real de Santo António,Faro,continente,Algarve,Algarve,150,15,150,15,
+0901,Aguiar da Beira,Guarda,continente,Viseu Dão Lafões,Centro,16G,16,194,19,
+0902,Almeida,Guarda,continente,Beiras e Serra da Estrela,Centro,16J,16,196,19,
+0903,Celorico da Beira,Guarda,continente,Beiras e Serra da Estrela,Centro,16J,16,196,19,
+0904,Figueira de Castelo Rodrigo,Guarda,continente,Beiras e Serra da Estrela,Centro,16J,16,196,19,
+0905,Fornos de Algodres,Guarda,continente,Beiras e Serra da Estrela,Centro,16J,16,196,19,
+0906,Gouveia,Guarda,continente,Beiras e Serra da Estrela,Centro,16J,16,196,19,
+0907,Guarda,Guarda,continente,Beiras e Serra da Estrela,Centro,16J,16,196,19,
+0908,Manteigas,Guarda,continente,Beiras e Serra da Estrela,Centro,16J,16,196,19,
+0909,Mêda,Guarda,continente,Beiras e Serra da Estrela,Centro,16J,16,196,19,
+0910,Pinhel,Guarda,continente,Beiras e Serra da Estrela,Centro,16J,16,196,19,
+0911,Sabugal,Guarda,continente,Beiras e Serra da Estrela,Centro,16J,16,196,19,
+0912,Seia,Guarda,continente,Beiras e Serra da Estrela,Centro,16J,16,196,19,
+0913,Trancoso,Guarda,continente,Beiras e Serra da Estrela,Centro,16J,16,196,19,
+0914,Vila Nova de Foz Côa,Guarda,continente,Douro,Norte,11D,11,11D,11,
+1001,Alcobaça,Leiria,continente,Oeste,Oeste e Vale do Tejo,16B,16,1D1,1D,
+1002,Alvaiázere,Leiria,continente,Região de Leiria,Centro,16F,16,193,19,
+1003,Ansião,Leiria,continente,Região de Leiria,Centro,16F,16,193,19,
+1004,Batalha,Leiria,continente,Região de Leiria,Centro,16F,16,193,19,
+1005,Bombarral,Leiria,continente,Oeste,Oeste e Vale do Tejo,16B,16,1D1,1D,
+1006,Caldas da Rainha,Leiria,continente,Oeste,Oeste e Vale do Tejo,16B,16,1D1,1D,
+1007,Castanheira de Pêra,Leiria,continente,Região de Leiria,Centro,16F,16,193,19,
+1008,Figueiró dos Vinhos,Leiria,continente,Região de Leiria,Centro,16F,16,193,19,
+1009,Leiria,Leiria,continente,Região de Leiria,Centro,16F,16,193,19,
+1010,Marinha Grande,Leiria,continente,Região de Leiria,Centro,16F,16,193,19,
+1011,Nazaré,Leiria,continente,Oeste,Oeste e Vale do Tejo,16B,16,1D1,1D,
+1012,Óbidos,Leiria,continente,Oeste,Oeste e Vale do Tejo,16B,16,1D1,1D,
+1013,Pedrógão Grande,Leiria,continente,Região de Leiria,Centro,16F,16,193,19,
+1014,Peniche,Leiria,continente,Oeste,Oeste e Vale do Tejo,16B,16,1D1,1D,
+1015,Pombal,Leiria,continente,Região de Leiria,Centro,16F,16,193,19,
+1016,Porto de Mós,Leiria,continente,Região de Leiria,Centro,16F,16,193,19,
+1101,Alenquer,Lisboa,continente,Oeste,Oeste e Vale do Tejo,16B,16,1D1,1D,
+1102,Arruda dos Vinhos,Lisboa,continente,Oeste,Oeste e Vale do Tejo,16B,16,1D1,1D,
+1103,Azambuja,Lisboa,continente,Lezíria do Tejo,Oeste e Vale do Tejo,185,18,1D3,1D,
+1104,Cadaval,Lisboa,continente,Oeste,Oeste e Vale do Tejo,16B,16,1D1,1D,
+1105,Cascais,Lisboa,continente,Grande Lisboa,Grande Lisboa,170,17,1A0,1A,
+1106,Lisboa,Lisboa,continente,Grande Lisboa,Grande Lisboa,170,17,1A0,1A,
+1107,Loures,Lisboa,continente,Grande Lisboa,Grande Lisboa,170,17,1A0,1A,
+1108,Lourinhã,Lisboa,continente,Oeste,Oeste e Vale do Tejo,16B,16,1D1,1D,
+1109,Mafra,Lisboa,continente,Grande Lisboa,Grande Lisboa,170,17,1A0,1A,
+1110,Oeiras,Lisboa,continente,Grande Lisboa,Grande Lisboa,170,17,1A0,1A,
+1111,Sintra,Lisboa,continente,Grande Lisboa,Grande Lisboa,170,17,1A0,1A,
+1112,Sobral de Monte Agraço,Lisboa,continente,Oeste,Oeste e Vale do Tejo,16B,16,1D1,1D,
+1113,Torres Vedras,Lisboa,continente,Oeste,Oeste e Vale do Tejo,16B,16,1D1,1D,
+1114,Vila Franca de Xira,Lisboa,continente,Grande Lisboa,Grande Lisboa,170,17,1A0,1A,
+1115,Amadora,Lisboa,continente,Grande Lisboa,Grande Lisboa,170,17,1A0,1A,
+1116,Odivelas,Lisboa,continente,Grande Lisboa,Grande Lisboa,170,17,1A0,1A,1999
+1201,Alter do Chão,Portalegre,continente,Alto Alentejo,Alentejo,186,18,1C3,1C,
+1202,Arronches,Portalegre,continente,Alto Alentejo,Alentejo,186,18,1C3,1C,
+1203,Avis,Portalegre,continente,Alto Alentejo,Alentejo,186,18,1C3,1C,
+1204,Campo Maior,Portalegre,continente,Alto Alentejo,Alentejo,186,18,1C3,1C,
+1205,Castelo de Vide,Portalegre,continente,Alto Alentejo,Alentejo,186,18,1C3,1C,
+1206,Crato,Portalegre,continente,Alto Alentejo,Alentejo,186,18,1C3,1C,
+1207,Elvas,Portalegre,continente,Alto Alentejo,Alentejo,186,18,1C3,1C,
+1208,Fronteira,Portalegre,continente,Alto Alentejo,Alentejo,186,18,1C3,1C,
+1209,Gavião,Portalegre,continente,Alto Alentejo,Alentejo,186,18,1C3,1C,
+1210,Marvão,Portalegre,continente,Alto Alentejo,Alentejo,186,18,1C3,1C,
+1211,Monforte,Portalegre,continente,Alto Alentejo,Alentejo,186,18,1C3,1C,
+1212,Nisa,Portalegre,continente,Alto Alentejo,Alentejo,186,18,1C3,1C,
+1213,Ponte de Sor,Portalegre,continente,Alto Alentejo,Alentejo,186,18,1C3,1C,
+1214,Portalegre,Portalegre,continente,Alto Alentejo,Alentejo,186,18,1C3,1C,
+1215,Sousel,Portalegre,continente,Alto Alentejo,Alentejo,186,18,1C3,1C,
+1301,Amarante,Porto,continente,Tâmega e Sousa,Norte,11C,11,11C,11,
+1302,Baião,Porto,continente,Tâmega e Sousa,Norte,11C,11,11C,11,
+1303,Felgueiras,Porto,continente,Tâmega e Sousa,Norte,11C,11,11C,11,
+1304,Gondomar,Porto,continente,Área Metropolitana do Porto,Norte,11A,11,11A,11,
+1305,Lousada,Porto,continente,Tâmega e Sousa,Norte,11C,11,11C,11,
+1306,Maia,Porto,continente,Área Metropolitana do Porto,Norte,11A,11,11A,11,
+1307,Marco de Canaveses,Porto,continente,Tâmega e Sousa,Norte,11C,11,11C,11,
+1308,Matosinhos,Porto,continente,Área Metropolitana do Porto,Norte,11A,11,11A,11,
+1309,Paços de Ferreira,Porto,continente,Tâmega e Sousa,Norte,11C,11,11C,11,
+1310,Paredes,Porto,continente,Área Metropolitana do Porto,Norte,11A,11,11A,11,
+1311,Penafiel,Porto,continente,Tâmega e Sousa,Norte,11C,11,11C,11,
+1312,Porto,Porto,continente,Área Metropolitana do Porto,Norte,11A,11,11A,11,
+1313,Póvoa de Varzim,Porto,continente,Área Metropolitana do Porto,Norte,11A,11,11A,11,
+1314,Santo Tirso,Porto,continente,Área Metropolitana do Porto,Norte,11A,11,11A,11,
+1315,Valongo,Porto,continente,Área Metropolitana do Porto,Norte,11A,11,11A,11,
+1316,Vila do Conde,Porto,continente,Área Metropolitana do Porto,Norte,11A,11,11A,11,
+1317,Vila Nova de Gaia,Porto,continente,Área Metropolitana do Porto,Norte,11A,11,11A,11,
+1318,Trofa,Porto,continente,Área Metropolitana do Porto,Norte,11A,11,11A,11,1998
+1401,Abrantes,Santarém,continente,Médio Tejo,Oeste e Vale do Tejo,16I,16,1D2,1D,
+1402,Alcanena,Santarém,continente,Médio Tejo,Oeste e Vale do Tejo,16I,16,1D2,1D,
+1403,Almeirim,Santarém,continente,Lezíria do Tejo,Oeste e Vale do Tejo,185,18,1D3,1D,
+1404,Alpiarça,Santarém,continente,Lezíria do Tejo,Oeste e Vale do Tejo,185,18,1D3,1D,
+1405,Benavente,Santarém,continente,Lezíria do Tejo,Oeste e Vale do Tejo,185,18,1D3,1D,
+1406,Cartaxo,Santarém,continente,Lezíria do Tejo,Oeste e Vale do Tejo,185,18,1D3,1D,
+1407,Chamusca,Santarém,continente,Lezíria do Tejo,Oeste e Vale do Tejo,185,18,1D3,1D,
+1408,Constância,Santarém,continente,Médio Tejo,Oeste e Vale do Tejo,16I,16,1D2,1D,
+1409,Coruche,Santarém,continente,Lezíria do Tejo,Oeste e Vale do Tejo,185,18,1D3,1D,
+1410,Entroncamento,Santarém,continente,Médio Tejo,Oeste e Vale do Tejo,16I,16,1D2,1D,
+1411,Ferreira do Zêzere,Santarém,continente,Médio Tejo,Oeste e Vale do Tejo,16I,16,1D2,1D,
+1412,Golegã,Santarém,continente,Lezíria do Tejo,Oeste e Vale do Tejo,185,18,1D3,1D,
+1413,Mação,Santarém,continente,Médio Tejo,Oeste e Vale do Tejo,16I,16,1D2,1D,
+1414,Rio Maior,Santarém,continente,Lezíria do Tejo,Oeste e Vale do Tejo,185,18,1D3,1D,
+1415,Salvaterra de Magos,Santarém,continente,Lezíria do Tejo,Oeste e Vale do Tejo,185,18,1D3,1D,
+1416,Santarém,Santarém,continente,Lezíria do Tejo,Oeste e Vale do Tejo,185,18,1D3,1D,
+1417,Sardoal,Santarém,continente,Médio Tejo,Oeste e Vale do Tejo,16I,16,1D2,1D,
+1418,Tomar,Santarém,continente,Médio Tejo,Oeste e Vale do Tejo,16I,16,1D2,1D,
+1419,Torres Novas,Santarém,continente,Médio Tejo,Oeste e Vale do Tejo,16I,16,1D2,1D,
+1420,Vila Nova da Barquinha,Santarém,continente,Médio Tejo,Oeste e Vale do Tejo,16I,16,1D2,1D,
+1421,Ourém,Santarém,continente,Médio Tejo,Oeste e Vale do Tejo,16I,16,1D2,1D,
+1501,Alcácer do Sal,Setúbal,continente,Alentejo Litoral,Alentejo,181,18,1C1,1C,
+1502,Alcochete,Setúbal,continente,Península de Setúbal,Península de Setúbal,170,17,1B0,1B,
+1503,Almada,Setúbal,continente,Península de Setúbal,Península de Setúbal,170,17,1B0,1B,
+1504,Barreiro,Setúbal,continente,Península de Setúbal,Península de Setúbal,170,17,1B0,1B,
+1505,Grândola,Setúbal,continente,Alentejo Litoral,Alentejo,181,18,1C1,1C,
+1506,Moita,Setúbal,continente,Península de Setúbal,Península de Setúbal,170,17,1B0,1B,
+1507,Montijo,Setúbal,continente,Península de Setúbal,Península de Setúbal,170,17,1B0,1B,
+1508,Palmela,Setúbal,continente,Península de Setúbal,Península de Setúbal,170,17,1B0,1B,
+1509,Santiago do Cacém,Setúbal,continente,Alentejo Litoral,Alentejo,181,18,1C1,1C,
+1510,Seixal,Setúbal,continente,Península de Setúbal,Península de Setúbal,170,17,1B0,1B,
+1511,Sesimbra,Setúbal,continente,Península de Setúbal,Península de Setúbal,170,17,1B0,1B,
+1512,Setúbal,Setúbal,continente,Península de Setúbal,Península de Setúbal,170,17,1B0,1B,
+1513,Sines,Setúbal,continente,Alentejo Litoral,Alentejo,181,18,1C1,1C,
+1601,Arcos de Valdevez,Viana do Castelo,continente,Alto Minho,Norte,111,11,111,11,
+1602,Caminha,Viana do Castelo,continente,Alto Minho,Norte,111,11,111,11,
+1603,Melgaço,Viana do Castelo,continente,Alto Minho,Norte,111,11,111,11,
+1604,Monção,Viana do Castelo,continente,Alto Minho,Norte,111,11,111,11,
+1605,Paredes de Coura,Viana do Castelo,continente,Alto Minho,Norte,111,11,111,11,
+1606,Ponte da Barca,Viana do Castelo,continente,Alto Minho,Norte,111,11,111,11,
+1607,Ponte de Lima,Viana do Castelo,continente,Alto Minho,Norte,111,11,111,11,
+1608,Valença,Viana do Castelo,continente,Alto Minho,Norte,111,11,111,11,
+1609,Viana do Castelo,Viana do Castelo,continente,Alto Minho,Norte,111,11,111,11,
+1610,Vila Nova de Cerveira,Viana do Castelo,continente,Alto Minho,Norte,111,11,111,11,
+1701,Alijó,Vila Real,continente,Douro,Norte,11D,11,11D,11,
+1702,Boticas,Vila Real,continente,Alto Tâmega e Barroso,Norte,11B,11,11B,11,
+1703,Chaves,Vila Real,continente,Alto Tâmega e Barroso,Norte,11B,11,11B,11,
+1704,Mesão Frio,Vila Real,continente,Douro,Norte,11D,11,11D,11,
+1705,Mondim de Basto,Vila Real,continente,Ave,Norte,119,11,119,11,
+1706,Montalegre,Vila Real,continente,Alto Tâmega e Barroso,Norte,11B,11,11B,11,
+1707,Murça,Vila Real,continente,Douro,Norte,11D,11,11D,11,
+1708,Peso da Régua,Vila Real,continente,Douro,Norte,11D,11,11D,11,
+1709,Ribeira de Pena,Vila Real,continente,Alto Tâmega e Barroso,Norte,11B,11,11B,11,
+1710,Sabrosa,Vila Real,continente,Douro,Norte,11D,11,11D,11,
+1711,Santa Marta de Penaguião,Vila Real,continente,Douro,Norte,11D,11,11D,11,
+1712,Valpaços,Vila Real,continente,Alto Tâmega e Barroso,Norte,11B,11,11B,11,
+1713,Vila Pouca de Aguiar,Vila Real,continente,Alto Tâmega e Barroso,Norte,11B,11,11B,11,
+1714,Vila Real,Vila Real,continente,Douro,Norte,11D,11,11D,11,
+1801,Armamar,Viseu,continente,Douro,Norte,11D,11,11D,11,
+1802,Carregal do Sal,Viseu,continente,Viseu Dão Lafões,Centro,16G,16,194,19,
+1803,Castro Daire,Viseu,continente,Viseu Dão Lafões,Centro,16G,16,194,19,
+1804,Cinfães,Viseu,continente,Tâmega e Sousa,Norte,11C,11,11C,11,
+1805,Lamego,Viseu,continente,Douro,Norte,11D,11,11D,11,
+1806,Mangualde,Viseu,continente,Viseu Dão Lafões,Centro,16G,16,194,19,
+1807,Moimenta da Beira,Viseu,continente,Douro,Norte,11D,11,11D,11,
+1808,Mortágua,Viseu,continente,Região de Coimbra,Centro,16E,16,192,19,
+1809,Nelas,Viseu,continente,Viseu Dão Lafões,Centro,16G,16,194,19,
+1810,Oliveira de Frades,Viseu,continente,Viseu Dão Lafões,Centro,16G,16,194,19,
+1811,Penalva do Castelo,Viseu,continente,Viseu Dão Lafões,Centro,16G,16,194,19,
+1812,Penedono,Viseu,continente,Douro,Norte,11D,11,11D,11,
+1813,Resende,Viseu,continente,Tâmega e Sousa,Norte,11C,11,11C,11,
+1814,Santa Comba Dão,Viseu,continente,Viseu Dão Lafões,Centro,16G,16,194,19,
+1815,São João da Pesqueira,Viseu,continente,Douro,Norte,11D,11,11D,11,
+1816,São Pedro do Sul,Viseu,continente,Viseu Dão Lafões,Centro,16G,16,194,19,
+1817,Sátão,Viseu,continente,Viseu Dão Lafões,Centro,16G,16,194,19,
+1818,Sernancelhe,Viseu,continente,Douro,Norte,11D,11,11D,11,
+1819,Tabuaço,Viseu,continente,Douro,Norte,11D,11,11D,11,
+1820,Tarouca,Viseu,continente,Douro,Norte,11D,11,11D,11,
+1821,Tondela,Viseu,continente,Viseu Dão Lafões,Centro,16G,16,194,19,
+1822,Vila Nova de Paiva,Viseu,continente,Viseu Dão Lafões,Centro,16G,16,194,19,
+1823,Viseu,Viseu,continente,Viseu Dão Lafões,Centro,16G,16,194,19,
+1824,Vouzela,Viseu,continente,Viseu Dão Lafões,Centro,16G,16,194,19,
+3101,Calheta,Ilha da Madeira,madeira,Região Autónoma da Madeira,Região Autónoma da Madeira,300,30,300,30,
+3102,Câmara de Lobos,Ilha da Madeira,madeira,Região Autónoma da Madeira,Região Autónoma da Madeira,300,30,300,30,
+3103,Funchal,Ilha da Madeira,madeira,Região Autónoma da Madeira,Região Autónoma da Madeira,300,30,300,30,
+3104,Machico,Ilha da Madeira,madeira,Região Autónoma da Madeira,Região Autónoma da Madeira,300,30,300,30,
+3105,Ponta do Sol,Ilha da Madeira,madeira,Região Autónoma da Madeira,Região Autónoma da Madeira,300,30,300,30,
+3106,Porto Moniz,Ilha da Madeira,madeira,Região Autónoma da Madeira,Região Autónoma da Madeira,300,30,300,30,
+3107,Ribeira Brava,Ilha da Madeira,madeira,Região Autónoma da Madeira,Região Autónoma da Madeira,300,30,300,30,
+3108,Santa Cruz,Ilha da Madeira,madeira,Região Autónoma da Madeira,Região Autónoma da Madeira,300,30,300,30,
+3109,Santana,Ilha da Madeira,madeira,Região Autónoma da Madeira,Região Autónoma da Madeira,300,30,300,30,
+3110,São Vicente,Ilha da Madeira,madeira,Região Autónoma da Madeira,Região Autónoma da Madeira,300,30,300,30,
+3201,Porto Santo,Ilha de Porto Santo,madeira,Região Autónoma da Madeira,Região Autónoma da Madeira,300,30,300,30,
+4101,Vila do Porto,Ilha de Santa Maria,azores,Região Autónoma dos Açores,Região Autónoma dos Açores,200,20,200,20,
+4201,Lagoa,Ilha de São Miguel,azores,Região Autónoma dos Açores,Região Autónoma dos Açores,200,20,200,20,
+4202,Nordeste,Ilha de São Miguel,azores,Região Autónoma dos Açores,Região Autónoma dos Açores,200,20,200,20,
+4203,Ponta Delgada,Ilha de São Miguel,azores,Região Autónoma dos Açores,Região Autónoma dos Açores,200,20,200,20,
+4204,Povoação,Ilha de São Miguel,azores,Região Autónoma dos Açores,Região Autónoma dos Açores,200,20,200,20,
+4205,Ribeira Grande,Ilha de São Miguel,azores,Região Autónoma dos Açores,Região Autónoma dos Açores,200,20,200,20,
+4206,Vila Franca do Campo,Ilha de São Miguel,azores,Região Autónoma dos Açores,Região Autónoma dos Açores,200,20,200,20,
+4301,Angra do Heroísmo,Ilha Terceira,azores,Região Autónoma dos Açores,Região Autónoma dos Açores,200,20,200,20,
+4302,Praia da Vitória,Ilha Terceira,azores,Região Autónoma dos Açores,Região Autónoma dos Açores,200,20,200,20,
+4401,Santa Cruz da Graciosa,Ilha da Graciosa,azores,Região Autónoma dos Açores,Região Autónoma dos Açores,200,20,200,20,
+4501,Calheta de São Jorge,Ilha de São Jorge,azores,Região Autónoma dos Açores,Região Autónoma dos Açores,200,20,200,20,
+4502,Velas,Ilha de São Jorge,azores,Região Autónoma dos Açores,Região Autónoma dos Açores,200,20,200,20,
+4601,Lajes do Pico,Ilha do Pico,azores,Região Autónoma dos Açores,Região Autónoma dos Açores,200,20,200,20,
+4602,Madalena,Ilha do Pico,azores,Região Autónoma dos Açores,Região Autónoma dos Açores,200,20,200,20,
+4603,São Roque do Pico,Ilha do Pico,azores,Região Autónoma dos Açores,Região Autónoma dos Açores,200,20,200,20,
+4701,Horta,Ilha do Faial,azores,Região Autónoma dos Açores,Região Autónoma dos Açores,200,20,200,20,
+4801,Lajes das Flores,Ilha das Flores,azores,Região Autónoma dos Açores,Região Autónoma dos Açores,200,20,200,20,
+4802,Santa Cruz das Flores,Ilha das Flores,azores,Região Autónoma dos Açores,Região Autónoma dos Açores,200,20,200,20,
+4901,Corvo,Ilha do Corvo,azores,Região Autónoma dos Açores,Região Autónoma dos Açores,200,20,200,20,

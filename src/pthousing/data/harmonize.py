@@ -6,6 +6,11 @@ from pthousing.config import EXTERNAL, MUNI_KEY
 
 CROSSWALK_PATH = EXTERNAL / "muni_crosswalk.csv"
 
+# Municipalities created after 1995 (Vizela, Trofa, Odivelas). INE does not back-cast them: its 1995+ series
+# hold exact zeros, not missing values, until the first year with data, while the parent municipalities still
+# carry the territory. First year with data = first non-zero year of the licensed-dwellings series (0000087).
+VALID_FROM_YEAR = {"0314": 1998, "1318": 1998, "1116": 1999}
+
 # One municipality-level indicator per NUTS vintage; INE's 7-char geocod = NUTS III prefix + muni_code.
 NUTS_2013_SOURCE = ("0009490", "S5A20213")  # sale prices, methodology 2018, 3Q2021
 NUTS_2024_SOURCE = ("0012600", "S7A2024")  # median rent of new leases, 2024
@@ -36,6 +41,7 @@ def build_crosswalk(
     for vintage, frame in (("2013", ine_nuts2013), ("2024", ine_nuts2024)):
         out[f"nuts3_{vintage}"] = out[MUNI_KEY].map(nuts_prefixes(frame, codes, f"nuts3_{vintage}"))
         out[f"nuts2_{vintage}"] = out[f"nuts3_{vintage}"].str[:2]
+    out["valid_from_year"] = out[MUNI_KEY].map(VALID_FROM_YEAR).astype("Int64")
     return out.sort_values(MUNI_KEY, ignore_index=True)
 
 
@@ -56,6 +62,16 @@ def write_crosswalk() -> pd.DataFrame:
 
 def read_crosswalk() -> pd.DataFrame:
     return pd.read_csv(CROSSWALK_PATH, dtype=str, encoding="utf-8")
+
+
+def mask_pre_creation(df: pd.DataFrame, crosswalk: pd.DataFrame | None = None) -> pd.DataFrame:
+    """Set ``value`` to NaN for municipality-years before the municipality existed (structural zeros).
+
+    The parent municipalities keep the territory until then, so their series have a boundary break at
+    the same date; this only cleans the new municipalities' own history."""
+    cw = crosswalk if crosswalk is not None else read_crosswalk()
+    start = pd.to_numeric(cw.set_index(MUNI_KEY)["valid_from_year"]).dropna()
+    return df.assign(value=df["value"].mask(df["year"] < df[MUNI_KEY].map(start)))
 
 
 def keep_municipalities(df: pd.DataFrame, crosswalk: pd.DataFrame | None = None) -> pd.DataFrame:
