@@ -22,13 +22,13 @@ Registry of every dataset. **Read this before opening any data file or source mo
 | eurostat_hpi | eurostat | HPI (prc_hpi_q) and HICP (prc_hicp_aind) for EU comparison | Country | Quarterly / annual | 2005-Q1–2026-Q2 / 1996–2025 | | verified |
 | at_imi_imt | at | IMI and IMT revenue and municipal IMI rates | Municipality | Annual | no official source found; third-party IMI rates 2023–2025 | | candidate (unresolved) |
 | rnal_al | rnal | Registered short-term rentals (Alojamento Local), with registration date and coordinates | Point / parish / municipality | Snapshot (current registrations) | 111,937 units, `DataRegisto` | | verified (survivorship caveat) |
-| caop_boundaries | caop | Municipality boundaries (CAOP 2024) | Municipality | Annual vintage | 2024 | | verified (URLs respond) |
+| caop_boundaries | caop | Municipality boundaries (CAOP 2024), 308 municipalities | Municipality | Annual vintage | 2024 | caop_municipalities.parquet | ingested |
 | aima_foreigners | aima | Foreign residents with legal status (ex-SEF, via INE) | Municipality | Annual | 2014–2023 (0010247) | | verified (ends 2023) |
 
 ## Lookups (`data/external/`)
 | File | Content | Built by | Status |
 |---|---|---|---|
-| muni_crosswalk.csv | Municipality codes across boundary/code changes, district, NUTS II/III (2013 and 2024 versions) | manual + harmonize.py | — |
+| muni_crosswalk.csv | 308 CAOP 2024 municipalities: name, district, territory, NUTS II/III codes in the 2013 and 2024 vintages (codes from INE `geocod` prefixes) | harmonize.write_crosswalk() | built; code changes before 2013 not covered |
 | muni_typology.csv | Coastal/inland, urban/rural (INE TIPAU), tourist flag + definition | manual | — |
 
 ## Processed panels (`data/processed/`)
