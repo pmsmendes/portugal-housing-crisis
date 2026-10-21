@@ -47,6 +47,9 @@ target-version = "py314"
 select = ["E", "F", "I", "B", "UP"]
 ignore = ["E501"]  # line length is left to ruff format
 
+[tool.ruff.lint.per-file-ignores]
+"notebooks/**" = ["B018", "E402"]  # a bare `fig` shows the figure in a notebook cell
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 
