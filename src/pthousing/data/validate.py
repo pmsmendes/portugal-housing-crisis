@@ -16,7 +16,7 @@ import pandera.pandas as pa
 from pandera.pandas import Check, Column, DataFrameSchema
 
 from pthousing.config import MUNI_KEY
-from pthousing.data import harmonize, interim
+from pthousing.data import build_panel, harmonize, interim
 
 N_MUNICIPALITIES = 308
 PUBLICATION_MIN_N = 33  # INE publishes a municipal median only from 33 observations
@@ -118,6 +118,20 @@ def schemas() -> dict[str, DataFrameSchema]:
                 "other_tenure_n": _num(0, 1_000_000, nullable=False),
             },
             unique=[MUNI_KEY],
+            strict=True,
+        ),
+        "ine_census_stock": DataFrameSchema(
+            {
+                MUNI_KEY: muni,
+                "census_year": Column(int, Check.isin([2011, 2021]), coerce=True),
+                "dwellings_n": _num(1, 2_000_000, nullable=False),
+                "dwellings_usual_n": _num(0, 2_000_000, nullable=False),
+                "dwellings_secondary_n": _num(0, 2_000_000, nullable=False),
+                "dwellings_vacant_n": _num(0, 2_000_000, nullable=False),
+                "households_n": _num(1, 2_000_000, nullable=False),
+                "dwelling_area_sqm": _num(40, 250, nullable=False),
+            },
+            unique=[MUNI_KEY, "census_year"],
             strict=True,
         ),
         "ine_population": DataFrameSchema(
@@ -323,6 +337,18 @@ def check_census(df: pd.DataFrame) -> list[str | None]:
     return [_grid(df, ["census_year"]), _sum_equals(df["occupied_dwellings_n"], parts)]
 
 
+def check_census_stock(df: pd.DataFrame) -> list[str | None]:
+    parts = df[["dwellings_usual_n", "dwellings_secondary_n", "dwellings_vacant_n"]].sum(axis=1)
+    ratio = df["dwellings_usual_n"] / df["households_n"]
+    return [
+        _grid(df, ["census_year"]),
+        _sum_equals(df["dwellings_n"], parts),
+        None
+        if ratio.between(0.7, 1.05).all()
+        else "dwellings of usual residence and households differ by more than 30% in some municipality",
+    ]
+
+
 def check_population(df: pd.DataFrame) -> list[str | None]:
     key = [MUNI_KEY, "year"]
     tot = df[(df["sex"] == "total") & (df["age_group"] == "total")].set_index(key)["population_n"]
@@ -412,6 +438,7 @@ CHECKS: dict[str, Callable[[pd.DataFrame], list[str | None]]] = {
     "ine_bank_valuation": check_valuation,
     "ine_bank_valuation_annual": check_valuation_annual,
     "ine_census": check_census,
+    "ine_census_stock": check_census_stock,
     "ine_population": check_population,
     "ine_cpi": check_cpi,
     "ine_cpi_monthly": check_cpi_monthly,
@@ -461,6 +488,237 @@ def cross_checks(tables: dict[str, pd.DataFrame]) -> list[tuple[str, str | None]
     return out
 
 
+# ---- processed panels -----------------------------------------------------------------------------
+
+PANEL_YEARS = list(range(1995, 2026))
+REAL_PAIRS = [
+    "price_sqm_eur",
+    "price_existing_sqm_eur",
+    "price_new_sqm_eur",
+    "rent_sqm_eur",
+    "valuation_sqm_eur",
+    "income_mean_eur",
+    "income_median_eur",
+]
+FIRST_YEAR = {
+    "price_sqm_eur": 2016,
+    "rent_sqm_eur": 2020,
+    "income_median_eur": 2015,
+    "population_n": 2011,
+}
+
+
+def panel_schemas() -> dict[str, DataFrameSchema]:
+    """Key columns, ranges and uniqueness of the processed panels (other columns are not constrained)."""
+    codes = set(harmonize.read_crosswalk()[MUNI_KEY])
+    return {
+        "panel_municipality_year": DataFrameSchema(
+            {
+                MUNI_KEY: Column(str, Check.isin(codes)),
+                "year": Column(int, Check.in_range(1995, 2025), coerce=True),
+                "territory": _cat({"continente", "madeira", "azores"}),
+                "price_sqm_eur": _num(50, 20_000),
+                "rent_sqm_eur": _num(1, 40),
+                "income_median_eur": _num(3_000, 60_000),
+                "dwelling_area_sqm": _num(50, 200, nullable=False),
+                "deflator_to_base_year": _num(0.5, 3, nullable=False),
+                "pti_years": _num(0.5, 60),
+                "pti_years_100sqm": _num(0.5, 60),
+                "rti_pct": _num(5, 300),
+                "mortgage_burden_pct": _num(1, 400),
+                "mortgage_rate_new_lt1y_pct": _num(0, 15),  # BPstat starts in 2003
+            },
+            unique=[MUNI_KEY, "year"],
+            strict=False,
+        ),
+        "national_quarterly": DataFrameSchema(
+            {
+                "period_start": Column("datetime64[ns]", coerce=True),
+                "year": Column(int, Check.in_range(2005, 2030), coerce=True),
+                "quarter": Column(int, Check.in_range(1, 4), coerce=True),
+                "hpi_pt_b2015": _num(10, 600),
+                "hpi_eu27_b2015": _num(10, 600, nullable=False),
+                "cpi_index_b2025": _num(10, 500),
+                "deflator_to_base_year": _num(0.5, 3),
+                "mortgage_rate_new_lt1y_pct": _num(0, 15),
+                "mortgage_payment_100k_eur": _num(100, 1_500),
+            },
+            unique=["period_start"],
+            strict=False,
+        ),
+    }
+
+
+def _rel_diff(a: pd.Series, b: pd.Series) -> float:
+    both = pd.concat([a, b], axis=1).dropna()
+    return (
+        0.0
+        if both.empty
+        else float(((both.iloc[:, 0] - both.iloc[:, 1]).abs() / both.iloc[:, 1].abs()).max())
+    )
+
+
+def check_panel_municipality_year(
+    p: pd.DataFrame, tables: dict[str, pd.DataFrame]
+) -> list[str | None]:
+    msgs: list[str | None] = [
+        _grid(p, ["year"]),
+        None if sorted(p["year"].unique()) == PANEL_YEARS else "panel years are not 1995-2025",
+    ]
+    bad = [
+        c for c in REAL_PAIRS if _rel_diff(p[f"{c}_real"], p[c] * p["deflator_to_base_year"]) > 1e-9
+    ]
+    msgs.append(None if not bad else f"real values differ from nominal x deflator: {bad}")
+    base = p.loc[p["year"] == 2024, "deflator_to_base_year"]
+    msgs.append(None if (base == 1).all() else "the deflator is not 1 in the base year 2024")
+    msgs.append(
+        None
+        if all(p.loc[p["year"] < y, c].isna().all() for c, y in FIRST_YEAR.items())
+        else "values appear before the first year each source covers"
+    )
+    rate_missing = set(p.loc[p["mortgage_rate_new_lt1y_pct"].isna(), "year"])
+    msgs.append(
+        None
+        if rate_missing == set(range(1995, 2003))
+        else f"mortgage rate missing in years {sorted(rate_missing)}"
+    )
+
+    # indicators recomputed with plain formulas (independent of features/affordability.py)
+    area, income = p["dwelling_area_sqm"], p["income_median_eur"]
+    pti = p["price_sqm_eur"] * area / income
+    rti = 100 * p["rent_sqm_eur"] * area * 12 / income
+    r, n = p["mortgage_rate_new_lt1y_pct"] / 1200, 12 * 30
+    payment = 0.8 * p["price_sqm_eur"] * area * r / (1 - (1 + r) ** -n)
+    burden = 100 * 12 * payment / income
+    for name, expected in (("pti_years", pti), ("rti_pct", rti), ("mortgage_burden_pct", burden)):
+        rel = _rel_diff(p[name], expected)
+        msgs.append(
+            None if rel < 1e-9 else f"{name} differs from its definition (max relative {rel:.2e})"
+        )
+
+    # the panel keeps the totals of the interim tables
+    cons = (
+        tables["ine_construction"]
+        .query("size == 'total'")
+        .groupby("year")[["licensed_n", "completed_n"]]
+        .sum()
+    )
+    got = p.groupby("year")[["licensed_n", "completed_n"]].sum()
+    msgs.append(
+        None
+        if (got - cons.reindex(got.index)).abs().max().max() == 0
+        else "licensed / completed dwellings differ from the interim table"
+    )
+    pop = (
+        tables["ine_population"]
+        .query("sex == 'total' and age_group == 'total'")
+        .groupby("year")["population_n"]
+        .sum()
+    )
+    got_pop = p.groupby("year")["population_n"].sum(min_count=1).dropna()
+    msgs.append(
+        None
+        if (got_pop - pop.reindex(got_pop.index)).abs().max() == 0
+        else "population differs from the interim table"
+    )
+
+    static = p.drop_duplicates(MUNI_KEY).set_index(MUNI_KEY)
+    computed = 100 * static["dwellings_vacant_2021_n"] / static["dwellings_2021_n"]
+    gap = (computed - static["vacant_dwellings_pct_2021"]).abs().max()
+    msgs.append(
+        None if gap < 0.1 else f"census vacancy: published and computed differ by {gap:.2f} pp"
+    )
+
+    islands = p["territory"] != "continente"
+    registered_2026 = int((tables["rnal_al"]["registered"].dt.year >= 2026).sum())
+    survivors = p.loc[p["year"] == 2025, "al_survivor_units_n"].sum()
+    snapshot = static["al_units_snapshot_n"].sum()
+    msgs.append(
+        None
+        if p.loc[islands, "al_survivor_units_n"].isna().all()
+        and p.loc[~islands, "al_survivor_units_n"].notna().all()
+        else "short-term rentals are not NaN exactly for the island municipalities"
+    )
+    msgs.append(
+        None
+        if survivors + registered_2026 == snapshot
+        else "rental units registered up to 2025 plus those of 2026 do not add up to the snapshot"
+    )
+    return msgs
+
+
+def check_national_quarterly(q: pd.DataFrame, tables: dict[str, pd.DataFrame]) -> list[str | None]:
+    steps = q["period_start"].diff().dropna()
+    msgs: list[str | None] = [
+        None
+        if steps.between(pd.Timedelta(days=89), pd.Timedelta(days=92)).all()
+        else "quarters are not consecutive"
+    ]
+    for real, nominal in (
+        ("hpi_total_real_b2025", "hpi_total_b2025"),
+        ("hpi_pt_real_b2015", "hpi_pt_b2015"),
+    ):
+        rel = _rel_diff(q[real], q[nominal] * q["deflator_to_base_year"])
+        msgs.append(None if rel < 1e-9 else f"{real} differs from nominal x deflator")
+    deflator_2024 = q.loc[q["year"] == 2024, "deflator_to_base_year"].mean()
+    msgs.append(
+        None
+        if abs(deflator_2024 - 1) < 0.01
+        else f"quarterly deflator averages {deflator_2024:.4f} in 2024"
+    )
+    ine = (
+        tables["ine_hpi"].query("category == 'total'").set_index("period_start")["hpi_index_b2025"]
+    )
+    msgs.append(
+        None
+        if _rel_diff(
+            q.set_index("period_start")["hpi_total_b2025"],
+            ine.reindex(q["period_start"]).set_axis(q["period_start"]),
+        )
+        == 0
+        else "INE HPI differs from the interim table"
+    )
+    rate_up = q.dropna(subset=["mortgage_rate_new_lt1y_pct"]).sort_values(
+        "mortgage_rate_new_lt1y_pct"
+    )
+    msgs.append(
+        None
+        if rate_up["mortgage_payment_100k_eur"].is_monotonic_increasing
+        else "the payment on a fixed loan does not rise with the rate"
+    )
+    return msgs
+
+
+PANEL_CHECKS = {
+    "panel_municipality_year": check_panel_municipality_year,
+    "national_quarterly": check_national_quarterly,
+}
+
+
+def validate_panels(tables: dict[str, pd.DataFrame]) -> list[dict]:
+    """Schema and consistency checks of the processed panels against the interim tables."""
+    rows = []
+    for name, schema in panel_schemas().items():
+        panel = build_panel.read(name)
+        try:
+            schema.validate(panel, lazy=True)
+            rows.append({"table": name, "check": "schema", "ok": True, "detail": ""})
+        except pa.errors.SchemaErrors as exc:
+            cases = exc.failure_cases.groupby(["column", "check"]).size()
+            detail = "; ".join(f"{col}: {chk} ({n})" for (col, chk), n in cases.head(5).items())
+            rows.append({"table": name, "check": "schema", "ok": False, "detail": detail})
+        for i, msg in enumerate(PANEL_CHECKS[name](panel, tables)):
+            rows.append(
+                {
+                    "table": name,
+                    "check": f"consistency_{i + 1}",
+                    "ok": msg is None,
+                    "detail": msg or "",
+                }
+            )
+    return rows
+
+
 # ---- runner ---------------------------------------------------------------------------------------
 
 
@@ -489,6 +747,7 @@ def validate_all(strict: bool = True) -> pd.DataFrame:
         {"table": "cross_source", "check": name, "ok": msg is None, "detail": msg or ""}
         for name, msg in cross_checks(tables)
     ]
+    rows += validate_panels(tables)
     geometry = interim.read("caop_municipalities")
     caop_ok = (
         len(geometry) == N_MUNICIPALITIES

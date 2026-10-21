@@ -15,7 +15,7 @@ Registry of every dataset. **Read this before opening any data file or source mo
 | ine_bank_valuation | ine | Bank appraisal median €/m² by construction type | Municipality | Monthly / annual | Jan 2011–Aug 2026 (0012248) | ine_bank_valuation.parquet, ine_bank_valuation_annual.parquet | ingested |
 | ine_income | ine | Gross reported income per taxable person, mean and median (IRS) | Municipality | Annual | 2018–2024 (0012748/9, NUTS 2024); 2015–2021 (0009933/4, NUTS 2013) | ine_income.parquet | ingested |
 | ine_population | ine | Resident population estimates, natural change, migration | Municipality | Annual | 2011–2023 (0008273; earlier + migration todo) | ine_population.parquet | ingested (partial) |
-| ine_census | ine | Census: dwellings (primary/secondary/vacant), tenure, households | Municipality / parish | 1991, 2001, 2011, 2021 | 2021 verified (0012517, 0012531); earlier codes todo | ine_census.parquet | ingested (2021 only) |
+| ine_census | ine | Census: dwellings (primary/secondary/vacant), tenure, households, mean dwelling area | Municipality / parish | 1991, 2001, 2011, 2021 | 2011 and 2021 stock and area (0006304, 0012502, 0006457, 0012856, 0006988, 0012518); 2021 vacancy and tenure (0012517, 0012531); 2001 and 1991 todo | ine_census.parquet, ine_census_stock.parquet | ingested (2011 and 2021) |
 | ine_construction | ine | New family dwellings licensed and completed | Municipality | Annual (monthly licensed) | Licensed 1995–2025 (0000087, 0013235); completed 1995–2025 (0000076, 0013248) | ine_construction.parquet | ingested |
 | ine_cpi | ine | Consumer Price Index (deflator) | National | Monthly / annual | 1948–2026 (0014640 / 0014642, base 2025) | ine_cpi.parquet, ine_cpi_monthly.parquet | ingested |
 | bp_mortgage | bportugal | Mortgage interest rates (APRC, agreed rate, stocks), new loan volumes | National | Monthly | Jan 2003–Aug 2026 (series 12533714, 12533730, 12519759, 12533719); fixed-rate median from Dec 2018 (12710738) | bp_mortgage.parquet | ingested (household debt series todo) |
@@ -44,6 +44,7 @@ Full 308-municipality grid for municipal tables; suppressed cells are NaN, never
 | eurostat_hpi | geo × period_start | hpi_index_b2015 (PT, ES, IT, FR, DE, IE, EU27) |
 | eurostat_hicp | geo × year | hicp_index_b2015 (PT, EU27) |
 | rnal_al | rnal_n (one row per registered unit) | registered, opened, modality, guests_n, muni_code, parish_code, geo_reliability, lon, lat (mainland snapshot) |
+| ine_census_stock | muni_code × census_year (2011, 2021) | dwellings_n, dwellings_usual_n, dwellings_secondary_n, dwellings_vacant_n, households_n, dwelling_area_sqm |
 | caop_municipalities | muni_code | names, district, NUTS 2024 names, area_ha, parishes_n, geometry (EPSG:3763) |
 
 ## Lookups (`data/external/`)
@@ -55,5 +56,5 @@ Full 308-municipality grid for municipal tables; suppressed cells are NaN, never
 ## Processed panels (`data/processed/`)
 | File | Grain | Built by | Status |
 |---|---|---|---|
-| panel_municipality_year.parquet | muni_code × year | build_panel.py | — |
-| national_quarterly.parquet | quarter | build_panel.py | — |
+| panel_municipality_year.parquet | muni_code × year (308 × 1995–2025, 53 columns) | build_panel.py | built, validated |
+| national_quarterly.parquet | quarter (2005Q1–2026Q2, 25 columns) | build_panel.py | built, validated |

@@ -74,20 +74,26 @@ def period_codes(code: str) -> list[str]:
 
 
 def fetch_indicator(
-    code: str, periods: list[str] | None = None, refresh: bool = False
+    code: str,
+    periods: list[str] | None = None,
+    filters: dict[str, str] | None = None,
+    refresh: bool = False,
 ) -> list[Path]:
     """Download an indicator into ``data/raw/ine/<code>/`` and return the files written or reused.
 
     Without ``periods`` it asks for all periods at once and, if INE rejects that (large series), falls
-    back to one request per period.
+    back to one request per period. ``filters`` restrict other dimensions, e.g. ``{"Dim4": "T"}`` keeps
+    only the total of dimension 4 (needed when the full table exceeds INE's row limit); a filtered
+    download is stored in its own file so it never mixes with an unfiltered one.
     """
     folder = RAW / SOURCE_ID / code
     folder.mkdir(parents=True, exist_ok=True)
+    suffix = "".join(f"__{k}-{v}" for k, v in sorted((filters or {}).items()))
 
     def one(period: str) -> Path:
-        path = folder / f"{period}.json"
+        path = folder / f"{period}{suffix}.json"
         if refresh or not path.exists():
-            params = {"op": 2, "varcd": code, "Dim1": period, "lang": "EN"}
+            params = {"op": 2, "varcd": code, "Dim1": period, "lang": "EN", **(filters or {})}
             _decode(content := _get("pindica.jsp", params))  # validates before it is stored
             path.write_bytes(content)
         return path

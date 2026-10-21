@@ -161,6 +161,46 @@ def build_ine_census() -> pd.DataFrame:
     return out[cols].sort_values(MUNI_KEY, ignore_index=True)
 
 
+def build_ine_census_stock() -> pd.DataFrame:
+    """Census 2011 and 2021: dwellings by occupancy, private households and mean useful area.
+
+    ``dwellings_n`` are conventional dwellings; ``dwellings_vacant_n`` sums every vacant category (for
+    sale, for rent, other reasons). ``households_n`` are private households (2011: classic families).
+    ``dwelling_area_sqm`` is the mean useful area of dwellings of usual residence.
+    """
+    occupancy = {  # (census year, dim_3 code) -> column
+        (2011, "T"): "dwellings_n",
+        (2011, "11"): "dwellings_usual_n",
+        (2011, "12"): "dwellings_secondary_n",
+        (2011, "2"): "dwellings_vacant_n",
+        (2021, "T"): "dwellings_n",
+        (2021, "1"): "dwellings_usual_n",
+        (2021, "2"): "dwellings_secondary_n",
+        (2021, "3"): "dwellings_vacant_n",
+        (2021, "4"): "dwellings_vacant_n",
+    }
+    parts = []
+    for code in ("0006304", "0012502"):
+        df = _municipal(code)
+        df = df.assign(
+            col=[occupancy.get((y, d)) for y, d in zip(df["year"], df["dim_3"], strict=True)]
+        )
+        df = df.dropna(subset=["col"]).groupby([MUNI_KEY, "year", "col"])["value"].sum(min_count=1)
+        parts.append(df.unstack("col"))
+    dwellings = pd.concat(parts)
+    households = pd.concat(
+        [_municipal(c).set_index([MUNI_KEY, "year"])["value"] for c in ("0006457", "0012856")]
+    ).rename("households_n")
+    area = pd.concat(
+        [_municipal(c).set_index([MUNI_KEY, "year"])["value"] for c in ("0006988", "0012518")]
+    ).rename("dwelling_area_sqm")
+    out = dwellings.join([households, area], how="outer").reset_index()
+    out = out.rename(columns={"year": "census_year"})
+    cols = [MUNI_KEY, "census_year", "dwellings_n", "dwellings_usual_n", "dwellings_secondary_n"]
+    cols += ["dwellings_vacant_n", "households_n", "dwelling_area_sqm"]
+    return out[cols].sort_values([MUNI_KEY, "census_year"], ignore_index=True)
+
+
 def _age_group(label: str) -> str:
     if label == "Total":
         return "total"
@@ -252,9 +292,17 @@ INE_CODES = (
     "0009933", "0009934", "0012748", "0012749",  # income, NUTS 2013 and 2024 vintages
     "0000087", "0000076",  # dwellings licensed, completed (1995+)
     "0012248", "0012256",  # bank valuation, monthly and annual
-    "0012517", "0012531",  # census 2021
+    "0012517", "0012531",  # census 2021: vacancy, tenure
+    "0006988", "0012518",  # census 2011 / 2021: mean useful area of dwellings of usual residence
     "0008273", "0014642", "0014640", "0014765",  # population, CPI annual / monthly, HPI
 )  # fmt: skip
+# Census tables that exceed INE's row limit as a whole: only the totals of the dimensions we do not split by.
+INE_FILTERED = {
+    "0006304": {"Dim4": "T", "Dim5": "T"},  # conventional dwellings 2011 by occupancy status
+    "0012502": {"Dim4": "T", "Dim5": "T"},  # conventional dwellings 2021 by occupancy status
+    "0006457": {"Dim3": "T", "Dim4": "T", "Dim5": "T"},  # private households 2011
+    "0012856": {"Dim3": "T", "Dim4": "T", "Dim5": "T"},  # private households 2021
+}
 SOURCES = ("ine", "bportugal", "eurostat", "rnal", "caop")
 
 
@@ -266,6 +314,8 @@ def download(sources: list[str] | None = None, refresh: bool = False) -> None:
     if "ine" in chosen:
         for code in INE_CODES:
             ine.fetch_indicator(code, refresh=refresh)
+        for code, filters in INE_FILTERED.items():
+            ine.fetch_indicator(code, filters=filters, refresh=refresh)
     if "bportugal" in chosen:
         bportugal.fetch_all(refresh=refresh)
     if "eurostat" in chosen:
@@ -285,6 +335,7 @@ BUILDERS: dict[str, Callable[[], pd.DataFrame]] = {
     "ine_bank_valuation": build_ine_bank_valuation,
     "ine_bank_valuation_annual": build_ine_bank_valuation_annual,
     "ine_census": build_ine_census,
+    "ine_census_stock": build_ine_census_stock,
     "ine_population": build_ine_population,
     "ine_cpi": build_ine_cpi,
     "ine_cpi_monthly": build_ine_cpi_monthly,

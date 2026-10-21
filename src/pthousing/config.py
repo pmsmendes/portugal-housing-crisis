@@ -23,6 +23,13 @@ PHASES = ("p1", "p2", "p3", "p4")
 # Real values are expressed in constant euros of this year (HICP/CPI deflator, see harmonize.py).
 BASE_YEAR = 2024
 
+# Mortgage-burden assumptions for a typical new home loan (assumptions, not estimates: results are shown
+# with sensitivity to both; see docs/methodology.md and docs/decisions.md).
+MORTGAGE_LTV = 0.80  # loan as a share of the dwelling price
+MORTGAGE_TERM_YEARS = 30
+# Benchmark dwelling for the fixed-size variants of PTI / RTI (comparable across municipalities).
+BENCHMARK_AREA_SQM = 100
+
 # CRS: ETRS89 / Portugal TM06 for metric operations, WGS84 for web maps.
 CRS_METRIC = "EPSG:3763"
 CRS_WEB = "EPSG:4326"

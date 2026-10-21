@@ -1,12 +1,12 @@
-"""Data pipeline CLI: download -> clean (interim parquet) -> validate.
+"""Data pipeline CLI: download -> clean (interim parquet) -> build panels -> validate.
 
 Usage: uv run python scripts/run_pipeline.py [--sources ine bportugal ...] [--skip-download] [--refresh]
-Thin wrapper only; all logic lives in src/pthousing/data/. The analysis panels (build_panel.py) come next.
+Thin wrapper only; all logic lives in src/pthousing/data/.
 """
 
 import argparse
 
-from pthousing.data import interim, validate
+from pthousing.data import build_panel, interim, validate
 
 
 def main() -> None:
@@ -25,6 +25,8 @@ def main() -> None:
         interim.download(args.sources, refresh=args.refresh)
     paths = interim.build_all()
     print(f"Built {len(paths)} interim tables in data/interim")
+    panels = build_panel.build_all()
+    print(f"Built {len(panels)} panels in data/processed")
     report = validate.validate_all(strict=False)
     failed = report[~report["ok"]]
     print(f"Validation: {int(report['ok'].sum())} of {len(report)} checks pass")

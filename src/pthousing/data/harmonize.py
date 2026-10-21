@@ -2,7 +2,7 @@
 
 import pandas as pd
 
-from pthousing.config import EXTERNAL, MUNI_KEY
+from pthousing.config import BASE_YEAR, EXTERNAL, MUNI_KEY
 
 CROSSWALK_PATH = EXTERNAL / "muni_crosswalk.csv"
 
@@ -86,3 +86,38 @@ def unmatched_codes(df: pd.DataFrame, crosswalk: pd.DataFrame | None = None) -> 
     codes = set((crosswalk if crosswalk is not None else read_crosswalk())[MUNI_KEY])
     rows = df[df["geo_level"].eq("municipality") & ~df[MUNI_KEY].isin(codes)]
     return rows[["geocod", "geo_name", MUNI_KEY]].drop_duplicates().reset_index(drop=True)
+
+
+# ---- CPI deflation to constant BASE_YEAR euros ---------------------------------------------------
+
+
+def annual_deflator(cpi_annual: pd.DataFrame, base_year: int = BASE_YEAR) -> pd.Series:
+    """Factor by year that turns nominal euros into constant ``base_year`` euros: CPI(base) / CPI(year).
+
+    ``cpi_annual`` has columns ``year`` and ``cpi_index_b2025`` (the interim ``ine_cpi`` table).
+    """
+    cpi = cpi_annual.set_index("year")["cpi_index_b2025"]
+    if base_year not in cpi.index:
+        raise ValueError(f"Base year {base_year} is not in the CPI series")
+    return (cpi[base_year] / cpi).rename("deflator")
+
+
+def quarterly_deflator(cpi_monthly: pd.DataFrame, base_year: int = BASE_YEAR) -> pd.Series:
+    """Factor by quarter start: average CPI of ``base_year`` / average CPI of the quarter.
+
+    A quarter is only used when all three months are present. ``cpi_monthly`` is the interim
+    ``ine_cpi_monthly`` table.
+    """
+    cpi = cpi_monthly.set_index("period_start")["cpi_index_b2025"]
+    months = cpi[cpi.index.year == base_year]
+    if len(months) != 12:
+        raise ValueError(f"Base year {base_year} does not have 12 monthly CPI values")
+    quarter = cpi.index.to_period("Q").to_timestamp()
+    grouped = cpi.groupby(quarter)
+    mean = grouped.mean()[grouped.count() == 3]
+    return (months.mean() / mean).rename("deflator")
+
+
+def to_real(nominal: pd.Series, deflator: pd.Series, period: pd.Series) -> pd.Series:
+    """Nominal values times the deflator of their period (year or quarter start); NaN if no deflator."""
+    return nominal * period.map(deflator)

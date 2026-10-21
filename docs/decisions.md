@@ -2,6 +2,15 @@
 
 Analytic and engineering choices, newest first. One short entry each: what, why, alternatives rejected.
 
+## 2026-10-21 — Panels, deflator and affordability indicators
+- **What:** `build_panel.py` writes `panel_municipality_year` (308 × 1995–2025) and `national_quarterly` (2005Q1+); `harmonize.annual_deflator` / `quarterly_deflator` / `to_real` deflate to 2024 euros; `features/affordability.py` holds PTI, RTI, mortgage burden and the supply gap, defined in `docs/methodology.md`.
+- **Dwelling size:** INE prices and rents are per m², so a dwelling is the per-m² value times the census mean useful area of the municipality (interpolated between 2011 and 2021). It describes occupied homes and biases levels upwards, hence the fixed 100 m² benchmark variants. Rejected: one invented national size without a source.
+- **Annual price = 4th-quarter value** of INE's last-12-months median (no averaging of overlapping windows).
+- **Mortgage payment rate = agreed rate on new floating loans** (BPstat), not the APRC (1.1–1.8 pp higher since 2015, includes fees and insurance). LTV 80% and 30 years are assumptions in `config.py`; the effect of changing them is tabulated in methodology.md (2024 median burden 40–57%).
+- **Supply gap** uses all conventional dwellings against private households between the 2011 and 2021 censuses, per 1,000 households at the start; annual household counts do not exist.
+- **Short-term rentals** in the panel: islands are NaN, mainland municipalities without units are 0.
+- **Census size filters**: the 2011 and 2021 dwelling and household tables exceed INE's row limit, so only the totals of the dimensions we do not split by are requested (`INE_FILTERED`).
+
 ## 2026-10-21 — Interim tables and validation
 - **What:** `interim.py` builds one parquet per dataset in `data/interim/` (16 tables); `validate.py` checks them with pandera schemas (types, ranges, categories, unique keys, no unexpected columns), grid checks (308 municipalities in every period), consistency checks (totals = sum of parts, source publication rules) and cross-source checks (INE vs Eurostat HPI and CPI/HICP). `scripts/run_pipeline.py` runs download, build and validate.
 - **Conventions:** municipal tables keep the full grid, with suppressed cells NaN (not dropped, not zero); nominal values, unit in the column suffix; index base in the column name (`_b2025`, `_b2015`); splices made at table-build time (prices 2018 -> 2022 method; income 2013 -> 2024 vintage; construction masks pre-creation years); rents are annual only (the semi-annual series is not built).

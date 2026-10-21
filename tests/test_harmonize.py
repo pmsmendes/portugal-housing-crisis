@@ -1,3 +1,4 @@
+import numpy as np
 import pandas as pd
 import pytest
 
@@ -106,3 +107,38 @@ def test_mask_pre_creation_only_touches_new_municipalities_before_their_first_ye
     assert out["value"].isna().tolist() == [False, False, True, True, False]
     assert out["value"].dropna().tolist() == [5.0, 6.0, 8.0]
     assert df["value"].notna().all()  # input untouched
+
+
+# ---- CPI deflation --------------------------------------------------------------------------------
+
+
+def test_annual_deflator_is_cpi_of_base_year_over_cpi_of_year():
+    cpi = pd.DataFrame({"year": [2023, 2024, 2025], "cpi_index_b2025": [95.0, 97.5, 100.0]})
+    d = harmonize.annual_deflator(cpi, base_year=2024)
+    assert d[2024] == 1.0
+    assert d[2023] == pytest.approx(97.5 / 95.0)  # 2023 euros are worth more in 2024 euros
+    assert d[2025] == pytest.approx(0.975)
+    with pytest.raises(ValueError, match="not in the CPI"):
+        harmonize.annual_deflator(cpi, base_year=1990)
+
+
+def test_quarterly_deflator_uses_quarter_means_and_drops_incomplete_quarters():
+    months = pd.date_range("2024-01-01", "2025-02-01", freq="MS")  # Q1 2025 has two months only
+    cpi = pd.DataFrame(
+        {"period_start": months, "cpi_index_b2025": [100.0 + i for i in range(len(months))]}
+    )
+    d = harmonize.quarterly_deflator(cpi, base_year=2024)
+    base = sum(100.0 + i for i in range(12)) / 12
+    assert d[pd.Timestamp("2024-01-01")] == pytest.approx(base / 101.0)  # mean of 100, 101, 102
+    assert pd.Timestamp("2025-01-01") not in d.index
+    with pytest.raises(ValueError, match="12 monthly"):
+        harmonize.quarterly_deflator(cpi, base_year=2025)
+
+
+def test_to_real_multiplies_by_the_deflator_of_each_period_and_keeps_missing():
+    deflator = pd.Series({2023: 1.1, 2024: 1.0})
+    nominal = pd.Series([100.0, 100.0, np.nan, 100.0])
+    years = pd.Series([2023, 2024, 2024, 1900])
+    real = harmonize.to_real(nominal, deflator, years)
+    assert real.iloc[:2].tolist() == pytest.approx([110.0, 100.0])
+    assert real.iloc[2:].isna().all()  # missing value and unknown year stay missing

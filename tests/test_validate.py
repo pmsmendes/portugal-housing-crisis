@@ -175,6 +175,7 @@ def test_validate_all_reports_failures_and_raises_only_in_strict_mode(monkeypatc
     monkeypatch.setattr(validate, "schemas", lambda: {"ine_median_rent_sqm": real_schema})
     monkeypatch.setattr(interim, "read", lambda name: tables[name])
     monkeypatch.setattr(validate, "cross_checks", lambda _: [])
+    monkeypatch.setattr(validate, "validate_panels", lambda _: [])
 
     report = validate.validate_all(strict=False)
     failed = report[~report["ok"]]
@@ -191,3 +192,100 @@ def test_validate_all_reports_failures_and_raises_only_in_strict_mode(monkeypatc
 def test_real_interim_tables_pass_all_checks():
     report = validate.validate_all(strict=True)
     assert report["ok"].all() and len(report) >= 40
+
+
+# ---- processed panels -----------------------------------------------------------------------------
+
+
+def _small_panel(**override):
+    years = list(range(1995, 2026))
+    rows = [(c, y) for c in CODES for y in years]
+    p = pd.DataFrame(rows, columns=["muni_code", "year"])
+    p["territory"] = "continente"
+    p["deflator_to_base_year"] = 1.0
+    p["dwelling_area_sqm"] = 100.0
+    p["price_sqm_eur"] = np.where(p.year >= 2016, 2000.0, np.nan)
+    p["rent_sqm_eur"] = np.where(p.year >= 2020, 10.0, np.nan)
+    p["income_median_eur"] = np.where(p.year >= 2015, 12_000.0, np.nan)
+    p["income_mean_eur"] = p["income_median_eur"] * 1.2
+    p["population_n"] = np.where(p.year >= 2011, 10.0, np.nan)
+    for col in validate.REAL_PAIRS:
+        if col not in p:
+            p[col] = np.nan
+        p[f"{col}_real"] = p[col] * p["deflator_to_base_year"]
+    p["mortgage_rate_new_lt1y_pct"] = np.where(p.year >= 2003, 3.0, np.nan)
+    r, n = 3.0 / 1200, 360
+    burden = 100 * 12 * (0.8 * 2000 * 100 * r / (1 - (1 + r) ** -n)) / 12_000
+    p["pti_years"] = 2000 * 100 / p["income_median_eur"]
+    p["pti_years_100sqm"] = p["pti_years"]
+    p["rti_pct"] = 100 * p["rent_sqm_eur"] * 100 * 12 / p["income_median_eur"]
+    p["mortgage_burden_pct"] = np.where(p.year >= 2016, burden, np.nan)
+    p["licensed_n"] = 1.0
+    p["completed_n"] = 1.0
+    p["dwellings_vacant_2021_n"] = 15.0
+    p["dwellings_2021_n"] = 1000.0
+    p["vacant_dwellings_pct_2021"] = 1.5
+    p["al_survivor_units_n"] = 1.0
+    p["al_units_snapshot_n"] = 1.0
+    for col, value in override.items():
+        p[col] = value
+    return p
+
+
+def _panel_tables(panel):
+    construction = pd.DataFrame(
+        {
+            "year": panel["year"],
+            "size": "total",
+            "licensed_n": 1.0,
+            "completed_n": 1.0,
+            "muni_code": panel["muni_code"],
+        }
+    )
+    population = pd.DataFrame(
+        {
+            "muni_code": CODES,
+            "year": 2011,
+            "sex": "total",
+            "age_group": "total",
+            "population_n": 10.0,
+        }
+    )
+    rnal = pd.DataFrame({"registered": pd.to_datetime(["2020-01-01"]), "muni_code": ["0101"]})
+    return {"ine_construction": construction, "ine_population": population, "rnal_al": rnal}
+
+
+def _panel_failures(panel):
+    msgs = validate.check_panel_municipality_year(panel, _panel_tables(panel))
+    return [m for m in msgs if m is not None]
+
+
+def test_panel_checks_catch_a_wrong_indicator_real_value_and_early_data():
+    panel = _small_panel()
+    assert [
+        m
+        for m in _panel_failures(panel)
+        if "differs from its definition" in m or "real values" in m
+    ] == []
+    wrong_pti = _small_panel(pti_years=99.0)
+    assert any("pti_years differs" in m for m in _panel_failures(wrong_pti))
+    wrong_real = _small_panel()
+    wrong_real["price_sqm_eur_real"] = wrong_real["price_sqm_eur"] * 2
+    assert any("real values differ" in m for m in _panel_failures(wrong_real))
+    early = _small_panel()
+    early.loc[early.year == 2010, "price_sqm_eur"] = 1500.0
+    assert any("before the first year" in m for m in _panel_failures(early))
+
+
+def test_panel_checks_catch_missing_years_and_municipalities():
+    short = _small_panel().query("year != 2005")
+    assert any("1995-2025" in m for m in _panel_failures(short))
+    assert any("lack the 308" in m for m in _panel_failures(_small_panel().iloc[:-1]))
+
+
+def test_panel_schema_rejects_implausible_indicator_and_unknown_municipality():
+    schema = validate.panel_schemas()["panel_municipality_year"]
+    schema.validate(_small_panel())
+    for bad in (_small_panel(pti_years=500.0), _small_panel().assign(muni_code="9999")):
+        with pytest.raises(validate.pa.errors.SchemaErrors):
+            schema.validate(bad, lazy=True)

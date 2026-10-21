@@ -83,8 +83,17 @@ ine:
       vacant_pct_2001: "0000772"     # 2001 - code taken from the catalogue, not yet checked
     format: json
     notes: >
-      2021 verified (308 municipalities, plain 4-char codes). Tenure 0012531 has dim_3 tenure (owner, lease, other) and
-      dim_4 years of residence. 2011 / 2001 / 1991 codes still to be checked.
+      2021 vacancy and tenure verified (308 municipalities, plain 4-char codes). Tenure 0012531 has dim_3 tenure (owner,
+      lease, other) and dim_4 years of residence.
+    stock_and_area:       # 2011 / 2021, all 308 municipalities; fetched with filters (INE_FILTERED in interim.py)
+      dwellings_2011: "0006304"      # filter Dim4=T, Dim5=T; dim_3 occupancy (T, 11 usual, 12 secondary, 2 vacant ...)
+      dwellings_2021: "0012502"      # filter Dim4=T, Dim5=T; dim_3 (T, 1 usual, 2 secondary, 3 + 4 vacant)
+      households_2011: "0006457"     # filter Dim3=T, Dim4=T, Dim5=T
+      households_2021: "0012856"     # filter Dim3=T, Dim4=T, Dim5=T
+      mean_useful_area_2011: "0006988"   # dwellings of usual residence, m2
+      mean_useful_area_2021: "0012518"
+      totals: 5.86 M (2011) and 5.97 M (2021) conventional dwellings, 4.04 M and 4.15 M households (match the census)
+    other_censuses: 2001 and 1991 codes still to be checked (the 2001 families indicator 0001349 is regions only).
   ine_construction:
     # Municipal (308 x 5 dwelling typologies verified for licensed dwellings).
     licensed_dwellings: "0013235"    # new family dwellings licensed, annual 2002 - 2025, NUTS 2024

@@ -181,7 +181,9 @@ def test_download_calls_each_chosen_source_and_rejects_unknown(monkeypatch):
 
     calls = []
     monkeypatch.setattr(
-        ine, "fetch_indicator", lambda code, refresh=False: calls.append(("ine", code))
+        ine,
+        "fetch_indicator",
+        lambda code, filters=None, refresh=False: calls.append(("ine", code, filters)),
     )
     monkeypatch.setattr(bportugal, "fetch_all", lambda refresh=False: calls.append(("bportugal",)))
     monkeypatch.setattr(eurostat, "fetch", lambda ds, refresh=False: calls.append(("eurostat", ds)))
@@ -192,7 +194,9 @@ def test_download_calls_each_chosen_source_and_rejects_unknown(monkeypatch):
     assert calls == [("eurostat", "eurostat_hpi"), ("eurostat", "eurostat_hicp"), ("rnal",)]
     calls.clear()
     interim.download()
-    assert [c for c in calls if c[0] == "ine"] == [("ine", code) for code in interim.INE_CODES]
+    expected = [("ine", code, None) for code in interim.INE_CODES]
+    expected += [("ine", code, flt) for code, flt in interim.INE_FILTERED.items()]
+    assert [c for c in calls if c[0] == "ine"] == expected
     assert {c[0] for c in calls} == set(interim.SOURCES)
     with pytest.raises(ValueError, match="Unknown source"):
         interim.download(["nope"])
