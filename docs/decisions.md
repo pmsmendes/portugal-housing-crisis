@@ -2,6 +2,12 @@
 
 Analytic and engineering choices, newest first. One short entry each: what, why, alternatives rejected.
 
+## 2026-10-22 — Fixed-effects regressions of price-to-income (phase 2)
+- **What:** outcome log price-to-income; drivers population growth (annual log change), completions of the previous three years per 1,000 census-2011 dwellings, share aged 65+, and (mainland) registered short-term rentals per 1,000 census-2011 dwellings. Municipality + year effects; harder variant municipality + NUTS 3 × year effects; errors clustered by municipality, by NUTS 3 region as a check. 2016 to 2023.
+- **Why:** price-to-income is the affordability outcome. Income is left out of the drivers because it is inside the outcome, and because it varies little within a municipality (about 1% a year against 15% for prices) and is negatively correlated with price growth across municipalities (-0.31), so a price regression returns a negative income coefficient that reflects convergence, not an effect (shown in the notebook appendix). The 2011 dwelling stock is a fixed denominator so it does not move with construction. Completions are lagged (t-3 to t-1) so they cannot react to year-t prices. Results are reported per within-municipality standard deviation so drivers are comparable.
+- **Rejected:** instruments for construction (no credible instrument available here, so effects stay adjusted associations); random effects (municipality effects are correlated with the drivers); a spatial-lag model in this step (residual Moran's I is flagged instead, the spatial model is the next step).
+- **Limits kept visible:** residuals stay spatially correlated in some years; immigration and second homes are not in the panel; the rental stock is survivors only.
+
 ## 2026-10-21 — Spatial weights and tests (phase 2)
 - **What:** queen contiguity, row-standardised, built separately for the mainland, the Azores and Madeira so no link crosses the sea; a municipality with no land neighbour (an island with one municipality) is linked to its 2 nearest in the same territory. Robustness: 6 nearest centroids. Global Moran's I, LISA and Gi* use 999 conditional permutations, two-sided, `alpha` 0.05, fixed seed, one process (`n_jobs=1`).
 - **Why:** contiguity is the standard reading of "neighbouring municipality"; per-territory blocks avoid linking Corvo to Mainland by distance; k-nearest shows how much results depend on the weights (it matters for the within-region result: Moran's I 0.20 vs 0.08).

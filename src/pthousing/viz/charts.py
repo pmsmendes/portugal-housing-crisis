@@ -380,3 +380,59 @@ def moran_trends(table: pd.DataFrame, weights_note: str) -> Figure:
         f"0 = no spatial pattern, 1 = neighbours alike. {weights_note}",
         f"Source: INE, CAOP 2024; own calculations. Largest permutation p-value across points: {p_max:.3f}.",
     )
+
+
+# ---- regression coefficients ----------------------------------------------------------------------
+
+
+def coef_ladder(
+    table: pd.DataFrame, labels: dict[str, str], main: str, compare: str, outcome: str
+) -> Figure:
+    """Effect of one within-standard-deviation of each driver on ``outcome`` (in %), across specifications.
+
+    ``table`` is the concatenated output of ``panel.coef_table`` for log outcomes (``coef`` x 100 is then a
+    percentage). One panel per driver, one row per specification; ``main`` is blue, ``compare`` orange and the
+    other specifications grey. The 95% interval is drawn around the point.
+    """
+    terms = [t for t in labels if t in set(table["term"])]
+    specs = list(dict.fromkeys(table["spec"]))
+    colors = {s: BLUE if s == main else ORANGE if s == compare else MUTED for s in specs}
+    fig, axes = plt.subplots(1, len(terms), figsize=(11, 0.5 * len(specs) + 1.9), sharey=True)
+    for ax, term in zip(axes, terms, strict=True):
+        d = table[table["term"] == term].set_index("spec")
+        for i, spec in enumerate(specs):
+            if spec not in d.index:
+                continue
+            row = d.loc[spec]
+            lo, hi, mid = (100 * row["sd_within"] * row[k] for k in ("ci_low", "ci_high", "coef"))
+            ax.plot([lo, hi], [i, i], color=colors[spec], lw=1.6, solid_capstyle="round", zorder=3)
+            ax.plot([mid], [i], "o", ms=7, mfc=colors[spec], mec=SURFACE, mew=1.5, zorder=4)
+        ax.axvline(0, color=INK_2, lw=1, zorder=2)
+        ax.set_yticks(range(len(specs)), specs)
+        ax.set_ylim(len(specs) - 0.4, -0.6)
+        ax.tick_params(axis="y", length=0)
+        ax.grid(axis="y", visible=False)
+        _panel_title(ax, labels[term].replace(" (", "\n("))
+        lo_all = (100 * d["sd_within"] * d["ci_low"]).min()
+        hi_all = (100 * d["sd_within"] * d["ci_high"]).max()
+        pad = 0.12 * (max(hi_all, 0) - min(lo_all, 0))
+        ax.set_xlim(min(lo_all, 0) - pad, max(hi_all, 0) + pad)
+        ax.xaxis.set_major_locator(mticker.MaxNLocator(4, integer=True))
+        ax.xaxis.set_major_formatter(
+            mticker.FuncFormatter(lambda v, _: "0" if abs(v) < 1e-9 else f"{v:+.0f}%")
+        )
+    main_rows = table[table["spec"] == main]
+    top = main_rows.loc[main_rows["coef_per_sd"].abs().idxmax()]
+    fig = style.finish(
+        fig,
+        f"One standard deviation of the strongest driver ({labels[top['term']].split(' (')[0].lower()}) "
+        f"changes {outcome} by {100 * top['coef_per_sd']:+.1f}%",
+        f"Per one within-municipality standard deviation of each driver, 95% intervals; "
+        f"{main} (blue), {compare} (orange)",
+        "Source: INE, Banco de Portugal, RNAL (short-term rentals, mainland); own calculations. "
+        "Adjusted associations, not causal effects.",
+        head_in=1.5,
+        foot_in=0.5,
+    )
+    fig.subplots_adjust(left=0.19, right=0.985, wspace=0.14)
+    return fig

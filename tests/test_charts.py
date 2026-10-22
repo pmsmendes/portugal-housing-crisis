@@ -120,3 +120,22 @@ def test_moran_trends_title_follows_the_data():
     assert "0.60 to 0.70" in fig.texts[0].get_text()
     falling = pd.DataFrame(rows).assign(I=lambda d: d["I"].iloc[::-1].to_numpy())
     assert "differ from each other less" in charts.moran_trends(falling, "").texts[0].get_text()
+
+
+def test_coef_ladder_has_one_panel_per_driver_and_a_computed_title():
+    rows = []
+    for spec in ("Main", "Region", "Other"):
+        for term, coef in (("a", 0.02), ("b", -0.01)):
+            rows.append(
+                {"spec": spec, "term": term, "coef": coef, "ci_low": coef - 0.01,
+                 "ci_high": coef + 0.01, "sd_within": 2.0, "coef_per_sd": coef * 2.0}
+            )  # fmt: skip
+    fig = charts.coef_ladder(
+        pd.DataFrame(rows),
+        {"a": "Driver A (unit)", "b": "Driver B"},
+        "Main",
+        "Region",
+        "price-to-income",
+    )
+    assert len(fig.axes) == 2
+    assert "driver a" in fig.texts[0].get_text() and "+4.0%" in fig.texts[0].get_text()

@@ -36,7 +36,7 @@ Reference questions by ID (e.g. `RQ2.3`) in notebooks, reports and commits.
 |---|---|---|---|
 | RQ3.1 | How has population evolved over 30 years, split into natural change vs net migration? | — | |
 | RQ3.2 | How has the foreign-resident population evolved and where is it located? | — | |
-| RQ3.3 | What is the municipal-level relationship between population growth, immigration and prices/rents? | — | |
+| RQ3.3 | What is the municipal-level relationship between population growth, immigration and prices/rents? | partly | `p2_02`: population growth is positively associated with price-to-income within municipalities (+1.3% per within-SD; halves with region-year effects); immigration not in the panel yet |
 | RQ3.4 | How has the number of households evolved relative to population, and how has household size changed? | — | |
 | RQ3.5 | How have ageing, internal migration and single-person households affected demand? | — | |
 | RQ3.6 | To what extent do demand changes explain regional differences in price growth? | — | |
@@ -54,10 +54,10 @@ Reference questions by ID (e.g. `RQ2.3`) in notebooks, reports and commits.
 ## RQ5 — Tourism, foreign investment and the housing market (Phase 2)
 | ID | Question | Status | Where |
 |---|---|---|---|
-| RQ5.1 | What is the relationship between short-term rental concentration and local prices and rents? | — | |
+| RQ5.1 | What is the relationship between short-term rental concentration and local prices and rents? | partly | `p2_02`: mainland rentals per 1,000 dwellings go with +1.7% price-to-income per within-SD, but ~0 within region-year (p = 0.43); registry is today's survivors, 30 island municipalities missing |
 | RQ5.2 | How has foreign investment in residential property evolved, and is it associated with higher regional prices? | — | |
 | RQ5.3 | How do tourist demand, seasonal occupancy and second homes affect availability of permanent housing? | — | |
-| RQ5.4 | Can these relationships be separated from income growth, population change and limited construction? | — | |
+| RQ5.4 | Can these relationships be separated from income growth, population change and limited construction? | partly | `p2_02`: rental association vanishes once region-year effects are added; separation from income, construction and population done, immigration and second homes still missing |
 
 ## RQ6 — Housing policies and rent regulation (Phase 3)
 | ID | Question | Status | Where |
