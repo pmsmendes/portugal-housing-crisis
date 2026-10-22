@@ -2,12 +2,12 @@
 
 Why did affordability deteriorate, and where? This phase moves from description to association; nothing here is a
 causal claim. Figures: `reports/figures/p2/`, tables: `reports/tables/p2/`, notebooks: `notebooks/p2_explain/`
-(`p2_01` to `p2_05`). Methods: [methodology](../docs/methodology.md), choices:
+(`p2_01` to `p2_06`). Methods: [methodology](../docs/methodology.md), choices:
 [decisions](../docs/decisions.md).
 
 **Done so far:** spatial autocorrelation (RQ4.3 partly), fixed-effects regressions with foreign residents (RQ3.3,
 RQ5.1, RQ5.4 partly), spillover tests (RQ4.4), segmentation (RQ4.6) and supply against demand (RQ2.1 to RQ2.4,
-RQ3.4, RQ4.5). **Still to do:** second homes.
+RQ3.4, RQ4.5) and second homes (RQ5.3, RQ5.4). **Still to do:** a synthesis of phase 2.
 
 ## Key findings
 
@@ -141,6 +141,22 @@ Tables: `construction_flows.csv`, `housing_balance_by_area.csv`, `housing_balanc
 `stock_composition_national.csv`, `stock_composition_by_class.csv`, `supply_demand_associations.csv`,
 `supply_demand_sensitivity.csv`. Map for 2011 to 2021: `figures/p2/housing_shortfall_map_2011_2021.png`.
 
+## Second homes (`p2_06_second_homes`)
+
+Census secondary residences, 2011 and 2021, mainland; a cross-section, so the panel uses it only as an interaction.
+
+21. **A rural, interior stock that barely moved.** Median share in 2021: 34% in rural municipalities, 7.6% in urban,
+    27.6% inland, 21.4% on the coast, 39% in tourist ones. The mean share was 26.7% in 2011 and 26.8% in 2021; the
+    national count fell by 28,000. No sign of conversions of permanent homes in the census decade.
+22. **More second homes, smaller rise in price-to-income.** Within a district one sd of the share (13.6 points) goes with
+    −6.3% in the 2016 to 2024 change (−3.6% with coast and density, p = 0.08) and −17% in the 2024 level. The share
+    marks low-demand places, not pressure on permanent housing; only on the coast is it clearly negative (−9.1%).
+23. **The foreign-resident association is weaker where second homes are common.** 2.4 points less per 10 points of
+    share (1.4 with NUTS 3 × year effects, both p < 0.001); the interaction with other population change is nil.
+
+Tables: `second_homes_by_class.csv`, `second_homes_cross_section.csv`, `second_homes_subsamples.csv`,
+`second_homes_interactions.csv`.
+
 ## Limitations
 
 - **A pattern, not a mechanism.** Spatial autocorrelation does not show that price changes spill over: shared
@@ -156,12 +172,15 @@ Tables: `construction_flows.csv`, `housing_balance_by_area.csv`, `housing_balanc
   keeps the conclusions, but few clusters are a caveat of its own.
 - **Foreign residents.** The series counts residence titles on 31 December (2014 to 2023; 2024 is not published at
   municipal level). It jumps by a third in 2023, possibly partly because of processing of applications, and may include
-  people already living in the municipality; results are shown without 2023. Nationalities and second homes are not
+  people already living in the municipality; results are shown without 2023. Nationalities are not
   yet used.
 - **Typology.** Coast, density and tourism are proxies (CAOP shoreline, 2021 density, today's rental registry),
   the groups overlap and some are small (9 to 57 municipalities); islands are left out.
 - **Rentals.** The series is the stock of units still registered today (survivors, mainland only), which understates
   the past and so overstates its growth.
+- **Second homes.** The census category mixes holiday homes, inherited village houses and the diaspora's homes, is
+  observed only in 2011 and 2021 (before part of the recent rental and foreign-buyer boom) and cannot show later
+  conversions or seasonal occupancy.
 - **Implied households.** The 2021 to 2023 gap divides new residents by 2021 persons per household, ignores
   household-size change and revisions of population estimates, and completions exclude renovation, conversion and
   demolition; it is a proxy (almost minus population growth, correlation −0.99). Census years are ten years apart.
@@ -171,4 +190,4 @@ Tables: `construction_flows.csv`, `housing_balance_by_area.csv`, `housing_balanc
 ## Questions answered
 
 RQ4.4 (little evidence of spillovers beyond the regional pattern), RQ4.6 (coastal and urban, not tourism as such), RQ2.1 to
-RQ2.3 and RQ4.5 (supply against households) are answered; RQ4.3, RQ3.3, RQ5.1 and RQ5.4 are partly answered (see [research_questions](../docs/research_questions.md)).
+RQ2.3 and RQ4.5 (supply against households) and RQ5.4 (second homes separated) are answered; RQ4.3, RQ3.3, RQ5.1 and RQ5.3 are partly answered (see [research_questions](../docs/research_questions.md)).

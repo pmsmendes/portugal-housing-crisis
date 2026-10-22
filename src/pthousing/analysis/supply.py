@@ -183,6 +183,21 @@ def associations(
     )
 
 
+def secondary_share(stock: pd.DataFrame) -> pd.DataFrame:
+    """Share (%) of each municipality's conventional dwellings that are secondary residences, by census year.
+
+    Columns ``secondary_2011_pct``, ``secondary_2021_pct`` and ``secondary_change_pp`` (percentage points).
+    """
+    wide = stock.pivot(index=MUNI_KEY, columns="census_year")
+    out = pd.DataFrame(index=wide.index)
+    for year in CENSUS:
+        out[f"secondary_{year}_pct"] = (
+            100 * wide[("dwellings_secondary_n", year)] / wide[("dwellings_n", year)]
+        )
+    out["secondary_change_pp"] = out["secondary_2021_pct"] - out["secondary_2011_pct"]
+    return out
+
+
 def pti_change(panel: pd.DataFrame, start: int, end: int) -> pd.Series:
     """Log change of price-to-income per municipality between two years (NaN if either is missing)."""
     wide = panel[panel[YEAR_KEY].isin([start, end])].pivot(

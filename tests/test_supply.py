@@ -116,3 +116,10 @@ def test_national_flows_sum_over_municipalities():
     )
     f = supply.national_flows(panel)
     assert f.loc[2020, "licensed_n"] == 12 and f.loc[2020, "completed_n"] == 3
+
+
+def test_secondary_share_and_its_change_in_points():
+    out = supply.secondary_share(_stock())
+    assert out.loc["a", "secondary_2011_pct"] == pytest.approx(25.0)
+    assert out.loc["a", "secondary_2021_pct"] == pytest.approx(100 * 250 / 1100)
+    assert out.loc["b", "secondary_change_pp"] == pytest.approx(100 * 100 / 480 - 20.0)

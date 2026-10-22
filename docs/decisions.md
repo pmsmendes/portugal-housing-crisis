@@ -2,6 +2,11 @@
 
 Analytic and engineering choices, newest first. One short entry each: what, why, alternatives rejected.
 
+## 2026-10-22 — Second homes (phase 2)
+- **What:** the census share of secondary residences (2011, 2021) enters as a cross-section: same-district regressions of the 2016 to 2024 change and the 2024 level of price-to-income (with and without coast and density class, and in subsamples), and as an interaction (centred, per 10 points) with the P2.02 panel drivers under municipality + year and municipality + NUTS 3 × year effects. Mainland only.
+- **Why:** only two census points exist, so a municipality fixed effect would absorb the share in the panel; an interaction is the way to ask whether the drivers act differently where second homes are common.
+- **Rejected:** interpolating annual second-home counts between censuses (invented variation); using registered short-term rentals as the second-home measure (it is the touristic part only, and survivors); a causal reading of the negative cross-section sign (it reflects where second homes are: rural, low-demand places).
+
 ## 2026-10-22 — Supply against demand (phase 2)
 - **What:** two periods with the same sign (positive = dwellings grew faster than households): the census decade 2011 to 2021 (observed: conventional dwellings and private households) and 2021 to 2023 (implied: new households = population growth / persons per household in 2021, supply = completions of 2022 and 2023). Groups are summed in counts and the ratios recomputed (never an average of municipal ratios). Cross-section regressions of the 2016 to 2024 log change in price-to-income on the drivers with district intercepts (mainland, HC3 errors), then with coast and density classes.
 - **Why:** annual household counts do not exist, so the post-2021 pressure can only be implied from population; keeping the two periods apart shows which part is a count and which a proxy. A cross-section is used because dwellings and households are census-year observations.

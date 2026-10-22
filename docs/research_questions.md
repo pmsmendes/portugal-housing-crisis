@@ -56,8 +56,8 @@ Reference questions by ID (e.g. `RQ2.3`) in notebooks, reports and commits.
 |---|---|---|---|
 | RQ5.1 | What is the relationship between short-term rental concentration and local prices and rents? | partly | `p2_02`: mainland rentals per 1,000 dwellings go with +1.7% price-to-income per within-SD, but ~0 within region-year (p = 0.43); registry is today's survivors, 30 island municipalities missing |
 | RQ5.2 | How has foreign investment in residential property evolved, and is it associated with higher regional prices? | — | |
-| RQ5.3 | How do tourist demand, seasonal occupancy and second homes affect availability of permanent housing? | — | |
-| RQ5.4 | Can these relationships be separated from income growth, population change and limited construction? | partly | `p2_02`: rental association vanishes once region-year effects are added; separation from income, construction, population and foreign residents done; second homes still missing |
+| RQ5.3 | How do tourist demand, seasonal occupancy and second homes affect availability of permanent housing? | partly | `p2_06`: second homes are a rural/interior stock (34% of dwellings rural vs 8% urban, 2021) that barely changed 2011-2021 (26.7% to 26.8%); a higher share goes with a smaller rise in price-to-income (-6.3% per sd within district, -3.6% with coast and density), so it marks low-demand places, not pressure; conversions after 2021 and seasonal occupancy not observable |
+| RQ5.4 | Can these relationships be separated from income growth, population change and limited construction? | done | `p2_02`: rental association vanishes once region-year effects are added; separation from income, construction, population and foreign residents done; `p2_06`: second homes added; the foreign-resident association is weaker where second homes are common (-2.4 points per 10 points of share, -1.4 with region-year effects), so it is a feature of permanent-housing markets |
 
 ## RQ6 — Housing policies and rent regulation (Phase 3)
 | ID | Question | Status | Where |
