@@ -45,12 +45,14 @@ Missing means "not published / not covered", never zero: prices from 2016, rents
 
 ## Geography
 - Unit of analysis: municipality (308), key `muni_code` (INE DICOFRE, 4-digit string).
+- Typology (`data/external/muni_typology.csv`, `data/typology.py`): coast / estuary / inland from CAOP shoreline segments; urban / intermediate / rural from 2021 residents per km² (500 and 100); tourist from registered short-term rentals per 1,000 dwellings (25, mainland). Proxies, not INE classes.
 - Boundary/definition changes handled through `data/external/muni_crosswalk.csv` (NUTS vintages, `valid_from_year` for Vizela, Trofa and Odivelas).
 
 ## Models
 | Phase | Method | Module | Spec |
 |---|---|---|---|
 | p2 | Spatial autocorrelation (Moran's I, LISA, Gi*) | analysis/spatial.py | queen contiguity per territory, row-standardised; k=6 nearest as check; 999 permutations, alpha 0.05 (see decisions.md) |
+| p2 | Segmentation: group medians, adjusted group differences (HC3), foreign-resident interactions | analysis/descriptive.py + analysis/panel.py | mainland; log change in price-to-income on coast, density, tourist dummies, with district effects and starting level (see decisions.md) |
 | p2 | Spillover tests: residual Moran's I, SLX, neighbours' lagged vs lead price-to-income | analysis/panel.py + analysis/spatial.py | same FE model as below plus `spatial_lag` terms, queen weights, 2017-2022 (see decisions.md) |
 | p2 | Two-way FE panel regression | analysis/panel.py | log price-to-income on foreign-resident change, other population change, completions (3 y, lagged), share 65+, rentals; municipality + year (or NUTS 3 × year) effects; clustered errors; 2016-2023 (see decisions.md) |
 | p3 | DiD / event study | analysis/causal.py | _tbd_ |

@@ -49,7 +49,7 @@ Reference questions by ID (e.g. `RQ2.3`) in notebooks, reports and commits.
 | RQ4.3 | Are prices rising faster in major urban centres than in surrounding municipalities? | partly | `p2_01`: no significant high-low/low-high outlier in the change in price-to-income; urban centres moved with their surroundings. Price growth itself by city/ring not yet compared |
 | RQ4.4 | Is there evidence of spatial spillovers between neighbouring municipalities? | done | `p2_01`: strong spatial autocorrelation (Moran's I of price-to-income 0.63 to 0.76), mostly regional; `p2_03`: with NUTS 3 × year effects no residual clustering, neighbours' drivers do not matter, and neighbours' past price-to-income (0.18) is matched by a next-year placebo (0.12): weak evidence at best |
 | RQ4.5 | Which regions show the largest imbalance between supply and household growth? | — | |
-| RQ4.6 | How do trends differ coastal vs inland, urban vs rural, tourist vs non-tourist? | partly | `p2_01`: LISA clusters (Algarve, Lisboa, Setúbal, Porto high-high; interior low-low). Group comparisons not yet done |
+| RQ4.6 | How do trends differ coastal vs inland, urban vs rural, tourist vs non-tourist? | done | `p2_01`: LISA clusters; `p2_04`: price-to-income 2016-2024 rose 52% on the coast vs 10% inland, 72% urban vs 7% rural, 47% tourist vs 16%; density matters most, then the coast, tourism adds nothing once those and the district are controlled (proxy classes, mainland) |
 
 ## RQ5 — Tourism, foreign investment and the housing market (Phase 2)
 | ID | Question | Status | Where |

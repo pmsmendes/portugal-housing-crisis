@@ -101,3 +101,42 @@ def build_interim() -> Path:
     INTERIM.mkdir(parents=True, exist_ok=True)
     read_municipalities().to_parquet(path)
     return path
+
+
+_COAST = "linha de costa"
+_WATER = "limite na água"
+
+
+def coast_class() -> pd.Series:
+    """How each of the 308 municipalities meets the water: ``coast``, ``estuary`` or ``inland``.
+
+    Read from the boundary segments (``*_trocos`` layers): a municipality is ``coast`` if any parish of it lies on
+    a segment typed 'Limite e Linha de Costa'; ``estuary`` if it has only 'Limite na Água' segments (the tidal
+    Tejo and Sado, where CAOP draws the boundary in the water, e.g. Lisboa); otherwise ``inland``. Indexed by
+    ``muni_code``. The sea boundary of a parish carries the code '99' on its outer side, which is ignored.
+    """
+    gpkgs = sorted((RAW / SOURCE_ID).glob("*/*.gpkg"))
+    if not gpkgs:
+        raise FileNotFoundError("No CAOP GeoPackages in data/raw/caop; run caop.download() first")
+    coast, water = set(), set()
+    for gpkg in gpkgs:
+        layers = [name for name, _ in pyogrio.list_layers(gpkg) if name.endswith("_trocos")]
+        if len(layers) != 1:
+            raise ValueError(f"Expected one boundary-segment layer in {gpkg.name}, found {layers}")
+        segments = pyogrio.read_dataframe(gpkg, layer=layers[0], read_geometry=False)
+        kind = segments["significado_linha"].str.lower()
+        for mask, found in ((kind.str.contains(_COAST), coast), (kind.str.contains(_WATER), water)):
+            parishes = pd.concat(
+                [segments.loc[mask, "ea_direita"], segments.loc[mask, "ea_esquerda"]]
+            )
+            parishes = parishes.astype(str)
+            found.update(parishes[parishes.str.len() == 6].str[:4])
+    municipalities = read_municipalities(geometry=False)[MUNI_KEY]
+    return pd.Series(
+        [
+            "coast" if code in coast else "estuary" if code in water else "inland"
+            for code in municipalities
+        ],
+        index=pd.Index(municipalities, name=MUNI_KEY),
+        name="coast_class",
+    )

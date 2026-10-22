@@ -117,6 +117,8 @@ def _sample(frame: pd.DataFrame, years: tuple[int, int], sample: dict) -> pd.Dat
     keep = pd.Series(frame.index.get_level_values(YEAR_KEY), index=frame.index).between(*years)
     if "territory" in sample:
         keep &= frame["territory"].isin(sample["territory"])
+    if "codes" in sample:
+        keep &= frame.index.get_level_values(MUNI_KEY).isin(sample["codes"])
     if "exclude_district" in sample:
         keep &= ~frame["district"].isin(sample["exclude_district"])
     return frame[keep]

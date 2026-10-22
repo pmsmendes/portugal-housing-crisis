@@ -2,6 +2,12 @@
 
 Analytic and engineering choices, newest first. One short entry each: what, why, alternatives rejected.
 
+## 2026-10-22 — Municipality typology for group comparisons (phase 2)
+- **What:** `data/external/muni_typology.csv` from `data/typology.py`. Coast: a CAOP boundary segment typed 'Limite e Linha de Costa' touches the municipality; 'estuary' if its only water boundary is a 'Limite na Água' (nine municipalities on the tidal Tejo and Sado, Lisboa among them); else inland. Density: residents per km² in 2021, urban from 500, rural below 100. Tourist: at least 25 registered short-term rentals per 1,000 dwellings (mainland; islands 'unknown'). Thresholds live in `config.py`.
+- **Why:** these can be computed from sources already in the project, with rules that can be stated in one line. Segment comparisons use the 278 mainland municipalities (all 30 island municipalities are coastal and have no rental registry).
+- **Rejected:** the INE TIPAU parish typology (not ingested; a density proxy is used and labelled as such); a hand-made list of coastal municipalities (not reproducible); treating Lisboa as inland because CAOP draws its river front as a water limit (it is kept in its own 'estuary' group); a tourism flag from overnight stays (no municipal source ingested yet).
+- **Limits:** the tourist flag describes today's registry (survivors) and is applied to all years; the estuary group has 9 municipalities. The group differences do not depend on the borders (class thresholds varied in `p2_04`).
+
 ## 2026-10-22 — Spillover tests as fixed-effects regressions (phase 2)
 - **What:** three tests with the p2_02 model and queen weights: Moran's I of the residuals; the neighbours' drivers (SLX, `spatial_lag` of each driver); the neighbours' log price-to-income last year, against next year (a placebo that cannot be a cause), with and without the municipality's own lag. Window 2017-2022. Municipality + year and municipality + NUTS 3 × year effects.
 - **Why:** `spreg` (spatial-lag / spatial-error panel models) is not installed and installing software was not asked for; these are the space-time and SLX forms that a fixed-effects regression estimates directly, and the lead placebo is a falsification test a spatial-lag model would not give.

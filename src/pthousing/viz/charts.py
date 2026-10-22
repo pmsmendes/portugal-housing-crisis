@@ -494,3 +494,54 @@ def neighbour_placebo(table: pd.DataFrame, rows: dict[str, str], main: str, comp
     )
     fig.subplots_adjust(left=0.37, right=0.97)
     return fig
+
+
+# ---- segmentation ---------------------------------------------------------------------------------
+
+
+def segment_trends(
+    panels: list[dict], changes: dict[str, dict[str, float]], start: int, end: int
+) -> Figure:
+    """Median price-to-income by year for groups of municipalities, one panel per typology dimension.
+
+    ``panels`` holds ``title`` and ``series`` (group label -> Series indexed by year, in drawing order: the
+    first is blue, the second orange, any other grey). ``changes`` maps a dimension key ('coast', 'density',
+    'tourist') to {group label: % change of the median municipality's price-to-income}; the title is
+    computed from them.
+    """
+    fig, axes = plt.subplots(1, len(panels), figsize=(12, 4.6), sharey=True)
+    palette = [BLUE, ORANGE, MUTED]
+    top = max(s.max() for p in panels for s in p["series"].values())
+    for ax, panel in zip(axes, panels, strict=True):
+        for i, (label, s) in enumerate(panel["series"].items()):
+            color = palette[min(i, 2)]
+            _line(ax, s.index, s, color, width=LINE_WIDTH if i < 2 else CONTEXT_WIDTH)
+            _end_dot(ax, s.index[-1], s.iloc[-1], color)
+            _label(
+                ax,
+                s.index[-1],
+                s.iloc[-1],
+                f"{label} {s.iloc[-1]:.1f}",
+                dx=9,
+                weight="bold" if i < 2 else "normal",
+            )
+        _panel_title(ax, panel["title"])
+        ax.set_xticks([start, (start + end) // 2, end])
+        ax.set_xlim(start - 0.2, end + 0.2)
+        ax.set_ylim(0, top * 1.08)
+        ax.margins(x=0.02)
+    axes[0].set_ylabel("Years of income", color=INK_2)
+    urban, rural = changes["density"]["urban"], changes["density"]["rural"]
+    coast, inland = changes["coast"]["coast"], changes["coast"]["inland"]
+    fig = style.finish(
+        fig,
+        f"Since {start} price-to-income rose {urban:.0f}% in urban and {rural:.0f}% in rural municipalities, "
+        f"{coast:.0f}% on the coast and {inland:.0f}% inland",
+        f"Median price-to-income of each group of mainland municipalities, {start} to {end}; "
+        "lines use the same municipalities every year; the % change is the median of each municipality's own change",
+        "Source: INE, CAOP 2024, RNAL; own calculations. Density, coast and tourism classes: data/external/muni_typology.csv.",
+        head_in=1.15,
+        foot_in=0.55,
+    )
+    fig.subplots_adjust(left=0.06, right=0.9, wspace=0.55)
+    return fig

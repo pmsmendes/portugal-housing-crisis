@@ -125,3 +125,61 @@ def test_district_summary_compares_the_same_municipalities_in_both_years():
     )  # D dropped
     assert out.loc["d1", "change"] == pytest.approx(2.5)
     assert out.index.tolist() == ["d2", "d1"]  # sorted by the latest median
+
+
+def _segment_panel():
+    rows = []
+    for code, pti0, pti1, price0, price1, inc0, inc1 in (
+        ("0101", 10.0, 20.0, 1000.0, 2000.0, 10_000.0, 10_000.0),
+        ("0102", 10.0, 15.0, 1000.0, 1500.0, 10_000.0, 10_000.0),
+        ("0103", 8.0, 8.0, 1000.0, 1000.0, 10_000.0, 10_000.0),
+        ("0104", 8.0, 9.6, 1000.0, 1200.0, 10_000.0, 10_000.0),
+    ):
+        for year, pti, price, income in ((2016, pti0, price0, inc0), (2024, pti1, price1, inc1)):
+            rows.append({"muni_code": code, "year": year, "pti_years": pti,
+                         "price_sqm_eur_real": price, "income_median_eur_real": income})  # fmt: skip
+    return pd.DataFrame(rows)
+
+
+def _segment_typology():
+    return pd.DataFrame({"muni_code": ["0101", "0102", "0103", "0104"],
+                         "coast_class": ["coast", "coast", "inland", "inland"]})  # fmt: skip
+
+
+def test_segment_summary_reports_group_medians_and_changes():
+    out = d.segment_summary(
+        _segment_panel(), _segment_typology(), {"coast_class": ["coast", "inland"]}, 2016, 2024
+    ).set_index("group")
+    assert out.loc["coast", "municipalities_n"] == 2
+    assert out.loc["coast", "pti_2016"] == 10.0 and out.loc["coast", "pti_2024"] == pytest.approx(
+        17.5
+    )
+    assert out.loc["coast", "pti_change_pct"] == pytest.approx(75.0)  # median of +100% and +50%
+    assert out.loc["inland", "pti_change_pct"] == pytest.approx(10.0)  # median of 0% and +20%
+    assert out.loc["coast", "income_real_change_pct"] == pytest.approx(0.0)
+
+
+def test_segment_summary_drops_municipalities_missing_either_year():
+    panel = _segment_panel()
+    panel.loc[(panel.muni_code == "0102") & (panel.year == 2024), "pti_years"] = float("nan")
+    out = d.segment_summary(panel, _segment_typology(), {"coast_class": ["coast"]}, 2016, 2024)
+    assert out["municipalities_n"].iloc[0] == 1 and out["pti_change_pct"].iloc[0] == pytest.approx(
+        100.0
+    )
+
+
+def test_group_regression_recovers_group_differences_and_labels_terms():
+    rng = np.random.default_rng(0)
+    df = pd.DataFrame({"group": rng.choice(["a", "b", "c"], 300), "x": rng.normal(size=300)})
+    df["y"] = (
+        df["group"].map({"a": 0.0, "b": 1.0, "c": -2.0}) + 0.5 * df["x"] + rng.normal(0, 0.1, 300)
+    )
+    df["region"] = rng.choice(["r1", "r2"], 300)
+    out = d.group_regression(
+        df, "y", {"group": "a"}, controls=["x"], fixed_effects="region"
+    ).set_index("term")
+    assert out.loc["group: b (vs a)", "coef"] == pytest.approx(1.0, abs=0.05)
+    assert out.loc["group: c (vs a)", "coef"] == pytest.approx(-2.0, abs=0.05)
+    assert out.loc["x", "coef"] == pytest.approx(0.5, abs=0.05)
+    assert not any("region" in term for term in out.index)
+    assert out["n_obs"].iloc[0] == 300

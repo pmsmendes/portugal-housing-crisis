@@ -5,9 +5,9 @@ causal claim. Figures: `reports/figures/p2/`, tables: `reports/tables/p2/`, note
 (`p2_01_spatial_autocorrelation`). Methods: [methodology](../docs/methodology.md), choices:
 [decisions](../docs/decisions.md).
 
-**Done so far:** spatial autocorrelation (RQ4.3, RQ4.6 partly), fixed-effects regressions with foreign residents
-(RQ3.3, RQ5.1, RQ5.4 partly) and spillover tests (RQ4.4). **Still to do:** segmentation (coastal, urban, tourist),
-supply against demand, second homes.
+**Done so far:** spatial autocorrelation (RQ4.3 partly), fixed-effects regressions with foreign residents (RQ3.3,
+RQ5.1, RQ5.4 partly), spillover tests (RQ4.4) and segmentation (RQ4.6). **Still to do:** supply against demand
+(RQ2.3, RQ4.5), second homes.
 
 ## Key findings
 
@@ -84,6 +84,29 @@ Tables: `spillover_residual_moran.csv`, `spillover_slx.csv`, `spillover_diffusio
 a spillover spread across a whole region, so the tests are conservative; these are the space-time and SLX forms
 estimable by fixed effects, not spatial-lag or spatial-error panel models (decisions.md).
 
+## Coast, density and tourism (`p2_04_segmentation`)
+
+Mainland municipalities grouped by three proxies (coast, 2021 density, rental registry; see
+[decisions](../docs/decisions.md)).
+
+13. **The deterioration is coastal and urban.** From 2016 to 2024 the median price-to-income rose 52% in the 57
+    coastal municipalities (11.3 to 17.0 years of income) against 10% inland (7.0 to 7.4); 72% in the 32 urban ones
+    (10.1 to 15.9) against 7% in the 165 rural ones (6.5 to 6.6); 47% in the 34 tourist ones against 16%. Real prices
+    rose 84% on the coast and 41% inland, while real income rose less on the coast (25%) than inland (30%).
+14. **Density matters most, then the coast, tourism adds nothing.** With all three dimensions in one regression, urban
+    municipalities rose about 44% more than rural ones and coastal ones about 23% more than inland ones (38% and 13%
+    within the same district); the tourist gap is 0.05 log points (p = 0.29) and 0.00 within the district. Tourist
+    municipalities are mostly coastal and dense, so their raw gap is the coast's and the city's.
+15. **The foreign-resident association is strongest in dense coastal places.** With NUTS 3 × year effects, the effect of
+    a point of population added through foreign residents is +2.3% in an inland, rural, non-tourist municipality, plus
+    2.8 points on the coast, plus 4.3 in urban municipalities and minus 3.3 in tourist ones (exploratory: three
+    overlapping interactions).
+
+![Price-to-income by type of municipality](figures/p2/segment_pti_trends.png)
+
+Tables: `segment_summary.csv`, `segment_pti_by_year.csv`, `segment_adjusted_differences.csv`,
+`segment_foreign_interactions.csv`, `segment_foreign_interactions_joint.csv`.
+
 ## Limitations
 
 - **A pattern, not a mechanism.** Spatial autocorrelation does not show that price changes spill over: shared
@@ -101,6 +124,8 @@ estimable by fixed effects, not spatial-lag or spatial-error panel models (decis
   municipal level). It jumps by a third in 2023, possibly partly because of processing of applications, and may include
   people already living in the municipality; results are shown without 2023. Nationalities and second homes are not
   yet used.
+- **Typology.** Coast, density and tourism are proxies (CAOP shoreline, 2021 density, today's rental registry),
+  the groups overlap and some are small (9 to 57 municipalities); islands are left out.
 - **Rentals.** The series is the stock of units still registered today (survivors, mainland only), which understates
   the past and so overstates its growth.
 - **Missing municipalities.** 12 municipalities have no price-to-income for 2016 or 2024 and are left out (hatched on
@@ -108,5 +133,5 @@ estimable by fixed effects, not spatial-lag or spatial-error panel models (decis
 
 ## Questions answered
 
-RQ4.4 is answered (little evidence of spillovers beyond the regional pattern); RQ4.3, RQ4.6, RQ3.3, RQ5.1 and RQ5.4
-are partly answered (see [research_questions](../docs/research_questions.md)).
+RQ4.4 (little evidence of spillovers beyond the regional pattern) and RQ4.6 (coastal and urban, not tourism as such) are
+answered; RQ4.3, RQ3.3, RQ5.1 and RQ5.4 are partly answered (see [research_questions](../docs/research_questions.md)).

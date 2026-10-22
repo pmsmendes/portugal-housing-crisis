@@ -30,6 +30,13 @@ MORTGAGE_TERM_YEARS = 30
 # Benchmark dwelling for the fixed-size variants of PTI / RTI (comparable across municipalities).
 BENCHMARK_AREA_SQM = 100
 
+# Municipality typology (data/external/muni_typology.csv): own transparent proxies, not the INE TIPAU.
+DENSITY_URBAN_PER_KM2 = 500  # residents per km2 (2021) from which a municipality is urban
+DENSITY_RURAL_PER_KM2 = 100  # below this it is rural; in between, intermediate
+TOURIST_AL_PER_1000 = (
+    25  # registered short-term rentals per 1,000 dwellings (mainland) from which it is tourist
+)
+
 # CRS: ETRS89 / Portugal TM06 for metric operations, WGS84 for web maps.
 CRS_METRIC = "EPSG:3763"
 CRS_WEB = "EPSG:4326"

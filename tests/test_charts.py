@@ -154,3 +154,20 @@ def test_neighbour_placebo_title_compares_lag_and_lead():
     assert "(0.20)" in text and "almost as well (0.15)" in text
     far = pd.DataFrame(rows("A", 0.3, 0.3) + rows("B", 0.2, 0.02))
     assert "much less (0.02)" in charts.neighbour_placebo(far, labels, "A", "B").texts[0].get_text()
+
+
+def test_segment_trends_draws_one_panel_per_dimension_with_a_computed_title():
+    years = list(range(2016, 2025))
+    line = lambda start, end: pd.Series(np.linspace(start, end, len(years)), index=years)  # noqa: E731
+    panels = [
+        {
+            "title": "Coast",
+            "series": {"coast": line(10, 17), "inland": line(7, 7.4), "estuary": line(8, 13)},
+        },
+        {"title": "Density", "series": {"urban": line(10, 16), "rural": line(6.5, 6.6)}},
+    ]
+    changes = {"coast": {"coast": 52.0, "inland": 10.0}, "density": {"urban": 72.0, "rural": 7.0}}
+    fig = charts.segment_trends(panels, changes, 2016, 2024)
+    assert len(fig.axes) == 2
+    title = fig.texts[0].get_text()
+    assert "72% in urban and 7% in rural" in title and "52% on the coast and 10% inland" in title

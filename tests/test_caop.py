@@ -117,3 +117,38 @@ def test_real_caop_has_308_valid_municipalities():
     assert m["muni_code"].str.fullmatch(r"\d{4}").all()
     assert m.geometry.is_valid.all()
     assert m.set_index("muni_code").loc["1106", "muni_name"] == "Lisboa"
+
+
+def _write_segments(path, layer, rows):
+    from shapely.geometry import LineString
+
+    gdf = gpd.GeoDataFrame(
+        [
+            {"ea_direita": right, "ea_esquerda": left, "significado_linha": kind,
+             "geometry": LineString([(0, 0), (1, 1)])}
+            for right, left, kind in rows
+        ],
+        crs="EPSG:3763",
+    )  # fmt: skip
+    gdf.to_file(path, layer=layer, driver="GPKG")
+
+
+def test_coast_class_reads_shoreline_and_water_boundaries(raw_caop):
+    _write_segments(
+        raw_caop / "a" / "Continente_CAOP2024.gpkg",
+        "cont_trocos",
+        [("010201", "99", "Limite e Linha de Costa"), ("010201", "010101", "Limite em Terra")],
+    )
+    _write_segments(
+        raw_caop / "b" / "ArqMadeira_CAOP2024.gpkg",
+        "ram_trocos",
+        [("310101", "310102", "Limite na Água"), ("010101", "010102", "Limite em Terra")],
+    )
+    out = caop.coast_class()
+    assert out.to_dict() == {"0101": "inland", "0102": "coast", "3101": "estuary"}
+    assert out.index.name == "muni_code"
+
+
+def test_coast_class_needs_exactly_one_segment_layer(raw_caop):
+    with pytest.raises(ValueError, match="boundary-segment layer"):
+        caop.coast_class()

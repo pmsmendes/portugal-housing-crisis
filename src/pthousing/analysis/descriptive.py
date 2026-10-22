@@ -1,6 +1,8 @@
 """Descriptive statistics, growth rates and group comparisons (coastal/inland, urban/rural, tourist)."""
 
+import numpy as np
 import pandas as pd
+import statsmodels.formula.api as smf
 
 from pthousing.config import MUNI_KEY, YEAR_KEY
 from pthousing.features import affordability as aff
@@ -117,3 +119,90 @@ def district_summary(df: pd.DataFrame, column: str, start: int, end: int) -> pd.
     )
     out["change"] = out[f"median_{end}"] - out[f"median_{start}"]
     return out.sort_values(f"median_{end}", ascending=False).reset_index()
+
+
+def segment_summary(
+    panel: pd.DataFrame, typology: pd.DataFrame, groups: dict[str, list[str]], start: int, end: int
+) -> pd.DataFrame:
+    """Price-to-income, real price and real income by group of a typology column, ``start`` to ``end``.
+
+    ``groups`` maps a typology column to the group values to report. Only municipalities with all three
+    values in both years are used, so each group's two medians describe the same municipalities. Changes are
+    the median of each municipality's own log change, shown as a percentage.
+    """
+    columns = ["pti_years", "price_sqm_eur_real", "income_median_eur_real"]
+    wide = panel[panel[YEAR_KEY].isin([start, end])].pivot(
+        index=MUNI_KEY, columns=YEAR_KEY, values=columns
+    )
+    wide = wide.dropna()
+    own = pd.DataFrame(
+        {
+            f"pti_{start}": wide[("pti_years", start)],
+            f"pti_{end}": wide[("pti_years", end)],
+            "pti_change_pct": 100
+            * np.expm1(np.log(wide["pti_years"][end] / wide["pti_years"][start])),
+            "price_real_change_pct": 100
+            * np.expm1(np.log(wide["price_sqm_eur_real"][end] / wide["price_sqm_eur_real"][start])),
+            "income_real_change_pct": 100
+            * np.expm1(
+                np.log(wide["income_median_eur_real"][end] / wide["income_median_eur_real"][start])
+            ),
+        }
+    )
+    typology = typology.set_index(MUNI_KEY)
+    rows = []
+    for dimension, values in groups.items():
+        joined = own.join(typology[dimension])
+        for value in values:
+            sub = joined[joined[dimension] == value].drop(columns=dimension)
+            rows.append(
+                {"dimension": dimension, "group": value, "municipalities_n": len(sub)}
+                | sub.median().to_dict()
+            )
+    return pd.DataFrame(rows)
+
+
+def group_regression(
+    df: pd.DataFrame,
+    y: str,
+    groups: dict[str, str],
+    controls: list[str] | None = None,
+    fixed_effects: str | None = None,
+) -> pd.DataFrame:
+    """OLS of ``y`` on group dummies (HC3 robust errors): the difference of each group from its reference.
+
+    ``groups`` maps a column to its reference value; ``controls`` are numeric columns; ``fixed_effects`` a
+    column whose values get their own intercept (absorbed, not reported). Returns ``term``, ``coef``, ``se``,
+    ``ci_low``, ``ci_high``, ``p`` and the sample size.
+    """
+    terms = [f"C({col}, Treatment(reference='{ref}'))" for col, ref in groups.items()]
+    formula = f"{y} ~ " + " + ".join([*terms, *(controls or [])])
+    if fixed_effects:
+        formula += f" + C({fixed_effects})"
+    data = df.dropna(subset=[y, *groups, *(controls or [])])
+    res = smf.ols(formula, data=data).fit(cov_type="HC3")
+    ci = res.conf_int()
+    keep = [
+        name
+        for name in res.params.index
+        if any(name.startswith(f"C({col}, ") for col in groups) or name in (controls or [])
+    ]
+    labels = {}
+    for name in keep:
+        if name.startswith("C("):
+            col = name[2:].split(",")[0]
+            level = name.split("[T.")[1].rstrip("]")
+            labels[name] = f"{col}: {level} (vs {groups[col]})"
+        else:
+            labels[name] = name
+    return pd.DataFrame(
+        {
+            "term": [labels[n] for n in keep],
+            "coef": res.params[keep].to_numpy(),
+            "se": res.bse[keep].to_numpy(),
+            "ci_low": ci.loc[keep, 0].to_numpy(),
+            "ci_high": ci.loc[keep, 1].to_numpy(),
+            "p": res.pvalues[keep].to_numpy(),
+            "n_obs": int(res.nobs),
+        }
+    )

@@ -52,7 +52,7 @@ Full 308-municipality grid for municipal tables; suppressed cells are NaN, never
 | File | Content | Built by | Status |
 |---|---|---|---|
 | muni_crosswalk.csv | 308 CAOP 2024 municipalities: name, district, territory, NUTS II/III codes in the 2013 and 2024 vintages (codes from INE `geocod` prefixes) | harmonize.write_crosswalk() | built; code changes before 2013 not covered |
-| muni_typology.csv | Coastal/inland, urban/rural (INE TIPAU), tourist flag + definition | manual | — |
+| muni_typology.csv | 308 municipalities: coast / estuary / inland (CAOP shoreline segments), urban / intermediate / rural (2021 residents per km²: ≥ 500, 100 to 500, < 100; a proxy, not the INE TIPAU), tourist / other / unknown (≥ 25 registered short-term rentals per 1,000 dwellings; mainland only), second-home share 2021 | typology.build() (run by scripts/run_pipeline.py) | built |
 
 ## Processed panels (`data/processed/`)
 | File | Grain | Built by | Status |

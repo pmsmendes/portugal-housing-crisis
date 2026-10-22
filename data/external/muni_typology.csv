@@ -1,0 +1,309 @@
+muni_code,muni_name,territory,coast_class,density_per_km2_2021,density_class,al_per_1000_dwellings,tourist,second_homes_pct_2021
+0101,Águeda,continente,inland,140.98,intermediate,2.25,other,10.007
+0102,Albergaria-a-Velha,continente,inland,157.607,intermediate,3.753,other,11.539
+0103,Anadia,continente,inland,127.14,intermediate,5.143,other,12.175
+0104,Arouca,continente,inland,63.934,rural,13.444,other,21.798
+0105,Aveiro,continente,coast,423.514,intermediate,17.33,other,11.173
+0106,Castelo de Paiva,continente,inland,134.42,intermediate,12.567,other,13.667
+0107,Espinho,continente,coast,1502.697,urban,10.423,other,11.927
+0108,Estarreja,continente,inland,242.943,intermediate,2.234,other,10.329
+0109,Santa Maria da Feira,continente,inland,637.462,urban,1.729,other,9.171
+0110,Ílhavo,continente,coast,540.874,urban,13.857,other,21.284
+0111,Mealhada,continente,inland,174.757,intermediate,3.37,other,11.313
+0112,Murtosa,continente,coast,136.753,intermediate,14.998,other,41.225
+0113,Oliveira de Azeméis,continente,inland,415.371,intermediate,1.109,other,7.274
+0114,Oliveira do Bairro,continente,inland,270.259,intermediate,1.398,other,11.868
+0115,Ovar,continente,coast,376.351,intermediate,11.859,other,18.879
+0116,São João da Madeira,continente,inland,2878.887,urban,1.698,other,5.773
+0117,Sever do Vouga,continente,inland,86.005,rural,9.569,other,20.799
+0118,Vagos,continente,coast,138.587,intermediate,5.329,other,24.604
+0119,Vale de Cambra,continente,inland,145.315,intermediate,5.284,other,17.346
+0201,Aljustrel,continente,inland,19.266,rural,3.578,other,19.765
+0202,Almodôvar,continente,inland,8.676,rural,5.377,other,33.106
+0203,Alvito,continente,inland,8.488,rural,14.294,other,22.413
+0204,Barrancos,continente,inland,8.675,rural,3.906,other,41.953
+0205,Beja,continente,inland,30.934,rural,5.157,other,18.214
+0206,Castro Verde,continente,inland,12.038,rural,6.56,other,24.252
+0207,Cuba,continente,inland,27.916,rural,12.179,other,22.801
+0208,Ferreira do Alentejo,continente,inland,12.669,rural,3.431,other,19.268
+0209,Mértola,continente,inland,4.735,rural,13.042,other,45.141
+0210,Moura,continente,inland,14.131,rural,4.163,other,34.14
+0211,Odemira,continente,coast,21.014,rural,39.948,tourist,31.542
+0212,Ourique,continente,inland,7.405,rural,12.593,other,39.809
+0213,Serpa,continente,inland,12.666,rural,4.581,other,32.802
+0214,Vidigueira,continente,inland,16.756,rural,11.688,other,26.545
+0301,Amares,continente,inland,224.308,intermediate,11.559,other,26.171
+0302,Barcelos,continente,inland,305.528,intermediate,3.211,other,10.917
+0303,Braga,continente,inland,1066.126,urban,8.248,other,10.009
+0304,Cabeceiras de Basto,continente,inland,62.827,rural,14.843,other,33.279
+0305,Celorico de Basto,continente,inland,89.733,rural,15.41,other,26.298
+0306,Esposende,continente,coast,373.389,intermediate,21.819,other,37.029
+0307,Fafe,continente,inland,219.791,intermediate,2.313,other,20.088
+0308,Guimarães,continente,inland,655.541,urban,4.867,other,9.606
+0309,Póvoa de Lanhoso,continente,inland,155.355,intermediate,7.454,other,27.605
+0310,Terras de Bouro,continente,inland,22.89,rural,108.164,tourist,39.379
+0311,Vieira do Minho,continente,inland,53.044,rural,46.613,tourist,33.092
+0312,Vila Nova de Famalicão,continente,inland,669.132,urban,2.15,other,7.349
+0313,Vila Verde,continente,inland,200.122,intermediate,3.271,other,24.486
+0314,Vizela,continente,inland,982.821,urban,1.932,other,5.431
+0401,Alfândega da Fé,continente,inland,13.835,rural,6.971,other,36.458
+0402,Bragança,continente,inland,30.062,rural,9.884,other,35.1
+0403,Carrazeda de Ansiães,continente,inland,18.959,rural,5.255,other,47.485
+0404,Freixo de Espada à Cinta,continente,inland,12.837,rural,8.723,other,49.907
+0405,Macedo de Cavaleiros,continente,inland,19.697,rural,6.792,other,35.388
+0406,Miranda do Douro,continente,inland,12.798,rural,3.834,other,37.191
+0407,Mirandela,continente,inland,32.321,rural,2.274,other,30.155
+0408,Mogadouro,continente,inland,10.803,rural,7.646,other,37.206
+0409,Torre de Moncorvo,continente,inland,12.608,rural,9.996,other,42.188
+0410,Vila Flor,continente,inland,21.858,rural,3.189,other,34.465
+0411,Vimioso,continente,inland,8.067,rural,5.037,other,48.898
+0412,Vinhais,continente,inland,10.974,rural,5.408,other,46.693
+0501,Belmonte,continente,inland,50.674,rural,10.037,other,31.608
+0502,Castelo Branco,continente,inland,37.649,rural,2.07,other,29.873
+0503,Covilhã,continente,inland,85.646,rural,7.999,other,27.782
+0504,Fundão,continente,inland,37.459,rural,7.335,other,32.526
+0505,Idanha-a-Nova,continente,inland,5.759,rural,6.33,other,55.749
+0506,Oleiros,continente,inland,9.433,rural,5.152,other,45.71
+0507,Penamacor,continente,inland,7.672,rural,7.603,other,50.095
+0508,Proença-a-Nova,continente,inland,17.415,rural,10.555,other,43.904
+0509,Sertã,continente,inland,31.972,rural,5.303,other,36.278
+0510,Vila de Rei,continente,inland,15.965,rural,12.554,other,50.644
+0511,Vila Velha de Ródão,continente,inland,9.363,rural,3.954,other,47.472
+0601,Arganil,continente,inland,32.734,rural,15.314,other,45.129
+0602,Cantanhede,continente,coast,87.329,rural,1.523,other,21.411
+0603,Coimbra,continente,inland,457.192,intermediate,5.851,other,7.424
+0604,Condeixa-a-Nova,continente,inland,121.104,intermediate,3.816,other,8.265
+0605,Figueira da Foz,continente,coast,159.951,intermediate,12.298,other,30.933
+0606,Góis,continente,inland,14.068,rural,13.093,other,56.636
+0607,Lousã,continente,inland,123.468,intermediate,16.644,other,16.08
+0608,Mira,continente,coast,96.635,rural,16.156,other,29.737
+0609,Miranda do Corvo,continente,inland,94.811,rural,10.741,other,12.724
+0610,Montemor-o-Velho,continente,inland,107.205,intermediate,2.933,other,11.809
+0611,Oliveira do Hospital,continente,inland,82.685,rural,8.984,other,30.279
+0612,Pampilhosa da Serra,continente,inland,8.505,rural,6.43,other,55.242
+0613,Penacova,continente,inland,61.075,rural,9.312,other,19.95
+0614,Penela,continente,inland,39.703,rural,13.52,other,22.64
+0615,Soure,continente,inland,65.057,rural,2.312,other,15.918
+0616,Tábua,continente,inland,55.279,rural,9.553,other,36.349
+0617,Vila Nova de Poiares,continente,inland,81.679,rural,4.737,other,24.453
+0701,Alandroal,continente,inland,9.226,rural,12.217,other,39.14
+0702,Arraiolos,continente,inland,9.669,rural,10.719,other,27.007
+0703,Borba,continente,inland,45.307,rural,6.895,other,18.521
+0704,Estremoz,continente,inland,24.922,rural,8.003,other,20.529
+0705,Évora,continente,inland,42.623,rural,15.124,other,10.506
+0706,Montemor-o-Novo,continente,inland,12.74,rural,10.025,other,19.51
+0707,Mora,continente,inland,9.307,rural,7.057,other,31.652
+0708,Mourão,continente,inland,8.922,rural,37.637,tourist,40.669
+0709,Portel,continente,inland,9.511,rural,12.963,other,27.504
+0710,Redondo,continente,inland,17.19,rural,14.264,other,25.433
+0711,Reguengos de Monsaraz,continente,inland,21.938,rural,42.779,tourist,25.804
+0712,Vendas Novas,continente,inland,52.431,rural,3.117,other,11.501
+0713,Viana do Alentejo,continente,inland,13.539,rural,5.303,other,19.202
+0714,Vila Viçosa,continente,inland,38.171,rural,7.879,other,20.568
+0801,Albufeira,continente,coast,369.412,intermediate,232.349,tourist,47.062
+0802,Alcoutim,continente,inland,4.373,rural,14.465,other,50.57
+0803,Aljezur,continente,coast,19.555,rural,236.116,tourist,42.679
+0804,Castro Marim,continente,coast,22.603,rural,58.658,tourist,58.234
+0805,Faro,continente,coast,360.378,intermediate,33.672,tourist,14.191
+0806,Lagoa,continente,coast,293.096,intermediate,154.52,tourist,45.366
+0807,Lagos,continente,coast,167.954,intermediate,170.945,tourist,39.48
+0808,Loulé,continente,coast,106.309,intermediate,109.53,tourist,43.606
+0809,Monchique,continente,inland,13.539,rural,22.45,other,21.745
+0810,Olhão,continente,coast,349.424,intermediate,61.812,tourist,20.946
+0811,Portimão,continente,coast,361.88,intermediate,114.512,tourist,39.389
+0812,São Brás de Alportel,continente,inland,74.154,rural,25.455,tourist,23.884
+0813,Silves,continente,coast,58.465,rural,81.945,tourist,41.388
+0814,Tavira,continente,coast,49.283,rural,116.956,tourist,43.818
+0815,Vila do Bispo,continente,coast,33.341,rural,199.461,tourist,43.447
+0816,Vila Real de Santo António,continente,coast,335.004,intermediate,60.752,tourist,48.356
+0901,Aguiar da Beira,continente,inland,23.548,rural,3.378,other,36.367
+0902,Almeida,continente,inland,10.89,rural,5.192,other,49.844
+0903,Celorico da Beira,continente,inland,26.143,rural,5.388,other,35.404
+0904,Figueira de Castelo Rodrigo,continente,inland,9.953,rural,5.487,other,42.29
+0905,Fornos de Algodres,continente,inland,31.594,rural,9.555,other,37.541
+0906,Gouveia,continente,inland,39.456,rural,9.046,other,33.363
+0907,Guarda,continente,inland,55.99,rural,3.801,other,30.469
+0908,Manteigas,continente,inland,24.718,rural,25.082,tourist,42.312
+0909,Mêda,continente,inland,15.592,rural,4.546,other,44.159
+0910,Pinhel,continente,inland,16.817,rural,3.087,other,35.515
+0911,Sabugal,continente,inland,11.737,rural,4.732,other,52.763
+0912,Seia,continente,inland,49.45,rural,17.706,other,31.111
+0913,Trancoso,continente,inland,22.292,rural,5.628,other,37.472
+0914,Vila Nova de Foz Côa,continente,inland,14.796,rural,7.98,other,43.769
+1001,Alcobaça,continente,coast,136.235,intermediate,28.608,tourist,22.364
+1002,Alvaiázere,continente,inland,37.974,rural,10.845,other,30.348
+1003,Ansião,continente,inland,65.738,rural,10.659,other,23.849
+1004,Batalha,continente,inland,154.464,intermediate,8.259,other,13.509
+1005,Bombarral,continente,inland,139.507,intermediate,10.525,other,15.565
+1006,Caldas da Rainha,continente,coast,206.778,intermediate,21.716,other,17.559
+1007,Castanheira de Pêra,continente,inland,39.776,rural,20.127,other,38.874
+1008,Figueiró dos Vinhos,continente,inland,30.708,rural,10.834,other,33.585
+1009,Leiria,continente,coast,234.793,intermediate,3.584,other,15.472
+1010,Marinha Grande,continente,coast,220.297,intermediate,7.905,other,13.057
+1011,Nazaré,continente,coast,190.443,intermediate,95.366,tourist,44.332
+1012,Óbidos,continente,coast,87.394,rural,81.852,tourist,36.568
+1013,Pedrógão Grande,continente,inland,26.804,rural,8.698,other,46.268
+1014,Peniche,continente,coast,361.11,intermediate,62.117,tourist,39.542
+1015,Pombal,continente,coast,82.052,rural,4.485,other,22.324
+1016,Porto de Mós,continente,inland,89.683,rural,8.864,other,14.667
+1101,Alenquer,continente,estuary,149.382,intermediate,5.428,other,12.233
+1102,Arruda dos Vinhos,continente,inland,190.792,intermediate,1.493,other,8.719
+1103,Azambuja,continente,estuary,80.565,rural,3.092,other,13.011
+1104,Cadaval,continente,inland,74.72,rural,6.008,other,23.6
+1105,Cascais,continente,coast,2324.313,urban,22.216,other,11.659
+1106,Lisboa,continente,estuary,6051.184,urban,37.11,tourist,9.338
+1107,Loures,continente,estuary,1245.325,urban,2.504,other,6.306
+1108,Lourinhã,continente,coast,183.33,intermediate,32.176,tourist,26.27
+1109,Mafra,continente,coast,301.356,intermediate,25.311,tourist,17.016
+1110,Oeiras,continente,coast,3863.449,urban,7.043,other,6.275
+1111,Sintra,continente,coast,1253.702,urban,6.692,other,7.558
+1112,Sobral de Monte Agraço,continente,inland,201.6,intermediate,4.21,other,9.189
+1113,Torres Vedras,continente,coast,208.221,intermediate,7.534,other,18.679
+1114,Vila Franca de Xira,continente,coast,440.785,intermediate,1.027,other,6.207
+1115,Amadora,continente,inland,7497.719,urban,2.41,other,6.346
+1116,Odivelas,continente,inland,6046.166,urban,1.572,other,7.647
+1201,Alter do Chão,continente,inland,8.476,rural,5.65,other,38.418
+1202,Arronches,continente,inland,8.683,rural,7.908,other,38.078
+1203,Avis,continente,inland,6.174,rural,15.784,other,34.104
+1204,Campo Maior,continente,inland,33.515,rural,3.311,other,23.198
+1205,Castelo de Vide,continente,inland,11.302,rural,26.823,tourist,39.546
+1206,Crato,continente,inland,8.069,rural,8.451,other,44.444
+1207,Elvas,continente,inland,33.891,rural,10.215,other,15.793
+1208,Fronteira,continente,inland,11.81,rural,12.086,other,35.556
+1209,Gavião,continente,inland,11.45,rural,4.817,other,39.955
+1210,Marvão,continente,inland,19.232,rural,29.392,tourist,35.0
+1211,Monforte,continente,inland,6.972,rural,4.691,other,41.407
+1212,Nisa,continente,inland,10.303,rural,7.136,other,46.733
+1213,Ponte de Sor,continente,inland,18.363,rural,12.935,other,25.461
+1214,Portalegre,continente,inland,51.68,rural,5.666,other,17.366
+1215,Sousel,continente,inland,15.763,rural,7.893,other,27.49
+1301,Amarante,continente,inland,170.911,intermediate,7.58,other,20.538
+1302,Baião,continente,inland,98.488,rural,12.463,other,24.724
+1303,Felgueiras,continente,inland,482.333,intermediate,2.418,other,10.166
+1304,Gondomar,continente,inland,1252.395,urban,2.375,other,4.17
+1305,Lousada,continente,inland,494.338,intermediate,1.497,other,7.067
+1306,Maia,continente,inland,1644.914,urban,0.872,other,4.466
+1307,Marco de Canaveses,continente,inland,242.152,intermediate,10.655,other,16.131
+1308,Matosinhos,continente,coast,2799.068,urban,7.952,other,6.389
+1309,Paços de Ferreira,continente,inland,775.542,urban,1.475,other,5.848
+1310,Paredes,continente,inland,538.298,urban,1.441,other,7.396
+1311,Penafiel,continente,inland,326.65,intermediate,3.578,other,9.493
+1312,Porto,continente,coast,5895.046,urban,74.382,tourist,8.241
+1313,Póvoa de Varzim,continente,coast,801.329,urban,9.518,other,27.806
+1314,Santo Tirso,continente,inland,496.246,intermediate,1.423,other,7.203
+1315,Valongo,continente,inland,1273.739,urban,0.862,other,5.333
+1316,Vila do Conde,continente,coast,548.428,urban,11.377,other,17.616
+1317,Vila Nova de Gaia,continente,coast,1820.261,urban,11.87,other,6.541
+1318,Trofa,continente,inland,540.811,urban,1.502,other,4.382
+1401,Abrantes,continente,inland,48.455,rural,4.815,other,20.516
+1402,Alcanena,continente,inland,99.443,rural,2.492,other,12.424
+1403,Almeirim,continente,inland,101.796,intermediate,2.059,other,7.422
+1404,Alpiarça,continente,inland,74.809,rural,4.735,other,10.64
+1405,Benavente,continente,coast,58.343,rural,1.923,other,10.87
+1406,Cartaxo,continente,estuary,150.797,intermediate,4.233,other,14.038
+1407,Chamusca,continente,inland,11.378,rural,3.818,other,13.363
+1408,Constância,continente,inland,47.844,rural,13.674,other,13.81
+1409,Coruche,continente,inland,15.767,rural,4.423,other,14.254
+1410,Entroncamento,continente,inland,1511.79,urban,0.459,other,8.266
+1411,Ferreira do Zêzere,continente,inland,40.277,rural,13.323,other,41.727
+1412,Golegã,continente,inland,64.981,rural,12.332,other,16.002
+1413,Mação,continente,inland,15.451,rural,7.922,other,45.919
+1414,Rio Maior,continente,inland,80.593,rural,5.311,other,13.964
+1415,Salvaterra de Magos,continente,estuary,89.644,rural,3.709,other,13.302
+1416,Santarém,continente,inland,109.459,intermediate,4.397,other,13.855
+1417,Sardoal,continente,inland,38.493,rural,8.336,other,33.901
+1418,Tomar,continente,inland,103.584,intermediate,10.552,other,22.866
+1419,Torres Novas,continente,inland,127.62,intermediate,2.193,other,15.104
+1420,Vila Nova da Barquinha,continente,inland,143.49,intermediate,4.658,other,11.915
+1421,Ourém,continente,inland,105.601,intermediate,10.064,other,25.584
+1501,Alcácer do Sal,continente,estuary,7.71,rural,35.299,tourist,27.518
+1502,Alcochete,continente,coast,149.761,intermediate,7.191,other,9.457
+1503,Almada,continente,coast,2618.724,urban,17.74,other,16.998
+1504,Barreiro,continente,coast,2226.998,urban,2.657,other,6.635
+1505,Grândola,continente,coast,16.729,rural,61.208,tourist,41.561
+1506,Moita,continente,estuary,1232.958,urban,1.85,other,8.434
+1507,Montijo,continente,coast,164.746,intermediate,3.944,other,7.656
+1508,Palmela,continente,estuary,146.02,intermediate,7.099,other,12.303
+1509,Santiago do Cacém,continente,coast,26.742,rural,18.249,other,20.711
+1510,Seixal,continente,coast,1792.613,urban,4.644,other,10.496
+1511,Sesimbra,continente,coast,280.629,intermediate,29.038,tourist,30.992
+1512,Setúbal,continente,coast,555.728,urban,17.533,other,8.852
+1513,Sines,continente,coast,73.949,rural,17.913,other,19.704
+1601,Arcos de Valdevez,continente,inland,44.413,rural,17.926,other,40.174
+1602,Caminha,continente,coast,118.458,intermediate,50.762,tourist,47.427
+1603,Melgaço,continente,inland,30.586,rural,5.487,other,45.801
+1604,Monção,continente,inland,81.984,rural,8.015,other,30.349
+1605,Paredes de Coura,continente,inland,61.736,rural,26.528,tourist,31.423
+1606,Ponte da Barca,continente,inland,59.809,rural,14.251,other,35.461
+1607,Ponte de Lima,continente,inland,127.73,intermediate,18.906,other,26.455
+1608,Valença,continente,inland,117.717,intermediate,12.235,other,21.953
+1609,Viana do Castelo,continente,coast,272.299,intermediate,10.86,other,22.495
+1610,Vila Nova de Cerveira,continente,inland,84.1,rural,21.564,other,32.041
+1701,Alijó,continente,inland,34.688,rural,10.609,other,36.07
+1702,Boticas,continente,inland,14.834,rural,2.946,other,46.518
+1703,Chaves,continente,inland,61.788,rural,4.788,other,31.609
+1704,Mesão Frio,continente,inland,133.44,intermediate,24.339,other,26.563
+1705,Mondim de Basto,continente,inland,36.077,rural,21.606,other,37.32
+1706,Montalegre,continente,inland,10.932,rural,16.061,other,53.579
+1707,Murça,continente,inland,27.681,rural,2.828,other,38.926
+1708,Peso da Régua,continente,inland,154.438,intermediate,19.122,other,23.523
+1709,Ribeira de Pena,continente,inland,27.035,rural,9.716,other,44.378
+1710,Sabrosa,continente,inland,35.093,rural,8.93,other,46.854
+1711,Santa Marta de Penaguião,continente,inland,90.226,rural,5.804,other,37.081
+1712,Valpaços,continente,inland,26.034,rural,1.835,other,41.982
+1713,Vila Pouca de Aguiar,continente,inland,26.522,rural,1.459,other,41.92
+1714,Vila Real,continente,inland,131.475,intermediate,6.36,other,26.016
+1801,Armamar,continente,inland,45.651,rural,18.977,other,35.685
+1802,Carregal do Sal,continente,inland,76.695,rural,1.784,other,27.0
+1803,Castro Daire,continente,inland,34.904,rural,8.438,other,44.05
+1804,Cinfães,continente,inland,72.344,rural,4.285,other,32.474
+1805,Lamego,continente,inland,145.64,intermediate,7.984,other,29.197
+1806,Mangualde,continente,inland,84.025,rural,1.796,other,24.451
+1807,Moimenta da Beira,continente,inland,42.015,rural,1.012,other,38.943
+1808,Mortágua,continente,inland,35.369,rural,4.675,other,22.086
+1809,Nelas,continente,inland,104.84,intermediate,5.089,other,22.696
+1810,Oliveira de Frades,continente,inland,66.723,rural,9.197,other,26.589
+1811,Penalva do Castelo,continente,inland,53.142,rural,2.478,other,31.262
+1812,Penedono,continente,inland,18.451,rural,2.876,other,45.723
+1813,Resende,continente,inland,79.814,rural,11.945,other,36.796
+1814,Santa Comba Dão,continente,inland,94.732,rural,4.335,other,24.766
+1815,São João da Pesqueira,continente,inland,24.539,rural,10.814,other,34.32
+1816,São Pedro do Sul,continente,inland,43.046,rural,12.129,other,32.186
+1817,Sátão,continente,inland,53.377,rural,2.118,other,35.67
+1818,Sernancelhe,continente,inland,20.76,rural,8.218,other,36.094
+1819,Tabuaço,continente,inland,34.373,rural,10.393,other,40.277
+1820,Tarouca,continente,inland,70.2,rural,6.728,other,38.94
+1821,Tondela,continente,inland,69.151,rural,3.073,other,25.824
+1822,Vila Nova de Paiva,continente,inland,24.087,rural,3.444,other,44.77
+1823,Viseu,continente,inland,198.351,intermediate,2.578,other,19.036
+1824,Vouzela,continente,inland,48.711,rural,10.274,other,27.904
+3101,Calheta,madeira,coast,95.38,rural,,unknown,23.945
+3102,Câmara de Lobos,madeira,coast,598.459,urban,,unknown,9.945
+3103,Funchal,madeira,coast,1429.34,urban,,unknown,8.437
+3104,Machico,madeira,coast,288.298,intermediate,,unknown,13.542
+3105,Ponta do Sol,madeira,coast,178.474,intermediate,,unknown,20.09
+3106,Porto Moniz,madeira,coast,30.98,rural,,unknown,27.138
+3107,Ribeira Brava,madeira,coast,191.287,intermediate,,unknown,17.028
+3108,Santa Cruz,madeira,coast,520.438,urban,,unknown,11.962
+3109,Santana,madeira,coast,67.068,rural,,unknown,29.15
+3110,São Vicente,madeira,coast,59.488,rural,,unknown,32.064
+3201,Porto Santo,madeira,coast,138.044,intermediate,,unknown,33.516
+4101,Vila do Porto,azores,coast,56.282,rural,,unknown,26.111
+4201,Lagoa,azores,coast,312.481,intermediate,,unknown,6.783
+4202,Nordeste,azores,coast,43.423,rural,,unknown,24.209
+4203,Ponta Delgada,azores,coast,300.524,intermediate,,unknown,6.12
+4204,Povoação,azores,coast,54.291,rural,,unknown,27.524
+4205,Ribeira Grande,azores,coast,174.459,intermediate,,unknown,5.025
+4206,Vila Franca do Campo,azores,coast,130.066,intermediate,,unknown,10.663
+4301,Angra do Heroísmo,azores,coast,144.881,intermediate,,unknown,6.966
+4302,Praia da Vitória,azores,coast,122.316,intermediate,,unknown,9.486
+4401,Santa Cruz da Graciosa,azores,coast,68.103,rural,,unknown,32.676
+4501,Calheta de São Jorge,azores,coast,27.506,rural,,unknown,30.004
+4502,Velas,azores,coast,42.612,rural,,unknown,19.975
+4601,Lajes do Pico,azores,coast,28.498,rural,,unknown,36.936
+4602,Madalena,azores,coast,43.249,rural,,unknown,22.403
+4603,São Roque do Pico,azores,coast,23.307,rural,,unknown,31.723
+4701,Horta,azores,coast,84.776,rural,,unknown,12.295
+4801,Lajes das Flores,azores,coast,19.601,rural,,unknown,22.763
+4802,Santa Cruz das Flores,azores,coast,28.838,rural,,unknown,9.407
+4901,Corvo,azores,coast,23.43,rural,,unknown,1.471

@@ -67,6 +67,12 @@ def test_sample_filters_and_year_window():
     assert pn.coef_table(short)["n_obs"].iloc[0] == 60 * 4
 
 
+def test_sample_can_be_restricted_to_listed_municipalities():
+    codes = [f"{i:04d}" for i in range(10)]
+    res = pn.fit(_panel(), pn.Spec("log_pti", ["x1"], sample={"codes": codes}))
+    assert pn.coef_table(res)["n_munis"].iloc[0] == 10
+
+
 def test_spec_years_override_the_window():
     res = pn.fit(_panel(), pn.Spec("log_pti", ["x1"], years=(2014, 2017)), years=(2014, 2023))
     assert pn.coef_table(res)["n_obs"].iloc[0] == 60 * 4
