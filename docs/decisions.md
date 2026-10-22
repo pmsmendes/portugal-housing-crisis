@@ -2,6 +2,13 @@
 
 Analytic and engineering choices, newest first. One short entry each: what, why, alternatives rejected.
 
+## 2026-10-22 — Phase 3 policy: municipal IMI rate changes
+- **What:** phase 3 evaluates whether cuts in the municipal urban IMI rate are capitalised into sale prices (and, as a secondary outcome, rents), an event study on the changes in the rate each municipality sets every year. Source and design plan: `reports/p3_policy.md`; rates from the Portal das Finanças (`config/sources.yaml`, `at_imi_rates`).
+- **Why this policy:** among five candidates (IMI rates, short-term-rental rules, IMT Jovem, golden-visa restrictions, rent cap / public housing) it is the only one with many treated municipalities and staggered timing, the rate data turned out to be collectable for 2012–2025, and a capitalisation estimate is the behavioural parameter the phase 4 IMI lever needs (RQ7.4).
+- **Checked before choosing:** 2016–2025, 152 of the 270 municipalities with a complete rate series changed their rate at least once (509 changes, almost all cuts, median size 0.01 pp); on the mainland 303 changes fall in 2018–2023 with a complete window and 71 of them are isolated (no other change two years before or one after).
+- **Limits known up front:** rates are set strategically (cuts follow local conditions), changes are small (a 0.01 pp cut is about 3% of the bill), the municipal price series starts in 2016, and the 113 never-changers are mostly at the 0.3% floor (98) so they cannot cut. An exploratory two-way fixed-effects fit (only its standard error was looked at) puts the standard error of the price response to a 0.01 pp cut at about 0.35 percentage points, several times the capitalisation one would expect, so the design can bound a pass-through, not confirm a small one.
+- **Rejected:** short-term rental rules (adopters are the hottest markets, one-year national moratorium), IMT Jovem (everyone treated, no transaction data), golden visas (no municipal series, treated and comparison places already diverge), rent cap and public housing (no usable comparison, no data).
+
 ## 2026-10-22 — Phase 2 synthesis
 - **What:** one cross-section of the mainland municipalities (outcome: log change of price-to-income 2016 to 2024) with blocks added in order (geography, demand, supply, tourism, second homes) and the cumulative R2 and adjusted R2 reported; the reverse order (drivers first) and a joint per-sd model with and without coast and density classes as checks.
 - **Why:** the single-driver results of P2.02 to P2.06 overlap; a ladder shows how much each block accounts for beyond the others. Reporting both orders keeps the conclusion from depending on the order.

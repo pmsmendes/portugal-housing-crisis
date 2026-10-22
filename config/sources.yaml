@@ -149,9 +149,23 @@ eurostat:
     notes: Verified; annual average index 1996-2025. Cross-check for the INE CPI deflator.
 
 at:
-  # No official machine-readable municipal IMI/IMT revenue series found yet (DGAL / AT statistics: todo).
+  # IMI rates: Portal das Financas "Consultar Taxas do Municipio" (public, read-only HTML, one page per year and district).
+  # Verified 2026-10-22: 308 municipalities in every year 2012-2025 (22 district lists incl. 3 island capitals), no errors.
+  at_imi_rates:
+    url: https://www.portaldasfinancas.gov.pt/pt/CD/main.jsp
+    query: "<url>?body=/imi/consultarTaxasIMI.jsp&ano=<year>&distrito=<district>"   # year 1989-2026 offered; one request per (year, district)
+    districts: ["01AVEIRO", "02BEJA", "03BRAGA", "04BRAGANCA", "05C BRANCO", "06COIMBRA", "07EVORA", "08FARO", "09GUARDA", "10LEIRIA", "11LISBOA", "12PORTALEGRE", "13PORTO", "14SANTAREM", "15SETUBAL", "16VIANA DO CASTELO", "17VILA REAL", "18VISEU", "19ANGRA DO HEROISMO", "20HORTA", "21PONTA DELGADA", "22FUNCHAL"]
+    format: "html (ISO-8859-1 table: municipality code, name, urban rate %, rustic rate %, parish-rate flag, family-deduction link)"
+    notes: >
+      Urban rate (prédios urbanos avaliados nos termos do CIMI) per municipality and tax year; 'ano' is the tax year
+      (decided by the municipal assembly in the last months of the year; inferred from press counts of municipalities
+      at the 0.3% floor). Mainland codes are the 4-digit INE codes of muni_code; island municipalities use a district
+      scheme (19xx-22xx) and need a name match. 83 municipality-years (12 municipalities, e.g. Gondomar, Lagos,
+      Espinho) have parish-specific rates and no single urban rate. Fetched at <= 1 request/s with a research
+      User-Agent; keep the raw pages in data/raw/at/ as dated snapshots (the portal shows the rates as stored today).
+  # No official machine-readable IMI/IMT revenue series found (DGAL / AT statistics: todo).
   # Third-party only: Flat In Portugal, municipal IMI rates 2023-2025 (Zenodo DOI 10.5281/zenodo.22935147,
-  # https://flatin.pt/pt/ferramentas/dados-abertos-imi/) - not verified, 3 years only.
+  # https://flatin.pt/pt/ferramentas/dados-abertos-imi/) - not verified, superseded by at_imi_rates.
   at_imi_imt: {}
 
 rnal:

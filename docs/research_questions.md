@@ -75,7 +75,7 @@ Reference questions by ID (e.g. `RQ2.3`) in notebooks, reports and commits.
 | RQ7.1 | How have IMI and IMT revenues evolved? | — | |
 | RQ7.2 | How would IMI/IMT rate cuts affect central and municipal revenues under different scenarios? | — | |
 | RQ7.3 | Could more transactions or construction partly offset initial revenue losses from tax cuts? | — | |
-| RQ7.4 | Who benefits most from IMI/IMT cuts, and how much passes through to lower housing costs vs higher prices? | — | |
+| RQ7.4 | Who benefits most from IMI/IMT cuts, and how much passes through to lower housing costs vs higher prices? | — | _p3 planned: capitalisation of municipal IMI rate changes (`reports/p3_policy.md`); IMT part not covered_ |
 | RQ7.5 | How do targeted exemptions (first-time buyers, new build, renovation) compare with broad cuts? | — | |
 | RQ7.6 | What is the fiscal impact of alternative property-tax reforms, including vacant-property incentives? | — | |
 
