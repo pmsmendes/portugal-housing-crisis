@@ -204,3 +204,45 @@ def pti_change(panel: pd.DataFrame, start: int, end: int) -> pd.Series:
         index=MUNI_KEY, columns=YEAR_KEY, values="pti_years"
     )
     return np.log(wide[end] / wide[start]).rename("dlog_pti")
+
+
+def synthesis_frame(
+    panel: pd.DataFrame,
+    stock: pd.DataFrame,
+    typology: pd.DataFrame,
+    start: int = 2016,
+    end: int = 2024,
+) -> pd.DataFrame:
+    """One row per mainland municipality with the outcome and every explanatory block of phase 2.
+
+    Outcome ``dlog_pti`` (log change of price-to-income ``start`` to ``end``). Demand: foreign residents and
+    other population change ``start`` to the last year of the foreign-resident series, in % of the ``start``
+    population; household growth 2011 to 2021. Supply: dwelling growth 2011 to 2021 and completions after
+    ``start`` per 1,000 census-2011 dwellings. Tourism: registered rentals per 1,000 dwellings. Second homes:
+    secondary-residence share 2021. Geography: district, coast and density class.
+    """
+    last = int(panel.loc[panel["foreign_residents_n"].notna(), YEAR_KEY].max())
+    wide = lambda col: panel.pivot(index=MUNI_KEY, columns=YEAR_KEY, values=col)  # noqa: E731
+    pop, foreign, completed = wide("population_n"), wide("foreign_residents_n"), wide("completed_n")
+    bal = balance(panel, stock)
+    out = pd.DataFrame(
+        {
+            "dlog_pti": pti_change(panel, start, end),
+            "foreign_change_pct": 100 * (foreign[last] - foreign[start]) / pop[start],
+            "other_pop_change_pct": 100
+            * ((pop[last] - foreign[last]) - (pop[start] - foreign[start]))
+            / pop[start],
+            "households_change_pct": bal["households_change_pct"],
+            "dwellings_change_pct": bal["dwellings_change_pct"],
+            "completions_per_1000": 1000
+            * completed.loc[:, start + 1 : last].sum(axis=1)
+            / bal["dwellings_2011_n"],
+            "rentals_per_1000": typology["al_per_1000_dwellings"],
+            "secondary_2021_pct": secondary_share(stock)["secondary_2021_pct"],
+            "coast_class": typology["coast_class"],
+            "density_class": typology["density_class"],
+            "territory": typology["territory"],
+        }
+    )
+    out["district"] = area_of(panel)
+    return out[out["territory"] == "continente"]

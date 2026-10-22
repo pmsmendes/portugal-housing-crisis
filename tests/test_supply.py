@@ -123,3 +123,29 @@ def test_secondary_share_and_its_change_in_points():
     assert out.loc["a", "secondary_2011_pct"] == pytest.approx(25.0)
     assert out.loc["a", "secondary_2021_pct"] == pytest.approx(100 * 250 / 1100)
     assert out.loc["b", "secondary_change_pp"] == pytest.approx(100 * 100 / 480 - 20.0)
+
+
+def test_synthesis_frame_builds_cumulative_driver_changes_for_the_mainland():
+    rows = []
+    for muni, terr in (("a", "continente"), ("b", "azores")):
+        for year in range(2011, 2025):
+            rows.append(
+                {"muni_code": muni, "year": year, "district": "D", "territory": terr,
+                 "population_n": 1000.0 + 10 * (year - 2011) if year <= 2023 else np.nan,
+                 "foreign_residents_n": 50.0 + 5 * (year - 2011) if year <= 2023 else np.nan,
+                 "completed_n": 2, "pti_years": 10.0 * (1.1 ** (year - 2016))}
+            )  # fmt: skip
+    ty = pd.DataFrame(
+        {"al_per_1000_dwellings": [4.0, np.nan], "coast_class": ["coast", "coast"],
+         "density_class": ["urban", "urban"], "territory": ["continente", "azores"]},
+        index=pd.Index(["a", "b"], name="muni_code"),
+    )  # fmt: skip
+    out = supply.synthesis_frame(pd.DataFrame(rows), _stock(), ty)
+    assert list(out.index) == ["a"]
+    a = out.loc["a"]
+    assert a["foreign_change_pct"] == pytest.approx(
+        100 * 35 / 1050
+    )  # +35 foreign residents 2016 to 2023
+    assert a["other_pop_change_pct"] == pytest.approx(100 * (70 - 35) / 1050)
+    assert a["completions_per_1000"] == pytest.approx(1000 * 14 / 1000)  # 2017-2023 = 7 years x 2
+    assert a["dlog_pti"] == pytest.approx(np.log(1.1**8))

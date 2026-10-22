@@ -2,12 +2,43 @@
 
 Why did affordability deteriorate, and where? This phase moves from description to association; nothing here is a
 causal claim. Figures: `reports/figures/p2/`, tables: `reports/tables/p2/`, notebooks: `notebooks/p2_explain/`
-(`p2_01` to `p2_06`). Methods: [methodology](../docs/methodology.md), choices:
+(`p2_01` to `p2_07`). Methods: [methodology](../docs/methodology.md), choices:
 [decisions](../docs/decisions.md).
 
-**Done so far:** spatial autocorrelation (RQ4.3 partly), fixed-effects regressions with foreign residents (RQ3.3,
-RQ5.1, RQ5.4 partly), spillover tests (RQ4.4), segmentation (RQ4.6) and supply against demand (RQ2.1 to RQ2.4,
-RQ3.4, RQ4.5) and second homes (RQ5.3, RQ5.4). **Still to do:** a synthesis of phase 2.
+## Summary
+
+**Affordability worsened where people want to live, and the data cannot say much more than that.** From 2016 to
+2024 the median municipality's price-to-income rose 19%, driven by prices, not incomes; it rose 52% on the coast and
+72% in urban municipalities, against 10% inland and 7% in rural ones.
+
+- **Geography accounts for most of it.** District, coast class and density class explain 53% of the variation in
+  the change across 271 mainland municipalities; demand, supply, tourism and second homes together add 1.7 points
+  (`p2_07`). The drivers alone explain 35%, but geography still adds 20 points after them: they mostly describe the
+  same dense coastal places.
+- **The clustering is regional, not a spillover.** Neighbours resemble each other (Moran's I 0.63 to 0.76), but
+  within a region no residual clustering is left and a placebo does as well as the lag (`p2_01`, `p2_03`).
+- **Demand shows up through foreign residents, strongest in dense coastal places.** +4.3% in price-to-income per
+  point of population added through foreign residents (+3.1% within region-year), weaker where second homes are
+  common; an association with where residence titles are issued, not an effect of immigrants (`p2_02`, `p2_04`,
+  `p2_06`).
+- **Supply fell short where households grew, and everywhere since 2021.** 2011 to 2021 the stock grew with
+  households nationally (+1.9% against +2.6%) but not in the Lisboa, Setúbal and Porto districts, while the interior
+  added dwellings and lost households; since 2021 about 236,000 implied new households met 43,300 completions
+  (`p2_05`). Municipalities that built more saw smaller rises, but this fades once the coast and density are
+  accounted for.
+- **Tourism and second homes do not add.** Short-term rentals have no association within a region-year; second
+  homes are a rural stock that did not grow and goes with *smaller* rises (`p2_02`, `p2_06`).
+
+![Variance explained, block by block](figures/p2/synthesis_r2_ladder.png)
+
+**What this means for the next phases.** The observational drivers cannot be separated from place with the variation
+available, so a credible answer to "what would change affordability?" needs a policy with a comparison group
+(phase 3) and a simulator that keeps accounting effects apart from behavioural responses (phase 4). Tables:
+`synthesis_r2_ladder.csv`, `synthesis_r2_order_check.csv`, `synthesis_joint_model.csv`.
+
+**Contents:** spatial autocorrelation (`p2_01`, RQ4.3 partly), fixed-effects regressions with foreign residents
+(`p2_02`, RQ3.3, RQ5.1), spillover tests (`p2_03`, RQ4.4), segmentation (`p2_04`, RQ4.6), supply against demand
+(`p2_05`, RQ2.1 to RQ2.4, RQ3.4, RQ4.5), second homes (`p2_06`, RQ5.3, RQ5.4) and the synthesis (`p2_07`, RQ3.6).
 
 ## Key findings
 
@@ -178,6 +209,9 @@ Tables: `second_homes_by_class.csv`, `second_homes_cross_section.csv`, `second_h
   the groups overlap and some are small (9 to 57 municipalities); islands are left out.
 - **Rentals.** The series is the stock of units still registered today (survivors, mainland only), which understates
   the past and so overstates its growth.
+- **Synthesis.** The block ladder is one cross-section of 271 municipalities and one change (2016 to 2024); the
+  order of blocks matters when they overlap (reverse order in `synthesis_r2_order_check.csv`), and R2 says what
+  accompanies the outcome, not what causes it.
 - **Second homes.** The census category mixes holiday homes, inherited village houses and the diaspora's homes, is
   observed only in 2011 and 2021 (before part of the recent rental and foreign-buyer boom) and cannot show later
   conversions or seasonal occupancy.
@@ -190,4 +224,4 @@ Tables: `second_homes_by_class.csv`, `second_homes_cross_section.csv`, `second_h
 ## Questions answered
 
 RQ4.4 (little evidence of spillovers beyond the regional pattern), RQ4.6 (coastal and urban, not tourism as such), RQ2.1 to
-RQ2.3 and RQ4.5 (supply against households) and RQ5.4 (second homes separated) are answered; RQ4.3, RQ3.3, RQ5.1 and RQ5.3 are partly answered (see [research_questions](../docs/research_questions.md)).
+RQ2.3 and RQ4.5 (supply against households) and RQ5.4 (second homes separated) are answered; RQ3.6 is answered as far as these data allow (demand differences cannot be told from the regional pattern); RQ4.3, RQ3.3, RQ5.1 and RQ5.3 are partly answered (see [research_questions](../docs/research_questions.md)).

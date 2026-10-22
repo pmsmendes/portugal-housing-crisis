@@ -461,6 +461,47 @@ def housing_balance_by_area(
     )
 
 
+def r2_ladder(table: pd.DataFrame, outcome: str) -> Figure:
+    """Cumulative share of variance explained as blocks of explanations are added (``descriptive.block_r2``).
+
+    The first block is the story: geography. Bars are the cumulative R2 (adjusted R2 as a dot); labels give the
+    share each block adds. The title is computed from the table.
+    """
+    n = len(table)
+    fig, ax = plt.subplots(figsize=(9, 0.62 * n + 1.9))
+    for i, row in table.reset_index(drop=True).iterrows():
+        color = BLUE if i == 0 else MUTED
+        ax.barh(i, 100 * row["r2"], color=color, height=0.62, zorder=3)
+        ax.plot([100 * row["r2_adj"]], [i], "o", ms=7, mfc=ORANGE, mec=SURFACE, mew=1.5, zorder=5)
+        label = (
+            f"{100 * row['r2']:.0f}%"
+            if i == 0
+            else f"{100 * row['r2']:.0f}%  (+{100 * row['r2_added']:.1f} points)"
+        )
+        ax.annotate(label, (100 * row["r2"], i), xytext=(8, 0), textcoords="offset points",
+                    va="center", fontsize=9.5, color=INK, fontweight="bold")  # fmt: skip
+    ax.set_yticks(range(n), table["block"])
+    ax.set_ylim(n - 0.4, -0.6)
+    ax.set_xlim(0, 100 * table["r2"].max() * 1.6)
+    ax.xaxis.set_major_formatter(mticker.PercentFormatter(decimals=0))
+    ax.tick_params(axis="y", length=0)
+    ax.grid(axis="y", visible=False)
+    _legend(ax, [Patch(facecolor=MUTED, label="Cumulative R2"),
+                 Line2D([], [], marker="o", ls="", ms=7, mfc=ORANGE, mec=SURFACE, label="Adjusted R2")], loc="upper right")  # fmt: skip
+    first, last = table.iloc[0], table.iloc[-1]
+    rest = 100 * (last["r2"] - first["r2"])
+    fig = style.finish(
+        fig,
+        f"{first['block']} explains {100 * first['r2']:.0f}% of where {outcome} rose; all other drivers add {rest:.0f} points",
+        f"Cumulative R2 of the change in {outcome} across mainland municipalities (n = {int(last['n_obs'])}) as blocks are added in this order",
+        "Source: INE, AIMA, RNAL, CAOP 2024; own calculations. Order matters when blocks overlap; associations, not causal effects.",
+        head_in=1.15,
+        foot_in=0.55,
+    )
+    fig.subplots_adjust(left=0.38, right=0.97)
+    return fig
+
+
 # ---- regression coefficients ----------------------------------------------------------------------
 
 

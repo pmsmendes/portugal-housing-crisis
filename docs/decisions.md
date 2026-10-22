@@ -2,6 +2,12 @@
 
 Analytic and engineering choices, newest first. One short entry each: what, why, alternatives rejected.
 
+## 2026-10-22 — Phase 2 synthesis
+- **What:** one cross-section of the mainland municipalities (outcome: log change of price-to-income 2016 to 2024) with blocks added in order (geography, demand, supply, tourism, second homes) and the cumulative R2 and adjusted R2 reported; the reverse order (drivers first) and a joint per-sd model with and without coast and density classes as checks.
+- **Why:** the single-driver results of P2.02 to P2.06 overlap; a ladder shows how much each block accounts for beyond the others. Reporting both orders keeps the conclusion from depending on the order.
+- **Rejected:** Shapley/dominance decompositions (the blocks are far from independent and the story is already clear from the two orders); presenting the per-sd coefficients as a ranking of causes.
+- **Reading:** R2 is accompanying variation, not causal weight; with 271 municipalities and one change, place and driver cannot be separated, which is the argument for a design with a comparison group in phase 3.
+
 ## 2026-10-22 — Second homes (phase 2)
 - **What:** the census share of secondary residences (2011, 2021) enters as a cross-section: same-district regressions of the 2016 to 2024 change and the 2024 level of price-to-income (with and without coast and density class, and in subsamples), and as an interaction (centred, per 10 points) with the P2.02 panel drivers under municipality + year and municipality + NUTS 3 × year effects. Mainland only.
 - **Why:** only two census points exist, so a municipality fixed effect would absorb the share in the panel; an interaction is the way to ask whether the drivers act differently where second homes are common.

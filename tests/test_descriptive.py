@@ -183,3 +183,20 @@ def test_group_regression_recovers_group_differences_and_labels_terms():
     assert out.loc["x", "coef"] == pytest.approx(0.5, abs=0.05)
     assert not any("region" in term for term in out.index)
     assert out["n_obs"].iloc[0] == 300
+
+
+def test_block_r2_adds_blocks_in_order_on_a_fixed_sample():
+    rng = np.random.default_rng(3)
+    n = 200
+    df = pd.DataFrame(
+        {"a": rng.normal(size=n), "b": rng.normal(size=n), "g": rng.choice(list("xyz"), n)}
+    )
+    df["y"] = (
+        2 * df["a"] + 0.2 * df["b"] + df["g"].map({"x": 0, "y": 1, "z": 2}) + rng.normal(size=n)
+    )
+    df.loc[0, "b"] = np.nan  # dropped from every step, not only the last
+    out = d.block_r2(df, "y", {"first": ["a"], "groups": ["C(g)"], "second": ["b"]})
+    assert out["block"].tolist() == ["first", "groups", "second"]
+    assert (out["n_obs"] == n - 1).all()
+    assert out["r2"].is_monotonic_increasing
+    assert out["r2_added"].sum() == pytest.approx(out["r2"].iloc[-1])

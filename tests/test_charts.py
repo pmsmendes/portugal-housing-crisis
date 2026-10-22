@@ -197,3 +197,18 @@ def test_housing_balance_by_area_counts_areas_with_a_shortfall():
     fig = charts.housing_balance_by_area(census, after, {"census": 1.5, "after": -45.0})
     assert len(fig.axes) == 2
     assert "2 of 3 areas since 2021, against 1 of 3 between" in fig.texts[0].get_text()
+
+
+def test_r2_ladder_title_names_first_block_and_the_rest():
+    table = pd.DataFrame(
+        {
+            "block": ["Geography", "Demand", "Supply"],
+            "r2": [0.55, 0.60, 0.61],
+            "r2_adj": [0.50, 0.55, 0.55],
+            "r2_added": [0.55, 0.05, 0.01],
+            "n_obs": [270, 270, 270],
+        }
+    )
+    fig = charts.r2_ladder(table, "price-to-income")
+    title = fig.texts[0].get_text()
+    assert "Geography explains 55%" in title and "add 6 points" in title

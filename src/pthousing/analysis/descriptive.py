@@ -206,3 +206,34 @@ def group_regression(
             "n_obs": int(res.nobs),
         }
     )
+
+
+def block_r2(df: pd.DataFrame, y: str, blocks: dict[str, list[str]]) -> pd.DataFrame:
+    """R2 and adjusted R2 of ``y`` as blocks of terms are added one after another, on a fixed sample.
+
+    ``blocks`` maps a name to formula terms (numeric columns or ``C(column)``), added in the order given. The
+    sample is the rows with ``y`` and every column used, so the steps are comparable. Returns one row per step
+    with the cumulative ``r2``, ``r2_adj`` and the ``r2_added`` by that block (order matters when blocks overlap).
+    """
+    columns = {
+        c
+        for terms in blocks.values()
+        for t in terms
+        for c in ([t[2:-1]] if t.startswith("C(") else [t])
+    }
+    data = df.dropna(subset=[y, *columns])
+    rows, used, previous = [], [], 0.0
+    for name, terms in blocks.items():
+        used += terms
+        res = smf.ols(f"{y} ~ " + " + ".join(used), data=data).fit()
+        rows.append(
+            {
+                "block": name,
+                "r2": res.rsquared,
+                "r2_adj": res.rsquared_adj,
+                "r2_added": res.rsquared - previous,
+                "n_obs": int(res.nobs),
+            }
+        )
+        previous = res.rsquared
+    return pd.DataFrame(rows)

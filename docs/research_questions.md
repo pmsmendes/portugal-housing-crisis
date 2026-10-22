@@ -39,7 +39,7 @@ Reference questions by ID (e.g. `RQ2.3`) in notebooks, reports and commits.
 | RQ3.3 | What is the municipal-level relationship between population growth, immigration and prices/rents? | partly | `p2_02`: within municipalities, +1 pp of population added through foreign residents goes with +4.3% price-to-income (+3.1% with region-year effects, p < 0.001), against +1.0% (+0.45%, p = 0.10) for other population change; rents not analysed, nationalities not split |
 | RQ3.4 | How has the number of households evolved relative to population, and how has household size changed? | partly | `p2_05`: households +2.6% against population +0.4% 2011-2021, persons per household 2.61 to 2.55; 2001 and ageing/single-person split not done |
 | RQ3.5 | How have ageing, internal migration and single-person households affected demand? | — | |
-| RQ3.6 | To what extent do demand changes explain regional differences in price growth? | — | |
+| RQ3.6 | To what extent do demand changes explain regional differences in price growth? | partly | `p2_07`: demand (foreign residents, population, households) alone explains 29% of the variation in the 2016-2024 change of price-to-income, but only 0.8 points beyond district, coast and density (which explain 53%): demand differences cannot be told from the regional pattern with these data |
 
 ## RQ4 — Regional disparities (Phases 1–2)
 | ID | Question | Status | Where |
