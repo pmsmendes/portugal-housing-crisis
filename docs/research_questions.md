@@ -22,10 +22,10 @@ Reference questions by ID (e.g. `RQ2.3`) in notebooks, reports and commits.
 ## RQ2 — Housing supply and construction (Phases 1–2)
 | ID | Question | Status | Where |
 |---|---|---|---|
-| RQ2.1 | How many residential buildings and dwellings were built over the past 30 years? | — | |
-| RQ2.2 | How have building permits, construction starts and completions evolved? | — | |
-| RQ2.3 | Has supply kept pace with population growth and household formation? | — | |
-| RQ2.4 | How has the housing stock evolved, and what share is primary, secondary and vacant? | — | |
+| RQ2.1 | How many residential buildings and dwellings were built over the past 30 years? | done | `p2_05`: 1.53 million new family dwellings completed 1995-2025; 93,000 a year in 1995-2004, 42,000 in 2005-2014, 16,000 in 2015-2025; +111,000 net dwellings 2011-2021 (new construction only) |
+| RQ2.2 | How have building permits, construction starts and completions evolved? | done | `p2_05`: completions peaked at 126,000 (2002), fell to 7,100 (2015), 27,300 in 2025; licences 42,000 in 2025 |
+| RQ2.3 | Has supply kept pace with population growth and household formation? | done | `p2_05`: 2011-2021 dwellings +1.9%, households +2.6%, population +0.4% (balance +1.4 per 1,000 households), but households fell in 169 municipalities where dwellings still grew; 2021-2023 implied 236,000 new households against 43,300 completions |
+| RQ2.4 | How has the housing stock evolved, and what share is primary, secondary and vacant? | partly | `p2_05`: 2021 usual 69.4%, secondary 18.5%, vacant 12.1% (2011: 68.1, 19.3, 12.5); rural 54% usual vs urban 81%; only census years |
 | RQ2.5 | How many vacant dwellings could realistically return to residential use (location, condition, renovation cost)? | — | |
 | RQ2.6 | How has new-build supply compared with demand for different property types? | — | |
 | RQ2.7 | How have construction costs, land availability, planning rules and licensing times affected supply? | — | |
@@ -37,7 +37,7 @@ Reference questions by ID (e.g. `RQ2.3`) in notebooks, reports and commits.
 | RQ3.1 | How has population evolved over 30 years, split into natural change vs net migration? | — | |
 | RQ3.2 | How has the foreign-resident population evolved and where is it located? | — | |
 | RQ3.3 | What is the municipal-level relationship between population growth, immigration and prices/rents? | partly | `p2_02`: within municipalities, +1 pp of population added through foreign residents goes with +4.3% price-to-income (+3.1% with region-year effects, p < 0.001), against +1.0% (+0.45%, p = 0.10) for other population change; rents not analysed, nationalities not split |
-| RQ3.4 | How has the number of households evolved relative to population, and how has household size changed? | — | |
+| RQ3.4 | How has the number of households evolved relative to population, and how has household size changed? | partly | `p2_05`: households +2.6% against population +0.4% 2011-2021, persons per household 2.61 to 2.55; 2001 and ageing/single-person split not done |
 | RQ3.5 | How have ageing, internal migration and single-person households affected demand? | — | |
 | RQ3.6 | To what extent do demand changes explain regional differences in price growth? | — | |
 
@@ -48,7 +48,7 @@ Reference questions by ID (e.g. `RQ2.3`) in notebooks, reports and commits.
 | RQ4.2 | Which regions saw the greatest affordability deterioration relative to local incomes? | done | `p1_02`: change map and tables (PTI 2016-2024) |
 | RQ4.3 | Are prices rising faster in major urban centres than in surrounding municipalities? | partly | `p2_01`: no significant high-low/low-high outlier in the change in price-to-income; urban centres moved with their surroundings. Price growth itself by city/ring not yet compared |
 | RQ4.4 | Is there evidence of spatial spillovers between neighbouring municipalities? | done | `p2_01`: strong spatial autocorrelation (Moran's I of price-to-income 0.63 to 0.76), mostly regional; `p2_03`: with NUTS 3 × year effects no residual clustering, neighbours' drivers do not matter, and neighbours' past price-to-income (0.18) is matched by a next-year placebo (0.12): weak evidence at best |
-| RQ4.5 | Which regions show the largest imbalance between supply and household growth? | — | |
+| RQ4.5 | Which regions show the largest imbalance between supply and household growth? | done | `p2_05`: 2011-2021 shortfall in Setúbal, Lisboa, Porto (-30 to -23 per 1,000), surplus in the interior; since 2021 implied shortfall almost everywhere, largest in Faro, Beja, Lisboa, Setúbal, Leiria |
 | RQ4.6 | How do trends differ coastal vs inland, urban vs rural, tourist vs non-tourist? | done | `p2_01`: LISA clusters; `p2_04`: price-to-income 2016-2024 rose 52% on the coast vs 10% inland, 72% urban vs 7% rural, 47% tourist vs 16%; density matters most, then the coast, tourism adds nothing once those and the district are controlled (proxy classes, mainland) |
 
 ## RQ5 — Tourism, foreign investment and the housing market (Phase 2)

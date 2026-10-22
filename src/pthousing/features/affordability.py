@@ -63,6 +63,15 @@ def supply_gap_per_1000(dwellings_start, dwellings_end, households_start, househ
     )
 
 
+def implied_gap_per_1000(completions, new_households, households_start):
+    """Dwellings completed minus households implied by population growth, per 1,000 households at the start.
+
+    Same sign as ``supply_gap_per_1000`` (negative: construction fell short of the new households), for the
+    years after the last census, when only population and completions are observed.
+    """
+    return 1000 * (completions - new_households) / households_start
+
+
 def _like(result, *templates):
     """Return a Series (with the index of the first Series template) when one was given, else the array."""
     for template in templates:

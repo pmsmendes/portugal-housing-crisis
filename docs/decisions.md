@@ -2,6 +2,12 @@
 
 Analytic and engineering choices, newest first. One short entry each: what, why, alternatives rejected.
 
+## 2026-10-22 — Supply against demand (phase 2)
+- **What:** two periods with the same sign (positive = dwellings grew faster than households): the census decade 2011 to 2021 (observed: conventional dwellings and private households) and 2021 to 2023 (implied: new households = population growth / persons per household in 2021, supply = completions of 2022 and 2023). Groups are summed in counts and the ratios recomputed (never an average of municipal ratios). Cross-section regressions of the 2016 to 2024 log change in price-to-income on the drivers with district intercepts (mainland, HC3 errors), then with coast and density classes.
+- **Why:** annual household counts do not exist, so the post-2021 pressure can only be implied from population; keeping the two periods apart shows which part is a count and which a proxy. A cross-section is used because dwellings and households are census-year observations.
+- **Rejected:** treating the implied gap as a count (it ignores household-size change, demolitions, renovation and revisions of population estimates); a panel regression with interpolated annual households (invented variation); an instrument for construction (none available).
+- **Caveat:** the implied gap is almost minus the population growth (correlation −0.99) because completions are small against it, so it adds little beyond population change; the 2016 to 2024 outcome overlaps both periods.
+
 ## 2026-10-22 — Municipality typology for group comparisons (phase 2)
 - **What:** `data/external/muni_typology.csv` from `data/typology.py`. Coast: a CAOP boundary segment typed 'Limite e Linha de Costa' touches the municipality; 'estuary' if its only water boundary is a 'Limite na Água' (nine municipalities on the tidal Tejo and Sado, Lisboa among them); else inland. Density: residents per km² in 2021, urban from 500, rural below 100. Tourist: at least 25 registered short-term rentals per 1,000 dwellings (mainland; islands 'unknown'). Thresholds live in `config.py`.
 - **Why:** these can be computed from sources already in the project, with rules that can be stated in one line. Segment comparisons use the 278 mainland municipalities (all 30 island municipalities are coastal and have no rental registry).

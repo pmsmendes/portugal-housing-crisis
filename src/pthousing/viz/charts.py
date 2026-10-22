@@ -382,6 +382,85 @@ def moran_trends(table: pd.DataFrame, weights_note: str) -> Figure:
     )
 
 
+# ---- supply and demand ----------------------------------------------------------------------------
+
+
+def construction_flows(flows: pd.DataFrame) -> Figure:
+    """New family dwellings licensed and completed per year in Portugal (thousands).
+
+    ``flows`` is indexed by year with columns ``licensed_n`` and ``completed_n``.
+    """
+    years = flows.index
+    done = flows["completed_n"] / 1000
+    peak_year = done.idxmax()
+    low_year = done.loc[peak_year:].idxmin()
+    fig, ax = plt.subplots(figsize=(8, 4.6))
+    _line(ax, years, flows["licensed_n"] / 1000, MUTED)
+    _line(ax, years, done, BLUE, z=4)
+    for series, color in ((flows["licensed_n"] / 1000, MUTED), (done, BLUE)):
+        _end_dot(ax, years[-1], series.iloc[-1], color)
+    _label(ax, years[-1], done.iloc[-1], f"{done.iloc[-1]:.0f}k completed")
+    _label(
+        ax,
+        years[-1],
+        flows["licensed_n"].iloc[-1] / 1000,
+        f"{flows['licensed_n'].iloc[-1] / 1000:.0f}k licensed",
+    )
+    ax.set_xticks(range(years[0] + (-years[0] % 5), years[-1] + 1, 5))
+    ax.set_xlim(years[0] - 0.5, years[-1] + 6.5)
+    ax.set_ylim(bottom=0)
+    ax.margins(x=0.01)
+    _legend(ax, [Line2D([], [], color=BLUE, lw=LINE_WIDTH, label="Dwellings completed"),
+                 Line2D([], [], color=MUTED, lw=LINE_WIDTH, label="Dwellings licensed")], loc="upper right")  # fmt: skip
+    return style.finish(
+        fig,
+        f"Completions fell from {done.loc[peak_year]:.0f}k in {peak_year} to {done.loc[low_year]:.0f}k in {low_year} "
+        f"and are back to {done.iloc[-1]:.0f}k",
+        "New family dwellings licensed and completed per year, thousands, all municipalities",
+        "Source: INE (building licences and completions). New construction only: renovation, demolition and conversion are not counted.",
+    )
+
+
+def housing_balance_by_area(
+    census: pd.Series, after: pd.Series, headline: dict[str, float]
+) -> Figure:
+    """Dwellings added minus households added, per 1,000 households, by area: census decade and since 2021.
+
+    ``census`` (2011 to 2021, observed) and ``after`` (2021 to 2023, implied from population) are indexed by
+    area name; the areas are sorted by ``census``. Negative bars (orange) are areas where construction fell
+    short of new households. ``headline`` has the national ``census`` and ``after`` values for the title.
+    """
+    order = census.sort_values().index
+    census, after = census.reindex(order), after.reindex(order)
+    fig, axes = plt.subplots(1, 2, figsize=(11, 0.28 * len(order) + 2.0), sharey=True)
+    for ax, series, title in (
+        (axes[0], census, "2011 to 2021 (census: dwellings and households counted)"),
+        (axes[1], after, "2021 to 2023 (implied: population / persons per household)"),
+    ):
+        colors = [ORANGE if v < 0 else BLUE for v in series]
+        ax.barh(range(len(series)), series.to_numpy(), color=colors, height=0.68, zorder=3)
+        ax.axvline(0, color=INK_2, lw=1, zorder=4)
+        ax.set_yticks(range(len(series)), series.index)
+        ax.set_ylim(len(series) - 0.4, -0.6)
+        ax.tick_params(axis="y", length=0)
+        ax.grid(axis="y", visible=False)
+        lo, hi = series.min(), series.max()
+        pad = 0.08 * (hi - lo)
+        ax.set_xlim(min(lo, 0) - pad, max(hi, 0) + pad)
+        _panel_title(ax, title)
+    n_short, n_short_after = int((census < 0).sum()), int((after < 0).sum())
+    return style.finish(
+        fig,
+        f"Construction fell short of new households in {n_short_after} of {len(after)} areas since 2021, "
+        f"against {n_short} of {len(census)} between the censuses",
+        "Dwellings added minus households added, per 1,000 households at the start. Orange: fewer new dwellings than new households",
+        f"Source: INE (census, population estimates, completions); own calculations. National values: {headline['census']:+.0f} (2011 to 2021), "
+        f"{headline['after']:+.0f} (2021 to 2023, implied).",
+        head_in=1.15,
+        foot_in=0.55,
+    )
+
+
 # ---- regression coefficients ----------------------------------------------------------------------
 
 

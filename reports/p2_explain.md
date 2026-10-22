@@ -2,12 +2,12 @@
 
 Why did affordability deteriorate, and where? This phase moves from description to association; nothing here is a
 causal claim. Figures: `reports/figures/p2/`, tables: `reports/tables/p2/`, notebooks: `notebooks/p2_explain/`
-(`p2_01_spatial_autocorrelation`). Methods: [methodology](../docs/methodology.md), choices:
+(`p2_01` to `p2_05`). Methods: [methodology](../docs/methodology.md), choices:
 [decisions](../docs/decisions.md).
 
 **Done so far:** spatial autocorrelation (RQ4.3 partly), fixed-effects regressions with foreign residents (RQ3.3,
-RQ5.1, RQ5.4 partly), spillover tests (RQ4.4) and segmentation (RQ4.6). **Still to do:** supply against demand
-(RQ2.3, RQ4.5), second homes.
+RQ5.1, RQ5.4 partly), spillover tests (RQ4.4), segmentation (RQ4.6) and supply against demand (RQ2.1 to RQ2.4,
+RQ3.4, RQ4.5). **Still to do:** second homes.
 
 ## Key findings
 
@@ -107,6 +107,40 @@ Mainland municipalities grouped by three proxies (coast, 2021 density, rental re
 Tables: `segment_summary.csv`, `segment_pti_by_year.csv`, `segment_adjusted_differences.csv`,
 `segment_foreign_interactions.csv`, `segment_foreign_interactions_joint.csv`.
 
+## Supply against demand (`p2_05_supply_vs_demand`)
+
+Two periods with the same sign (negative: construction fell short of new households). 2011 to 2021 is observed
+(census dwellings and households). 2021 to 2023 is *implied*: new households = population growth / persons per
+household, against completions of 2022 and 2023 (new family dwellings only).
+
+16. **Construction collapsed and has recovered only partly.** Completions peaked at 126,000 in 2002, fell to 7,100 in
+    2015 and were 27,300 in 2025: 93,000 a year in 1995 to 2004, 42,000 in 2005 to 2014, 16,000 in 2015 to 2025.
+17. **Supply kept pace with households between the censuses nationally, not locally.** Dwellings +1.9% (+111,000),
+    households +2.6%, population +0.4%; the balance is +1.4 per 1,000 households. But households fell in 169
+    municipalities that still added 11,500 dwellings, while in the 139 where households grew (+147,000) dwellings
+    grew less (+99,600). Setúbal (−30 per 1,000), Lisboa (−24) and Porto (−23) fell short; the interior (Castelo
+    Branco +94, Bragança +91) added dwellings while losing households.
+18. **Since 2021 the pressure is everywhere.** About 236,000 implied new households against 43,300 completions
+    (−46 per 1,000): a shortfall in 18 of 20 areas and 237 of 308 municipalities, largest in Faro (−96), Beja (−80),
+    Lisboa and Setúbal (−73). The size is uncertain (population estimates, household size), the geography is not.
+19. **The stock is mostly lived in.** 69.4% usual residence, 18.5% secondary, 12.1% vacant (723,000) in 2021 (2011:
+    68.1, 19.3, 12.5); rural municipalities 54% usual and 31% secondary against 81% and 9% in urban ones.
+20. **Weak, non-robust link to affordability.** Within a district, municipalities whose dwellings grew more than
+    their households in 2011 to 2021 saw a smaller rise in price-to-income (−6.8% per standard deviation, p = 0.001)
+    and those with more population growth since 2021 a larger one (+6.3%), but these fade with coast and density
+    class (−2.6%, p = 0.16) and without the three metropolitan districts. Completions in 2022 and 2023 stay positive
+    (+2.9% to +4.8%): supply follows prices.
+
+![Dwellings against households by area](figures/p2/housing_balance_by_area.png)
+
+![Completions and licences](figures/p2/construction_flows.png)
+
+![Implied shortfall since 2021](figures/p2/housing_shortfall_map_2021_2023.png)
+
+Tables: `construction_flows.csv`, `housing_balance_by_area.csv`, `housing_balance_by_household_trend.csv`,
+`stock_composition_national.csv`, `stock_composition_by_class.csv`, `supply_demand_associations.csv`,
+`supply_demand_sensitivity.csv`. Map for 2011 to 2021: `figures/p2/housing_shortfall_map_2011_2021.png`.
+
 ## Limitations
 
 - **A pattern, not a mechanism.** Spatial autocorrelation does not show that price changes spill over: shared
@@ -128,10 +162,13 @@ Tables: `segment_summary.csv`, `segment_pti_by_year.csv`, `segment_adjusted_diff
   the groups overlap and some are small (9 to 57 municipalities); islands are left out.
 - **Rentals.** The series is the stock of units still registered today (survivors, mainland only), which understates
   the past and so overstates its growth.
+- **Implied households.** The 2021 to 2023 gap divides new residents by 2021 persons per household, ignores
+  household-size change and revisions of population estimates, and completions exclude renovation, conversion and
+  demolition; it is a proxy (almost minus population growth, correlation −0.99). Census years are ten years apart.
 - **Missing municipalities.** 12 municipalities have no price-to-income for 2016 or 2024 and are left out (hatched on
   the map); their neighbours' weights are re-standardised without them.
 
 ## Questions answered
 
-RQ4.4 (little evidence of spillovers beyond the regional pattern) and RQ4.6 (coastal and urban, not tourism as such) are
-answered; RQ4.3, RQ3.3, RQ5.1 and RQ5.4 are partly answered (see [research_questions](../docs/research_questions.md)).
+RQ4.4 (little evidence of spillovers beyond the regional pattern), RQ4.6 (coastal and urban, not tourism as such), RQ2.1 to
+RQ2.3 and RQ4.5 (supply against households) are answered; RQ4.3, RQ3.3, RQ5.1 and RQ5.4 are partly answered (see [research_questions](../docs/research_questions.md)).

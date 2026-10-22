@@ -171,3 +171,29 @@ def test_segment_trends_draws_one_panel_per_dimension_with_a_computed_title():
     assert len(fig.axes) == 2
     title = fig.texts[0].get_text()
     assert "72% in urban and 7% in rural" in title and "52% on the coast and 10% inland" in title
+
+
+def test_construction_flows_title_names_peak_trough_and_latest():
+    years = list(range(1995, 2026))
+    done = pd.Series(
+        [
+            60_000 + 2_000 * min(y - 1995, 10)
+            if y <= 2005
+            else max(8_000, 80_000 - 7_000 * (y - 2005))
+            for y in years
+        ],
+        index=years,
+    )
+    done.loc[2020:] = [10_000, 12_000, 18_000, 21_000, 25_000, 27_000]
+    flows = pd.DataFrame({"completed_n": done, "licensed_n": done * 1.2})
+    fig = charts.construction_flows(flows)
+    title = fig.texts[0].get_text()
+    assert f"from {done.max() / 1000:.0f}k in 2005" in title and "back to 27k" in title
+
+
+def test_housing_balance_by_area_counts_areas_with_a_shortfall():
+    census = pd.Series({"A": -30.0, "B": 10.0, "C": 50.0})
+    after = pd.Series({"A": -70.0, "B": -20.0, "C": 3.0})
+    fig = charts.housing_balance_by_area(census, after, {"census": 1.5, "after": -45.0})
+    assert len(fig.axes) == 2
+    assert "2 of 3 areas since 2021, against 1 of 3 between" in fig.texts[0].get_text()
