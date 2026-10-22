@@ -139,3 +139,18 @@ def test_coef_ladder_has_one_panel_per_driver_and_a_computed_title():
     )
     assert len(fig.axes) == 2
     assert "driver a" in fig.texts[0].get_text() and "+4.0%" in fig.texts[0].get_text()
+
+
+def test_neighbour_placebo_title_compares_lag_and_lead():
+    def rows(effects, lag, lead):
+        return [
+            {"spec": f"{effects}|{key}", "term": "w_log_pti", "coef": c, "ci_low": c - 0.1, "ci_high": c + 0.1}
+            for key, c in (("lag", lag), ("lead", lead))
+        ]  # fmt: skip
+
+    labels = {"lag": "Last year", "lead": "Next year (placebo)"}
+    close = pd.DataFrame(rows("A", 0.3, 0.3) + rows("B", 0.2, 0.15))
+    text = charts.neighbour_placebo(close, labels, "A", "B").texts[0].get_text()
+    assert "(0.20)" in text and "almost as well (0.15)" in text
+    far = pd.DataFrame(rows("A", 0.3, 0.3) + rows("B", 0.2, 0.02))
+    assert "much less (0.02)" in charts.neighbour_placebo(far, labels, "A", "B").texts[0].get_text()

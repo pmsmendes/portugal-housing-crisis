@@ -163,3 +163,20 @@ def moran_by_year(
         values = panel.loc[panel["year"] == year].set_index(MUNI_KEY)[column]
         rows.append({"year": year, **global_moran(values, w, permutations)})
     return pd.DataFrame(rows)
+
+
+def spatial_lag(values: pd.Series, w: weights.W) -> pd.Series:
+    """Average of ``values`` over each municipality's neighbours (the spatial lag Wy), by ``muni_code``.
+
+    Weights are row-standardised, so this is a weighted mean; a neighbour without a value is left out and
+    the remaining weights are re-scaled. A municipality with no neighbour holding a value gets NaN.
+    """
+    ids = list(w.id_order)
+    sparse = w.sparse.tocsr()
+    y = values.reindex(ids).to_numpy(dtype=float)
+    known = ~np.isnan(y)
+    numerator = sparse @ np.where(known, y, 0.0)
+    weight_sum = sparse @ known.astype(float)
+    with np.errstate(invalid="ignore", divide="ignore"):
+        lag = np.where(weight_sum > 0, numerator / weight_sum, np.nan)
+    return pd.Series(lag, index=pd.Index(ids, name=MUNI_KEY), name=values.name)

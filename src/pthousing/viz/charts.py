@@ -436,3 +436,61 @@ def coef_ladder(
     )
     fig.subplots_adjust(left=0.19, right=0.985, wspace=0.14)
     return fig
+
+
+def neighbour_placebo(table: pd.DataFrame, rows: dict[str, str], main: str, compare: str) -> Figure:
+    """Coefficient of the neighbours' price-to-income, last year against next year (placebo), by fixed effects.
+
+    ``table`` is the concatenated ``panel.coef_table`` output with a ``spec`` column of the form
+    ``'<effects>|<row key>'``; ``rows`` maps row keys to the labels shown (top to bottom); ``main`` and
+    ``compare`` are the effects prefixes drawn in blue and orange.
+    """
+    fig, ax = plt.subplots(figsize=(9, 0.9 * len(rows) + 1.6))
+    colors = {main: BLUE, compare: ORANGE}
+    offsets = {main: -0.14, compare: 0.14}
+    values = {}
+    for i, key in enumerate(rows):
+        for effects in (main, compare):
+            hit = table[(table["spec"] == f"{effects}|{key}") & table["term"].str.startswith("w_")]
+            if hit.empty:
+                continue
+            row = hit.iloc[0]
+            values[(effects, key)] = row["coef"]
+            y = i + offsets[effects]
+            ax.plot(
+                [row["ci_low"], row["ci_high"]], [y, y], color=colors[effects], lw=1.8, zorder=3
+            )
+            ax.plot(
+                [row["coef"]], [y], "o", ms=7, mfc=colors[effects], mec=SURFACE, mew=1.5, zorder=4
+            )
+    ax.axvline(0, color=INK_2, lw=1, zorder=2)
+    ax.set_yticks(range(len(rows)), list(rows.values()))
+    ax.set_ylim(len(rows) - 0.5, -0.5)
+    ax.tick_params(axis="y", length=0)
+    ax.grid(axis="y", visible=False)
+    ax.set_xlabel("Coefficient on the neighbours' log price-to-income", color=INK_2)
+    low, high = ax.get_xlim()
+    ax.set_xlim(low, high + 0.45 * (high - low))  # room on the right for the legend
+    _legend(ax, [Line2D([], [], color=BLUE, lw=LINE_WIDTH, label=main),
+                 Line2D([], [], color=ORANGE, lw=LINE_WIDTH, label=compare)], loc="center right")  # fmt: skip
+    first, second = list(rows)[:2]
+    lag, lead = values.get((compare, first)), values.get((compare, second))
+    if lag is None or lead is None:
+        head = "Neighbours' price-to-income and a municipality's own"
+    else:
+        closeness = "almost as well" if lead > 0.5 * lag else "much less"
+        head = (
+            f"Within a region, neighbours' price-to-income last year goes with a municipality's ({lag:.2f}); "
+            f"next year's does {closeness} ({lead:.2f})"
+        )
+    fig = style.finish(
+        fig,
+        head,
+        "Fixed-effects regressions of log price-to-income, 2017 to 2022, 95% intervals; the 'next year' row is a "
+        "placebo: it cannot be a cause",
+        "Source: INE, AIMA, CAOP 2024; own calculations. Adjusted associations, not causal effects.",
+        head_in=1.0,
+        foot_in=0.9,
+    )
+    fig.subplots_adjust(left=0.37, right=0.97)
+    return fig

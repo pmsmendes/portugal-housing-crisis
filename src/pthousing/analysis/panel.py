@@ -15,6 +15,7 @@ import numpy as np
 import pandas as pd
 from linearmodels.panel import PanelOLS
 
+from pthousing.analysis import spatial
 from pthousing.config import MUNI_KEY, YEAR_KEY
 
 REGION = "nuts3_name_2024"
@@ -75,6 +76,26 @@ def build_frame(panel: pd.DataFrame) -> pd.DataFrame:
         out[REGION].astype(str) + "_" + out.index.get_level_values(YEAR_KEY).astype(str)
     )
     return out
+
+
+def add_spatial_lags(frame: pd.DataFrame, w, columns: list[str], shift: int = 0) -> pd.DataFrame:
+    """Frame with the spatial lag W x of each column (the mean over neighbours in the same year).
+
+    New columns are ``w_<column>``; with ``shift`` > 0 the neighbours' value ``shift`` years earlier is used
+    and the columns are ``w_<column>_l<shift>`` (a lagged spatial lag cannot respond to this year's shocks); a
+    negative ``shift`` takes later years (``_f<n>``), used as a placebo.
+    """
+    parts = []
+    for year, cross_section in frame.groupby(level=YEAR_KEY):
+        cross_section = cross_section.droplevel(YEAR_KEY)
+        lagged = pd.DataFrame({c: spatial.spatial_lag(cross_section[c], w) for c in columns})
+        lagged[YEAR_KEY] = year
+        parts.append(lagged.reset_index().set_index([MUNI_KEY, YEAR_KEY]))
+    lags = pd.concat(parts).reindex(frame.index)
+    suffix = f"_l{shift}" if shift > 0 else f"_f{-shift}" if shift < 0 else ""
+    if shift:
+        lags = lags.groupby(level=MUNI_KEY).shift(shift)
+    return frame.join(lags.add_prefix("w_").add_suffix(suffix))
 
 
 @dataclass

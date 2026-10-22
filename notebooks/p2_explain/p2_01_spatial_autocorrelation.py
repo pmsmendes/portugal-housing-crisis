@@ -177,7 +177,7 @@ print(f"significant spatial outliers (HL/LH): {len(outliers)}")
 #    0.20 with queen weights and 0.08 with 6 nearest neighbours (both still significant, p < 0.01). So the pattern is
 #    mainly coast against interior and metropolitan area against rest; a small, weights-dependent part is
 #    clustering *within* regions. This is evidence that spillovers are *possible*, not that they exist: a spatial
-#    lag or Durbin model on the panel (p2_03) is needed to test them.
+#    lag or Durbin model on the panel is needed to test them; P2.03 does this with space-time and SLX regressions.
 # 4. **Clusters.** 45 municipalities are high-high and 50 low-low (p < 0.05, no multiple-testing correction). The
 #    high-high clusters are concentrated in the districts of Faro (13), Lisboa (11), Setúbal (8) and Porto (6);
 #    Lisboa, Porto, Cascais and Faro are inside them. The low-low clusters are the interior (Viseu, Guarda,

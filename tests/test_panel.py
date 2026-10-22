@@ -139,3 +139,27 @@ def test_build_frame_constructs_drivers_from_the_processed_panel():
     )
     assert row["log_pti"] == pytest.approx(np.log(10.0))
     assert frame.index.names == ["muni_code", "year"]
+
+
+def test_add_spatial_lags_uses_neighbours_in_the_same_or_an_earlier_year():
+    import geopandas as gpd
+    from shapely.geometry import box
+
+    from pthousing.analysis import spatial
+    from pthousing.config import CRS_METRIC
+
+    codes = ["0101", "0102", "0103"]  # three squares in a row: 0102 touches both others
+    geo = gpd.GeoDataFrame(
+        {"muni_code": codes, "territory": "continente",
+         "geometry": [box(i * 1000, 0, (i + 1) * 1000, 1000) for i in range(3)]},
+        crs=CRS_METRIC,
+    )  # fmt: skip
+    w = spatial.build_weights(geo)
+    index = pd.MultiIndex.from_product([codes, [2020, 2021]], names=["muni_code", "year"])
+    frame = pd.DataFrame({"v": [1.0, 2.0, 10.0, 20.0, 100.0, 200.0]}, index=index)
+    same = pn.add_spatial_lags(frame, w, ["v"])
+    assert same.loc[("0102", 2020), "w_v"] == pytest.approx((1.0 + 100.0) / 2)
+    assert same.loc[("0101", 2021), "w_v"] == pytest.approx(20.0)
+    earlier = pn.add_spatial_lags(frame, w, ["v"], shift=1)
+    assert np.isnan(earlier.loc[("0102", 2020), "w_v_l1"])
+    assert earlier.loc[("0102", 2021), "w_v_l1"] == pytest.approx((1.0 + 100.0) / 2)

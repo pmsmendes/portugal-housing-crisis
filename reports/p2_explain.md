@@ -5,9 +5,9 @@ causal claim. Figures: `reports/figures/p2/`, tables: `reports/tables/p2/`, note
 (`p2_01_spatial_autocorrelation`). Methods: [methodology](../docs/methodology.md), choices:
 [decisions](../docs/decisions.md).
 
-**Done so far:** spatial autocorrelation (RQ4.3, RQ4.4, RQ4.6 partly) and fixed-effects regressions with foreign
-residents (RQ3.3, RQ5.1, RQ5.4 partly). **Still to do:** a spatial lag test of spillovers, segmentation, supply
-against demand, second homes.
+**Done so far:** spatial autocorrelation (RQ4.3, RQ4.6 partly), fixed-effects regressions with foreign residents
+(RQ3.3, RQ5.1, RQ5.4 partly) and spillover tests (RQ4.4). **Still to do:** segmentation (coastal, urban, tourist),
+supply against demand, second homes.
 
 ## Key findings
 
@@ -63,11 +63,32 @@ harder variant adds NUTS 3 × year effects. All coefficients are adjusted associ
 Tables: `pti_change_decomposition.csv`, `fe_regressions_pti.csv`, `fe_regressions_pti_total_population.csv`,
 `fe_regressions_price.csv`, `fe_residual_moran.csv`.
 
+## Spillovers between neighbours (`p2_03_spillovers`)
+
+Does a municipality's price-to-income depend on its neighbours', beyond its own drivers and its region's yearly
+shocks? Three tests with the regression above, queen-contiguity neighbours, 2017 to 2022.
+
+10. **The leftover clustering was regional.** With municipality and year effects the residuals are spatially
+    correlated (Moran's I 0.18 in 2017, 0.28 in 2022); with NUTS 3 × year effects none is positive and
+    significant.
+11. **Neighbours' drivers matter only through the region.** With year effects the neighbours' completions, population
+    change and foreign-resident change are all associated with a municipality's price-to-income; with NUTS 3 × year
+    effects none is (p = 0.11, 0.56, 0.30), while the municipality's own foreign-resident change stays (+2.7%).
+12. **Diffusion cannot be told from shared shocks.** Within a region the neighbours' price-to-income last year goes
+    with a municipality's (0.18, p = 0.03), but next year's, which cannot be a cause, does almost as well (0.12,
+    p = 0.21). Evidence for spillovers between neighbours is weak at best.
+
+![Neighbours last year against next year](figures/p2/spillover_placebo.png)
+
+Tables: `spillover_residual_moran.csv`, `spillover_slx.csv`, `spillover_diffusion.csv`. The region effects also absorb
+a spillover spread across a whole region, so the tests are conservative; these are the space-time and SLX forms
+estimable by fixed effects, not spatial-lag or spatial-error panel models (decisions.md).
+
 ## Limitations
 
 - **A pattern, not a mechanism.** Spatial autocorrelation does not show that price changes spill over: shared
   income, coast, labour markets and policy produce it as well. The within-region check removes only average
-  regional differences. A spatial-lag panel model is the next test.
+  regional differences. The spillover tests in the next section go further.
 - **Short history.** Municipal prices start in 2016, so changes cover eight years.
 - **Weights matter at the margin.** Contiguity treats very unequal municipalities alike; the within-region result
   drops from 0.20 to 0.08 with k-nearest weights.
@@ -87,4 +108,5 @@ Tables: `pti_change_decomposition.csv`, `fe_regressions_pti.csv`, `fe_regression
 
 ## Questions answered
 
-RQ4.3, RQ4.4, RQ4.6, RQ3.3, RQ5.1 and RQ5.4 are partly answered (see [research_questions](../docs/research_questions.md)).
+RQ4.4 is answered (little evidence of spillovers beyond the regional pattern); RQ4.3, RQ4.6, RQ3.3, RQ5.1 and RQ5.4
+are partly answered (see [research_questions](../docs/research_questions.md)).

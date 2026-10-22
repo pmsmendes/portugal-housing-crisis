@@ -108,3 +108,27 @@ def test_moran_by_year_has_one_row_per_year():
     out = spatial.moran_by_year(panel, "v", w, [2020, 2021], permutations=49)
     assert out["year"].tolist() == [2020, 2021]
     assert (out["I"] > 0.5).all()
+
+
+def test_spatial_lag_is_the_mean_of_neighbours_and_skips_missing():
+    geo = _grid(island=False)
+    w = spatial.build_weights(geo)
+    values = pd.Series(0.0, index=geo["muni_code"])
+    values.loc["101"] = 8.0
+    lag = spatial.spatial_lag(values, w)
+    assert lag.loc["000"] == pytest.approx(8.0 / 3)  # corner square: 3 queen neighbours, one is 101
+    assert lag.loc["101"] == pytest.approx(0.0)  # a square is not its own neighbour
+    values.loc["001"] = np.nan
+    lag = spatial.spatial_lag(values, w)
+    assert lag.loc["000"] == pytest.approx(8.0 / 2)  # the missing neighbour is dropped, not zero
+    assert not np.isnan(lag.loc["001"])  # but a missing own value still gets a lag
+
+
+def test_spatial_lag_of_islands_stays_inside_the_territory():
+    geo = _grid()
+    w = spatial.build_weights(geo)
+    values = pd.Series(1.0, index=geo["muni_code"])
+    values.loc[["9002", "9003"]] = 5.0
+    lag = spatial.spatial_lag(values, w)
+    assert lag.loc["9001"] == pytest.approx(5.0)
+    assert lag.loc["000"] == pytest.approx(1.0)
