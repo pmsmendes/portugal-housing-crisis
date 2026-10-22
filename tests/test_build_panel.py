@@ -57,6 +57,12 @@ def _tables():
             {"muni_code": m, "year": 2020, "sex": "m", "age_group": "total", "population_n": 50.0}
         )
     population = pd.DataFrame(rows)
+    foreigners = pd.DataFrame(
+        [
+            {"muni_code": m, "year": 2020, "nationality": n, "foreign_residents_n": v}
+            for m in MUNIS for n, v in (("total", 10.0), ("br", 6.0), ("other", 4.0))
+        ]
+    )  # fmt: skip
     stock = pd.DataFrame(
         [
             {"muni_code": m, "census_year": y, "dwellings_n": d, "dwellings_usual_n": 0.0, "dwellings_secondary_n": 5.0,
@@ -93,7 +99,7 @@ def _tables():
     return {
         "ine_median_price_sqm": price, "ine_median_rent_sqm": rent, "ine_income": income,
         "ine_bank_valuation_annual": valuation, "ine_construction": construction,
-        "ine_population": population, "ine_census_stock": stock, "ine_census": census,
+        "ine_population": population, "aima_foreigners": foreigners, "ine_census_stock": stock, "ine_census": census,
         "rnal_al": units, "ine_cpi": cpi, "bp_mortgage": bp,
     }  # fmt: skip
 
@@ -145,6 +151,14 @@ def test_population_total_and_old_age_share(panel):
     row = panel.loc[("0101", 2020)]
     assert row["population_n"] == 100.0
     assert row["pop_65plus_pct"] == pytest.approx(20.0)  # 65-69 and 85+ of 100
+
+
+def test_foreign_residents_are_the_total_and_a_share_of_population(panel):
+    row = panel.loc[("0101", 2020)]
+    assert row["foreign_residents_n"] == 10.0  # the total, not the sum of all rows
+    assert row["foreign_residents_pct"] == pytest.approx(10.0)  # 10 of 100 residents
+    assert np.isnan(panel.loc[("0101", 2021), "foreign_residents_n"])
+    assert np.isnan(panel.loc[("0101", 2021), "foreign_residents_pct"])
 
 
 def test_dwelling_area_is_interpolated_between_censuses_and_flat_outside(panel):

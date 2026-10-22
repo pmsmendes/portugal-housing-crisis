@@ -67,6 +67,11 @@ def test_sample_filters_and_year_window():
     assert pn.coef_table(short)["n_obs"].iloc[0] == 60 * 4
 
 
+def test_spec_years_override_the_window():
+    res = pn.fit(_panel(), pn.Spec("log_pti", ["x1"], years=(2014, 2017)), years=(2014, 2023))
+    assert pn.coef_table(res)["n_obs"].iloc[0] == 60 * 4
+
+
 def test_lagged_drivers_drop_the_first_year():
     res = pn.fit(_panel(), pn.Spec("log_pti", ["x1"], lag=1), years=(2014, 2023))
     assert pn.coef_table(res)["n_obs"].iloc[0] == 60 * 9
@@ -109,6 +114,7 @@ def test_build_frame_constructs_drivers_from_the_processed_panel():
                     "pti_years": 10.0,
                     "income_median_eur_real": 12000.0,
                     "population_n": pop0 * 1.01**k,
+                    "foreign_residents_n": 100.0 + 10.0 * k,
                     "pop_65plus_pct": 20.0,
                     "completed_n": 10.0 * (k + 1),
                     "dwellings_2011_n": 500,
@@ -125,5 +131,11 @@ def test_build_frame_constructs_drivers_from_the_processed_panel():
     assert row["completions_per_1000"] == pytest.approx(1000 * (20 + 30 + 40) / 500)
     assert np.isnan(frame.loc[("0101", 2013), "completions_per_1000"])
     assert row["al_per_1000"] == pytest.approx(10.0)
+    last_pop = 1000.0 * 1.01**3  # population of 2015
+    assert row["foreign_change_pct"] == pytest.approx(100 * 10.0 / last_pop)
+    total_change = 100 * (1000.0 * 1.01**4 - last_pop) / last_pop
+    assert row["pop_change_ex_foreign_pct"] + row["foreign_change_pct"] == pytest.approx(
+        total_change
+    )
     assert row["log_pti"] == pytest.approx(np.log(10.0))
     assert frame.index.names == ["muni_code", "year"]

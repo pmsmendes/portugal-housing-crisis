@@ -24,6 +24,8 @@ COMPLETION_WINDOW = (
 LABELS = {
     "log_income_real": "Real median income (log)",
     "pop_growth_pct": "Population growth (pp per year)",
+    "pop_change_ex_foreign_pct": "Other population change (pp of pop.)",
+    "foreign_change_pct": "Foreign resident change (pp of pop.)",
     "completions_per_1000": "Completions, 3 years (per 1,000 dwellings)",
     "pop_65plus_pct": "Population aged 65+ (pp)",
     "al_per_1000": "Short-term rentals (per 1,000 dwellings)",
@@ -34,7 +36,10 @@ def build_frame(panel: pd.DataFrame) -> pd.DataFrame:
     """Regression frame indexed by (muni_code, year) with outcomes and drivers.
 
     Outcomes: ``log_price_real`` (price per m2) and ``log_pti`` (price-to-income). Drivers:
-    ``log_income_real``; ``pop_growth_pct`` (annual log change of resident population x 100);
+    ``log_income_real``; ``pop_growth_pct`` (annual log change of resident population x 100) and its
+    additive split ``foreign_change_pct`` (change in foreign residents with a legal title, in % of last year's
+    population) + ``pop_change_ex_foreign_pct`` (change in everyone else, same denominator), which sum to the
+    simple annual growth of the population;
     ``completions_per_1000`` (dwellings completed in the three previous years per 1,000 dwellings in the 2011
     census, a fixed denominator so the stock does not move with construction); ``pop_65plus_pct``;
     ``al_per_1000`` (registered short-term rentals per 1,000 census 2011 dwellings; mainland only, and
@@ -46,12 +51,17 @@ def build_frame(panel: pd.DataFrame) -> pd.DataFrame:
     completions = by["completed_n"].transform(
         lambda s: s.shift(1).rolling(COMPLETION_WINDOW, min_periods=COMPLETION_WINDOW).sum()
     )
+    last_pop = by["population_n"].shift(1)
+    foreign_change = by["foreign_residents_n"].diff()
+    non_foreign = df["population_n"] - df["foreign_residents_n"]
     out = pd.DataFrame(
         {
             "log_price_real": np.log(df["price_sqm_eur_real"]),
             "log_pti": np.log(df["pti_years"]),
             "log_income_real": np.log(df["income_median_eur_real"]),
             "pop_growth_pct": 100 * by["population_n"].transform(lambda s: np.log(s).diff()),
+            "foreign_change_pct": 100 * foreign_change / last_pop,
+            "pop_change_ex_foreign_pct": 100 * non_foreign.groupby(df[MUNI_KEY]).diff() / last_pop,
             "completions_per_1000": 1000 * completions / dwellings,
             "pop_65plus_pct": df["pop_65plus_pct"],
             "al_per_1000": 1000 * df["al_survivor_units_n"] / dwellings,
@@ -76,6 +86,7 @@ class Spec:
     effects: str = "year"  # 'year' or 'region_year'
     cluster: str = "muni"  # 'muni' or 'region'
     lag: int = 0  # years by which the drivers are lagged
+    years: tuple[int, int] | None = None  # overrides the window passed to ``fit``
     sample: dict = field(
         default_factory=dict
     )  # {'territory': ['continente'], 'exclude_district': [...]}
@@ -93,6 +104,7 @@ def _sample(frame: pd.DataFrame, years: tuple[int, int], sample: dict) -> pd.Dat
 def fit(frame: pd.DataFrame, spec: Spec, years: tuple[int, int] = (2016, 2023)):
     """Fit one specification and return the linearmodels result (``spec`` is stored in ``res.spec``)."""
     xs = spec.xs
+    years = spec.years or years
     data = frame
     if spec.lag:
         lagged = frame.groupby(level=MUNI_KEY)[xs].shift(spec.lag)

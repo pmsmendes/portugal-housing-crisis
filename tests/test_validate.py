@@ -56,6 +56,23 @@ def test_rent_publication_rule_is_checked():
     assert _failures("ine_median_rent_sqm", df) == []
 
 
+def test_aima_total_must_equal_sum_of_nationalities():
+    rows = [
+        {"muni_code": c, "year": y, "nationality": n, "foreign_residents_n": v}
+        for c in CODES
+        for y in (2022, 2023)
+        for n, v in (("total", 5.0), ("br", 3.0), ("other", 2.0))
+    ]
+    df = pd.DataFrame(rows)
+    assert _failures("aima_foreigners", df) == []
+    df.loc[(df.nationality == "br"), "foreign_residents_n"] = 4.0
+    assert any("max difference" in r["detail"] for r in _failures("aima_foreigners", df))
+    assert any(
+        r["check"] == "schema"
+        for r in _failures("aima_foreigners", df.assign(nationality="Brazil"))
+    )
+
+
 def test_population_totals_must_equal_sum_of_parts():
     rows = [
         {"muni_code": c, "year": 2023, "sex": s, "age_group": a, "population_n": v}
@@ -209,6 +226,7 @@ def _small_panel(**override):
     p["income_median_eur"] = np.where(p.year >= 2015, 12_000.0, np.nan)
     p["income_mean_eur"] = p["income_median_eur"] * 1.2
     p["population_n"] = np.where(p.year >= 2011, 10.0, np.nan)
+    p["foreign_residents_n"] = np.where(p.year.between(2014, 2023), 1.0, np.nan)
     for col in validate.REAL_PAIRS:
         if col not in p:
             p[col] = np.nan
@@ -252,7 +270,19 @@ def _panel_tables(panel):
         }
     )
     rnal = pd.DataFrame({"registered": pd.to_datetime(["2020-01-01"]), "muni_code": ["0101"]})
-    return {"ine_construction": construction, "ine_population": population, "rnal_al": rnal}
+    foreigners = pd.DataFrame(
+        [
+            {"muni_code": c, "year": y, "nationality": "total", "foreign_residents_n": 1.0}
+            for c in CODES
+            for y in range(2014, 2024)
+        ]
+    )
+    return {
+        "ine_construction": construction,
+        "ine_population": population,
+        "rnal_al": rnal,
+        "aima_foreigners": foreigners,
+    }
 
 
 def _panel_failures(panel):

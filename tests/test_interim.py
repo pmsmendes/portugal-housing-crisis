@@ -150,6 +150,19 @@ def test_population_labels_sex_and_age(monkeypatch):
     assert len(out) == 9
 
 
+def test_aima_foreigners_labels_nationalities_and_keeps_the_total(monkeypatch):
+    rows = [
+        {"muni_code": "0101", "period_start": "2023-01-01", "dim_3": code, "value": v}
+        for code, v in (("T", 6.0), ("BR", 3.0), ("TOP", 2.0), ("UA", 1.0))
+    ]
+    _patch_municipal(monkeypatch, {"0010247": _ine(rows)})
+    out = interim.build_aima_foreigners()
+    assert dict(zip(out["nationality"], out["foreign_residents_n"], strict=True)) == {
+        "total": 6.0, "br": 3.0, "other": 2.0, "ua": 1.0,
+    }  # fmt: skip
+    assert list(out.columns) == ["muni_code", "year", "nationality", "foreign_residents_n"]
+
+
 def test_bp_mortgage_one_column_per_series_with_month_start(monkeypatch):
     from pthousing.data.sources import bportugal
 
@@ -177,7 +190,7 @@ def test_build_writes_parquet_and_read_roundtrips(tmp_path, monkeypatch):
 
 
 def test_download_calls_each_chosen_source_and_rejects_unknown(monkeypatch):
-    from pthousing.data.sources import bportugal, caop, eurostat, ine, rnal
+    from pthousing.data.sources import aima, bportugal, caop, eurostat, ine, rnal
 
     calls = []
     monkeypatch.setattr(
@@ -188,6 +201,7 @@ def test_download_calls_each_chosen_source_and_rejects_unknown(monkeypatch):
     monkeypatch.setattr(bportugal, "fetch_all", lambda refresh=False: calls.append(("bportugal",)))
     monkeypatch.setattr(eurostat, "fetch", lambda ds, refresh=False: calls.append(("eurostat", ds)))
     monkeypatch.setattr(rnal, "fetch", lambda refresh=False: calls.append(("rnal",)))
+    monkeypatch.setattr(aima, "fetch", lambda refresh=False: calls.append(("aima",)))
     monkeypatch.setattr(caop, "download", lambda refresh=False: calls.append(("caop",)))
 
     interim.download(["eurostat", "rnal"])

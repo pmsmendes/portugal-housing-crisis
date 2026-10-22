@@ -51,7 +51,7 @@ Missing means "not published / not covered", never zero: prices from 2016, rents
 | Phase | Method | Module | Spec |
 |---|---|---|---|
 | p2 | Spatial autocorrelation (Moran's I, LISA, Gi*) | analysis/spatial.py | queen contiguity per territory, row-standardised; k=6 nearest as check; 999 permutations, alpha 0.05 (see decisions.md) |
-| p2 | Two-way FE panel regression | analysis/panel.py | log price-to-income on population growth, completions (3 y, lagged), share 65+, rentals; municipality + year (or NUTS 3 × year) effects; clustered errors; 2016-2023 (see decisions.md) |
+| p2 | Two-way FE panel regression | analysis/panel.py | log price-to-income on foreign-resident change, other population change, completions (3 y, lagged), share 65+, rentals; municipality + year (or NUTS 3 × year) effects; clustered errors; 2016-2023 (see decisions.md) |
 | p3 | DiD / event study | analysis/causal.py | _tbd_ |
 | p4 | Baselines, ETS, ARIMA, rolling-origin CV | analysis/forecasting.py | _tbd_ |
 | p4 | Scenario simulation | simulation/engine.py | assumptions in config/scenarios.yaml |

@@ -23,7 +23,7 @@ Registry of every dataset. **Read this before opening any data file or source mo
 | at_imi_imt | at | IMI and IMT revenue and municipal IMI rates | Municipality | Annual | no official source found; third-party IMI rates 2023–2025 | | candidate (unresolved) |
 | rnal_al | rnal | Registered short-term rentals (Alojamento Local), with registration date and coordinates | Point / parish / municipality | Snapshot (current registrations) | 111,937 registered units on 2026-10-21 (mainland only), `DataRegisto` | rnal_al.parquet | ingested (mainland only, survivorship caveat) |
 | caop_boundaries | caop | Municipality boundaries (CAOP 2024), 308 municipalities | Municipality | Annual vintage | 2024 | caop_municipalities.parquet | ingested |
-| aima_foreigners | aima | Foreign residents with legal status (ex-SEF, via INE) | Municipality | Annual | 2014–2023 (0010247) | | verified (ends 2023) |
+| aima_foreigners | aima | Foreign residents with a legal residence title on 31 December (ex-SEF, via INE), by nationality | Municipality | Annual | 2014–2023 (0010247, NUTS 2013) | aima_foreigners.parquet | ingested (ends 2023) |
 
 ## Interim tables (`data/interim/`, built by `interim.py`, checked by `validate.py`)
 Full 308-municipality grid for municipal tables; suppressed cells are NaN, never zero. Values are nominal.
@@ -38,6 +38,7 @@ Full 308-municipality grid for municipal tables; suppressed cells are NaN, never
 | ine_bank_valuation_annual | muni_code × year × type | valuation_sqm_eur |
 | ine_census | muni_code (census_year 2021) | vacant_dwellings_pct, occupied_dwellings_n, owner_occupied_n, rented_n, other_tenure_n |
 | ine_population | muni_code × year × sex × age_group (totals included) | population_n |
+| aima_foreigners | muni_code × year (2014–2023) × nationality (br, cn, cv, gb, gw, md, ro, st, ua, ao, other, total) | foreign_residents_n (total = sum of the others) |
 | ine_cpi / ine_cpi_monthly | year / period_start | cpi_index_b2025 (2025 = 100) |
 | ine_hpi | period_start × category | hpi_index_b2025 (2025 = 100), national |
 | bp_mortgage | date (month end) | mortgage_aprc_new_pct, mortgage_rate_new_lt1y_pct, mortgage_rate_stock_gt5y_pct, mortgage_new_lt1y_volume_eur_m, mortgage_rate_new_fixed_p50_pct |
@@ -56,5 +57,5 @@ Full 308-municipality grid for municipal tables; suppressed cells are NaN, never
 ## Processed panels (`data/processed/`)
 | File | Grain | Built by | Status |
 |---|---|---|---|
-| panel_municipality_year.parquet | muni_code × year (308 × 1995–2025, 53 columns) | build_panel.py | built, validated |
+| panel_municipality_year.parquet | muni_code × year (308 × 1995–2025, 56 columns; includes `foreign_residents_n` 2014–2023 and `foreign_residents_pct`) | build_panel.py | built, validated |
 | national_quarterly.parquet | quarter (2005Q1–2026Q2, 25 columns) | build_panel.py | built, validated |

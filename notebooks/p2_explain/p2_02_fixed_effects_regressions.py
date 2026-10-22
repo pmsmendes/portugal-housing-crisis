@@ -15,19 +15,23 @@
 # %% [markdown]
 # # P2.02 — What moves affordability within a municipality? Fixed-effects regressions
 #
-# **Questions:** RQ3.3 (population growth and prices; immigration is not in the panel yet), RQ5.1 and RQ5.4
-# (short-term rentals and prices, separated from the other drivers).
+# **Questions:** RQ3.3 (population growth, immigration and prices), RQ5.1 and RQ5.4 (short-term rentals and
+# prices, separated from the other drivers).
 #
 # **Outcome:** log price-to-income (`log_pti`), the affordability indicator of p1. Coefficients times 100 are
-# percentage changes. **Drivers:** population growth, completed dwellings in the previous three years per 1,000
-# dwellings, share of residents aged 65+, and (mainland only) registered short-term rentals per 1,000 dwellings.
+# percentage changes. **Drivers:** the change in foreign residents with a legal residence title (AIMA, 2014 to
+# 2023) and the change in everyone else, both in % of last year's population (they add up to the population's
+# growth); completed dwellings in the previous three years per 1,000 dwellings; share of residents aged 65+; and
+# (mainland only) registered short-term rentals per 1,000 dwellings.
 # Income is *not* a driver because it is inside the outcome; its role is decomposed first.
 #
 # **Design** (`src/pthousing/analysis/panel.py`): municipality fixed effects remove everything constant about a
 # place; year effects remove national shocks (mortgage rate, inflation); the tougher variant adds NUTS 3 × year
 # effects, so a coefficient comes from differences between municipalities of the same region. Standard errors
 # are clustered by municipality, and by NUTS 3 region as a check. Sample: 2016 to 2023 (prices start in 2016,
-# population ends in 2023). Results are **adjusted associations**: construction responds to prices and people move
+# population and foreign residents end in 2023). Foreign residents are those holding a residence title on 31
+# December: the series jumps by a third in 2023, partly from processing of applications, so one specification stops
+# in 2022. Results are **adjusted associations**: construction responds to prices and people move
 # to where prices are rising, so none of this identifies a cause.
 
 # %%
@@ -73,7 +77,12 @@ print("corr of 2016-24 price growth and income growth:", round(d_price.corr(d_in
 # ## Step 1 — The specification ladder
 
 # %%
-X = ["pop_growth_pct", "completions_per_1000", "pop_65plus_pct"]
+X = [
+    "pop_change_ex_foreign_pct",
+    "foreign_change_pct",
+    "completions_per_1000",
+    "pop_65plus_pct",
+]
 XAL = [*X, "al_per_1000"]
 mainland = {"territory": ["continente"]}
 metro = {"exclude_district": ["Lisboa", "Setúbal", "Porto"]}
@@ -83,6 +92,7 @@ SPECS = {
     "Errors clustered by region": pn.Spec("log_pti", X, cluster="region"),
     "Drivers lagged one year": pn.Spec("log_pti", X, lag=1),
     "Without Lisboa, Setúbal, Porto": pn.Spec("log_pti", X, sample=metro),
+    "Through 2022 (before the 2023 jump)": pn.Spec("log_pti", X, years=(2016, 2022)),
     "Mainland, with rentals": pn.Spec("log_pti", XAL, sample=mainland),
     "Mainland, with rentals, region-year": pn.Spec(
         "log_pti", XAL, effects="region_year", sample=mainland
@@ -98,6 +108,16 @@ print(
     .round(4)
     .to_string(index=False)
 )
+
+# %% [markdown]
+# For comparison, the earlier specification that does not split foreign residents out of population growth:
+
+# %%
+total_pop = pn.coef_table(
+    pn.fit(frame, pn.Spec("log_pti", ["pop_growth_pct", *X[2:]])), "Total population growth"
+)
+style.save_table(total_pop, "p2", "fe_regressions_pti_total_population")
+print(total_pop[["term", "coef", "se", "p", "coef_per_sd", "r2"]].round(4).to_string(index=False))
 
 # %%
 fig = charts.coef_ladder(ladder, pn.LABELS, MAIN, COMPARE, "price-to-income")
@@ -150,28 +170,36 @@ print(appendix[["spec", "term", "coef", "se", "p", "n_obs", "r2"]].round(4).to_s
 #    Across municipalities, 92% of the variance of the deterioration is the price change and 9% the income change
 #    (dwelling size: −1%). Price growth and income growth are negatively correlated (−0.31): the places where prices
 #    rose most are not those where incomes rose most.
-# 2. **The observed drivers explain little.** After removing municipality and year effects, population growth,
-#    recent completions and ageing explain 5% of the remaining variation in log price-to-income (0.9% with
-#    region-year effects). One within-municipality standard deviation of the strongest driver (completions) goes with
-#    +2.5% in price-to-income; for population growth it is +1.3%. Collinearity is not the issue (VIF 1.0 to 1.1).
-# 3. **Most of the association is regional.** Adding NUTS 3 × year effects roughly halves the coefficients: population
-#    growth 0.96 to 0.55 (per pp of annual growth, in % of PTI), completions 1.26 to 0.50 (per completed dwelling per
-#    1,000), both still positive and significant (p < 0.05). Faster-growing and faster-building municipalities see
-#    somewhat larger increases than their region, on top of the regional shock.
-# 4. **Construction is positively associated with price-to-income, which is supply responding to price, not building
-#    raising prices.** It is consistent with developers building where prices are rising. Lagging the drivers a year or excluding Lisboa, Setúbal
-#    and Porto leaves the signs unchanged. Nothing here estimates what *extra* supply would do; that needs the
-#    simulator (p4) or a design with exogenous supply.
-# 5. **Short-term rentals: an association that does not survive the region.** On the mainland, 10 more registered
-#    units per 1,000 dwellings go with +3.2% in price-to-income (p < 0.001), but with region-year effects the
-#    coefficient is 0.07% per unit (p = 0.43). Rentals concentrate in the Algarve, Lisboa and Porto, where prices rose for
-#    other reasons too. The series is the stock of units still registered today, which understates the past and so
-#    overstates its growth (data_quality.md).
-# 6. **Ageing: no robust association** (sign changes across specifications).
+# 2. **Foreign residents stand out among the drivers.** One more percentage point of the population added through
+#    foreign residents with a legal title goes with +4.3% in price-to-income (p < 0.001); a point of other population
+#    change with +1.0%. Per within-municipality standard deviation that is +2.0% and +1.4%, against +2.3% for recent
+#    completions. With NUTS 3 × year effects the foreign-resident coefficient is still +3.1% (p < 0.001) while the
+#    other-population one falls to +0.45% (p = 0.10). It holds with region-clustered errors (p = 0.006), lagged
+#    drivers (+4.8%), without Lisboa, Setúbal and Porto (+2.3%, p = 0.01) and when 2023 is dropped (+3.3%,
+#    p < 0.001). The price-per-m² model gives the same sign (+2.5%, +1.9% with region-year effects). Splitting
+#    foreign residents out raises the explained share from 5.4% (total population growth) to 6.8%.
+# 3. **Read it as an association with where foreign residents settle, not as an effect of immigrants.** A foreign
+#    resident adds one person, yet the coefficient is four times that of other population, so the variable also
+#    stands for what is concentrated with them: arrival in the tightest local markets beyond what the region absorbs,
+#    rental demand, and the processing of residence titles (the count may include people who were already living in
+#    the municipality before their title was issued). The series jumps by a third in 2023; the result survives dropping
+#    that year.
+# 4. **The observed drivers still explain little.** After removing municipality and year effects they account for
+#    6.8% of the variation in log price-to-income (1.6% with region-year effects). Collinearity is not the issue
+#    (VIF 1.0 to 1.2).
+# 5. **Construction follows prices, not the reverse.** Completions are positively associated with price-to-income
+#    (+1.15% per completed dwelling per 1,000, +0.46% with region-year effects); this is supply responding to price. It
+#    does not estimate what *extra* supply would do; that needs the simulator (p4) or a design with exogenous supply.
+# 6. **Short-term rentals: an association that does not survive the region.** On the mainland, 10 more registered
+#    units per 1,000 dwellings go with +3.4% (p < 0.001), but with region-year effects the coefficient is 0.07% per
+#    unit (p = 0.37). Rentals concentrate in the Algarve, Lisboa and Porto, where prices rose for other reasons too. The
+#    series is the stock of units still registered today, which understates the past and so overstates its growth
+#    (data_quality.md).
+# 7. **Ageing: no robust association** (sign changes across specifications).
 #
-# **Limits.** The residuals are still spatially correlated in some years (Moran's I 0.01 to 0.41; 0.41 in 2023), so
-# standard errors clustered by municipality are likely too small; clustering by region (26 clusters) keeps every
-# conclusion, but few clusters are themselves a caveat. The sample is eight years. Immigration, the largest suspected
-# demand shock, is not in the panel (the municipal series ends in 2023 and is not yet ingested), so the population
-# term mixes natural change, internal moves and immigration. Municipal income is smooth and noisy at the same time,
-# which is why income is decomposed rather than used as a driver.
+# **Limits.** The residuals are still spatially correlated in some years (Moran's I 0.03 to 0.39; 0.39 in 2023), so
+# standard errors clustered by municipality are likely too small; clustering by region (26 clusters) keeps the
+# conclusions, but few clusters are themselves a caveat. The sample is eight years. Foreign residents are those with a
+# residence title (AIMA via INE, 2014 to 2023), not people counted at a census, and the 2024 value is not available.
+# Nationalities are not used (they are in the interim table), second homes are not in the panel, and municipal income
+# is smooth and noisy at the same time, which is why income is decomposed rather than used as a driver.

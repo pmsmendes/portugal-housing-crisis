@@ -145,6 +145,16 @@ def schemas() -> dict[str, DataFrameSchema]:
             unique=[MUNI_KEY, "year", "sex", "age_group"],
             strict=True,
         ),
+        "aima_foreigners": DataFrameSchema(
+            {
+                MUNI_KEY: muni,
+                "year": _year(2014, 2030),
+                "nationality": Column(str, Check.str_matches(r"^([a-z]{2}|other|total)$")),
+                "foreign_residents_n": _num(0, 500_000, nullable=False),
+            },
+            unique=[MUNI_KEY, "year", "nationality"],
+            strict=True,
+        ),
         "ine_cpi": DataFrameSchema(
             {"year": _year(1948), "cpi_index_b2025": _num(0.1, 500, nullable=False)},
             unique=["year"],
@@ -365,6 +375,13 @@ def check_population(df: pd.DataFrame) -> list[str | None]:
     ]
 
 
+def check_aima_foreigners(df: pd.DataFrame) -> list[str | None]:
+    key = [MUNI_KEY, "year"]
+    tot = df[df["nationality"] == "total"].set_index(key)["foreign_residents_n"]
+    parts = df[df["nationality"] != "total"].groupby(key)["foreign_residents_n"].sum()
+    return [_grid(df, ["year", "nationality"]), _sum_equals(tot, parts)]
+
+
 def check_cpi(df: pd.DataFrame) -> list[str | None]:
     base = df.loc[df["year"] == 2025, "cpi_index_b2025"]
     return [
@@ -440,6 +457,7 @@ CHECKS: dict[str, Callable[[pd.DataFrame], list[str | None]]] = {
     "ine_census": check_census,
     "ine_census_stock": check_census_stock,
     "ine_population": check_population,
+    "aima_foreigners": check_aima_foreigners,
     "ine_cpi": check_cpi,
     "ine_cpi_monthly": check_cpi_monthly,
     "ine_hpi": check_hpi,
@@ -505,6 +523,7 @@ FIRST_YEAR = {
     "rent_sqm_eur": 2020,
     "income_median_eur": 2015,
     "population_n": 2011,
+    "foreign_residents_n": 2014,
 }
 
 
@@ -620,6 +639,19 @@ def check_panel_municipality_year(
         None
         if (got_pop - pop.reindex(got_pop.index)).abs().max() == 0
         else "population differs from the interim table"
+    )
+
+    foreign = (
+        tables["aima_foreigners"]
+        .query("nationality == 'total'")
+        .groupby("year")["foreign_residents_n"]
+        .sum()
+    )
+    got_foreign = p.groupby("year")["foreign_residents_n"].sum(min_count=1).dropna()
+    msgs.append(
+        None
+        if (got_foreign - foreign.reindex(got_foreign.index)).abs().max() == 0
+        else "foreign residents differ from the interim table"
     )
 
     static = p.drop_duplicates(MUNI_KEY).set_index(MUNI_KEY)

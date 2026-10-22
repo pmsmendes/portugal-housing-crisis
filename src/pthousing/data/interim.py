@@ -13,12 +13,13 @@ import pandas as pd
 
 from pthousing.config import INTERIM, MUNI_KEY
 from pthousing.data import harmonize
-from pthousing.data.sources import bportugal, caop, eurostat, ine, rnal
+from pthousing.data.sources import aima, bportugal, caop, eurostat, ine, rnal
 
 SIZE = {"T": "total", "1": "br_0_1", "2": "br_2", "3": "br_3", "4": "br_4plus"}
 PRICE_CATEGORY = {"H1": "total", "H11": "new", "H12": "existing"}
 VALUATION_TYPE = {"T": "total", "1": "flats", "2": "villas"}
 SEX = {"T": "total", "1": "m", "2": "f"}
+NATIONALITY_SPECIAL = {"T": "total", "TOP": "other"}  # the other codes are ISO 3166 alpha-2
 BP_COLUMNS = {
     "new_housing_aprc": "mortgage_aprc_new_pct",
     "new_housing_rate_lt1y": "mortgage_rate_new_lt1y_pct",
@@ -220,6 +221,19 @@ def build_ine_population() -> pd.DataFrame:
     return df[[*cols, "population_n"]].sort_values(cols, ignore_index=True)
 
 
+def build_aima_foreigners() -> pd.DataFrame:
+    """Foreign residents with a legal residence title by municipality, year and nationality, 2014-2023.
+
+    ``nationality`` is the lower-case ISO alpha-2 code of ten named nationalities, 'other' for all remaining
+    countries and 'total'. NUTS 2013 geography; all 308 municipalities existed throughout.
+    """
+    df = _municipal(aima.INDICATOR)
+    nationality = df["dim_3"].map(lambda c: NATIONALITY_SPECIAL.get(c, c.lower()))
+    df = df.assign(nationality=nationality).rename(columns={"value": "foreign_residents_n"})
+    cols = [MUNI_KEY, "year", "nationality"]
+    return df[[*cols, "foreign_residents_n"]].sort_values(cols, ignore_index=True)
+
+
 # ---- INE national tables -------------------------------------------------------------------------
 
 
@@ -303,7 +317,7 @@ INE_FILTERED = {
     "0006457": {"Dim3": "T", "Dim4": "T", "Dim5": "T"},  # private households 2011
     "0012856": {"Dim3": "T", "Dim4": "T", "Dim5": "T"},  # private households 2021
 }
-SOURCES = ("ine", "bportugal", "eurostat", "rnal", "caop")
+SOURCES = ("ine", "aima", "bportugal", "eurostat", "rnal", "caop")
 
 
 def download(sources: list[str] | None = None, refresh: bool = False) -> None:
@@ -316,6 +330,8 @@ def download(sources: list[str] | None = None, refresh: bool = False) -> None:
             ine.fetch_indicator(code, refresh=refresh)
         for code, filters in INE_FILTERED.items():
             ine.fetch_indicator(code, filters=filters, refresh=refresh)
+    if "aima" in chosen:
+        aima.fetch(refresh=refresh)
     if "bportugal" in chosen:
         bportugal.fetch_all(refresh=refresh)
     if "eurostat" in chosen:
@@ -340,6 +356,7 @@ BUILDERS: dict[str, Callable[[], pd.DataFrame]] = {
     "ine_cpi": build_ine_cpi,
     "ine_cpi_monthly": build_ine_cpi_monthly,
     "ine_hpi": build_ine_hpi,
+    "aima_foreigners": build_aima_foreigners,
     "bp_mortgage": build_bp_mortgage,
     "eurostat_hpi": build_eurostat_hpi,
     "eurostat_hicp": build_eurostat_hicp,

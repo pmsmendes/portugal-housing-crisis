@@ -71,6 +71,12 @@ def _population() -> pd.DataFrame:
     return out.reset_index()
 
 
+def _foreigners() -> pd.DataFrame:
+    """Foreign residents with a legal residence title (total of all nationalities), 2014-2023."""
+    f = interim.read("aima_foreigners").query("nationality == 'total'")
+    return _by_year(f, foreign_residents_n="foreign_residents_n")
+
+
 def _census_static() -> pd.DataFrame:
     """Census columns that do not change with the panel year (one value per municipality)."""
     stock = interim.read("ine_census_stock")
@@ -154,6 +160,7 @@ def build_municipality_year() -> pd.DataFrame:
         _by_year(valuation, valuation_sqm_eur="valuation_sqm_eur"),
         _by_year(construction, licensed_n="licensed_n", completed_n="completed_n"),
         _population(),
+        _foreigners(),
         _short_term_rentals(spine, crosswalk),
     ]
     for part in parts:
@@ -203,6 +210,7 @@ def build_municipality_year() -> pd.DataFrame:
     panel["mortgage_burden_pct_100sqm"] = aff.mortgage_burden_pct(
         panel["price_sqm_eur"], BENCHMARK_AREA_SQM, income_med, rate
     )
+    panel["foreign_residents_pct"] = 100 * panel["foreign_residents_n"] / panel["population_n"]
     panel["al_units_per_1000_dwellings_2021"] = (
         1000 * panel["al_units_snapshot_n"] / panel["dwellings_2021_n"]
     )
