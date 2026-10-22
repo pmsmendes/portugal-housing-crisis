@@ -13,7 +13,7 @@ import pandas as pd
 
 from pthousing.config import INTERIM, MUNI_KEY
 from pthousing.data import harmonize
-from pthousing.data.sources import aima, bportugal, caop, eurostat, ine, rnal
+from pthousing.data.sources import aima, at, bportugal, caop, eurostat, ine, rnal
 
 SIZE = {"T": "total", "1": "br_0_1", "2": "br_2", "3": "br_3", "4": "br_4plus"}
 PRICE_CATEGORY = {"H1": "total", "H11": "new", "H12": "existing"}
@@ -296,6 +296,21 @@ def build_rnal_al() -> pd.DataFrame:
     return rnal.read().sort_values("rnal_n", ignore_index=True)
 
 
+def build_at_imi_rates() -> pd.DataFrame:
+    """Municipal IMI rates by tax year, 2012-2025 (Portal das Financas), all 308 municipalities every year.
+
+    ``imi_urban_pct`` is the urban rate in % of the assessed value (NaN where the portal shows no single rate,
+    always with ``parish_rates`` True), ``imi_rustic_pct`` the rustic rate, ``parish_rates`` whether the
+    "Taxas por freguesia" link is shown (meaning unverified: 71 to 79 municipalities a year in 2013-2024, 208
+    in 2012, 8 in 2025) and ``deduction_link`` whether the household deduction page is linked (none before
+    tax year 2016, 219 to 278 municipalities after: the IMI Familiar scheme). Nominal rates, not deflated.
+    """
+    df = at.read().rename(columns={"urban_pct": "imi_urban_pct", "rustic_pct": "imi_rustic_pct"})
+    cols = [MUNI_KEY, "year"]
+    keep = [*cols, "imi_urban_pct", "imi_rustic_pct", "parish_rates", "deduction_link"]
+    return df[keep].sort_values(cols, ignore_index=True)
+
+
 def build_caop_municipalities() -> pd.DataFrame:
     return caop.read_municipalities()
 
@@ -317,7 +332,7 @@ INE_FILTERED = {
     "0006457": {"Dim3": "T", "Dim4": "T", "Dim5": "T"},  # private households 2011
     "0012856": {"Dim3": "T", "Dim4": "T", "Dim5": "T"},  # private households 2021
 }
-SOURCES = ("ine", "aima", "bportugal", "eurostat", "rnal", "caop")
+SOURCES = ("ine", "aima", "at", "bportugal", "eurostat", "rnal", "caop")
 
 
 def download(sources: list[str] | None = None, refresh: bool = False) -> None:
@@ -332,6 +347,8 @@ def download(sources: list[str] | None = None, refresh: bool = False) -> None:
             ine.fetch_indicator(code, filters=filters, refresh=refresh)
     if "aima" in chosen:
         aima.fetch(refresh=refresh)
+    if "at" in chosen:
+        at.fetch(refresh=refresh)  # ~300 pages, one snapshot reused until refreshed
     if "bportugal" in chosen:
         bportugal.fetch_all(refresh=refresh)
     if "eurostat" in chosen:
@@ -361,6 +378,7 @@ BUILDERS: dict[str, Callable[[], pd.DataFrame]] = {
     "eurostat_hpi": build_eurostat_hpi,
     "eurostat_hicp": build_eurostat_hicp,
     "rnal_al": build_rnal_al,
+    "at_imi_rates": build_at_imi_rates,
     "caop_municipalities": build_caop_municipalities,
 }
 

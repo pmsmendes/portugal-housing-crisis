@@ -319,3 +319,43 @@ def test_panel_schema_rejects_implausible_indicator_and_unknown_municipality():
     for bad in (_small_panel(pti_years=500.0), _small_panel().assign(muni_code="9999")):
         with pytest.raises(validate.pa.errors.SchemaErrors):
             schema.validate(bad, lazy=True)
+
+
+def _imi(**changes):
+    rows = [
+        {"muni_code": c, "year": y, "imi_urban_pct": 0.35, "imi_rustic_pct": 0.8,
+         "parish_rates": False, "deduction_link": False}
+        for c in CODES
+        for y in range(2012, 2026)
+    ]  # fmt: skip
+    df = pd.DataFrame(rows)
+    for col, value in changes.items():
+        df[col] = value
+    return df
+
+
+def test_imi_rates_schema_and_checks_accept_a_complete_table():
+    df = _imi()
+    validate.schemas()["at_imi_rates"].validate(df)
+    assert validate.check_at_imi_rates(df) == [None, None, None, None]
+
+
+def test_imi_rates_checks_catch_unexplained_gaps_missing_years_and_municipalities():
+    gap = _imi()
+    gap.loc[0, "imi_urban_pct"] = float("nan")
+    assert "without parish rates" in validate.check_at_imi_rates(gap)[1]
+    gap.loc[0, "parish_rates"] = True  # a parish-specific rate explains the gap
+    assert validate.check_at_imi_rates(gap)[1] is None
+    assert "2012-2024" in validate.check_at_imi_rates(_imi().query("year < 2025"))[3]
+    assert "lack the 308" in validate.check_at_imi_rates(_imi().iloc[:-1])[0]
+
+
+def test_imi_rates_schema_rejects_a_rate_outside_the_legal_range_and_duplicates():
+    schema = validate.schemas()["at_imi_rates"]
+    for bad in (
+        _imi(imi_urban_pct=0.9),
+        _imi(imi_rustic_pct=0.5),
+        pd.concat([_imi(), _imi().iloc[:1]], ignore_index=True),
+    ):
+        with pytest.raises(validate.pa.errors.SchemaErrors):
+            schema.validate(bad, lazy=True)

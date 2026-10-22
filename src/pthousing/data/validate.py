@@ -239,6 +239,20 @@ def schemas() -> dict[str, DataFrameSchema]:
             unique=["rnal_n"],
             strict=True,
         ),
+        "at_imi_rates": DataFrameSchema(
+            {
+                MUNI_KEY: muni,
+                "year": _year(2012, 2025),
+                "imi_urban_pct": _num(
+                    0.3, 0.5
+                ),  # CIMI art. 112: 0.30 to 0.45, 0.50 for some until 2023
+                "imi_rustic_pct": _num(0.8, 0.8),  # one national rate
+                "parish_rates": Column(bool),
+                "deduction_link": Column(bool),
+            },
+            unique=[MUNI_KEY, "year"],
+            strict=True,
+        ),
     }
 
 
@@ -447,6 +461,23 @@ def check_rnal(df: pd.DataFrame) -> list[str | None]:
     ]
 
 
+def check_at_imi_rates(df: pd.DataFrame) -> list[str | None]:
+    no_rate = df["imi_urban_pct"].isna()
+    unexplained = (no_rate & ~df["parish_rates"]).sum()
+    share = no_rate.mean()
+    years = sorted(df["year"].unique())
+    return [
+        _grid(df, ["year"]),
+        None if unexplained == 0 else f"{unexplained} missing urban rates without parish rates",
+        None
+        if share < 0.05
+        else f"{100 * share:.1f}% of municipality-years have no single urban rate",
+        None
+        if years == list(range(2012, 2026))
+        else f"years are {years[0]}-{years[-1]}, not 2012-2025",
+    ]
+
+
 CHECKS: dict[str, Callable[[pd.DataFrame], list[str | None]]] = {
     "ine_median_price_sqm": check_price,
     "ine_median_rent_sqm": check_rent,
@@ -464,6 +495,7 @@ CHECKS: dict[str, Callable[[pd.DataFrame], list[str | None]]] = {
     "bp_mortgage": check_bp,
     "eurostat_hpi": check_eurostat_hpi,
     "rnal_al": check_rnal,
+    "at_imi_rates": check_at_imi_rates,
 }
 
 

@@ -2,7 +2,7 @@
 
 Write-up of findings. Figures: `reports/figures/p3/`, tables: `reports/tables/p3/`, notebooks: `notebooks/p3_policy/`.
 
-**Status:** design planned, nothing estimated yet. The policy was chosen on 2026-10-22 from five candidates
+**Status:** design planned and rate data ingested; nothing estimated yet. The policy was chosen on 2026-10-22 from five candidates
 (see [decisions](../docs/decisions.md)).
 
 ## Question
@@ -80,8 +80,9 @@ so the 87 municipalities that first cut in 2016 have no pre-period.
 
 ## Plan
 
-1. Ingest: `sources/at.py` (fetch with dated raw snapshots, 1 request/s), `interim.py` table `at_imi_rates`
-   (island name match, parish-rate flag), checks in `validate.py`, rows in the catalog; tests on a saved page.
+1. **Done:** `sources/at.py` (dated raw snapshots, 308 pages), interim table `at_imi_rates` (4,312 rows), checks in
+   `validate.py`, catalog rows, tests. Still to check in `p3_01`: the meaning of the parish link (75 municipalities a
+   year, 8 in 2025) and whether the 2025 pages are complete; the main estimate may end in 2024.
 2. Add `imi_urban_pct` and `imi_change_pp` to the municipal panel (and the family-deduction flag); tests.
 3. `analysis/causal.py`: stacked event study, dose-response, pre-trend test, placebo; tests on synthetic data with a
    known effect (and a known pre-trend).

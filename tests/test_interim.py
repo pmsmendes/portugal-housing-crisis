@@ -190,7 +190,7 @@ def test_build_writes_parquet_and_read_roundtrips(tmp_path, monkeypatch):
 
 
 def test_download_calls_each_chosen_source_and_rejects_unknown(monkeypatch):
-    from pthousing.data.sources import aima, bportugal, caop, eurostat, ine, rnal
+    from pthousing.data.sources import aima, at, bportugal, caop, eurostat, ine, rnal
 
     calls = []
     monkeypatch.setattr(
@@ -202,6 +202,7 @@ def test_download_calls_each_chosen_source_and_rejects_unknown(monkeypatch):
     monkeypatch.setattr(eurostat, "fetch", lambda ds, refresh=False: calls.append(("eurostat", ds)))
     monkeypatch.setattr(rnal, "fetch", lambda refresh=False: calls.append(("rnal",)))
     monkeypatch.setattr(aima, "fetch", lambda refresh=False: calls.append(("aima",)))
+    monkeypatch.setattr(at, "fetch", lambda refresh=False: calls.append(("at",)))
     monkeypatch.setattr(caop, "download", lambda refresh=False: calls.append(("caop",)))
 
     interim.download(["eurostat", "rnal"])
@@ -214,3 +215,25 @@ def test_download_calls_each_chosen_source_and_rejects_unknown(monkeypatch):
     assert {c[0] for c in calls} == set(interim.SOURCES)
     with pytest.raises(ValueError, match="Unknown source"):
         interim.download(["nope"])
+
+
+def test_at_imi_rates_renames_keeps_flags_and_sorts(monkeypatch):
+    from pthousing.data.sources import at
+
+    raw = pd.DataFrame(
+        {
+            "year": [2016, 2015],
+            "urban_pct": [0.35, float("nan")],
+            "rustic_pct": [0.8, 0.8],
+            "parish_rates": [False, True],
+            "deduction_link": [True, False],
+            "muni_code": ["0102", "0101"],
+        }
+    )
+    monkeypatch.setattr(at, "read", lambda: raw)
+    out = interim.build_at_imi_rates()
+    assert list(out.columns) == [
+        "muni_code", "year", "imi_urban_pct", "imi_rustic_pct", "parish_rates", "deduction_link",
+    ]  # fmt: skip
+    assert out["muni_code"].tolist() == ["0101", "0102"]
+    assert out["parish_rates"].tolist() == [True, False]

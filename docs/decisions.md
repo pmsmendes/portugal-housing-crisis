@@ -2,6 +2,12 @@
 
 Analytic and engineering choices, newest first. One short entry each: what, why, alternatives rejected.
 
+## 2026-10-22 — IMI rate ingestion
+- **What:** `sources/at.py` downloads one page per (tax year 2012-2025, district list) (308 pages, 0.8 s apart, research User-Agent) into `data/raw/at/imi_rates_<date>/` as received, with a manifest written last; parsing reads the snapshot only. Interim table `at_imi_rates` (308 municipalities x 14 years, no row dropped), checked by schema and consistency checks in `validate.py`.
+- **Why:** the portal shows rates as stored today, so the dated snapshot is the record of what was seen; an interrupted download resumes (no manifest = incomplete) and a complete snapshot is reused unless `refresh`, so nobody else's server is hit 300 times a day. Each page's title year must equal the year asked for (the portal answers 200 for anything).
+- **Island municipalities:** the portal numbers them by district list (19xx to 22xx), so an explicit 30-entry code map to INE codes (tested to cover every island municipality once) replaces name matching, which fails for 6 names (e.g. 'S. VICENTE').
+- **Not decided yet:** what the 'Taxas por freguesia' link means and whether 2025 is complete (data_quality.md); both are checked in `p3_01` before the event study.
+
 ## 2026-10-22 — Phase 3 policy: municipal IMI rate changes
 - **What:** phase 3 evaluates whether cuts in the municipal urban IMI rate are capitalised into sale prices (and, as a secondary outcome, rents), an event study on the changes in the rate each municipality sets every year. Source and design plan: `reports/p3_policy.md`; rates from the Portal das Finanças (`config/sources.yaml`, `at_imi_rates`).
 - **Why this policy:** among five candidates (IMI rates, short-term-rental rules, IMT Jovem, golden-visa restrictions, rent cap / public housing) it is the only one with many treated municipalities and staggered timing, the rate data turned out to be collectable for 2012–2025, and a capitalisation estimate is the behavioural parameter the phase 4 IMI lever needs (RQ7.4).

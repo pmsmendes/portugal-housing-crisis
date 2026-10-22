@@ -20,7 +20,7 @@ Registry of every dataset. **Read this before opening any data file or source mo
 | ine_cpi | ine | Consumer Price Index (deflator) | National | Monthly / annual | 1948–2026 (0014640 / 0014642, base 2025) | ine_cpi.parquet, ine_cpi_monthly.parquet | ingested |
 | bp_mortgage | bportugal | Mortgage interest rates (APRC, agreed rate, stocks), new loan volumes | National | Monthly | Jan 2003–Aug 2026 (series 12533714, 12533730, 12519759, 12533719); fixed-rate median from Dec 2018 (12710738) | bp_mortgage.parquet | ingested (household debt series todo) |
 | eurostat_hpi | eurostat | HPI (prc_hpi_q) and HICP (prc_hicp_aind) for EU comparison | Country | Quarterly / annual | PT 2008-Q1–2026-Q2 (EU27 from 2005, IT from 2010) / PT 1996–2025 | eurostat_hpi.parquet, eurostat_hicp.parquet | ingested |
-| at_imi_rates | at | Municipal urban IMI rate per tax year (Portal das Finanças "Taxas do Município"), with a flag for parish-specific rates | Municipality | Annual | 2012–2025 verified (308 municipalities every year; portal offers 1989–2026) | | verified (not yet ingested; parish-rate and island-code caveats in data_quality) |
+| at_imi_rates | at | Municipal urban IMI rate per tax year (Portal das Finanças "Taxas do Município"), with a flag for parish-specific rates | Municipality | Annual | 2012–2025 (308 municipalities every year; portal offers 1989–2026) | at_imi_rates.parquet | ingested (raw HTML snapshot kept; parish-link and 2025 caveats in data_quality) |
 | at_imi_imt | at | IMI and IMT revenue | Municipality | Annual | no official source found | | candidate (unresolved) |
 | rnal_al | rnal | Registered short-term rentals (Alojamento Local), with registration date and coordinates | Point / parish / municipality | Snapshot (current registrations) | 111,937 registered units on 2026-10-21 (mainland only), `DataRegisto` | rnal_al.parquet | ingested (mainland only, survivorship caveat) |
 | caop_boundaries | caop | Municipality boundaries (CAOP 2024), 308 municipalities | Municipality | Annual vintage | 2024 | caop_municipalities.parquet | ingested |
@@ -47,6 +47,7 @@ Full 308-municipality grid for municipal tables; suppressed cells are NaN, never
 | eurostat_hicp | geo × year | hicp_index_b2015 (PT, EU27) |
 | rnal_al | rnal_n (one row per registered unit) | registered, opened, modality, guests_n, muni_code, parish_code, geo_reliability, lon, lat (mainland snapshot) |
 | ine_census_stock | muni_code × census_year (2011, 2021) | dwellings_n, dwellings_usual_n, dwellings_secondary_n, dwellings_vacant_n, households_n, dwelling_area_sqm |
+| at_imi_rates | muni_code × year (2012–2025, tax year) | imi_urban_pct (NaN where no single rate, 83 of 4,312), imi_rustic_pct (always 0.8), parish_rates, deduction_link |
 | caop_municipalities | muni_code | names, district, NUTS 2024 names, area_ha, parishes_n, geometry (EPSG:3763) |
 
 ## Lookups (`data/external/`)
