@@ -2,8 +2,9 @@
 
 Write-up of findings. Figures: `reports/figures/p3/`, tables: `reports/tables/p3/`, notebooks: `notebooks/p3_policy/`.
 
-**Status:** design planned and rate data ingested; nothing estimated yet. The policy was chosen on 2026-10-22 from five candidates
-(see [decisions](../docs/decisions.md)).
+**Status:** estimated (2026-10-23). The policy was chosen on 2026-10-22 from five candidates (see [decisions](../docs/decisions.md)).
+Result: **inconclusive, and an adjusted association rather than a causal effect**; phase 4 gets an upper bound, not a point estimate
+(see Key findings).
 
 ## Question
 
@@ -81,20 +82,53 @@ so the 87 municipalities that first cut in 2016 have no pre-period.
 ## Plan
 
 1. **Done:** `sources/at.py` (dated raw snapshots, 308 pages), interim table `at_imi_rates` (4,312 rows), checks in
-   `validate.py`, catalog rows, tests. Still to check in `p3_01`: the meaning of the parish link (75 municipalities a
-   year, 8 in 2025) and whether the 2025 pages are complete; the main estimate may end in 2024.
-2. Add `imi_urban_pct` and `imi_change_pp` to the municipal panel (and the family-deduction flag); tests.
-3. `analysis/causal.py`: stacked event study, dose-response, pre-trend test, placebo; tests on synthetic data with a
-   known effect (and a known pre-trend).
-4. Notebooks `p3_01` (who cuts and when; descriptive), `p3_02` (event study and dose-response), `p3_03` (robustness,
-   placebos, power); figures and tables via `save_fig` and `save_table`.
-5. Fill this report (findings, limitations); hand the parameter and its range to `config/scenarios.yaml` and the
-   phase 4 fiscal lever.
+   `validate.py`, catalog rows, tests. 2025 rates are complete (checked in `p3_01`); the meaning of the parish link is still not verified
+   (handled as a sensitivity run).
+2. **Done:** `imi_urban_pct`, `imi_change_pp`, `imi_parish_rates`, `imi_deduction_link` in the municipal panel, with panel checks and tests.
+3. **Done:** `analysis/causal.py` (event table, stacks, stacked event study, cohort 2×2 check, dose-response, benchmark) with
+   tests on synthetic data with a known effect and a known pre-trend.
+4. **Done:** notebooks `p3_01` (who cuts and when), `p3_02` (event study, dose-response), `p3_03` (robustness, rent, power).
+5. **Open:** hand the bound to the phase 4 fiscal lever (`config/scenarios.yaml`, `imi_capitalisation_benchmark`; the simulator does not read it yet);
+   the placebo "a cut in *t*+1 as treatment of *t*" is covered by the future-cut leads of the dose-response, not run separately.
 
 ## Key findings
 
-_Not started._
+All effects are in % of the real price per m² per 0.01 pp of cut (a typical isolated cut is 0.02 pp). Full capitalisation of a
+permanent 0.01 pp cut is **0.19%** (range 0.10% to 0.33%: assessed value 50% to 100% of the price, discount rate 3% to 5%).
+
+1. **Municipalities that cut are not like those that do not** (`p3_01`). In the year before the cut, their real price grew 9.7%
+   against 4.5% (t = 3.7); they are more urban (23% against 3%) and pricier, and start from higher rates. Cuts follow booms.
+2. **Usable events are few and small.** 303 cuts in 2018 to 2023, 295 with the window observed, **68 isolated** (22 of at least 0.03 pp),
+   of which 65 have prices in the whole window; 30 of those are in the 2020 wave. Median isolated cut 0.02 pp.
+3. **The pre-trend test fails** (`p3_02`). Treated municipalities' prices were 1.5% per 0.01 pp lower two years before the cut than one year before
+   (joint pre-trend test p = 0.02; p = 0.06 for a cut of any size). Under the decision rule the post-cut coefficients are **adjusted associations**,
+   not causal effects. The cohort-by-cohort check gives the same picture (−1.2% before; binary −4.3%, significant).
+4. **The post-cut effect is not pinned down.** One year after: −0.24% [−1.83, +1.35]; two years after: −0.81% [−3.54, +1.92]
+   (stacked regression). The cohort check is +0.53% [−1.24, +2.76] and −0.21% [−2.08, +2.76]. Every interval contains zero and the full-capitalisation benchmark.
+5. **Robustness** (`p3_03`). Across nine specifications no interval excludes either zero or full capitalisation. The pre-trend test is rejected in 7 of 9;
+   it is *not* rejected when the 2020 wave is dropped (p = 0.21) or when controls are limited to municipalities above the floor (p = 0.19), but those
+   estimates are the least precise (35 treated municipalities, or 157 controls). Price-to-income as the outcome gives the same result as price.
+6. **Dose-response** (all rate changes, 2016 to 2025). A cut raises price growth by +0.24% this year and +0.14% last year per 0.01 pp; the sum is +0.38% (SE 0.39),
+   or +0.23% (SE 0.48) controlling for last year's growth. Positive and close to the benchmark, but its interval includes zero. The placebo (cuts one and two years
+   *ahead*) is of the same size (+0.45%, −0.62%; neither significant), so the estimate cannot be separated from the timing of cuts.
+7. **Power.** The minimum detectable effect (2.8 standard errors) is 2.3% one year after and 3.9% two years after: **12 and 21 times** the full-capitalisation benchmark.
+   The dose-response (SE 0.39) detects about 1.1%, 6 times the benchmark. The design can rule out only capitalisation far above the benchmark (the one-year interval's upper end is 1.35%, 7× the benchmark).
+8. **Rent** is not usable: INE rents start in 2020, which leaves 5 treated municipalities (one-year coefficient −4.0% [−11.0, +3.0]).
+
+**Decision rules applied:** pre-trends rejected, so no causal language. Interval contains zero and full capitalisation, so the result is *inconclusive*.
+**For phase 4:** the IMI lever uses the share of a cut capitalised into prices as an assumption between 0 (no capitalisation) and 1 (full: 0.19% of the price per
+0.01 pp, range 0.10% to 0.33%), run at both ends; there is no estimate to cite for the middle. Under the project rule on behavioural parameters, the simulator must say so.
 
 ## Limitations
 
-_Not started._
+- **Selection into treatment.** Rates are chosen after price booms, and the pre-trend test rejects. The design cannot separate the effect of the cut from mean reversion after
+  the boom that preceded it.
+- **Power.** Few, small, isolated cuts and noisy municipal medians (annual log change with sd 16 pp). Only effects 12 to 21 times the benchmark are detectable.
+- **Common shocks.** The 2020 wave is almost half the treated sample; without it the estimates move but remain imprecise. The 2016 wave (87 cuts) has no pre-period and is not used.
+- **Rates as stored today.** Later corrections overwrite history; 'year' is the inferred tax year; 12 municipalities have parish-specific rates and no single rate; the meaning of the parish link is
+  unverified (a sensitivity run drops the 102 municipalities that show it in any year from 2013; the 2012 pages use another convention, 206 municipalities).
+- **Timing.** The response is assumed to start the year after the rate is decided; alternative alignments are only covered through the k = 0 and k = +2 coefficients.
+- **Benchmark assumptions.** Assessed value/price (0.5 to 1.0) and the discount rate (3% to 5%) are assumptions, not estimates; the assessed value of many old dwellings is far below market value, which would put the true benchmark at the low end.
+- **Concurrent measures.** The family-deduction (IMI Familiar) flag is a sensitivity only (dropping units whose status changes in their window); municipal short-term-rental rules and
+  pandemic measures are not controlled.
+- **Mainland only.** The islands' rates use a different code scheme and have few events.

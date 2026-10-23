@@ -26,6 +26,9 @@ from pthousing.config import MUNI_KEY, YEAR_KEY
 REGION = "nuts3_name_2024"
 DOSE_UNIT_PP = 0.01  # one dose unit = a 0.01 pp change in the rate
 TOLERANCE = 1e-9
+PARISH_LINK_FROM = (
+    2013  # the 2012 pages show the parish link for 206 municipalities: another convention
+)
 RATE_FLOOR_PCT = 0.30  # the legal minimum of the urban rate: municipalities there cannot cut
 
 
@@ -130,10 +133,13 @@ def build_stacks(
 
     Treated: municipalities with an isolated cut of at least ``min_cut_pp`` in the event year. Controls: all
     municipalities with no change from ``iso_before`` years before to the end of the outcome window
-    (``max(iso_after, post)`` years after; controls above ``control_min_rate_pct`` only, when given, to drop municipalities at the floor).
+    (``max(iso_after, post)`` years after); with ``control_min_rate_pct`` only those above that rate the year
+    before, which drops municipalities at the floor that cannot cut.
     Units need the outcome in every year of ``event - pre`` to ``event + post``; others drop out of that stack.
-    ``exclude_events`` removes event years (and their stacks), ``drop_munis`` removes municipalities,
-    ``sample`` is {'territory': [...], 'parish_free': True, 'no_deduction_link': True}.
+    ``exclude_events`` removes event years (and their stacks), ``drop_munis`` removes municipalities.
+    ``sample`` is {'territory': [...], 'parish_free': True, 'stable_deduction': True}: ``parish_free`` drops
+    municipalities that show the parish-rate link in any year from ``PARISH_LINK_FROM``; ``stable_deduction``
+    drops units whose family-deduction status (IMI Familiar link) changes inside their outcome window.
 
     Returns long rows: ``stack``, ``unit`` (municipality-stack), ``muni_code``, ``year``, ``k`` (event time),
     ``treated``, ``dose`` (size of the cut in 0.01 pp; 0 for controls), ``y``, ``region``, ``cell``
@@ -144,11 +150,9 @@ def build_stacks(
     if "territory" in sample:
         base = base[base["territory"].isin(sample["territory"])]
     if sample.get("parish_free"):
-        ever = base.groupby(MUNI_KEY)["parish_rates"].transform(lambda s: s.fillna(False).any())
-        base = base[~ever]
-    if sample.get("no_deduction_link"):
-        ever = base.groupby(MUNI_KEY)["deduction_link"].transform(lambda s: s.fillna(False).any())
-        base = base[~ever]
+        linked = base[base[YEAR_KEY] >= PARISH_LINK_FROM].groupby(MUNI_KEY)["parish_rates"]
+        ever = linked.apply(lambda s: bool(s.fillna(False).any()))
+        base = base[~base[MUNI_KEY].isin(ever[ever].index)]
     if drop_munis:
         base = base[~base[MUNI_KEY].isin(drop_munis)]
 
@@ -168,6 +172,7 @@ def build_stacks(
         treated_events = treated_events[~treated_events["event_year"].isin(exclude_events)]
 
     outcomes = base.pivot(index=MUNI_KEY, columns=YEAR_KEY, values=outcome)
+    deduction = base.pivot(index=MUNI_KEY, columns=YEAR_KEY, values="deduction_link").astype(float)
     regions = base.drop_duplicates(MUNI_KEY).set_index(MUNI_KEY)["region"]
     parts = []
     for year, treated in treated_events.groupby("event_year"):
@@ -175,6 +180,8 @@ def build_stacks(
         if not set(window) <= set(outcomes.columns):
             continue
         has_outcome = outcomes[window].notna().all(axis=1)
+        if sample.get("stable_deduction"):
+            has_outcome &= deduction[window].nunique(axis=1) <= 1
         is_control = observed[year] & (n_changes[year] == 0) & has_outcome
         if control_min_rate_pct is not None:
             is_control &= rate[year - 1] > control_min_rate_pct + TOLERANCE
@@ -276,11 +283,15 @@ def event_study(stacks: pd.DataFrame, dose: bool = True) -> EventStudy:
     )
 
 
-def cumulative(es: EventStudy, ks: list[int]) -> dict[str, float]:
-    """Sum of the post-period coefficients ``ks`` with its standard error and 95% interval."""
-    terms = [f"k{k}" for k in ks]
-    beta = es.res.params[terms]
-    var = float(np.ones(len(terms)) @ es.res.cov.loc[terms, terms].to_numpy() @ np.ones(len(terms)))
+def cumulative(res, terms: list[str]) -> dict[str, float]:
+    """Sum of the coefficients ``terms`` of a ``linearmodels`` result, with its standard error and 95% interval.
+
+    Meaningful for coefficients on *changes* (the dose-response: this year's plus last year's effect on growth).
+    The event-study coefficients are levels against k = -1, so the k = +2 coefficient already is the
+    two-year effect and must not be summed.
+    """
+    beta = res.params[terms]
+    var = float(res.cov.loc[terms, terms].to_numpy().sum())
     total, se = float(beta.sum()), float(np.sqrt(var))
     return {"coef": total, "se": se, "ci_low": total - 1.96 * se, "ci_high": total + 1.96 * se}
 

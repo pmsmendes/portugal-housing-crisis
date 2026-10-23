@@ -33,3 +33,11 @@ policies:
   public_housing: {units_per_year: null, cost_per_unit_eur: null}
   imi_reform: {rate_change_pp: null}
   imt_reform: {rate_change_pp: null, first_buyer_exemption_eur: null}
+
+# Benchmark for the p3 IMI capitalisation estimate (reports/p3_policy.md): the price effect if a permanent cut were
+# fully capitalised = cut x (assessed value / price) / discount rate. Ranges are assumptions, not estimates.
+imi_capitalisation_benchmark:
+  tax_value_ratio: {low: 0.5, mid: 0.75, high: 1.0}   # assessed value (VPT) over market price
+  discount_rate: {low: 0.03, mid: 0.04, high: 0.05}   # perpetuity rate
+# p3 result (reports/p3_policy.md): the capitalisation of municipal cuts is not identified, so the simulator runs both ends.
+imi_capitalisation_share: {low: 0.0, high: 1.0}

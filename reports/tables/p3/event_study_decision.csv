@@ -1,0 +1,6 @@
+quantity,value
+"pre-trend test (k = -2), p",0.024
+k = -2 coefficient (% per 0.01 pp),-1.51
+k = +1 (% per 0.01 pp),"-0.24  [-1.83, +1.35]"
+k = +2 (% per 0.01 pp),"-0.81  [-3.54, +1.92]"
+"full capitalisation, low / mid / high (% per 0.01 pp)",0.10 / 0.19 / 0.33

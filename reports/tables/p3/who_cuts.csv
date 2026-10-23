@@ -1,0 +1,7 @@
+characteristic,cutters,controls,difference,t_stat,n_cutters,n_controls
+real price growth in the year before the cut (%),9.687,4.464,5.223,3.684,65,757
+real price (EUR per m2) the year before,976.384,785.652,190.732,2.935,65,757
+rate the year before (%),0.373,0.314,0.059,13.471,65,757
+on the coast (share),0.231,0.148,0.083,1.527,65,757
+urban (share),0.231,0.032,0.199,3.752,65,757
+tourist municipality (share),0.108,0.127,-0.019,-0.471,65,757

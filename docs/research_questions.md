@@ -75,7 +75,7 @@ Reference questions by ID (e.g. `RQ2.3`) in notebooks, reports and commits.
 | RQ7.1 | How have IMI and IMT revenues evolved? | — | |
 | RQ7.2 | How would IMI/IMT rate cuts affect central and municipal revenues under different scenarios? | — | |
 | RQ7.3 | Could more transactions or construction partly offset initial revenue losses from tax cuts? | — | |
-| RQ7.4 | Who benefits most from IMI/IMT cuts, and how much passes through to lower housing costs vs higher prices? | — | _p3 planned: capitalisation of municipal IMI rate changes (`reports/p3_policy.md`); IMT part not covered_ |
+| RQ7.4 | Who benefits most from IMI/IMT cuts, and how much passes through to lower housing costs vs higher prices? | wip | `p3_02`, `p3_03`, `reports/p3_policy.md`: capitalisation of municipal IMI cuts into prices is inconclusive (pre-trend rejected, interval contains zero and full capitalisation, power 12-21x the benchmark); IMT and the incidence by income group not covered |
 | RQ7.5 | How do targeted exemptions (first-time buyers, new build, renovation) compare with broad cuts? | — | |
 | RQ7.6 | What is the fiscal impact of alternative property-tax reforms, including vacant-property incentives? | — | |
 
@@ -113,7 +113,7 @@ Reference questions by ID (e.g. `RQ2.3`) in notebooks, reports and commits.
 |---|---|---|---|
 | M1 | Which indicators best capture affordability, and how do conclusions change under alternative definitions? | — | |
 | M2 | How can datasets with different frequencies, geographic coverage and definitions be harmonised? | — | |
-| M3 | Which factors are associated with price growth, and which relationships have a credible causal identification strategy? | — | |
+| M3 | Which factors are associated with price growth, and which relationships have a credible causal identification strategy? | wip | associations: `p2_02`, `reports/p2_explain.md`; the one design tried (IMI cuts, `p3_02`) fails its pre-trend test, so no relationship has a credible causal identification yet |
 | M4 | How can specific policy effects be estimated while accounting for confounders and macro trends? | — | |
 | M5 | How reliable are price forecasts under rolling time-based validation vs random splits? | — | |
 | M6 | How can uncertainty in data, estimates and policy assumptions be carried into projections and cost-benefit analysis? | — | |

@@ -2,11 +2,20 @@
 
 Analytic and engineering choices, newest first. One short entry each: what, why, alternatives rejected.
 
+## 2026-10-23 — Phase 3 estimation: stacked event study on isolated IMI cuts
+- **What:** `analysis/causal.py`. Treated: isolated cuts (no other change from t-2 to t+1) in 2018-2023; controls: municipalities with no change from t-2 to t+2, compared within NUTS 3 x year (one stack per event year, unit and region-stack-year effects, errors clustered by municipality). Dose version (per 0.01 pp) as main, binary as check. Checks: cohort-by-cohort 2x2 with a municipality bootstrap, dose-response on all changes (with last year's growth and future cuts as placebo), nine sample variants. Benchmark: full capitalisation = cut x (assessed value / price) / discount rate, ranges in `config/scenarios.yaml`.
+- **Why:** the stacked design uses only clean comparisons, so it is not biased by differing effects between event years; the cohort 2x2 is the check on that. Rates are chosen, so the pre-period coefficients (k = -2) decide whether the result may be called causal (rule fixed before estimating: p < 0.10 means adjusted association).
+- **Controls must be quiet through t+post, not only through the isolation window (t+1):** a synthetic test showed that controls cutting in t+2 bias the k = +2 coefficient (0.0074 instead of 0.01).
+- **Event-study coefficients are levels against k = -1**, so the two-year effect is the k = +2 coefficient, never a sum of coefficients; sums are used only for the dose-response (coefficients on changes).
+- **Parish-link municipalities are those showing the link in any year from 2013:** the 2012 pages show it for 206 municipalities (another convention), which would drop 245 of 278.
+- **Result:** inconclusive and not causal; see `reports/p3_policy.md`. Phase 4 receives a bound (0 to full capitalisation), not an estimate.
+- **Rejected:** a two-way fixed-effects event study over all changes (biased with staggered timing and effects that differ by cohort), a rent outcome as a main result (2020 start, 5 treated municipalities), Callaway-Sant'Anna with covariates (the cohort 2x2 is the same comparison without the extra model).
+
 ## 2026-10-22 — IMI rate ingestion
 - **What:** `sources/at.py` downloads one page per (tax year 2012-2025, district list) (308 pages, 0.8 s apart, research User-Agent) into `data/raw/at/imi_rates_<date>/` as received, with a manifest written last; parsing reads the snapshot only. Interim table `at_imi_rates` (308 municipalities x 14 years, no row dropped), checked by schema and consistency checks in `validate.py`.
 - **Why:** the portal shows rates as stored today, so the dated snapshot is the record of what was seen; an interrupted download resumes (no manifest = incomplete) and a complete snapshot is reused unless `refresh`, so nobody else's server is hit 300 times a day. Each page's title year must equal the year asked for (the portal answers 200 for anything).
 - **Island municipalities:** the portal numbers them by district list (19xx to 22xx), so an explicit 30-entry code map to INE codes (tested to cover every island municipality once) replaces name matching, which fails for 6 names (e.g. 'S. VICENTE').
-- **Not decided yet:** what the 'Taxas por freguesia' link means and whether 2025 is complete (data_quality.md); both are checked in `p3_01` before the event study.
+- **Checked in `p3_01` (2026-10-23):** 2025 is complete (271 municipalities with a rate, 36 changes, in line with earlier years); the meaning of the 'Taxas por freguesia' link stays unverified and is handled as a sensitivity run (data_quality.md).
 
 ## 2026-10-22 — Phase 3 policy: municipal IMI rate changes
 - **What:** phase 3 evaluates whether cuts in the municipal urban IMI rate are capitalised into sale prices (and, as a secondary outcome, rents), an event study on the changes in the rate each municipality sets every year. Source and design plan: `reports/p3_policy.md`; rates from the Portal das Finanças (`config/sources.yaml`, `at_imi_rates`).

@@ -665,3 +665,196 @@ def segment_trends(
     )
     fig.subplots_adjust(left=0.06, right=0.9, wspace=0.55)
     return fig
+
+
+def imi_rate_changes(table: pd.DataFrame) -> Figure:
+    """Municipal urban IMI rate changes per tax year (mainland): cuts up, increases down, share at the floor.
+
+    ``table`` has one row per year with ``cuts``, ``increases`` and ``at_floor_pct`` (share of municipalities
+    at the 0.30% legal minimum, which cannot cut any further).
+    """
+    years = table["year"]
+    fig, (bars, floor) = plt.subplots(
+        1, 2, figsize=(10.5, 4.2), gridspec_kw={"width_ratios": [2, 1]}
+    )
+    bars.bar(years, table["cuts"], color=BLUE, width=0.7, zorder=3)
+    bars.bar(years, -table["increases"], color=ORANGE, width=0.7, zorder=3)
+    bars.axhline(0, color=INK_2, lw=1, zorder=4)
+    _years(bars, years)
+    bars.set_xlim(years.min() - 0.7, years.max() + 0.7)
+    bars.legend(
+        handles=[Patch(color=BLUE, label="Cuts"), Patch(color=ORANGE, label="Increases")],
+        loc="upper right",
+        frameon=False,
+    )
+    bars.yaxis.set_major_formatter(mticker.FuncFormatter(lambda v, _: f"{abs(v):.0f}"))
+    for year, cuts in zip(years, table["cuts"], strict=True):
+        if cuts >= 80:
+            bars.text(year, cuts + 2, f"{cuts:.0f}", ha="center", va="bottom", color=INK_2)
+    _panel_title(bars, "Municipalities that changed the urban rate")
+    _line(floor, years, table["at_floor_pct"], BLUE)
+    _end_dot(floor, years.iloc[-1], table["at_floor_pct"].iloc[-1], BLUE)
+    _label(
+        floor,
+        years.iloc[-1],
+        table["at_floor_pct"].iloc[-1],
+        f"{table['at_floor_pct'].iloc[-1]:.0f}%",
+        dx=6,
+    )
+    floor.set_ylim(0, 100)
+    floor.yaxis.set_major_formatter(mticker.PercentFormatter(decimals=0))
+    _years(floor, years[::4])
+    floor.set_xlim(years.min() - 0.4, years.max() + 2)
+    _panel_title(floor, "At the 0.30% legal floor")
+    peak = table.loc[table["cuts"].idxmax()]
+    fig = style.finish(
+        fig,
+        f"{table['cuts'].sum():.0f} rate cuts and {table['increases'].sum():.0f} increases in "
+        f"{years.min()} to {years.max()}; {table['at_floor_pct'].iloc[-1]:.0f}% of municipalities now sit at the floor",
+        f"Mainland municipalities, urban IMI rate by tax year; cuts peak at {peak['cuts']:.0f} in {peak['year']:.0f}",
+        "Source: Autoridade Tributária (Portal das Finanças); own calculations. Parish-rate municipality-years are missing.",
+        head_in=1.15,
+        foot_in=0.55,
+    )
+    fig.subplots_adjust(left=0.06, right=0.97, wspace=0.18)
+    return fig
+
+
+def event_study_plot(
+    panels: list[dict], unit: str = "% per 0.01 pp cut", scale: float = 100.0
+) -> Figure:
+    """Event-study coefficients by event time, one panel per estimate (log outcome x ``scale`` = %).
+
+    Each dict has ``title``, ``table`` (columns k, coef, ci_low, ci_high; the reference k = -1 is added at 0)
+    and optionally ``pretrend_p``, ``compare`` (a second table, drawn in orange, e.g. the cohort check) and
+    ``benchmark`` (full-capitalisation effect in the same unit, drawn as a dashed line for k >= 0).
+    """
+    fig, axes = plt.subplots(
+        1, len(panels), figsize=(4.4 * len(panels), 4.3), sharey=True, squeeze=False
+    )
+    for ax, spec in zip(axes[0], panels, strict=True):
+        for key, color, shift in (("table", BLUE, -0.07), ("compare", ORANGE, 0.07)):
+            if key not in spec:
+                continue
+            t = pd.concat(
+                [
+                    spec[key][["k", "coef", "ci_low", "ci_high"]],
+                    pd.DataFrame({"k": [-1], "coef": [0.0], "ci_low": [0.0], "ci_high": [0.0]}),
+                ]
+            ).sort_values("k")
+            x = t["k"] + (shift if "compare" in spec else 0)
+            ax.vlines(x, scale * t["ci_low"], scale * t["ci_high"], color=color, lw=1.6, zorder=3)
+            ax.plot(x, scale * t["coef"], "o", ms=6, mfc=color, mec=SURFACE, mew=1.2, zorder=4)
+        if "benchmark" in spec:
+            ax.hlines(
+                spec["benchmark"], -0.4, spec["table"]["k"].max() + 0.4,
+                color=INK_2, lw=1, ls=(0, (4, 3)), zorder=2,
+            )  # fmt: skip
+            ax.text(
+                spec["table"]["k"].max() + 0.45, spec["benchmark"], "full\ncapitalisation",
+                va="center", fontsize=8, color=INK_2,
+            )  # fmt: skip
+        ax.axhline(0, color=INK_2, lw=1, zorder=2)
+        ax.axvline(-0.5, color=GRID, lw=1, zorder=1)
+        ks = sorted(set(spec["table"]["k"]) | {-1})
+        ax.set_xticks(ks, [f"{k:+d}" if k else "0" for k in ks])
+        ax.set_xlim(min(ks) - 0.5, max(ks) + 1.9)
+        p = spec.get("pretrend_p")
+        title = spec["title"] + (
+            f"\nPre-trend test p = {p:.2f}" if p is not None and p == p else ""
+        )
+        _panel_title(ax, title)
+        ax.set_xlabel("Years since the cut (reference: year before)", color=INK_2)
+    axes[0][0].set_ylabel(unit, color=INK_2)
+    if "compare" in panels[0]:
+        axes[0][0].legend(
+            handles=[
+                Line2D([], [], marker="o", color=BLUE, lw=1.6, label="Stacked regression"),
+                Line2D([], [], marker="o", color=ORANGE, lw=1.6, label="Cohort-by-cohort 2x2"),
+            ],
+            loc="lower right",
+            frameon=False,
+        )
+    first = panels[0]
+    fig = style.finish(
+        fig,
+        first.get("headline", "Prices around municipal IMI rate cuts"),
+        "Effect on the real price per m² relative to the year before the cut, 95% intervals clustered by municipality",
+        "Source: INE, Autoridade Tributária; own calculations. Rates are chosen by councils: read as adjusted associations unless the pre-trend is flat.",
+        head_in=1.3,
+        foot_in=0.85,
+    )
+    fig.subplots_adjust(left=0.08, right=0.98, wspace=0.12)
+    return fig
+
+
+def robustness_ladder(
+    table: pd.DataFrame,
+    main: str,
+    benchmark: tuple[float, float, float],
+    ks: tuple[int, ...] = (1, 2),
+) -> Figure:
+    """Event-study coefficient at each event time in ``ks`` across specifications (% per 0.01 pp of cut).
+
+    ``table`` has ``spec``, ``k``, ``coef``, ``ci_low``, ``ci_high`` (in %), ``n_treated`` and ``pretrend_p``;
+    a hollow marker means the pre-trend test is rejected at 10%. The shaded band is the (low, mid, high)
+    full-capitalisation benchmark.
+    """
+    specs = list(dict.fromkeys(table["spec"]))
+    fig, axes = plt.subplots(
+        1,
+        len(ks),
+        figsize=(5.2 * len(ks) + 2.8, 0.42 * len(specs) + 2.2),
+        sharey=True,
+        squeeze=False,
+    )
+    for ax, k in zip(axes[0], ks, strict=True):
+        d = table[table["k"] == k].set_index("spec")
+        ax.axvspan(benchmark[0], benchmark[2], color=GRID, zorder=1)
+        ax.axvline(benchmark[1], color=MUTED, lw=1, ls=(0, (4, 3)), zorder=2)
+        for i, spec in enumerate(specs):
+            if spec not in d.index:
+                continue
+            row = d.loc[spec]
+            color = BLUE if spec == main else MUTED
+            hollow = row["pretrend_p"] < 0.10
+            ax.plot([row["ci_low"], row["ci_high"]], [i, i], color=color, lw=1.6, zorder=3)
+            ax.plot(
+                [row["coef"]],
+                [i],
+                "o",
+                ms=7,
+                mfc=SURFACE if hollow else color,
+                mec=color,
+                mew=1.6,
+                zorder=4,
+            )
+        ax.axvline(0, color=INK_2, lw=1, zorder=2)
+        ax.set_yticks(range(len(specs)), [f"{s}" for s in specs])
+        ax.set_ylim(len(specs) - 0.4, -0.6)
+        ax.grid(axis="y", visible=False)
+        ax.xaxis.set_major_formatter(mticker.FuncFormatter(lambda v, _: f"{v:+.0f}%" if v else "0"))
+        _panel_title(
+            ax, f"{'One' if k == 1 else 'Two'} year{'s' if k > 1 else ''} after the cut (k = +{k})"
+        )
+    last = table[table["k"] == ks[0]].drop_duplicates("spec")
+    rejected = int((last["pretrend_p"] < 0.10).sum())
+    both = (
+        table[table["k"].isin(ks)]
+        .groupby("spec")
+        .apply(
+            lambda g: bool(((g["ci_low"] <= 0) & (g["ci_high"] >= benchmark[1])).all()),
+            include_groups=False,
+        )
+    )
+    fig = style.finish(
+        fig,
+        f"{int(both.sum())} of {len(specs)} specifications cannot tell zero from full capitalisation; {rejected} fail the pre-trend test",
+        f"Effect on the real price per m², % per 0.01 pp of cut, 95% intervals; hollow marker = pre-trend rejected at 10%; "
+        f"shaded = full capitalisation ({benchmark[0]:.2f}% to {benchmark[2]:.2f}%)",
+        "Source: INE, Autoridade Tributária; own calculations. Main specification in blue.",
+        head_in=1.3,
+        foot_in=0.55,
+    )
+    fig.subplots_adjust(left=0.27, right=0.98, wspace=0.08)
+    return fig

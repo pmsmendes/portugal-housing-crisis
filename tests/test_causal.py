@@ -152,11 +152,17 @@ def test_binary_event_study_scales_with_the_average_dose(frame):
     assert binary.loc[1, "coef"] == pytest.approx(0.01 * mean_dose, rel=0.25)
 
 
-def test_cumulative_sums_post_coefficients(frame):
-    es = causal.event_study(causal.build_stacks(frame))
-    total = causal.cumulative(es, [0, 1, 2])
-    assert total["coef"] == pytest.approx(es.table.set_index("k").loc[[0, 1, 2], "coef"].sum())
-    assert total["ci_low"] < 0.03 < total["ci_high"]
+def test_cumulative_sums_coefficients_with_their_covariance():
+    frame = causal.build_frame(_panel(effect=0.01, seed=5))
+    res = causal.dose_response(frame, lags=(0, 1), years=(2013, 2025))
+    total = causal.cumulative(res, ["cut_l0", "cut_l1"])
+    assert total["coef"] == pytest.approx(res.params[["cut_l0", "cut_l1"]].sum())
+    # the level jump of 0.01 shows up in growth once: this year's plus last year's coefficient is 0.01
+    assert total["coef"] == pytest.approx(0.01, abs=0.003)
+    assert total["ci_low"] < total["coef"] < total["ci_high"]
+    assert total["se"] == pytest.approx(
+        float(np.sqrt(res.cov.loc[["cut_l0", "cut_l1"], ["cut_l0", "cut_l1"]].to_numpy().sum()))
+    )
 
 
 def test_cohort_did_agrees_with_the_pooled_event_study(frame):
@@ -187,3 +193,28 @@ def test_full_capitalisation_benchmark():
     assert causal.full_capitalisation_pct(0.01, 0.75, 0.04) == pytest.approx(0.1875)
     with pytest.raises(ValueError):
         causal.full_capitalisation_pct(0.01, 0.75, 0.0)
+
+
+def test_parish_free_and_stable_deduction_samples(frame):
+    linked = frame.copy()
+    code = "0000"  # municipality 0 cuts in some year; give it the parish link from 2014
+    linked.loc[(linked["muni_code"] == code) & (linked["year"] >= 2014), "parish_rates"] = True
+    base = causal.build_stacks(linked)
+    free = causal.build_stacks(linked, sample={"parish_free": True})
+    assert code in set(base["muni_code"]) and code not in set(free["muni_code"])
+    # a link shown only in 2012 (another convention) does not count
+    only_2012 = frame.copy()
+    only_2012.loc[
+        (only_2012["muni_code"] == code) & (only_2012["year"] == 2012), "parish_rates"
+    ] = True
+    assert code in set(causal.build_stacks(only_2012, sample={"parish_free": True})["muni_code"])
+
+    switch = frame.copy()
+    switch["deduction_link"] = False
+    switch.loc[(switch["muni_code"] == code) & (switch["year"] >= 2019), "deduction_link"] = True
+    stable = causal.build_stacks(switch, sample={"stable_deduction": True})
+    full = causal.build_stacks(switch)
+    # the link switches on inside this municipality's window in the stacks that span 2019
+    spans = full[(full["muni_code"] == code)].groupby("stack")["year"].agg(["min", "max"])
+    crossing = {s for s, r in spans.iterrows() if r["min"] < 2019 <= r["max"]}
+    assert crossing and not (set(stable[stable["muni_code"] == code]["stack"]) & crossing)

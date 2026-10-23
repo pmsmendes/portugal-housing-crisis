@@ -212,3 +212,57 @@ def test_r2_ladder_title_names_first_block_and_the_rest():
     fig = charts.r2_ladder(table, "price-to-income")
     title = fig.texts[0].get_text()
     assert "Geography explains 55%" in title and "add 6 points" in title
+
+
+def test_imi_rate_changes_title_counts_cuts_increases_and_floor_share():
+    years = pd.Series(range(2013, 2026))
+    table = pd.DataFrame(
+        {
+            "year": years,
+            "cuts": [50] * 12 + [90],
+            "increases": [5] * 13,
+            "at_floor_pct": np.linspace(40, 60, 13),
+        }
+    )
+    title = _title(charts.imi_rate_changes(table))
+    assert "690 rate cuts and 65 increases" in title and "60% of municipalities" in title
+
+
+def _es_table(coefs):
+    ks = [-2, 0, 1, 2]
+    return pd.DataFrame(
+        {
+            "k": ks,
+            "coef": coefs,
+            "ci_low": [c - 0.02 for c in coefs],
+            "ci_high": [c + 0.02 for c in coefs],
+        }
+    )
+
+
+def test_event_study_plot_shows_the_pretrend_p_and_both_estimators():
+    table = _es_table([-0.01, 0.0, 0.01, 0.02])
+    fig = charts.event_study_plot(
+        [
+            {
+                "title": "Per 0.01 pp",
+                "table": table,
+                "compare": table,
+                "pretrend_p": 0.024,
+                "benchmark": 0.19,
+            }
+        ]
+    )
+    assert "p = 0.02" in fig.axes[0].get_title(loc="left")
+    assert fig.axes[0].get_legend() is not None
+
+
+def test_robustness_ladder_title_counts_rejected_pretrends_and_ambiguous_intervals():
+    rows = []
+    for spec, p, lo, hi in (("Main", 0.02, -1.0, 1.0), ("Other", 0.5, -2.0, 0.1)):
+        for k in (1, 2):
+            rows.append(
+                {"spec": spec, "k": k, "coef": 0.0, "ci_low": lo, "ci_high": hi, "pretrend_p": p}
+            )
+    title = _title(charts.robustness_ladder(pd.DataFrame(rows), "Main", (0.1, 0.19, 0.33)))
+    assert title.startswith("1 of 2 specifications") and "1 fail the pre-trend test" in title
