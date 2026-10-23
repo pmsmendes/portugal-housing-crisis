@@ -5,7 +5,7 @@ decades, what role supply, demographics, tourism and regional dynamics play, whe
 policies have worked, and what alternative interventions could achieve — and cost.
 
 > **Status:** phase 1 (evidence) is complete: data pipeline, municipal panels, affordability indicators, maps and trend
-> charts — see the [phase 1 report](reports/p1_evidence.md). Phase 2 is done (spatial autocorrelation, fixed-effects regressions, spillover tests, segmentation, supply against demand, second homes, synthesis); phases 3 and 4 and the dashboards are not started yet.
+> charts — see the [phase 1 report](reports/p1_evidence.md). Phase 2 is done (spatial autocorrelation, fixed-effects regressions, spillover tests, segmentation, supply against demand, second homes, synthesis); phases 3 and 4 are done too (see the reports below). The dashboard has five pages: landing, geographic map, trends, explanatory and simulator.
 
 ![Price-to-income by municipality, 2024](reports/figures/p1/pti_map_2024.png)
 
@@ -31,7 +31,7 @@ These are descriptive results with stated limits (short municipal history, one n
 | 3. Evaluate a policy | Difference-in-differences / event study, pre-trend and placebo tests | [report](reports/p3_policy.md) |
 | 4. Forecast and simulate | Naïve/ETS/ARIMA with rolling-origin validation, scenario simulator | [report](reports/p4_forecast.md) |
 
-Planned interactive dashboards (Streamlit): geographic explorer, long-term trends, explanatory analysis, forecast & policy simulator. Only the landing page exists so far.
+Interactive dashboards (Streamlit, `uv run streamlit run app/Home.py`): a **geographic** explorer (municipality map of any indicator, level or change between two years, with rankings), **trends** (national price index and rates, a municipality against all others, group medians), **explanatory** (what accounts for where affordability worsened, and the policy test) and the forecast & policy **simulator**. They read only the committed processed data and report tables.
 
 ## Data
 Public Portuguese and European sources (INE, Banco de Portugal, Eurostat, Autoridade Tributária, Turismo de Portugal RNAL, DGT CAOP, AIMA). Full registry: [docs/data_catalog.md](docs/data_catalog.md).

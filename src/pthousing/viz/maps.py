@@ -6,6 +6,8 @@ one-hue ramp for levels or the blue-red ramp for changes. Municipalities without
 hatched, never colored as zero.
 """
 
+from pathlib import Path
+
 import geopandas as gpd
 import matplotlib as mpl
 import matplotlib.pyplot as plt
@@ -15,7 +17,7 @@ from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 from matplotlib.patches import Patch
 
-from pthousing.config import CRS_WEB, MUNI_KEY
+from pthousing.config import CRS_WEB, MUNI_KEY, PROCESSED
 from pthousing.data import interim
 from pthousing.viz import style
 from pthousing.viz.style import BASELINE, INK_2, MUTED, NO_DATA, SURFACE
@@ -41,6 +43,21 @@ def municipality_geometry(simplify_m: float = 150.0) -> gpd.GeoDataFrame:
     ].copy()
     geo["geometry"] = geo.geometry.simplify(simplify_m)  # metres, while still in the projected CRS
     return geo.to_crs(CRS_WEB)
+
+
+WEB_GEOMETRY = PROCESSED / "municipalities.geojson"
+
+
+def export_web_geometry(simplify_m: float = 400.0, decimals: int = 4) -> Path:
+    """Write a light municipality GeoJSON (``muni_code``, ``muni_name``) for the dashboard.
+
+    Coarser than the print maps (hover maps need outlines, not coastline detail); coordinates are rounded
+    to ``decimals`` (4 is about 10 m). The file is committed so the app runs without the interim tables.
+    """
+    geo = municipality_geometry(simplify_m)[[MUNI_KEY, "muni_name", "geometry"]]
+    WEB_GEOMETRY.parent.mkdir(parents=True, exist_ok=True)
+    geo.to_file(WEB_GEOMETRY, driver="GeoJSON", COORDINATE_PRECISION=decimals)
+    return WEB_GEOMETRY
 
 
 def classify(values: pd.Series, breaks: list[float]) -> pd.Series:

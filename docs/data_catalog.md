@@ -61,3 +61,4 @@ Full 308-municipality grid for municipal tables; suppressed cells are NaN, never
 |---|---|---|---|
 | panel_municipality_year.parquet | muni_code × year (308 × 1995–2025, 60 columns; includes `foreign_residents_n` 2014–2023 and `foreign_residents_pct`, and from the IMI rates `imi_urban_pct`, `imi_change_pp`, `imi_parish_rates`, `imi_deduction_link` for 2012–2025) | build_panel.py | built, validated |
 | national_quarterly.parquet | quarter (2005Q1–2026Q2, 25 columns) | build_panel.py | built, validated |
+| municipalities.geojson | 308 CAOP 2024 outlines (`muni_code`, `muni_name`), simplified to 400 m, 4-decimal coordinates, ~380 kB; only for the dashboard map | maps.export_web_geometry() (run by scripts/run_pipeline.py) | built |

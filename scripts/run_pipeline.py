@@ -1,4 +1,4 @@
-"""Data pipeline CLI: download -> clean (interim parquet) -> build panels -> typology -> validate.
+"""Data pipeline CLI: download -> clean (interim parquet) -> build panels -> dashboard geometry -> typology -> validate.
 
 Usage: uv run python scripts/run_pipeline.py [--sources ine bportugal ...] [--skip-download] [--refresh]
 Thin wrapper only; all logic lives in src/pthousing/data/.
@@ -7,6 +7,7 @@ Thin wrapper only; all logic lives in src/pthousing/data/.
 import argparse
 
 from pthousing.data import build_panel, interim, typology, validate
+from pthousing.viz import maps
 
 
 def main() -> None:
@@ -27,6 +28,7 @@ def main() -> None:
     print(f"Built {len(paths)} interim tables in data/interim")
     panels = build_panel.build_all()
     print(f"Built {len(panels)} panels in data/processed")
+    print(f"Exported the dashboard geometry to {maps.export_web_geometry().name} in data/processed")
     print(f"Built the municipality typology ({len(typology.build())} rows) in data/external")
     report = validate.validate_all(strict=False)
     failed = report[~report["ok"]]

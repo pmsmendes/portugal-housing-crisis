@@ -257,17 +257,17 @@ with tab1:
     left, right = st.columns(2)
     left.plotly_chart(
         band_chart("pti_years", "Price-to-income (years of income)", "years"),
-        use_container_width=True,
+        width="stretch",
     )
     right.plotly_chart(
         band_chart("burden_pct", "Mortgage burden (% of income)", "% of income"),
-        use_container_width=True,
+        width="stretch",
     )
     st.plotly_chart(
         band_chart(
             "price_index", f"Real house price index ({a.start_year} = 100)", "index", reference
         ),
-        use_container_width=True,
+        width="stretch",
     )
     st.caption(
         "Median municipality; the national price, income and mortgage-rate paths move it proportionally, so regional differences "
@@ -295,7 +295,7 @@ with tab2:
         yaxis_title="households (negative: spare capacity)",
     )
     fig.update_yaxes(gridcolor=GRID)
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")
     if effect is not None:
         spend = pd.DataFrame(
             {
