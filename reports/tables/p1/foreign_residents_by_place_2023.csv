@@ -1,0 +1,13 @@
+dimension,group,foreign_residents_n,population_n,foreign_share_of_total_pct,population_share_of_total_pct,foreign_share_pct
+density,urban,613479.0,5307120.0,58.7,47.4,11.6
+density,intermediate,295720.0,3723393.0,28.3,33.2,7.9
+density,rural,135039.0,2173834.0,12.9,19.4,6.2
+coast,coast,552665.0,5015736.0,52.9,44.8,11.0
+coast,inland,273763.0,5027032.0,26.2,44.9,5.4
+coast,estuary,217810.0,1161579.0,20.9,10.4,18.8
+district,Lisboa,431677.0,2594574.0,41.3,23.2,16.6
+district,Faro,125424.0,563923.0,12.0,5.0,22.2
+district,Setúbal,106353.0,974784.0,10.2,8.7,10.9
+district,Porto,97155.0,1878373.0,9.3,16.8,5.2
+district,Leiria,43495.0,502691.0,4.2,4.5,8.7
+district,Braga,41808.0,885356.0,4.0,7.9,4.7

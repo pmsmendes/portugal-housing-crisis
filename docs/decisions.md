@@ -2,6 +2,12 @@
 
 Analytic and engineering choices, newest first. One short entry each: what, why, alternatives rejected.
 
+## 2026-10-23 — Foreign residents described from titles, with the 2023 step kept (RQ3.2)
+- **What:** `analysis/demography.py` and `p1_05`: totals, nationalities, concentration, distribution by density, coast and district, and the location of each nationality, from `aima_foreigners` (2014-2023) and the panel's population.
+- **Why the 2023 step is kept, not smoothed:** it is +34% in the median municipality and above +20% in 222 of 308, so it is a national movement of the series, not a local event; dropping or interpolating 2023 would invent a figure. It is stated in the title note of the chart and in the limitations.
+- **Why titles are not called immigrants:** the series excludes naturalised citizens and the foreign-born, so the growth contribution (foreign titles over population change) is reported as a share of population change without splitting natural change or emigration, which the data do not provide.
+- **Rejected:** a decomposition of population growth into natural change and net migration (no municipal natural change or migration series is ingested; RQ3.1 stays open), nationality-level price regressions (p2 uses the total).
+
 ## 2026-10-23 — Renting versus buying as a user cost with assumed components (RQ1.6)
 - **What:** `features/rent_vs_buy.py` and `p1_04`. Yearly cost of owning (interest on the loan, return forgone on the deposit, IMI on part of the price, upkeep, buying costs over ten years) as a % of the price, against the rent yield; the difference is the break-even price growth. Municipal for 2020-2024 (the only years with rents), national for 2003-2025 with the OECD price-to-rent index scaled to the municipal yield. The columns are computed by `add_indicators`, not stored in the panel.
 - **Why a user cost, not a cash comparison:** payments include principal, which is saving; the economic cost of owning is interest, forgone return, taxes and upkeep. The cash view is kept as a second indicator because it is what a household must pay each month.

@@ -132,6 +132,44 @@ levels carry about a point of doubt and the **changes** are the finding (sensiti
 Tables: `rent_vs_buy_trend_2020_2024.csv`, `rent_vs_buy_by_municipality_2024.csv`, `rent_vs_buy_by_type_2024.csv`,
 `rent_vs_buy_sensitivity_2024.csv`, `rent_vs_buy_anchor_check.csv`.
 
+## Foreign residents: how many, who, where (RQ3.2)
+
+Foreign nationals with a residence title on 31 December (INE, from AIMA/SEF), 2014 to 2023. This is a stock of titles, not
+the foreign-born population: people who took Portuguese nationality are not counted, and the count can move with
+administrative processing.
+
+![Foreign residents over time](figures/p1/foreign_residents_trend.png)
+
+- **A 2.7-fold rise.** 390,000 in 2014, 589,000 in 2019, 781,000 in 2022 and 1,044,000 in 2023: from 3.8% to 9.3% of the
+  resident population. Between 2014 and 2019 the resident population fell by 20,000 while the number of titles rose by
+  199,000; in 2019-2023 the population grew by 829,000 and the titles by 455,000 (55%), so titles grew while the population
+  did not, and account for over half of the recent growth (natural change and emigration are not split here).
+- **The 2023 jump is everywhere.** The count rose 34% in the median municipality and by more than 20% in 222 of 308, so it
+  is a national movement (probably processing of titles, see data quality), not local. Read 2023 levels with that in mind.
+- **Brazil is the story.** Brazilians went from 85,000 to 368,000 (4.3 times, 35% of the 2023 total); the "other" group
+  (all nationalities not listed, 37%) grew 3.8 times. Ukrainians, Romanians and Moldovans fell by a third or more since 2014,
+  Cabo Verde grew 20% and Guinea-Bissau 83%.
+- **Concentrated.** The 10 municipalities with most foreign residents hold 45% of them and 24% of the population; Lisboa
+  alone holds 15.5% (162,000, 24.8% of its residents). The district of Lisboa has 41% of all foreign residents (17% of its
+  population), Faro 12% (22% of its population). Urban municipalities host 59% of foreign residents (47% of the population);
+  rural ones 13% (19%).
+- **The highest shares are in the south-west and the Algarve.** Vila do Bispo (38%), Aljezur and Lagos (34%), Odemira and
+  Albufeira (31%) and Tavira, Loulé and Lisboa (25%); the share rose since 2019 in 302 of 308 municipalities, by more than
+  4 points in 41.
+- **Nationalities settle differently.** 70% of Guineans, 60% of Cabo Verdeans and 54% of Angolans live in the district of
+  Lisboa (and a further 11-21% in Setúbal), 49% of British residents live in Faro and only 21% in Lisboa, and Brazilians
+  are spread (33% Lisboa, 7% Faro, 47% elsewhere).
+
+| Share of residents, 2023 | Change in the share, 2019 to 2023 |
+|---|---|
+| ![Share map](figures/p1/foreign_residents_share_map_2023.png) | ![Change map](figures/p1/foreign_residents_change_map_2019_2023.png) |
+
+![Where each nationality lives](figures/p1/foreign_residents_location_by_nationality.png)
+
+Tables: `foreign_residents_totals.csv`, `foreign_residents_by_nationality.csv`, `foreign_residents_by_place_2023.csv`,
+`foreign_residents_concentration_2023.csv`, `foreign_residents_by_municipality_2023.csv`,
+`foreign_residents_location_by_nationality.csv`.
+
 ## Limitations
 
 - **Short municipal history.** Municipal prices exist from 2016 and rents from 2020; INE's national index starts in
@@ -154,11 +192,15 @@ Tables: `rent_vs_buy_trend_2020_2024.csv`, `rent_vs_buy_by_municipality_2024.csv
   municipal yield, and differs from the measured yield by -0.5 to +0.6 pp in 2020-2024 (`rent_vs_buy_anchor_check.csv`).
   Dwellings that are rented are not those that are sold (size, age, quality), the taxable value for IMI is assumed to be
   60% of the price, and the comparison ignores risk, mobility, rent control and who can get a loan.
+- **Foreign residents are titles, not people.** The series ends in 2023, excludes naturalised citizens and has an
+  unexplained +34% step in 2023; the share divides by an estimate of residents of a different vintage and logic, so levels
+  are indicative (Vila do Bispo's 38% is the extreme). Natural change and emigration are not separated, so how much of the
+  population growth is immigration is read from titles alone.
 - **One national mortgage rate** (agreed rate on new floating-rate loans) applies to every municipality, and the loan
   (80% of the price over 30 years) is an assumption, not an estimate.
 - **Descriptive, not causal.** The report says what changed and where, not why; that is phase 2.
 
 ## Questions answered
 
-RQ1.3, RQ1.5, RQ1.6, RQ4.1 and RQ4.2 are answered with the available data; RQ1.1 (national thirty years done, municipal from 2016), RQ1.4 and RQ1.7 are partly answered
+RQ1.3, RQ1.5, RQ1.6, RQ3.2, RQ4.1 and RQ4.2 are answered with the available data; RQ1.1 (national thirty years done, municipal from 2016), RQ1.4 and RQ1.7 are partly answered
 (see [research_questions](../docs/research_questions.md)).

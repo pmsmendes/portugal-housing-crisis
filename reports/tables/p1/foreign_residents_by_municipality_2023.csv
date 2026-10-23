@@ -1,0 +1,309 @@
+muni_code,muni_name,district,foreign_residents_n,population_n,foreign_residents_pct
+1106,Lisboa,Lisboa,162306.0,655542.0,24.76
+1111,Sintra,Lisboa,63222.0,432915.0,14.6
+1105,Cascais,Lisboa,42824.0,241537.0,17.73
+1115,Amadora,Lisboa,35858.0,196563.0,18.24
+1312,Porto,Porto,35651.0,267236.0,13.34
+1107,Loures,Lisboa,32264.0,227301.0,14.19
+1116,Odivelas,Lisboa,32250.0,180033.0,17.91
+1503,Almada,Setúbal,25713.0,197221.0,13.04
+0808,Loulé,Faro,22725.0,91363.0,24.87
+1510,Seixal,Setúbal,21890.0,188623.0,11.61
+0303,Braga,Braga,21097.0,209088.0,10.09
+1110,Oeiras,Lisboa,19708.0,185767.0,10.61
+0801,Albufeira,Faro,18970.0,61294.0,30.95
+1317,Vila Nova de Gaia,Porto,17502.0,318087.0,5.5
+0811,Portimão,Faro,15419.0,75320.0,20.47
+1512,Setúbal,Setúbal,14935.0,137653.0,10.85
+0211,Odemira,Beja,13843.0,44712.0,30.96
+0807,Lagos,Faro,13758.0,40286.0,34.15
+1114,Vila Franca de Xira,Lisboa,13718.0,148155.0,9.26
+0603,Coimbra,Coimbra,13702.0,154224.0,8.88
+1009,Leiria,Leiria,12792.0,142208.0,9.0
+0805,Faro,Faro,12235.0,78780.0,15.53
+1308,Matosinhos,Porto,10338.0,180417.0,5.73
+1504,Barreiro,Setúbal,9827.0,87938.0,11.17
+0105,Aveiro,Aveiro,9821.0,89592.0,10.96
+1109,Mafra,Lisboa,9203.0,93994.0,9.79
+1507,Montijo,Setúbal,9049.0,64411.0,14.05
+0813,Silves,Faro,8673.0,44469.0,19.5
+1113,Torres Vedras,Lisboa,8355.0,91589.0,9.12
+1506,Moita,Setúbal,8263.0,74300.0,11.12
+0814,Tavira,Faro,8237.0,32825.0,25.09
+3103,Funchal,Ilha da Madeira,7402.0,112290.0,6.59
+1006,Caldas da Rainha,Leiria,6572.0,57277.0,11.47
+1306,Maia,Porto,6323.0,140501.0,4.5
+0806,Lagoa,Faro,6187.0,27917.0,22.16
+0810,Olhão,Faro,6044.0,47881.0,12.62
+1823,Viseu,Viseu,5932.0,106199.0,5.59
+1416,Santarém,Santarém,5790.0,66711.0,8.68
+1304,Gondomar,Porto,5488.0,169122.0,3.24
+0308,Guimarães,Braga,5476.0,163814.0,3.34
+1609,Viana do Castelo,Viana do Castelo,5450.0,91336.0,5.97
+1101,Alenquer,Lisboa,5087.0,49003.0,10.38
+1508,Palmela,Setúbal,4998.0,73249.0,6.82
+0312,Vila Nova de Famalicão,Braga,4915.0,140750.0,3.49
+0605,Figueira da Foz,Coimbra,4743.0,64468.0,7.36
+1511,Sesimbra,Setúbal,4570.0,58124.0,7.86
+1001,Alcobaça,Leiria,4514.0,59157.0,7.63
+1313,Póvoa de Varzim,Porto,4462.0,70149.0,6.36
+1010,Marinha Grande,Leiria,4432.0,44616.0,9.93
+0402,Bragança,Bragança,4305.0,37688.0,11.42
+1316,Vila do Conde,Porto,4079.0,84710.0,4.82
+0502,Castelo Branco,Castelo Branco,3819.0,57148.0,6.68
+0816,Vila Real de Santo António,Faro,3753.0,22115.0,16.97
+0705,Évora,Évora,3684.0,58070.0,6.34
+1421,Ourém,Santarém,3583.0,47159.0,7.6
+0302,Barcelos,Braga,3549.0,120085.0,2.96
+0503,Covilhã,Castelo Branco,3329.0,50165.0,6.64
+0101,Águeda,Aveiro,3260.0,50154.0,6.5
+1015,Pombal,Leiria,3260.0,53972.0,6.04
+1405,Benavente,Santarém,3135.0,32678.0,9.59
+0109,Santa Maria da Feira,Aveiro,2970.0,141386.0,2.1
+0205,Beja,Beja,2960.0,38661.0,7.66
+1315,Valongo,Porto,2922.0,98264.0,2.97
+0110,Ílhavo,Aveiro,2630.0,42249.0,6.22
+1414,Rio Maior,Santarém,2608.0,24464.0,10.66
+0815,Vila do Bispo,Faro,2592.0,6826.0,37.97
+1108,Lourinhã,Lisboa,2512.0,29007.0,8.66
+1410,Entroncamento,Santarém,2504.0,22883.0,10.94
+0803,Aljezur,Faro,2501.0,7304.0,34.24
+1014,Peniche,Leiria,2276.0,29746.0,7.65
+1714,Vila Real,Vila Real,2131.0,52139.0,4.09
+0113,Oliveira de Azeméis,Aveiro,2013.0,69109.0,2.91
+4203,Ponta Delgada,Ilha de São Miguel,2001.0,70946.0,2.82
+1103,Azambuja,Lisboa,1962.0,22284.0,8.8
+0116,São João da Madeira,Aveiro,1927.0,23995.0,8.03
+0504,Fundão,Castelo Branco,1886.0,27377.0,6.89
+1608,Valença,Viana do Castelo,1885.0,15351.0,12.28
+1011,Nazaré,Leiria,1879.0,16932.0,11.1
+0812,São Brás de Alportel,Faro,1865.0,12168.0,15.33
+1509,Santiago do Cacém,Setúbal,1860.0,29697.0,6.26
+1310,Paredes,Porto,1837.0,86924.0,2.11
+3108,Santa Cruz,Ilha da Madeira,1824.0,43330.0,4.21
+0115,Ovar,Aveiro,1812.0,57192.0,3.17
+1418,Tomar,Santarém,1796.0,37446.0,4.8
+0114,Oliveira do Bairro,Aveiro,1784.0,25227.0,7.07
+1513,Sines,Setúbal,1722.0,16678.0,10.32
+0306,Esposende,Braga,1705.0,37866.0,4.5
+1318,Trofa,Porto,1613.0,40759.0,3.96
+0907,Guarda,Guarda,1589.0,40570.0,3.92
+1502,Alcochete,Setúbal,1581.0,20067.0,7.88
+1406,Cartaxo,Santarém,1497.0,24901.0,6.01
+0103,Anadia,Aveiro,1482.0,28831.0,5.14
+1403,Almeirim,Santarém,1461.0,23783.0,6.14
+1016,Porto de Mós,Leiria,1460.0,24606.0,5.93
+1012,Óbidos,Leiria,1453.0,13456.0,10.8
+0313,Vila Verde,Braga,1429.0,48114.0,2.97
+1604,Monção,Viana do Castelo,1389.0,18267.0,7.6
+1004,Batalha,Leiria,1353.0,16770.0,8.07
+3101,Calheta,Ilha da Madeira,1324.0,11268.0,11.75
+1703,Chaves,Vila Real,1314.0,37508.0,3.5
+1505,Grândola,Setúbal,1312.0,14903.0,8.8
+0107,Espinho,Aveiro,1260.0,32210.0,3.91
+0118,Vagos,Aveiro,1234.0,24622.0,5.01
+1419,Torres Novas,Santarém,1205.0,35445.0,3.4
+0102,Albergaria-a-Velha,Aveiro,1181.0,26118.0,4.52
+0602,Cantanhede,Coimbra,1180.0,35222.0,3.35
+0804,Castro Marim,Faro,1170.0,7331.0,15.96
+1401,Abrantes,Santarém,1169.0,35484.0,3.29
+1314,Santo Tirso,Porto,1138.0,69184.0,1.64
+0611,Oliveira do Hospital,Coimbra,1128.0,19845.0,5.68
+1602,Caminha,Viana do Castelo,1086.0,16967.0,6.4
+0108,Estarreja,Aveiro,1077.0,27431.0,3.93
+1607,Ponte de Lima,Viana do Castelo,1060.0,42084.0,2.52
+1214,Portalegre,Portalegre,1057.0,23870.0,4.43
+1005,Bombarral,Leiria,1047.0,13878.0,7.54
+1307,Marco de Canaveses,Porto,1037.0,50141.0,2.07
+1311,Penafiel,Porto,1037.0,70849.0,1.46
+0809,Monchique,Faro,1031.0,5566.0,18.52
+0601,Arganil,Coimbra,1020.0,11338.0,9.0
+1102,Arruda dos Vinhos,Lisboa,1012.0,15714.0,6.44
+1610,Vila Nova de Cerveira,Viana do Castelo,1008.0,9960.0,10.12
+1309,Paços de Ferreira,Porto,956.0,56443.0,1.69
+4701,Horta,Ilha do Faial,934.0,14995.0,6.23
+0307,Fafe,Braga,926.0,49598.0,1.87
+0208,Ferreira do Alentejo,Beja,908.0,9245.0,9.82
+1303,Felgueiras,Porto,897.0,57046.0,1.57
+0509,Sertã,Castelo Branco,888.0,14818.0,5.99
+0407,Mirandela,Bragança,874.0,21724.0,4.02
+1301,Amarante,Porto,871.0,52394.0,1.66
+0616,Tábua,Coimbra,855.0,11533.0,7.41
+0607,Lousã,Coimbra,837.0,17800.0,4.7
+0119,Vale de Cambra,Aveiro,830.0,22008.0,3.77
+1821,Tondela,Viseu,826.0,26447.0,3.12
+1207,Elvas,Portalegre,817.0,21828.0,3.74
+1415,Salvaterra de Magos,Santarém,800.0,23079.0,3.47
+1305,Lousada,Porto,795.0,49127.0,1.62
+0712,Vendas Novas,Évora,777.0,12571.0,6.18
+1112,Sobral de Monte Agraço,Lisboa,773.0,11404.0,6.78
+0706,Montemor-o-Novo,Évora,766.0,16430.0,4.66
+1013,Pedrógão Grande,Leiria,757.0,3708.0,20.42
+0301,Amares,Braga,756.0,19367.0,3.9
+0912,Seia,Guarda,736.0,21745.0,3.38
+1810,Oliveira de Frades,Viseu,724.0,10283.0,7.04
+0505,Idanha-a-Nova,Castelo Branco,702.0,8536.0,8.22
+0309,Póvoa de Lanhoso,Braga,702.0,21895.0,3.21
+1402,Alcanena,Santarém,681.0,13189.0,5.16
+1806,Mangualde,Viseu,679.0,19131.0,3.55
+0213,Serpa,Beja,666.0,14776.0,4.51
+3102,Câmara de Lobos,Ilha da Madeira,657.0,32018.0,2.05
+0608,Mira,Coimbra,654.0,12576.0,5.2
+1816,São Pedro do Sul,Viseu,633.0,15583.0,4.06
+1501,Alcácer do Sal,Setúbal,633.0,11920.0,5.31
+1104,Cadaval,Lisboa,623.0,13766.0,4.53
+0111,Mealhada,Aveiro,606.0,19758.0,3.07
+1003,Ansião,Leiria,601.0,12064.0,4.98
+3105,Ponta do Sol,Ilha da Madeira,600.0,8568.0,7.0
+4301,Angra do Heroísmo,Ilha Terceira,593.0,34782.0,1.7
+0314,Vizela,Braga,586.0,25102.0,2.33
+0604,Condeixa-a-Nova,Coimbra,574.0,17369.0,3.3
+1002,Alvaiázere,Leiria,570.0,6218.0,9.17
+3104,Machico,Ilha da Madeira,562.0,20034.0,2.81
+0610,Montemor-o-Velho,Coimbra,558.0,24901.0,2.24
+3201,Porto Santo,Ilha de Porto Santo,558.0,6345.0,8.79
+3107,Ribeira Brava,Ilha da Madeira,550.0,12812.0,4.29
+1601,Arcos de Valdevez,Viana do Castelo,543.0,20416.0,2.66
+0614,Penela,Coimbra,542.0,5576.0,9.72
+0609,Miranda do Corvo,Coimbra,535.0,12188.0,4.39
+1213,Ponte de Sor,Portalegre,530.0,15711.0,3.37
+1411,Ferreira do Zêzere,Santarém,520.0,7966.0,6.53
+0117,Sever do Vouga,Aveiro,513.0,11476.0,4.47
+1809,Nelas,Viseu,509.0,13560.0,3.75
+1808,Mortágua,Viseu,504.0,9182.0,5.49
+0617,Vila Nova de Poiares,Coimbra,503.0,7231.0,6.96
+0212,Ourique,Beja,477.0,5074.0,9.4
+0615,Soure,Coimbra,463.0,17459.0,2.65
+1409,Coruche,Santarém,442.0,17773.0,2.49
+0507,Penamacor,Castelo Branco,440.0,4340.0,10.14
+1814,Santa Comba Dão,Viseu,425.0,10951.0,3.88
+0704,Estremoz,Évora,421.0,12883.0,3.27
+1404,Alpiarça,Santarém,406.0,7541.0,5.38
+0405,Macedo de Cavaleiros,Bragança,388.0,13855.0,2.8
+4205,Ribeira Grande,Ilha de São Miguel,387.0,31694.0,1.22
+0202,Almodôvar,Beja,369.0,6979.0,5.29
+0711,Reguengos de Monsaraz,Évora,359.0,10536.0,3.41
+1008,Figueiró dos Vinhos,Leiria,354.0,5386.0,6.57
+0112,Murtosa,Aveiro,340.0,10274.0,3.31
+4602,Madalena,Ilha do Pico,332.0,6613.0,5.02
+1802,Carregal do Sal,Viseu,328.0,9406.0,3.49
+0606,Góis,Coimbra,328.0,3824.0,8.58
+0206,Castro Verde,Beja,324.0,7055.0,4.59
+0508,Proença-a-Nova,Castelo Branco,322.0,6946.0,4.64
+0906,Gouveia,Guarda,317.0,11905.0,2.66
+4302,Praia da Vitória,Ilha Terceira,314.0,19740.0,1.59
+1805,Lamego,Viseu,306.0,24513.0,1.25
+0207,Cuba,Beja,299.0,4779.0,6.26
+0201,Aljustrel,Beja,291.0,9051.0,3.22
+1804,Cinfães,Viseu,286.0,17626.0,1.62
+1807,Moimenta da Beira,Viseu,285.0,9639.0,2.96
+1605,Paredes de Coura,Viana do Castelo,284.0,8725.0,3.26
+0613,Penacova,Coimbra,282.0,13193.0,2.14
+1803,Castro Daire,Viseu,270.0,13359.0,2.02
+0802,Alcoutim,Faro,264.0,2478.0,10.65
+1824,Vouzela,Viseu,260.0,9581.0,2.71
+1204,Campo Maior,Portalegre,260.0,8255.0,3.15
+1210,Marvão,Portalegre,259.0,2945.0,8.79
+0209,Mértola,Beja,251.0,6088.0,4.12
+0511,Vila Velha de Ródão,Castelo Branco,251.0,3279.0,7.65
+0104,Arouca,Aveiro,249.0,21360.0,1.17
+0106,Castelo de Paiva,Aveiro,242.0,15743.0,1.54
+4101,Vila do Porto,Ilha de Santa Maria,241.0,5549.0,4.34
+3110,São Vicente,Ilha da Madeira,240.0,4755.0,5.05
+1713,Vila Pouca de Aguiar,Vila Real,240.0,11641.0,2.06
+0214,Vidigueira,Beja,231.0,5546.0,4.17
+0210,Moura,Beja,230.0,13559.0,1.7
+1413,Mação,Santarém,229.0,6275.0,3.65
+4201,Lagoa,Ilha de São Miguel,227.0,14369.0,1.58
+3109,Santana,Ilha da Madeira,227.0,6498.0,3.49
+0506,Oleiros,Castelo Branco,222.0,4468.0,4.97
+1606,Ponte da Barca,Viana do Castelo,221.0,11121.0,1.99
+0903,Celorico da Beira,Guarda,219.0,6552.0,3.34
+1603,Melgaço,Viana do Castelo,219.0,7197.0,3.04
+0410,Vila Flor,Bragança,218.0,5792.0,3.76
+1412,Golegã,Santarém,217.0,5584.0,3.89
+0714,Vila Viçosa,Évora,213.0,7443.0,2.86
+4601,Lajes do Pico,Ilha do Pico,209.0,4530.0,4.61
+1302,Baião,Porto,209.0,17020.0,1.23
+1817,Sátão,Viseu,207.0,11131.0,1.86
+1712,Valpaços,Vila Real,201.0,14288.0,1.41
+0304,Cabeceiras de Basto,Braga,195.0,15383.0,1.27
+0311,Vieira do Minho,Braga,192.0,11683.0,1.64
+0701,Alandroal,Évora,189.0,5095.0,3.71
+0911,Sabugal,Guarda,188.0,9482.0,1.98
+4603,São Roque do Pico,Ilha do Pico,183.0,3408.0,5.37
+0709,Portel,Évora,182.0,5754.0,3.16
+0914,Vila Nova de Foz Côa,Guarda,179.0,5837.0,3.07
+1407,Chamusca,Santarém,175.0,8651.0,2.02
+1007,Castanheira de Pêra,Leiria,175.0,2697.0,6.49
+0710,Redondo,Évora,169.0,6448.0,2.62
+0501,Belmonte,Castelo Branco,168.0,6076.0,2.76
+0305,Celorico de Basto,Braga,166.0,16254.0,1.02
+0403,Carrazeda de Ansiães,Bragança,166.0,5304.0,3.13
+0913,Trancoso,Guarda,163.0,8029.0,2.03
+1215,Sousel,Portalegre,163.0,4473.0,3.64
+1420,Vila Nova da Barquinha,Santarém,161.0,7469.0,2.16
+0406,Miranda do Douro,Bragança,159.0,6158.0,2.58
+0702,Arraiolos,Évora,159.0,6729.0,2.36
+0902,Almeida,Guarda,158.0,5639.0,2.8
+0401,Alfândega da Fé,Bragança,158.0,4298.0,3.68
+1708,Peso da Régua,Vila Real,156.0,14639.0,1.07
+1205,Castelo de Vide,Portalegre,154.0,3029.0,5.08
+0713,Viana do Alentejo,Évora,146.0,5500.0,2.65
+0703,Borba,Évora,143.0,6612.0,2.16
+0510,Vila de Rei,Castelo Branco,142.0,3227.0,4.4
+0408,Mogadouro,Bragança,142.0,8132.0,1.75
+1201,Alter do Chão,Portalegre,141.0,3157.0,4.47
+1818,Sernancelhe,Viseu,140.0,4874.0,2.87
+0404,Freixo de Espada à Cinta,Bragança,138.0,3039.0,4.54
+4206,Vila Franca do Campo,Ilha de São Miguel,138.0,10201.0,1.35
+1212,Nisa,Portalegre,137.0,5924.0,2.31
+4502,Velas,Ilha de São Jorge,136.0,5010.0,2.71
+4801,Lajes das Flores,Ilha das Flores,134.0,1399.0,9.58
+1820,Tarouca,Viseu,131.0,7234.0,1.81
+1815,São João da Pesqueira,Viseu,127.0,6557.0,1.94
+0910,Pinhel,Guarda,127.0,8009.0,1.59
+1417,Sardoal,Santarém,126.0,3654.0,3.45
+1709,Ribeira de Pena,Vila Real,125.0,5875.0,2.13
+1801,Armamar,Viseu,121.0,5460.0,2.22
+1706,Montalegre,Vila Real,120.0,8746.0,1.37
+3106,Porto Moniz,Ilha da Madeira,116.0,2593.0,4.47
+0310,Terras de Bouro,Braga,114.0,6357.0,1.79
+1208,Fronteira,Portalegre,112.0,3014.0,3.72
+4204,Povoação,Ilha de São Miguel,110.0,5643.0,1.95
+1811,Penalva do Castelo,Viseu,107.0,7130.0,1.5
+1701,Alijó,Vila Real,106.0,10161.0,1.04
+0409,Torre de Moncorvo,Bragança,106.0,6573.0,1.61
+0203,Alvito,Beja,104.0,2287.0,4.55
+4202,Nordeste,Ilha de São Miguel,95.0,4401.0,2.16
+0411,Vimioso,Bragança,94.0,3782.0,2.49
+1202,Arronches,Portalegre,85.0,2788.0,3.05
+0905,Fornos de Algodres,Guarda,85.0,4162.0,2.04
+1408,Constância,Santarém,81.0,3916.0,2.07
+1705,Mondim de Basto,Vila Real,80.0,6215.0,1.29
+0707,Mora,Évora,79.0,4120.0,1.92
+0708,Mourão,Évora,78.0,2519.0,3.1
+0908,Manteigas,Guarda,78.0,2996.0,2.6
+1819,Tabuaço,Viseu,77.0,4570.0,1.68
+0412,Vinhais,Bragança,77.0,7335.0,1.05
+1702,Boticas,Vila Real,74.0,4781.0,1.55
+1707,Murça,Vila Real,73.0,5201.0,1.4
+1813,Resende,Viseu,72.0,9641.0,0.75
+4401,Santa Cruz da Graciosa,Ilha da Graciosa,72.0,4123.0,1.75
+1711,Santa Marta de Penaguião,Vila Real,71.0,6142.0,1.16
+1206,Crato,Portalegre,70.0,3300.0,2.12
+1203,Avis,Portalegre,69.0,3747.0,1.84
+1822,Vila Nova de Paiva,Viseu,69.0,4305.0,1.6
+0901,Aguiar da Beira,Guarda,63.0,4813.0,1.31
+4501,Calheta de São Jorge,Ilha de São Jorge,61.0,3451.0,1.77
+0909,Mêda,Guarda,59.0,4407.0,1.34
+1211,Monforte,Portalegre,58.0,2921.0,1.99
+4802,Santa Cruz das Flores,Ilha das Flores,57.0,2038.0,2.8
+0612,Pampilhosa da Serra,Coimbra,51.0,3326.0,1.53
+0904,Figueira de Castelo Rodrigo,Guarda,48.0,4968.0,0.97
+1710,Sabrosa,Vila Real,47.0,5528.0,0.85
+1812,Penedono,Viseu,42.0,2472.0,1.7
+1704,Mesão Frio,Vila Real,30.0,3456.0,0.87
+0204,Barrancos,Beja,26.0,1429.0,1.82
+1209,Gavião,Portalegre,25.0,3303.0,0.76
+4901,Corvo,Ilha do Corvo,13.0,416.0,3.12

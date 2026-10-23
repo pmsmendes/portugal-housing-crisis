@@ -1431,3 +1431,105 @@ def owner_cost_stack(table: pd.DataFrame, rent_yield: pd.Series) -> Figure:
         head_in=1.0,
         foot_in=1.1,
     )
+
+
+# ---- foreign residents ----------------------------------------------------------------------------
+
+
+def foreign_residents_trend(
+    totals: pd.DataFrame, brazil: pd.Series, share_by_class: pd.DataFrame
+) -> Figure:
+    """Foreign residents with a residence title, 2014 to 2023.
+
+    ``totals`` is ``demography.national_totals`` (``foreign_residents_n``, ``foreign_share_pct``), ``brazil``
+    the Brazilian count by year, ``share_by_class`` the foreign share of the population (%) by year (rows) and
+    density class (columns: urban, intermediate, rural). Left: thousands of residents; right: share of the
+    population by class.
+    """
+    fig, (left, right) = plt.subplots(1, 2, figsize=(11, 4.4))
+    total = totals["foreign_residents_n"] / 1000
+    _line(left, total.index, total, BLUE)
+    _line(left, brazil.index, brazil / 1000, ORANGE, z=4)
+    for series, color in ((total, BLUE), (brazil / 1000, ORANGE)):
+        _end_dot(left, series.index[-1], series.iloc[-1], color)
+        _label(left, series.index[-1], series.iloc[-1], f"{series.iloc[-1]:,.0f}k")
+    _legend(left, [Line2D([], [], color=BLUE, lw=LINE_WIDTH, label="All foreign residents"),
+                   Line2D([], [], color=ORANGE, lw=LINE_WIDTH, label="of which Brazil")])  # fmt: skip
+    colors = {"urban": BLUE, "intermediate": ORANGE, "rural": MUTED}
+    for name, color in colors.items():
+        s = share_by_class[name]
+        _line(right, s.index, s, color)
+        _end_dot(right, s.index[-1], s.iloc[-1], color)
+        _label(right, s.index[-1], s.iloc[-1], f"{s.iloc[-1]:.1f}%")
+    _legend(right, [Line2D([], [], color=c, lw=LINE_WIDTH, label=n.capitalize()) for n, c in colors.items()])  # fmt: skip
+    for ax in (left, right):
+        ax.set_xlim(ax.get_xlim()[0], totals.index.max() + 1.8)
+        ax.set_xticks(range(int(totals.index.min()), int(totals.index.max()) + 1, 3))
+        ax.set_ylim(bottom=0)
+    left.yaxis.set_major_formatter(mticker.FuncFormatter(lambda v, _: f"{v:,.0f}k"))
+    right.yaxis.set_major_formatter(mticker.FuncFormatter(lambda v, _: f"{v:g}%"))
+    _panel_title(left, "Foreign residents with a residence title")
+    _panel_title(right, "Share of the resident population, by density")
+    first, last = totals.index[0], totals.index[-1]
+    return style.finish(
+        fig,
+        f"Foreign residents rose from {totals['foreign_residents_n'].iloc[0] / 1000:,.0f}k in {first} to "
+        f"{totals['foreign_residents_n'].iloc[-1] / 1000:,.0f}k in {last}, {totals['foreign_share_pct'].iloc[0]:.1f}% to "
+        f"{totals['foreign_share_pct'].iloc[-1]:.1f}% of residents",
+        "Foreign nationals with a residence title on 31 December; density class from 2021 residents per km2",
+        "Source: INE (AIMA/SEF titles; resident population estimate), own calculations. Titles, not the foreign-born: "
+        "part of the 2023 jump may be administrative.",
+        head_in=1.3,
+        foot_in=0.6,
+    )
+
+
+def nationality_location_bars(
+    location: pd.DataFrame, labels: dict[str, str], names: dict[str, str]
+) -> Figure:
+    """Where each nationality lives: 100% bars over groups of districts.
+
+    ``location`` is ``demography.nationality_location`` (rows nationality, columns the groups plus ``other``,
+    rows add to 100); ``labels`` maps a column to its legend text, ``names`` a nationality code to its name.
+    Rows are sorted by the share of the first group.
+    """
+    first = location.columns[0]
+    d = location.sort_values(first)
+    shades = [style.BLUE_RAMP[s] for s in (700, 450, 250)] + [style.BASELINE]
+    fig, ax = plt.subplots(figsize=(9, 0.5 * len(d) + 2.6))
+    y = np.arange(len(d))
+    left = np.zeros(len(d))
+    for column, color in zip(d.columns, shades, strict=False):
+        ax.barh(
+            y,
+            d[column],
+            left=left,
+            height=0.62,
+            color=color,
+            label=labels.get(column, column),
+            zorder=3,
+        )
+        left = left + d[column].to_numpy()
+    ax.set_yticks(y, [names.get(i, i.capitalize()) for i in d.index])
+    ax.set_xlim(0, 100)
+    ax.xaxis.set_major_formatter(mticker.FuncFormatter(lambda v, _: f"{v:g}%"))
+    ax.grid(axis="y", visible=False)
+    ax.legend(
+        loc="upper left",
+        bbox_to_anchor=(0, -0.08),
+        ncol=len(d.columns),
+        fontsize=9,
+        labelcolor=INK_2,
+        frameon=False,
+    )
+    top = d[first].idxmax()
+    bottom = d[first].idxmin()
+    return style.finish(
+        fig,
+        f"{names.get(top, top)}: {d[first].max():.0f}% live in {labels.get(first, first)}; "
+        f"{names.get(bottom, bottom)}: {d[first].min():.0f}%",
+        "Share of each nationality's residents by district, 31 December 2023",
+        "Source: INE (AIMA/SEF residence titles), own calculations. Districts of mainland and islands as in CAOP 2024.",
+        head_in=1.0,
+        foot_in=1.3,
+    )

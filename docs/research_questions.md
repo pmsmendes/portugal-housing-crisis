@@ -35,7 +35,7 @@ Reference questions by ID (e.g. `RQ2.3`) in notebooks, reports and commits.
 | ID | Question | Status | Where |
 |---|---|---|---|
 | RQ3.1 | How has population evolved over 30 years, split into natural change vs net migration? | — | |
-| RQ3.2 | How has the foreign-resident population evolved and where is it located? | — | |
+| RQ3.2 | How has the foreign-resident population evolved and where is it located? | done | `p1_05`, `reports/p1_evidence.md`: foreign residents with a title 390,000 (2014) to 1,044,000 (2023), 3.8% to 9.3% of residents, Brazil 35%; 45% live in 10 municipalities, 41% in the district of Lisboa; highest shares in the Algarve and Odemira; titles not the foreign-born, ends 2023 |
 | RQ3.3 | What is the municipal-level relationship between population growth, immigration and prices/rents? | partly | `p2_02`: within municipalities, +1 pp of population added through foreign residents goes with +4.3% price-to-income (+3.1% with region-year effects, p < 0.001), against +1.0% (+0.45%, p = 0.10) for other population change; rents not analysed, nationalities not split |
 | RQ3.4 | How has the number of households evolved relative to population, and how has household size changed? | partly | `p2_05`: households +2.6% against population +0.4% 2011-2021, persons per household 2.61 to 2.55; 2001 and ageing/single-person split not done |
 | RQ3.5 | How have ageing, internal migration and single-person households affected demand? | — | |
