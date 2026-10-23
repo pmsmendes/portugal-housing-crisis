@@ -101,7 +101,7 @@ Reference questions by ID (e.g. `RQ2.3`) in notebooks, reports and commits.
 ## RQ10 — Forecasting and scenario analysis (Phase 4)
 | ID | Question | Status | Where |
 |---|---|---|---|
-| RQ10.1 | How are prices, rents and affordability likely to evolve over 5–10 years under different scenarios? | — | |
+| RQ10.1 | How are prices, rents and affordability likely to evolve over 5–10 years under different scenarios? | wip | `p4_01`, `reports/p4_forecast.md`: national two-year forecast of real prices and the ownership cost index (ETS, validated); rents and the 5-10 year scenarios still to do in the simulator |
 | RQ10.2 | Which regions are most likely to see further affordability deterioration? | — | |
 | RQ10.3 | How would scenarios for population, immigration, construction, interest rates and income affect future demand? | — | |
 | RQ10.4 | What is the estimated affordability impact of more construction, public housing or vacant-home renovation? | — | |

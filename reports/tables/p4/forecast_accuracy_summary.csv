@@ -1,0 +1,11 @@
+series,method,rmse,mase,bias,coverage80,coverage95
+Ownership cost index,ARIMA,0.159,5.266,0.058,0.768,0.86
+Ownership cost index,ETS,0.145,4.707,0.059,0.766,0.86
+Ownership cost index,drift,0.181,5.91,0.118,0.597,0.772
+Ownership cost index,naive,0.18,5.632,0.123,0.607,0.752
+Ownership cost index,seasonal naive,0.229,7.352,0.163,0.701,0.745
+Real house price index,ARIMA,0.059,3.255,0.035,0.721,0.907
+Real house price index,ETS,0.051,2.872,0.008,0.821,0.96
+Real house price index,drift,0.073,4.22,0.062,0.47,0.699
+Real house price index,naive,0.096,5.861,0.088,0.27,0.482
+Real house price index,seasonal naive,0.124,7.728,0.116,0.462,0.822

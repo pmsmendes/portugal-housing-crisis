@@ -8,6 +8,7 @@ the story lines, text in ink tokens.
 
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
+import numpy as np
 import pandas as pd
 from matplotlib.axes import Axes
 from matplotlib.figure import Figure
@@ -857,4 +858,112 @@ def robustness_ladder(
         foot_in=0.55,
     )
     fig.subplots_adjust(left=0.27, right=0.98, wspace=0.08)
+    return fig
+
+
+FORECAST_COLORS = {
+    "ETS": BLUE,
+    "ARIMA": ORANGE,
+    "drift": MUTED,
+    "seasonal naive": GRID,
+    "naive": INK_2,
+}
+
+
+def forecast_accuracy(panels: list[dict], baseline: str = "naive") -> Figure:
+    """Rolling-origin accuracy by horizon: RMSE relative to the baseline (top) and 80% interval coverage (bottom).
+
+    Each dict has ``title``, ``rel`` (rows h, columns methods: RMSE divided by the baseline's) and ``acc`` (the
+    ``forecasting.accuracy`` table with ``method``, ``h``, ``coverage80``). Lines below 1 beat the baseline; the
+    coverage lines should sit on the dashed 80% line.
+    """
+    fig, axes = plt.subplots(
+        2, len(panels), figsize=(5.2 * len(panels), 6.4), sharex=True, squeeze=False
+    )
+    for col, spec in enumerate(panels):
+        top, bottom = axes[0][col], axes[1][col]
+        rel, acc = spec["rel"], spec["acc"]
+        for method in rel.columns:
+            if method == baseline:
+                continue
+            color = FORECAST_COLORS.get(method, MUTED)
+            _line(
+                top,
+                rel.index,
+                rel[method],
+                color,
+                method,
+                width=2 if method in ("ETS", "ARIMA") else 1.2,
+            )
+        top.axhline(1, color=INK_2, lw=1, zorder=2)
+        top.set_ylim(0, min(max(rel.drop(columns=baseline).max().max() * 1.1, 1.3), 2.5))
+        _panel_title(top, spec["title"])
+        for method in ("ETS", "ARIMA", baseline):
+            d = acc[acc["method"] == method].sort_values("h")
+            _line(
+                bottom,
+                d["h"],
+                d["coverage80"],
+                FORECAST_COLORS[method],
+                method,
+                width=2 if method != baseline else 1.2,
+            )
+        bottom.axhline(0.8, color=INK_2, lw=1, ls=(0, (4, 3)), zorder=2)
+        bottom.set_ylim(0, 1.02)
+        bottom.yaxis.set_major_formatter(mticker.PercentFormatter(1, decimals=0))
+        bottom.set_xticks(sorted(acc["h"].unique()))
+        bottom.set_xlabel("Quarters ahead", color=INK_2)
+    axes[0][0].set_ylabel(f"RMSE relative to {baseline}", color=INK_2)
+    axes[1][0].set_ylabel("80% interval coverage", color=INK_2)
+    axes[0][0].legend(loc="lower left", frameon=False, ncols=2, fontsize=8.5)
+    first = panels[0]["rel"].drop(columns=baseline)
+    best = first.mean().idxmin()
+    cover = float(np.mean([p["acc"].query("method == @best")["coverage80"].mean() for p in panels]))
+    fig = style.finish(
+        fig,
+        f"{best} cuts the error of a naive forecast by {100 * (1 - first[best].mean()):.0f}% on average; its 80% intervals hold {100 * cover:.0f}% of outcomes",
+        "Rolling-origin validation, 1 to 8 quarters ahead (top: RMSE relative to the naive forecast; bottom: share of outcomes inside the 80% interval, dashed = 80%)",
+        "Source: INE, Banco de Portugal; own calculations. Origins from 2017Q4: one boom period, no downturn to test against.",
+        head_in=1.25,
+        foot_in=0.55,
+    )
+    fig.subplots_adjust(left=0.08, right=0.98, hspace=0.12, wspace=0.18)
+    return fig
+
+
+def forecast_fans(panels: list[dict]) -> Figure:
+    """History and forecast with 80% and 95% intervals, one panel per series.
+
+    Each dict has ``title``, ``history`` (a Series indexed by year as a float, e.g. 2024.25), ``forecast`` (a frame
+    with ``mean``, ``lo80``, ``hi80``, ``lo95``, ``hi95``, same index type) and ``unit_fmt`` for the end label.
+    """
+    fig, axes = plt.subplots(1, len(panels), figsize=(5.4 * len(panels), 4.4), squeeze=False)
+    for ax, spec in zip(axes[0], panels, strict=True):
+        h, f = spec["history"], spec["forecast"]
+        ax.fill_between(f.index, f["lo95"], f["hi95"], color=BLUE, alpha=0.12, lw=0, zorder=2)
+        ax.fill_between(f.index, f["lo80"], f["hi80"], color=BLUE, alpha=0.25, lw=0, zorder=2)
+        _line(ax, h.index, h, INK_2)
+        _line(ax, f.index, f["mean"], BLUE)
+        _end_dot(ax, f.index[-1], f["mean"].iloc[-1], BLUE)
+        _label(
+            ax, f.index[-1], f["mean"].iloc[-1], spec["unit_fmt"].format(f["mean"].iloc[-1]), dx=6
+        )
+        _end_dot(ax, h.index[-1], h.iloc[-1], INK_2)
+        ax.axvline(h.index[-1], color=GRID, lw=1, zorder=1)
+        ax.set_xlim(h.index[0] - 0.3, f.index[-1] + 1.6)
+        ax.margins(y=0.05)
+        _panel_title(ax, spec["title"])
+        ax.xaxis.set_major_locator(mticker.MultipleLocator(4))
+        ax.xaxis.set_major_formatter(mticker.FuncFormatter(lambda v, _: f"{v:.0f}"))
+    first = panels[0]
+    f = first["forecast"]
+    fig = style.finish(
+        fig,
+        first.get("headline", "Forecast"),
+        "History (grey) and forecast (blue) with 80% and 95% intervals; the model extends the recent trend and knows nothing of policy or rate shocks",
+        "Source: INE, Banco de Portugal; own calculations. Eight quarters is the validated range; 5 to 10 year paths come from the scenarios.",
+        head_in=1.25,
+        foot_in=0.55,
+    )
+    fig.subplots_adjust(left=0.06, right=0.95, wspace=0.28)
     return fig

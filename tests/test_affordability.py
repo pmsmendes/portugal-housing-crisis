@@ -57,3 +57,12 @@ def test_supply_gap_sign_and_scale():
     assert aff.supply_gap_per_1000(2_000_000, 2_020_000, 1_000_000, 1_040_000) == pytest.approx(
         -20.0
     )
+
+
+def test_ownership_cost_index_is_the_payment_rebased_to_the_base_period():
+    price = pd.Series([100.0, 110.0, 120.0], index=[2022, 2023, 2024])
+    payment = pd.Series([400.0, 400.0, 500.0], index=[2022, 2023, 2024])
+    idx = aff.ownership_cost_index(price, payment, price.index == 2022)
+    assert idx[2022] == pytest.approx(100.0)
+    assert idx[2023] == pytest.approx(110.0)  # price up 10%, payment factor unchanged
+    assert idx[2024] == pytest.approx(150.0)  # price up 20% and payment factor up 25%

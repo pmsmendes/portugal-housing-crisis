@@ -51,6 +51,18 @@ def mortgage_burden_pct(
     return 100 * 12 * mortgage_payment_monthly(loan, annual_rate_pct, term_years) / income_eur
 
 
+def ownership_cost_index(real_price_index, payment_per_100k_eur, base):
+    """Monthly payment on a dwelling bought at the index price, rebased to 100 over the ``base`` periods.
+
+    Real price index x payment per 100,000 EUR borrowed: what a fixed real dwelling costs to finance, at
+    constant real income. Income is left out on purpose (there is no quarterly national income), so it is an
+    income-neutral affordability indicator: divide by an income index to get a burden. ``base`` is a boolean
+    mask (or index labels) of the periods whose mean is 100.
+    """
+    raw = real_price_index * payment_per_100k_eur
+    return 100 * raw / raw[base].mean()
+
+
 def supply_gap_per_1000(dwellings_start, dwellings_end, households_start, households_end):
     """Housing vs household growth: (change in dwellings - change in households) per 1,000 households at start.
 
