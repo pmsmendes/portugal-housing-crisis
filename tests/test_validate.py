@@ -245,6 +245,8 @@ def _small_panel(**override):
     p["vacant_dwellings_pct_2021"] = 1.5
     p["al_survivor_units_n"] = 1.0
     p["al_units_snapshot_n"] = 1.0
+    p["imi_urban_pct"] = np.where(p.year.between(2012, 2025), 0.35, np.nan)
+    p["imi_change_pp"] = np.where(p.year.between(2013, 2025), 0.0, np.nan)
     for col, value in override.items():
         p[col] = value
     return p
@@ -282,6 +284,13 @@ def _panel_tables(panel):
         "ine_population": population,
         "rnal_al": rnal,
         "aima_foreigners": foreigners,
+        "at_imi_rates": pd.DataFrame(
+            {
+                "muni_code": panel["muni_code"],
+                "year": panel["year"],
+                "imi_urban_pct": 0.35,
+            }
+        ).query("2012 <= year"),
     }
 
 
@@ -304,6 +313,19 @@ def test_panel_checks_catch_a_wrong_indicator_real_value_and_early_data():
     assert any("real values differ" in m for m in _panel_failures(wrong_real))
     early = _small_panel()
     early.loc[early.year == 2010, "price_sqm_eur"] = 1500.0
+    assert any("before the first year" in m for m in _panel_failures(early))
+
+
+def test_panel_checks_catch_a_wrong_imi_rate_and_change():
+    assert [m for m in _panel_failures(_small_panel()) if "IMI" in m or "imi_" in m] == []
+    wrong_rate = _small_panel()
+    wrong_rate.loc[wrong_rate.year == 2020, "imi_urban_pct"] = 0.4
+    assert any("differ from at_imi_rates" in m for m in _panel_failures(wrong_rate))
+    wrong_change = _small_panel()
+    wrong_change.loc[wrong_change.year == 2020, "imi_change_pp"] = -0.05
+    assert any("imi_change_pp" in m for m in _panel_failures(wrong_change))
+    early = _small_panel()
+    early.loc[early.year == 2010, "imi_urban_pct"] = 0.35
     assert any("before the first year" in m for m in _panel_failures(early))
 
 

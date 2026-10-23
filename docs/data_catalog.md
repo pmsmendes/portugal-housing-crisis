@@ -59,5 +59,5 @@ Full 308-municipality grid for municipal tables; suppressed cells are NaN, never
 ## Processed panels (`data/processed/`)
 | File | Grain | Built by | Status |
 |---|---|---|---|
-| panel_municipality_year.parquet | muni_code × year (308 × 1995–2025, 56 columns; includes `foreign_residents_n` 2014–2023 and `foreign_residents_pct`) | build_panel.py | built, validated |
+| panel_municipality_year.parquet | muni_code × year (308 × 1995–2025, 60 columns; includes `foreign_residents_n` 2014–2023 and `foreign_residents_pct`, and from the IMI rates `imi_urban_pct`, `imi_change_pp`, `imi_parish_rates`, `imi_deduction_link` for 2012–2025) | build_panel.py | built, validated |
 | national_quarterly.parquet | quarter (2005Q1–2026Q2, 25 columns) | build_panel.py | built, validated |

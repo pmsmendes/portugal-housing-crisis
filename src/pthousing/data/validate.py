@@ -556,6 +556,7 @@ FIRST_YEAR = {
     "income_median_eur": 2015,
     "population_n": 2011,
     "foreign_residents_n": 2014,
+    "imi_urban_pct": 2012,
 }
 
 
@@ -707,6 +708,23 @@ def check_panel_municipality_year(
         None
         if survivors + registered_2026 == snapshot
         else "rental units registered up to 2025 plus those of 2026 do not add up to the snapshot"
+    )
+
+    imi = tables["at_imi_rates"].set_index([MUNI_KEY, "year"])["imi_urban_pct"]
+    in_panel = p.set_index([MUNI_KEY, "year"])["imi_urban_pct"].dropna()
+    msgs.append(
+        None
+        if in_panel.equals(imi.dropna().reindex(in_panel.index))
+        and len(in_panel) == imi.notna().sum()
+        else "panel IMI rates differ from at_imi_rates"
+    )
+    change = p.sort_values([MUNI_KEY, "year"]).groupby(MUNI_KEY)["imi_urban_pct"].diff()
+    recomputed = p.assign(c=change).sort_values([MUNI_KEY, "year"])
+    bad = (recomputed["c"].fillna(0) - recomputed["imi_change_pp"].fillna(0)).abs() > 1e-9
+    msgs.append(
+        None
+        if not bad.any() and p.loc[p["year"] == 2012, "imi_change_pp"].isna().all()
+        else f"imi_change_pp is not the change on the previous year in {int(bad.sum())} rows"
     )
     return msgs
 

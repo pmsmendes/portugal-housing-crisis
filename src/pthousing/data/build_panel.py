@@ -126,6 +126,31 @@ def _short_term_rentals(spine: pd.DataFrame, crosswalk: pd.DataFrame) -> pd.Data
     return out
 
 
+def _imi_rates() -> pd.DataFrame:
+    """Municipal urban IMI rate per tax year (2012-2025) and its change on the previous year.
+
+    ``imi_urban_pct`` is NaN where the municipality has parish-specific rates (no single value), and
+    ``imi_change_pp`` is NaN whenever either year is missing, so a gap never reads as a change.
+    """
+    rates = interim.read("at_imi_rates").sort_values([MUNI_KEY, "year"])
+    rates = rates.assign(imi_change_pp=rates.groupby(MUNI_KEY)["imi_urban_pct"].diff().round(4))
+    # diff() across a missing year would span two years: keep only consecutive years
+    gap = rates.groupby(MUNI_KEY)["year"].diff() != 1
+    rates.loc[gap, "imi_change_pp"] = np.nan
+    return rates.rename(
+        columns={"parish_rates": "imi_parish_rates", "deduction_link": "imi_deduction_link"}
+    )[
+        [
+            MUNI_KEY,
+            "year",
+            "imi_urban_pct",
+            "imi_change_pp",
+            "imi_parish_rates",
+            "imi_deduction_link",
+        ]
+    ]
+
+
 def _municipality_areas() -> pd.DataFrame:
     """Municipality area in hectares (CAOP), read without the geometry."""
     return pd.read_parquet(
@@ -162,10 +187,16 @@ def build_municipality_year() -> pd.DataFrame:
         _population(),
         _foreigners(),
         _short_term_rentals(spine, crosswalk),
+        _imi_rates(),
     ]
     for part in parts:
         panel = panel.merge(part, on=[MUNI_KEY, "year"], how="left", validate="one_to_one")
     panel = panel.merge(_census_static(), on=MUNI_KEY, how="left", validate="many_to_one")
+    imi_flags = [
+        "imi_parish_rates",
+        "imi_deduction_link",
+    ]  # NaN outside 2012-2025: nullable boolean
+    panel[imi_flags] = panel[imi_flags].astype("boolean")
 
     # dwelling size: mean useful area of dwellings of usual residence, interpolated between the censuses
     t = ((panel["year"] - CENSUS_YEARS[0]) / (CENSUS_YEARS[1] - CENSUS_YEARS[0])).clip(0, 1)

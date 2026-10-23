@@ -80,6 +80,14 @@ def _tables():
             "registered": pd.to_datetime(["2005-06-01", "2020-03-01", "2026-02-01", "2020-05-01"]),
         }
     )
+    imi = pd.DataFrame(
+        [
+            {"muni_code": m, "year": y, "imi_urban_pct": r, "imi_rustic_pct": 0.8,
+             "parish_rates": m == "1106" and y == 2014, "deduction_link": y >= 2016}
+            for m, rates in (("0101", (0.4, 0.4, 0.35, 0.35)), ("1106", (0.3, np.nan, 0.3, 0.3)))
+            for y, r in zip(range(2013, 2017), rates, strict=True)
+        ]
+    )  # fmt: skip
     cpi = pd.DataFrame({"year": range(1995, 2026), "cpi_index_b2025": np.linspace(50.0, 100.0, 31)})
     months = pd.date_range("2003-01-01", "2025-12-01", freq="MS")
     bp = pd.DataFrame(
@@ -100,7 +108,7 @@ def _tables():
         "ine_median_price_sqm": price, "ine_median_rent_sqm": rent, "ine_income": income,
         "ine_bank_valuation_annual": valuation, "ine_construction": construction,
         "ine_population": population, "aima_foreigners": foreigners, "ine_census_stock": stock, "ine_census": census,
-        "rnal_al": units, "ine_cpi": cpi, "bp_mortgage": bp,
+        "rnal_al": units, "at_imi_rates": imi, "ine_cpi": cpi, "bp_mortgage": bp,
     }  # fmt: skip
 
 
@@ -299,3 +307,20 @@ def test_write_and_read_roundtrip(tmp_path, monkeypatch):
     assert build_panel.read("toy")["a"].tolist() == [1]
     with pytest.raises(FileNotFoundError, match="build_panel.build"):
         build_panel.read("missing")
+
+
+def test_imi_rate_change_is_the_difference_on_the_previous_year(panel):
+    rate, change = panel.loc["0101", "imi_urban_pct"], panel.loc["0101", "imi_change_pp"]
+    assert rate[2015] == 0.35 and change[2015] == pytest.approx(-0.05)
+    assert change[2014] == 0 and np.isnan(
+        change[2013]
+    )  # first year of the series: no previous year
+    assert np.isnan(rate[2012]) and np.isnan(rate[2017])  # outside the 2013-2016 fixture
+
+
+def test_imi_change_is_missing_around_a_missing_rate(panel):
+    change = panel.loc["1106", "imi_change_pp"]
+    assert np.isnan(change[2014]) and np.isnan(change[2015]) and change[2016] == 0
+    assert panel.loc[("1106", 2014), "imi_parish_rates"]
+    assert panel.loc[("0101", 2016), "imi_deduction_link"]
+    assert not panel.loc[("0101", 2015), "imi_deduction_link"]
