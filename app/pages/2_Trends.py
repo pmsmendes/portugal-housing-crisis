@@ -25,6 +25,11 @@ def national() -> pd.DataFrame:
     return D.load_national()
 
 
+@st.cache_data
+def longrun() -> pd.DataFrame:
+    return D.load_long_run()
+
+
 def _alpha(hex_color: str, alpha: float = 0.14) -> str:
     r, g, b = (int(hex_color[i : i + 2], 16) for i in (1, 3, 5))
     return f"rgba({r},{g},{b},{alpha})"
@@ -86,6 +91,58 @@ with tab_nat:
     st.plotly_chart(
         _layout(fig, "House price index, all dwellings (2025 = 100)", "index"),
         width="stretch",
+    )
+
+    long = longrun()
+    lr = long.set_index("year")["hpi_real_b2015"]
+    peak = int(lr.loc[:2012].idxmax())
+    low = int(lr.loc[peak:].idxmin())
+    pti_s = long.dropna(subset=["price_to_income_b2015"])["price_to_income_b2015"]
+    top = "the highest" if pti_s.iloc[-1] >= pti_s.max() else "not the highest"
+    st.markdown(
+        f"**Thirty years.** After inflation, prices peaked in **{peak}**, fell "
+        f"**{100 * (1 - lr[low] / lr[peak]):.0f}%** to {low} and are now **{lr.iloc[-1] / lr[low]:.1f}x** that low; "
+        f"the OECD price-to-income index is {top} in its series (from 1995)."
+    )
+    fig = go.Figure()
+    fig.add_trace(
+        go.Scatter(
+            x=long["year"],
+            y=long["hpi_real_b2015"],
+            name="Real house price index",
+            line=dict(color=style.BLUE, width=2.5),
+        )
+    )
+    fig.add_trace(
+        go.Scatter(
+            x=long["year"],
+            y=long["rent_real_b2015"],
+            name="Real rent index",
+            line=dict(color=style.ORANGE, width=2.5),
+        )
+    )
+    pti = long.dropna(subset=["price_to_income_b2015"])
+    fig.add_trace(
+        go.Scatter(
+            x=pti["year"],
+            y=pti["price_to_income_b2015"],
+            name="Price to income per head",
+            line=dict(color=style.INK_2, width=2.5, dash="dot"),
+        )
+    )
+    fig.add_vline(
+        x=2009, line_dash="dot", line_color=style.MUTED, annotation_text="series changes source"
+    )
+    fig.update_yaxes(rangemode="tozero")
+    st.plotly_chart(
+        _layout(
+            fig, "National prices, rents and price-to-income, 1988 to 2025 (2015 = 100)", "index"
+        ),
+        width="stretch",
+    )
+    st.caption(
+        "Source: BIS, INE (house prices, CPI), OECD (rents, price-to-income); own calculations. Before 2009 the price "
+        "index is a BIS compilation whose join with INE's cannot be tested; price-to-income uses income per head."
     )
 
     left, right = st.columns(2)

@@ -34,7 +34,7 @@ These are descriptive results with stated limits (short municipal history, one n
 Interactive dashboards (Streamlit, `uv run streamlit run app/Home.py`): a **geographic** explorer (municipality map of any indicator, level or change between two years, with rankings), **trends** (national price index and rates, a municipality against all others, group medians), **explanatory** (what accounts for where affordability worsened, and the policy test) and the forecast & policy **simulator**. They read only the committed processed data and report tables.
 
 ## Data
-Public Portuguese and European sources (INE, Banco de Portugal, Eurostat, Autoridade Tributária, Turismo de Portugal RNAL, DGT CAOP, AIMA). Full registry: [docs/data_catalog.md](docs/data_catalog.md).
+Public Portuguese and European sources (INE, Banco de Portugal, Eurostat, BIS, OECD, Autoridade Tributária, Turismo de Portugal RNAL, DGT CAOP, AIMA). Full registry: [docs/data_catalog.md](docs/data_catalog.md).
 
 ## Reproduce
 ```bash

@@ -11,6 +11,7 @@
 
 from collections.abc import Callable
 
+import numpy as np
 import pandas as pd
 import pandera.pandas as pa
 from pandera.pandas import Check, Column, DataFrameSchema
@@ -205,6 +206,31 @@ def schemas() -> dict[str, DataFrameSchema]:
                 "hpi_index_b2015": _num(10, 600, nullable=False),
             },
             unique=["geo", "period_start"],
+            strict=True,
+        ),
+        "bis_spp": DataFrameSchema(
+            {
+                "period_start": Column("datetime64[ns]", coerce=True),
+                "year": _year(1988),
+                "quarter": Column(int, Check.in_range(1, 4), coerce=True),
+                "hpi_nominal_b2010": _num(10, 600, nullable=False),
+                "hpi_real_b2010": _num(10, 600, nullable=False),
+            },
+            unique=["period_start"],
+            strict=True,
+        ),
+        "oecd_house_prices": DataFrameSchema(
+            {
+                "year": _year(1959, 2030),
+                "hpi_nominal_b2015": _num(10, 600),
+                "hpi_real_b2015": _num(10, 600),
+                "rent_index_b2015": _num(0.5, 400, nullable=False),
+                "price_to_rent_b2015": _num(10, 600),
+                "price_to_income_b2015": _num(10, 600),
+                "price_to_rent_std": _num(10, 400),
+                "price_to_income_std": _num(10, 400),
+            },
+            unique=["year"],
             strict=True,
         ),
         "eurostat_hicp": DataFrameSchema(
@@ -450,6 +476,39 @@ def check_eurostat_hpi(df: pd.DataFrame) -> list[str | None]:
     ]
 
 
+def check_bis_spp(df: pd.DataFrame) -> list[str | None]:
+    base = df[df["year"] == 2010]
+    return [
+        _gaps_quarterly(df["period_start"]),
+        None
+        if abs(base["hpi_nominal_b2010"].mean() - 100) < 0.05
+        else "nominal index does not average 100 in 2010",
+        None
+        if df["year"].min() == 1988 and len(df) > 150
+        else "BIS series is shorter than expected",
+    ]
+
+
+def check_oecd_house_prices(df: pd.DataFrame) -> list[str | None]:
+    row = df.set_index("year").loc[2015]
+    base_ok = all(
+        abs(row[c] - 100) < 0.01
+        for c in (
+            "hpi_nominal_b2015",
+            "hpi_real_b2015",
+            "price_to_income_b2015",
+            "rent_index_b2015",
+        )
+    )
+    return [
+        None if base_ok else "an index does not equal 100 in its base year 2015",
+        None
+        if df.dropna(subset=["price_to_income_b2015"])["year"].min() == 1995
+        else "price-to-income should start in 1995",
+        None if df["year"].is_monotonic_increasing and df["year"].is_unique else "years not unique",
+    ]
+
+
 def check_rnal(df: pd.DataFrame) -> list[str | None]:
     future = (df["registered"] > df["snapshot_date"]).sum()
     islands = df[MUNI_KEY].str[:2].astype(int) >= 31
@@ -494,6 +553,8 @@ CHECKS: dict[str, Callable[[pd.DataFrame], list[str | None]]] = {
     "ine_hpi": check_hpi,
     "bp_mortgage": check_bp,
     "eurostat_hpi": check_eurostat_hpi,
+    "bis_spp": check_bis_spp,
+    "oecd_house_prices": check_oecd_house_prices,
     "rnal_al": check_rnal,
     "at_imi_rates": check_at_imi_rates,
 }
@@ -530,6 +591,43 @@ def cross_checks(tables: dict[str, pd.DataFrame]) -> list[tuple[str, str | None]
             None
             if len(ratio) > 20 and ratio.between(0.98, 1.02).all()
             else f"ratio range {ratio.min():.3f}-{ratio.max():.3f}",
+        )
+    )
+
+    bis = tables["bis_spp"].set_index("period_start")
+    ratio = (bis["hpi_nominal_b2010"] / ine_hpi).dropna()
+    out.append(
+        (
+            "bis_hpi_equals_ine_hpi_from_2009",
+            None
+            if len(ratio) > 60 and ratio.max() / ratio.min() - 1 < 1e-4
+            else f"BIS / INE ratio varies by {100 * (ratio.max() / ratio.min() - 1):.3f}% over {len(ratio)} quarters",
+        )
+    )
+    annual = (
+        bis.groupby("year")["hpi_real_b2010"].mean()
+        / bis.groupby("year")["hpi_nominal_b2010"].mean()
+    )
+    implied = (annual / annual[2015]) * (cpi15 / 100)
+    out.append(
+        (
+            "bis_real_uses_the_ine_cpi",
+            None
+            if implied.dropna().between(0.995, 1.005).all() and len(implied.dropna()) >= 30
+            else f"implied deflator vs CPI range {implied.min():.3f}-{implied.max():.3f}",
+        )
+    )
+    n = bis.groupby("year")["hpi_nominal_b2010"].agg(["mean", "count"])
+    growth_bis = np.log(n[n["count"] == 4]["mean"]).diff()
+    growth_oecd = np.log(tables["oecd_house_prices"].set_index("year")["hpi_nominal_b2015"]).diff()
+    gap = (growth_bis - growth_oecd).abs().dropna()
+    seam = gap.get(2009, 0.0)  # the join of two compilations: BIS and OECD treat it differently
+    out.append(
+        (
+            "bis_vs_oecd_annual_growth",
+            None
+            if gap.drop(2009, errors="ignore").max() < 0.003 and seam < 0.02
+            else f"max gap {gap.drop(2009, errors='ignore').max():.4f}, 2009: {seam:.4f}",
         )
     )
 
@@ -581,6 +679,19 @@ def panel_schemas() -> dict[str, DataFrameSchema]:
                 "mortgage_rate_new_lt1y_pct": _num(0, 15),  # BPstat starts in 2003
             },
             unique=[MUNI_KEY, "year"],
+            strict=False,
+        ),
+        "national_annual_long": DataFrameSchema(
+            {
+                "year": Column(int, Check.in_range(1988, 2030), coerce=True),
+                "hpi_nominal_b2015": _num(10, 600, nullable=False),
+                "hpi_real_b2015": _num(10, 600, nullable=False),
+                "cpi_index_b2015": _num(10, 300, nullable=False),
+                "rent_index_b2015": _num(0.5, 400, nullable=False),
+                "price_to_rent_b2015": _num(10, 600, nullable=False),
+                "price_to_income_b2015": _num(10, 600),
+            },
+            unique=["year"],
             strict=False,
         ),
         "national_quarterly": DataFrameSchema(
@@ -771,9 +882,36 @@ def check_national_quarterly(q: pd.DataFrame, tables: dict[str, pd.DataFrame]) -
     return msgs
 
 
+def check_national_annual_long(
+    a: pd.DataFrame, tables: dict[str, pd.DataFrame]
+) -> list[str | None]:
+    base = a.set_index("year").loc[2015]
+    deflator = harmonize.annual_deflator(tables["ine_cpi"]).reindex(a["year"]).to_numpy()
+    real = a["hpi_nominal_b2015"].to_numpy() * deflator
+    real = real / real[a["year"].to_list().index(2015)] * 100
+    bis = tables["bis_spp"]
+    quarters = bis.groupby("year")["hpi_nominal_b2010"].count()
+    complete = set(quarters[quarters == 4].index)
+    return [
+        None if a["year"].diff().dropna().eq(1).all() else "years are not consecutive",
+        None
+        if abs(base["hpi_nominal_b2015"] - 100) < 1e-9 and abs(base["hpi_real_b2015"] - 100) < 1e-9
+        else "price indices do not equal 100 in 2015",
+        None
+        if np.allclose(a["hpi_real_b2015"], real, rtol=1e-9)
+        else "real index differs from nominal x the project deflator",
+        None if set(a["year"]) <= complete else "an incomplete BIS year is in the table",
+        None
+        if a["price_to_income_b2015"].notna().sum()
+        == a["year"].between(1995, a["year"].max()).sum()
+        else "price-to-income has gaps after 1995",
+    ]
+
+
 PANEL_CHECKS = {
     "panel_municipality_year": check_panel_municipality_year,
     "national_quarterly": check_national_quarterly,
+    "national_annual_long": check_national_annual_long,
 }
 
 

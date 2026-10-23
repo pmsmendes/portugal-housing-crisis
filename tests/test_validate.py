@@ -166,17 +166,54 @@ def test_cross_source_check_flags_diverging_hpi():
     pop = pd.DataFrame(
         [{"muni_code": c, "year": 2023, "sex": "total", "age_group": "total"} for c in CODES]
     )
+    bis_quarters = pd.date_range("1988-01-01", "2026-01-01", freq="QS")
+    nominal = pd.Series(np.linspace(20, 285, len(bis_quarters)), index=bis_quarters)
+    nominal.loc["2009-01-01":] = index.values[: len(nominal.loc["2009-01-01":])] * 2.5
+    cpi_by_year = cpi.set_index("year")["cpi_index_b2025"]
+    deflator = (cpi_by_year.loc[2015] / cpi_by_year).reindex(bis_quarters.year).to_numpy()
+    bis = pd.DataFrame(
+        {
+            "period_start": bis_quarters,
+            "year": bis_quarters.year,
+            "hpi_nominal_b2010": nominal.values,
+            "hpi_real_b2010": nominal.values * deflator,
+        }
+    )
+    annual = bis.groupby("year")["hpi_nominal_b2010"].mean()
+    oecd = pd.DataFrame({"year": annual.index, "hpi_nominal_b2015": annual.values})
     tables = {
         "ine_hpi": ine,
         "eurostat_hpi": es,
         "ine_cpi": cpi,
         "eurostat_hicp": hicp,
         "ine_population": pop,
+        "bis_spp": bis,
+        "oecd_house_prices": oecd,
     }
-    assert all(msg is None for _, msg in validate.cross_checks(tables))
+    assert all(msg is None for _, msg in validate.cross_checks(tables)), validate.cross_checks(
+        tables
+    )
     tables["eurostat_hpi"] = es.assign(hpi_index_b2015=es["hpi_index_b2015"] * 1.05)
     results = dict(validate.cross_checks(tables))
     assert results["eurostat_hpi_vs_ine_hpi"] is not None
+
+    tables["eurostat_hpi"] = es
+    drifting = bis.assign(
+        hpi_nominal_b2010=bis["hpi_nominal_b2010"]
+        * np.where(bis["period_start"] >= "2015-01-01", 1.02, 1.0)
+    )
+    wrong_deflator = bis.assign(
+        hpi_real_b2010=bis["hpi_real_b2010"] * np.where(bis["year"] >= 2005, 1.03, 1.0)
+    )  # a constant factor would cancel when rebased
+    shifted = oecd.assign(
+        hpi_nominal_b2015=oecd["hpi_nominal_b2015"] * np.where(oecd["year"] >= 2000, 1.03, 1.0)
+    )
+    for key, broken, check in (
+        ("bis_spp", drifting, "bis_hpi_equals_ine_hpi_from_2009"),
+        ("bis_spp", wrong_deflator, "bis_real_uses_the_ine_cpi"),
+        ("oecd_house_prices", shifted, "bis_vs_oecd_annual_growth"),
+    ):
+        assert dict(validate.cross_checks({**tables, key: broken}))[check] is not None, check
 
 
 def test_validate_all_reports_failures_and_raises_only_in_strict_mode(monkeypatch):
@@ -381,3 +418,59 @@ def test_imi_rates_schema_rejects_a_rate_outside_the_legal_range_and_duplicates(
     ):
         with pytest.raises(validate.pa.errors.SchemaErrors):
             schema.validate(bad, lazy=True)
+
+
+def _bis(**override):
+    quarters = pd.date_range("1988-01-01", "2026-01-01", freq="QS")
+    df = pd.DataFrame(
+        {
+            "period_start": quarters,
+            "year": quarters.year,
+            "quarter": quarters.quarter,
+            "hpi_nominal_b2010": np.where(quarters.year == 2010, 100.0, 90.0),
+            "hpi_real_b2010": 100.0,
+        }
+    )
+    for col, value in override.items():
+        df[col] = value
+    return df
+
+
+def test_bis_table_checks_catch_a_missing_quarter_and_a_wrong_base():
+    assert _failures("bis_spp", _bis()) == []
+    gap = _bis().drop(index=[50])
+    assert any(r["check"].startswith("consistency") for r in _failures("bis_spp", gap))
+    wrong_base = _bis(hpi_nominal_b2010=95.0)
+    assert any(r["check"].startswith("consistency") for r in _failures("bis_spp", wrong_base))
+
+
+def _oecd():
+    years = list(range(1959, 2026))
+    df = pd.DataFrame({"year": years})
+    for col in (
+        "hpi_nominal_b2015",
+        "hpi_real_b2015",
+        "price_to_rent_b2015",
+        "price_to_income_b2015",
+    ):
+        df[col] = np.where(
+            df["year"] < 1988, np.nan if col != "price_to_rent_b2015" else 100.0, 100.0
+        )
+    df["price_to_income_b2015"] = np.where(df["year"] >= 1995, 100.0, np.nan)
+    df["hpi_nominal_b2015"] = np.where(df["year"] >= 1988, 100.0, np.nan)
+    df["hpi_real_b2015"] = df["hpi_nominal_b2015"]
+    df["price_to_rent_b2015"] = df["hpi_nominal_b2015"]
+    df["rent_index_b2015"] = 100.0
+    df["price_to_rent_std"] = np.where(df["year"] >= 1988, 100.0, np.nan)
+    df["price_to_income_std"] = df["price_to_income_b2015"]
+    return df
+
+
+def test_oecd_table_checks_catch_a_wrong_base_and_a_late_start():
+    assert _failures("oecd_house_prices", _oecd()) == []
+    wrong = _oecd().assign(
+        hpi_nominal_b2015=lambda d: np.where(d["year"] == 2015, 90.0, d["hpi_nominal_b2015"])
+    )
+    assert any(r["check"].startswith("consistency") for r in _failures("oecd_house_prices", wrong))
+    late = _oecd().assign(price_to_income_b2015=lambda d: np.where(d["year"] < 2000, np.nan, 100.0))
+    assert any(r["check"].startswith("consistency") for r in _failures("oecd_house_prices", late))

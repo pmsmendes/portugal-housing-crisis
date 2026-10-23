@@ -2,6 +2,13 @@
 
 Analytic and engineering choices, newest first. One short entry each: what, why, alternatives rejected.
 
+## 2026-10-23 — Thirty-year national series from the BIS and the OECD, not spliced
+- **What:** sources `bis` (WS_SPP, Portugal quarterly, 1988 on) and `oecd` (DSD_AN_HOUSE_PRICES, annual); interim tables `bis_spp` and `oecd_house_prices`; processed `national_annual_long` (1988 to 2025) with the BIS annual mean rebased to 2015, a real index from the project CPI, and the OECD rent, price-to-rent and price-to-income. Notebook `p1_03`.
+- **Why no splice:** from 2009 the BIS index is INE's exactly (constant ratio over 69 quarters), so the BIS series already is the long INE series; before 2009 nothing overlaps, so a join cannot be tested. Re-chaining would only hide that, so the seam is marked on the chart and written in `data_quality.md`.
+- **Why the project deflator:** the BIS real series equals the INE CPI deflation (ratio 1.000), the OECD's differs by up to 4%; one deflator everywhere (`harmonize.py`).
+- **Scope:** national only. There is no municipal price history before 2016 and none was found; RQ1.1 stays partly answered. The INE census 1991 and 2001 and older population (supply-demand balance back to 1991) were offered and not chosen.
+- **Rejected:** the Dallas Fed's extension to 1975 (spliced with building permits, not a price index), INE bank valuations (2011 on), reconstructing municipal prices from census values.
+
 ## 2026-10-23 — Regional outlook (RQ10.2): trends on rolling origins, stated relative to the median municipality
 - **What:** `analysis/regional_forecast.py`, `p4_03`. Seven methods on log price-to-income (naive, national drift, national trend, own trend, region trend, coast x density class trend, empirical-Bayes shrunk trend), scored on rolling origins 2019 to 2023 at one and two years, same municipalities for all; selection rule fixed first (lowest municipal RMSE, ties within 1% to the simpler) picks the class trend. Intervals: empirical quantiles of errors, coverage checked leaving each origin out (79%).
 - **Why not ETS/ARIMA per municipality:** nine points, noisy level (lag-1 growth autocorrelation -0.3 to -0.6): nothing to validate on. A municipality's own trend loses to no change; a trend shared across a group wins.

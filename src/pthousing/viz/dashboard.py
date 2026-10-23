@@ -82,6 +82,11 @@ def load_national() -> pd.DataFrame:
     return build_panel.read("national_quarterly")
 
 
+def load_long_run() -> pd.DataFrame:
+    """National annual prices, rents and price-to-income, 1988 onwards (BIS, OECD)."""
+    return build_panel.read("national_annual_long")
+
+
 def load_geometry() -> dict:
     """Municipality outlines as a GeoJSON dict (``properties.muni_code``)."""
     with open(maps.WEB_GEOMETRY, encoding="utf-8") as f:

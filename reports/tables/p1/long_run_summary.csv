@@ -1,0 +1,13 @@
+indicator,year,value
+Real house prices: first peak,2001,139.39
+Real house prices: low,2013,93.27
+"Real house prices: fall, peak to low (%)",2001-2013,-33.09
+Real house prices: passed the first peak again,2020,149.33
+Real house prices: last year,2025,213.87
+Real house prices: last year over low (x),2025,2.29
+Real rents: 1988,1988,73.17
+Real rents: last year,2025,110.54
+Price-to-income: 1995,1995,142.07
+Price-to-income: low,2013,97.33
+Price-to-income: last year,2025,166.73
+"Price-to-income vs long-term average, last year (100 = average)",2025,132.58

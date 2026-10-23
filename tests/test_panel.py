@@ -169,3 +169,17 @@ def test_add_spatial_lags_uses_neighbours_in_the_same_or_an_earlier_year():
     earlier = pn.add_spatial_lags(frame, w, ["v"], shift=1)
     assert np.isnan(earlier.loc[("0102", 2020), "w_v_l1"])
     assert earlier.loc[("0102", 2021), "w_v_l1"] == pytest.approx((1.0 + 100.0) / 2)
+
+
+def test_national_annual_long_is_rebased_real_and_marks_incomplete_years():
+    from pthousing.data import build_panel, harmonize, interim
+
+    a = build_panel.read("national_annual_long").set_index("year")
+    assert a.index.min() == 1988 and a.index.is_unique
+    assert a.loc[2015, ["hpi_nominal_b2015", "hpi_real_b2015", "rent_real_b2015"]].eq(100).all()
+    deflator = harmonize.annual_deflator(interim.read("ine_cpi"))
+    real = a["hpi_nominal_b2015"] * deflator.reindex(a.index)
+    assert (a["hpi_real_b2015"] / (real / real[2015] * 100) - 1).abs().max() < 1e-9
+    bis = interim.read("bis_spp")
+    assert a.index.max() == bis[bis["year"].map(bis.groupby("year").size()) == 4]["year"].max()
+    assert a["price_to_income_b2015"].first_valid_index() == 1995

@@ -13,7 +13,17 @@ import pandas as pd
 
 from pthousing.config import INTERIM, MUNI_KEY
 from pthousing.data import harmonize
-from pthousing.data.sources import aima, at, bportugal, caop, eurostat, ine, rnal
+from pthousing.data.sources import aima, at, bis, bportugal, caop, eurostat, ine, oecd, rnal
+
+OECD_COLUMNS = {
+    "HPI": "hpi_nominal_b2015",
+    "RHP": "hpi_real_b2015",
+    "RPI": "rent_index_b2015",
+    "HPI_RPI": "price_to_rent_b2015",
+    "HPI_YDH": "price_to_income_b2015",
+    "HPI_RPI_AVG": "price_to_rent_std",
+    "HPI_YDH_AVG": "price_to_income_std",
+}
 
 SIZE = {"T": "total", "1": "br_0_1", "2": "br_2", "3": "br_3", "4": "br_4plus"}
 PRICE_CATEGORY = {"H1": "total", "H11": "new", "H12": "existing"}
@@ -291,6 +301,25 @@ def build_eurostat_hicp() -> pd.DataFrame:
     return df[["geo", "year", "hicp_index_b2015"]].sort_values(["geo", "year"], ignore_index=True)
 
 
+def build_bis_spp() -> pd.DataFrame:
+    """BIS residential property price index for Portugal (2010 = 100), nominal and real, quarterly from 1988."""
+    df = bis.read("bis_spp")
+    df = df[df["unit"] == "628"]
+    wide = df.pivot(index=["period_start", "year", "quarter"], columns="basis", values="value")
+    wide = wide.rename(columns={"N": "hpi_nominal_b2010", "R": "hpi_real_b2010"}).reset_index()
+    wide.columns.name = None
+    return wide.sort_values("period_start", ignore_index=True)
+
+
+def build_oecd_house_prices() -> pd.DataFrame:
+    """OECD house price, rent, price-to-rent and price-to-income indices for Portugal (2015 = 100), annual."""
+    df = oecd.read("oecd_house_prices")
+    wide = df.pivot(index="year", columns="measure", values="value").rename(columns=OECD_COLUMNS)
+    wide = wide[list(OECD_COLUMNS.values())].reset_index()
+    wide.columns.name = None
+    return wide.sort_values("year", ignore_index=True)
+
+
 def build_rnal_al() -> pd.DataFrame:
     """Registered short-term rental units of the latest snapshot (mainland only)."""
     return rnal.read().sort_values("rnal_n", ignore_index=True)
@@ -332,7 +361,7 @@ INE_FILTERED = {
     "0006457": {"Dim3": "T", "Dim4": "T", "Dim5": "T"},  # private households 2011
     "0012856": {"Dim3": "T", "Dim4": "T", "Dim5": "T"},  # private households 2021
 }
-SOURCES = ("ine", "aima", "at", "bportugal", "eurostat", "rnal", "caop")
+SOURCES = ("ine", "aima", "at", "bportugal", "eurostat", "bis", "oecd", "rnal", "caop")
 
 
 def download(sources: list[str] | None = None, refresh: bool = False) -> None:
@@ -354,6 +383,10 @@ def download(sources: list[str] | None = None, refresh: bool = False) -> None:
     if "eurostat" in chosen:
         for dataset_id in ("eurostat_hpi", "eurostat_hicp"):
             eurostat.fetch(dataset_id, refresh=refresh)
+    if "bis" in chosen:
+        bis.fetch("bis_spp", refresh=refresh)
+    if "oecd" in chosen:
+        oecd.fetch("oecd_house_prices", refresh=refresh)
     if "rnal" in chosen:
         rnal.fetch(refresh=refresh)  # a new dated snapshot each day
     if "caop" in chosen:
@@ -377,6 +410,8 @@ BUILDERS: dict[str, Callable[[], pd.DataFrame]] = {
     "bp_mortgage": build_bp_mortgage,
     "eurostat_hpi": build_eurostat_hpi,
     "eurostat_hicp": build_eurostat_hicp,
+    "bis_spp": build_bis_spp,
+    "oecd_house_prices": build_oecd_house_prices,
     "rnal_al": build_rnal_al,
     "at_imi_rates": build_at_imi_rates,
     "caop_municipalities": build_caop_municipalities,

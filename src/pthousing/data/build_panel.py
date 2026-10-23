@@ -2,6 +2,7 @@
 
 * ``panel_municipality_year``: 308 municipalities x 1995-2025, one row per municipality-year.
 * ``national_quarterly``: national time series by quarter, 2005 onwards.
+* ``national_annual_long``: national house prices, rents and price-to-income by year, 1988 onwards (BIS, OECD).
 
 Nominal columns end in ``_eur``; real values (constant ``BASE_YEAR`` euros, CPI deflator) in ``_eur_real``.
 Affordability indicators are computed with ``features/affordability.py``.
@@ -310,11 +311,50 @@ def build_national_quarterly() -> pd.DataFrame:
     return panel
 
 
+LONG_START = 1988
+
+
+def build_national_annual_long() -> pd.DataFrame:
+    """National house prices over three decades, annual, 1988 onwards (2015 = 100).
+
+    The nominal price index is the annual mean of the BIS quarterly index (identical to INE's from 2009; before
+    that the BIS compilation, with no overlap to test the join), kept only for years with four quarters. The real
+    index deflates it with the project's CPI (the one deflator of ``harmonize.py``). Rents, price-to-rent and
+    price-to-income come from the OECD (nominal price over nominal disposable income per head); the ratios'
+    ``_std`` columns are percentage points above their long-term average (100 = average).
+    """
+    bis = interim.read("bis_spp")
+    n = bis.groupby("year")["hpi_nominal_b2010"].agg(["mean", "count"])
+    nominal = n[n["count"] == 4]["mean"]
+    nominal = nominal / nominal[2015] * 100
+    oecd = interim.read("oecd_house_prices").set_index("year")
+    cpi = interim.read("ine_cpi")
+    deflator = harmonize.annual_deflator(cpi)
+    out = pd.DataFrame(index=pd.RangeIndex(LONG_START, int(nominal.index.max()) + 1, name="year"))
+    out["hpi_nominal_b2015"] = nominal
+    real = nominal * deflator.reindex(nominal.index)
+    out["hpi_real_b2015"] = real / real[2015] * 100
+    out["cpi_index_b2015"] = cpi.set_index("year")["cpi_index_b2025"].reindex(out.index)
+    out["cpi_index_b2015"] = out["cpi_index_b2015"] / out.loc[2015, "cpi_index_b2015"] * 100
+    for col in (
+        "rent_index_b2015",
+        "price_to_rent_b2015",
+        "price_to_income_b2015",
+        "price_to_rent_std",
+        "price_to_income_std",
+    ):
+        out[col] = oecd[col].reindex(out.index)
+    out["rent_real_b2015"] = out["rent_index_b2015"] / out["cpi_index_b2015"] * 100
+    out["rent_real_b2015"] = out["rent_real_b2015"] / out.loc[2015, "rent_real_b2015"] * 100
+    return out.reset_index()
+
+
 # ---- writing -------------------------------------------------------------------------------------
 
 BUILDERS = {
     "panel_municipality_year": build_municipality_year,
     "national_quarterly": build_national_quarterly,
+    "national_annual_long": build_national_annual_long,
 }
 
 

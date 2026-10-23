@@ -24,6 +24,8 @@ Registry of every dataset. **Read this before opening any data file or source mo
 | at_imi_imt | at | IMI and IMT revenue | Municipality | Annual | no official source found | | candidate (unresolved) |
 | rnal_al | rnal | Registered short-term rentals (Alojamento Local), with registration date and coordinates | Point / parish / municipality | Snapshot (current registrations) | 111,937 registered units on 2026-10-21 (mainland only), `DataRegisto` | rnal_al.parquet | ingested (mainland only, survivorship caveat) |
 | caop_boundaries | caop | Municipality boundaries (CAOP 2024), 308 municipalities | Municipality | Annual vintage | 2024 | caop_municipalities.parquet | ingested |
+| bis_spp | bis | BIS residential property price index, nominal and real (CPI-deflated), index 2010=100 and y/y % | National | Quarterly | 1988-Q1–2026-Q1 (WS_SPP, key Q.PT..); equals INE's index exactly from 2009 | bis_spp.parquet | ingested (pre-2009 source not stated; join untestable) |
+| oecd_house_prices | oecd | OECD analytical house price indicators: nominal and real house price index, rent prices, price-to-rent and price-to-income (2015=100) and the ratios against their long-term average | National | Annual | HPI and price-to-rent 1988–2025; price-to-income 1995–2025; rent prices 1959–2025 (DSD_AN_HOUSE_PRICES) | oecd_house_prices.parquet | ingested (own real series not used: different deflator) |
 | aima_foreigners | aima | Foreign residents with a legal residence title on 31 December (ex-SEF, via INE), by nationality | Municipality | Annual | 2014–2023 (0010247, NUTS 2013) | aima_foreigners.parquet | ingested (ends 2023) |
 
 ## Interim tables (`data/interim/`, built by `interim.py`, checked by `validate.py`)
@@ -45,6 +47,8 @@ Full 308-municipality grid for municipal tables; suppressed cells are NaN, never
 | bp_mortgage | date (month end) | mortgage_aprc_new_pct, mortgage_rate_new_lt1y_pct, mortgage_rate_stock_gt5y_pct, mortgage_new_lt1y_volume_eur_m, mortgage_rate_new_fixed_p50_pct |
 | eurostat_hpi | geo × period_start | hpi_index_b2015 (PT, ES, IT, FR, DE, IE, EU27) |
 | eurostat_hicp | geo × year | hicp_index_b2015 (PT, EU27) |
+| bis_spp | period_start (quarter) | hpi_nominal_b2010, hpi_real_b2010 (2010 = 100) |
+| oecd_house_prices | year (1959–2025) | hpi_nominal_b2015, hpi_real_b2015, rent_index_b2015, price_to_rent_b2015, price_to_income_b2015, price_to_rent_std, price_to_income_std (the last two: 100 = long-term average) |
 | rnal_al | rnal_n (one row per registered unit) | registered, opened, modality, guests_n, muni_code, parish_code, geo_reliability, lon, lat (mainland snapshot) |
 | ine_census_stock | muni_code × census_year (2011, 2021) | dwellings_n, dwellings_usual_n, dwellings_secondary_n, dwellings_vacant_n, households_n, dwelling_area_sqm |
 | at_imi_rates | muni_code × year (2012–2025, tax year) | imi_urban_pct (NaN where no single rate, 83 of 4,312), imi_rustic_pct (always 0.8), parish_rates, deduction_link |
@@ -61,4 +65,5 @@ Full 308-municipality grid for municipal tables; suppressed cells are NaN, never
 |---|---|---|---|
 | panel_municipality_year.parquet | muni_code × year (308 × 1995–2025, 60 columns; includes `foreign_residents_n` 2014–2023 and `foreign_residents_pct`, and from the IMI rates `imi_urban_pct`, `imi_change_pp`, `imi_parish_rates`, `imi_deduction_link` for 2012–2025) | build_panel.py | built, validated |
 | national_quarterly.parquet | quarter (2005Q1–2026Q2, 25 columns) | build_panel.py | built, validated |
+| national_annual_long.parquet | year (1988–2025, 10 columns): BIS annual price index rebased to 2015, real index (project CPI), CPI, OECD rent, price-to-rent and price-to-income | build_panel.py | built, validated |
 | municipalities.geojson | 308 CAOP 2024 outlines (`muni_code`, `muni_name`), simplified to 400 m, 4-decimal coordinates, ~380 kB; only for the dashboard map | maps.export_web_geometry() (run by scripts/run_pipeline.py) | built |

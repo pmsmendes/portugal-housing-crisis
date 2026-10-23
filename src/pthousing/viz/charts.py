@@ -1244,3 +1244,54 @@ def outlook_ranking(
     )
     fig.subplots_adjust(left=0.27, right=0.9)
     return fig
+
+
+# ---- thirty years of national prices --------------------------------------------------------------
+
+
+def long_run_prices(long: pd.DataFrame, seam_year: int = 2009) -> Figure:
+    """National house prices, rents and price-to-income since 1988 (``build_panel.national_annual_long``).
+
+    Left: real house price index and real rent index (2015 = 100). Right: the OECD price-to-income index
+    (2015 = 100) from 1995. The dotted line marks the year the price series changes source (the INE index starts):
+    the join cannot be tested because the sources do not overlap.
+    """
+    d = long.set_index("year")
+    real, rent = d["hpi_real_b2015"], d["rent_real_b2015"]
+    pti = d["price_to_income_b2015"].dropna()
+    peak_year = real.loc[:2012].idxmax()
+    low_year = real.loc[peak_year:].idxmin()
+    back = real[real.index > low_year]
+    beat = int(back[back > real.loc[peak_year]].index.min())
+    fig, (left, right) = plt.subplots(1, 2, figsize=(11, 4.6))
+    _line(left, rent.index, rent, ORANGE)
+    _line(left, real.index, real, BLUE, z=4)
+    for series, color in ((rent, ORANGE), (real, BLUE)):
+        _end_dot(left, series.index[-1], series.iloc[-1], color)
+    _label(left, real.index[-1], real.iloc[-1], f"{real.iloc[-1]:.0f}")
+    _label(left, rent.index[-1], rent.iloc[-1], f"{rent.iloc[-1]:.0f}")
+    _line(right, pti.index, pti, BLUE)
+    _end_dot(right, pti.index[-1], pti.iloc[-1], BLUE)
+    _label(right, pti.index[-1], pti.iloc[-1], f"{pti.iloc[-1]:.0f}")
+    for ax in (left, right):
+        ax.axvline(seam_year, color=MUTED, lw=1, ls=(0, (2, 3)), zorder=1)
+        ax.set_xlim(ax.get_xlim()[0], 2025 + 4.5)
+        ax.set_xticks(range(1990, 2026, 5))
+        ax.set_ylim(bottom=0)
+    left.text(
+        seam_year + 0.3, 6, "series changes\nsource (2009)", fontsize=8, color=MUTED, va="bottom"
+    )
+    _legend(left, [Line2D([], [], color=BLUE, lw=LINE_WIDTH, label="Real house price index"),
+                   Line2D([], [], color=ORANGE, lw=LINE_WIDTH, label="Real rent index")], loc="upper left")  # fmt: skip
+    _panel_title(left, "House prices and rents after inflation (2015 = 100)")
+    _panel_title(right, "House price to disposable income per head (2015 = 100)")
+    return style.finish(
+        fig,
+        f"After inflation, prices peaked in {peak_year}, fell {100 * (1 - real.loc[low_year] / real.loc[peak_year]):.0f}% to {low_year} "
+        f"and passed that peak again in {beat}; the price-to-income index is {pti.iloc[-1] / pti.iloc[0]:.1f}x its {pti.index[0]} level",
+        "Annual, national, 1988 to 2025 (price-to-income from 1995); real = deflated with the consumer price index",
+        "Source: BIS, INE (house prices, CPI), OECD (rents, price-to-income); own calculations. Before 2009 the price index is the BIS "
+        "compilation: the join with INE's cannot be tested.",
+        head_in=1.3,
+        foot_in=0.6,
+    )

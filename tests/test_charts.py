@@ -357,3 +357,22 @@ def test_outlook_ranking_colours_only_clear_differences():
     fig = charts.outlook_ranking(table, "region", "regions", 2, 2026)
     assert "A is expected to worsen most" in _title(fig)
     assert "2 of 3 regions differ clearly" in _title(fig)
+
+
+def test_long_run_prices_title_is_computed_from_the_cycle():
+    years = np.arange(1988, 2026)
+    real = np.interp(years, [1988, 2001, 2013, 2025], [110, 140, 90, 210])
+    long = pd.DataFrame(
+        {
+            "year": years,
+            "hpi_real_b2015": real,
+            "rent_real_b2015": np.linspace(75, 110, len(years)),
+            "price_to_income_b2015": np.where(
+                years >= 1995, np.interp(years, [1995, 2013, 2025], [140, 97, 167]), np.nan
+            ),
+        }
+    )
+    title = _title(charts.long_run_prices(long))
+    assert "peaked in 2001" in title and "fell 36% to 2013" in title
+    assert "passed that peak again in 2019" in title or "again in 2020" in title
+    assert "1.2x its 1995 level" in title

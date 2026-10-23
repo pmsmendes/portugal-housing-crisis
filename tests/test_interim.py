@@ -190,7 +190,7 @@ def test_build_writes_parquet_and_read_roundtrips(tmp_path, monkeypatch):
 
 
 def test_download_calls_each_chosen_source_and_rejects_unknown(monkeypatch):
-    from pthousing.data.sources import aima, at, bportugal, caop, eurostat, ine, rnal
+    from pthousing.data.sources import aima, at, bis, bportugal, caop, eurostat, ine, oecd, rnal
 
     calls = []
     monkeypatch.setattr(
@@ -200,6 +200,8 @@ def test_download_calls_each_chosen_source_and_rejects_unknown(monkeypatch):
     )
     monkeypatch.setattr(bportugal, "fetch_all", lambda refresh=False: calls.append(("bportugal",)))
     monkeypatch.setattr(eurostat, "fetch", lambda ds, refresh=False: calls.append(("eurostat", ds)))
+    monkeypatch.setattr(bis, "fetch", lambda ds, refresh=False: calls.append(("bis", ds)))
+    monkeypatch.setattr(oecd, "fetch", lambda ds, refresh=False: calls.append(("oecd", ds)))
     monkeypatch.setattr(rnal, "fetch", lambda refresh=False: calls.append(("rnal",)))
     monkeypatch.setattr(aima, "fetch", lambda refresh=False: calls.append(("aima",)))
     monkeypatch.setattr(at, "fetch", lambda refresh=False: calls.append(("at",)))
@@ -213,6 +215,7 @@ def test_download_calls_each_chosen_source_and_rejects_unknown(monkeypatch):
     expected += [("ine", code, flt) for code, flt in interim.INE_FILTERED.items()]
     assert [c for c in calls if c[0] == "ine"] == expected
     assert {c[0] for c in calls} == set(interim.SOURCES)
+    assert ("bis", "bis_spp") in calls and ("oecd", "oecd_house_prices") in calls
     with pytest.raises(ValueError, match="Unknown source"):
         interim.download(["nope"])
 

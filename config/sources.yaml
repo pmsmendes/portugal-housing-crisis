@@ -198,3 +198,27 @@ aima:
       national_by_sex: "0001274"     # national, 1980 - 2023
     format: json
     notes: INE series ends 2023 (AIMA data delay). AIMA "Relatório de Migrações e Asilo" has municipal 2024/2025 values but only as PDF.
+
+bis:
+  # BIS Data Portal SDMX API v2 (CSV). WS_SPP = selected residential property prices; key = freq.area.value.unit (empty = all).
+  bis_spp:
+    base_url: https://stats.bis.org/api/v2/data/dataflow/BIS
+    dataflow: WS_SPP/1.0
+    key: "Q.PT.."          # Portugal, quarterly: N nominal and R real (CPI-deflated), unit 628 (index 2010=100) and 771 (y/y %)
+    format: csv
+    notes: >
+      Verified 2026-10-23: 153 quarters, 1988-Q1 to 2026-Q1, four series. Whole-country, all dwellings. Before 2009 the series
+      is the BIS compilation from national sources (there is no INE index before 2009); how it joins the INE index is tested
+      in validate.cross_checks and written up in data_quality.md.
+
+oecd:
+  # OECD SDMX API (CSV with labels). Analytical house price indicators, annual, Portugal.
+  oecd_house_prices:
+    base_url: https://sdmx.oecd.org/public/rest/data
+    dataflow: "OECD.ECO.MPD,DSD_AN_HOUSE_PRICES@DF_HOUSE_PRICES,"
+    key: "PRT.A.."        # area.freq.(all measures).(all units)
+    format: csv
+    notes: >
+      Verified 2026-10-23: HPI nominal and RHP real house price index 1988-2025 (2015=100); HPI_RPI price-to-rent 1988-2025;
+      HPI_YDH price-to-income 1995-2025 (nominal price over nominal disposable income per head, 2015=100); RPI rent prices
+      1959-2025; HPI_*_AVG are the same ratios as a percentage deviation from their long-term average.
