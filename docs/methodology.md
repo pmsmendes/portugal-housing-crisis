@@ -47,6 +47,7 @@ Definitions are implemented once in code; this file states them and points to th
 Municipalities without one urban IMI rate (parish rates) take the year's mean rate (8 of 308 in 2024). The 2024 median break-even moves between -0.3 and +1.3 pp across these ranges (`rent_vs_buy_sensitivity_2024.csv`). The national long series divides a scale by the OECD price-to-rent index; the scale makes it match the lease-weighted municipal yield over 2020-2024 (`calibrate_yield_scale`).
 
 ### Alternative definitions for robustness (M1)
+The comparison of these definitions across municipalities is in `reports/p1_evidence.md` (`p1_06`, `descriptive.compare_definitions`): rankings agree (rank correlation 0.92-1.00) except rents (change 0.43), and the median rise 2016-2024 is 17-25% by definition.
 `pti_years_100sqm`, `pti_years_mean_income` (mean instead of median income, for the 3% of municipality-years where the median is missing and as a check), `rti_pct_100sqm`, `mortgage_burden_pct_100sqm`; other LTV, term and rate choices through the function arguments.
 
 ## Real values (`src/pthousing/data/harmonize.py`)

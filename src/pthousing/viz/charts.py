@@ -1533,3 +1533,62 @@ def nationality_location_bars(
         head_in=1.0,
         foot_in=1.3,
     )
+
+
+# ---- robustness of the affordability indicators ----------------------------------------------------
+
+
+def indicator_robustness(table: pd.DataFrame, trends: pd.DataFrame, base_label: str) -> Figure:
+    """How much the picture depends on how affordability is defined (``descriptive.compare_definitions``).
+
+    Left: rank correlation with the base indicator across municipalities, of the 2024 level (filled dot) and of
+    the change over each definition's window (open dot). Right: the median municipality's indicator rebased to
+    its first year (rows years, columns definitions; the first column is the base, drawn in blue).
+    """
+    fig, (left, right) = plt.subplots(
+        1, 2, figsize=(11, 0.45 * len(table) + 3.4), gridspec_kw={"width_ratios": [1.15, 1]}
+    )
+    d = table.iloc[::-1].reset_index(drop=True)
+    y = np.arange(len(d))
+    left.axvline(1, color=style.BASELINE, lw=1, zorder=1)
+    left.axvline(0, color=style.BASELINE, lw=1, zorder=1)
+    for yi, lvl, chg in zip(y, d["rank_corr_level"], d["rank_corr_change"], strict=True):
+        if not (np.isnan(lvl) or np.isnan(chg)):
+            left.plot([lvl, chg], [yi, yi], color=GRID, lw=2, zorder=2)
+    left.plot(d["rank_corr_level"], y, "o", ms=8, mfc=BLUE, mec=SURFACE, mew=1.5, zorder=4)
+    left.plot(d["rank_corr_change"], y, "o", ms=8, mfc=SURFACE, mec=ORANGE, mew=2, zorder=5)
+    left.set_yticks(
+        y, [f"{n}\n({w})" for n, w in zip(d["definition"], d["window"], strict=True)], fontsize=8.5
+    )
+    left.set_xlim(-0.05, 1.08)
+    left.set_ylim(-0.6, len(d) - 0.4)
+    left.grid(axis="y", visible=False)
+    _legend(left, [Line2D([], [], color=BLUE, marker="o", ls="", ms=8, label="Level, 2024"),
+                   Line2D([], [], color=ORANGE, marker="o", ls="", mfc=SURFACE, mew=2, ms=8, label="Change over the window")], loc="lower left")  # fmt: skip
+    _panel_title(left, "Rank correlation with the base indicator")
+    cols = list(trends.columns)
+    styles = [
+        (BLUE, "-", 3),
+        (ORANGE, "-", 3),
+        (MUTED, "-", 2),
+        (MUTED, (0, (4, 2)), 2),
+        (INK_2, (0, (1, 2)), 2),
+    ]
+    for col, (color, ls, z) in zip(cols, styles, strict=False):
+        right.plot(
+            trends.index, trends[col], color=color, ls=ls, lw=LINE_WIDTH, zorder=z, label=col
+        )
+    right.axhline(100, color=style.BASELINE, lw=1, zorder=1)
+    right.set_xticks(range(int(trends.index.min()), int(trends.index.max()) + 1, 2))
+    _legend(right, [Line2D([], [], color=c, ls=ls, lw=LINE_WIDTH, label=col) for col, (c, ls, _) in zip(cols, styles, strict=False)], loc="upper left")  # fmt: skip
+    _panel_title(right, f"Median municipality's change, {int(trends.index.min())} = 100")
+    ends = trends.iloc[-1]
+    return style.finish(
+        fig,
+        f"Purchase definitions rank places alike, rents do not; the rise since {int(trends.index.min())} is "
+        f"{ends.min() - 100:+.0f}% to {ends.max() - 100:+.0f}% depending on the definition",
+        f"Alternative to '{base_label}': rank correlation across municipalities (left) and the median municipality over time (right)",
+        "Source: INE, Banco de Portugal; own calculations. Definitions in docs/methodology.md; windows differ because the series have different lengths.",
+        head_in=1.3,
+        foot_in=0.6,
+    )

@@ -170,6 +170,30 @@ Tables: `foreign_residents_totals.csv`, `foreign_residents_by_nationality.csv`, 
 `foreign_residents_concentration_2023.csv`, `foreign_residents_by_municipality_2023.csv`,
 `foreign_residents_location_by_nationality.csv`.
 
+## Do the conclusions depend on the definition? (M1)
+
+The base indicator is price-to-income with the census mean dwelling size and the median income per tax household. Six
+alternatives were swapped in one at a time (`p1_06`), comparing, across municipalities, the ranking (Spearman rank
+correlation of the 2024 levels and of the change over a window) and the direction (share worsening, same sign as the base).
+
+![Robustness of the indicator](figures/p1/indicator_robustness.png)
+
+- **The ranking of places does not depend on the purchase definition.** The 2024 levels rank alike with a fixed 100 m²
+  dwelling (0.99), mean income (1.00), existing dwellings only (0.99) and, from a different source, bank appraisals
+  (0.92). The mortgage burden is the same ranking by construction (one national rate).
+- **Rents rank places differently.** Rent-to-income has a level correlation of 0.90 with price-to-income, but the rank
+  correlation of the **changes** in 2020-2024 is only 0.43: where rents rose is not where prices rose, so a price-based
+  map of deterioration is not a map of what tenants faced.
+- **The direction mostly holds.** Affordability worsened since 2016 in 75% of municipalities with the base, 70% with a fixed
+  dwelling, 80% with mean income and 87% with appraisals (84% for the base in the same municipalities). The fixed dwelling
+  size flips the sign in 14 of 296 municipalities (13 inland rural ones and Ponta do Sol), all with a change of less than 3.5% either way,
+  so the sign is not meaningful there.
+- **The size of the rise does.** The median municipality's price-to-income is 17% (fixed dwelling), 19% (base), 22%
+  (appraisals) or 25% (mean income) above its 2016 value in 2024. The headline of `p1_02` is therefore a range of about
+  17-25%, not a point; the rate shows up only in the mortgage burden (+64%).
+
+Tables: `indicator_robustness.csv`, `indicator_robustness_trends.csv`, `indicator_robustness_sign_differs.csv`.
+
 ## Limitations
 
 - **Short municipal history.** Municipal prices exist from 2016 and rents from 2020; INE's national index starts in
@@ -202,5 +226,5 @@ Tables: `foreign_residents_totals.csv`, `foreign_residents_by_nationality.csv`, 
 
 ## Questions answered
 
-RQ1.3, RQ1.5, RQ1.6, RQ3.2, RQ4.1 and RQ4.2 are answered with the available data; RQ1.1 (national thirty years done, municipal from 2016), RQ1.4 and RQ1.7 are partly answered
+RQ1.3, RQ1.5, RQ1.6, RQ3.2, M1, RQ4.1 and RQ4.2 are answered with the available data; RQ1.1 (national thirty years done, municipal from 2016), RQ1.4 and RQ1.7 are partly answered
 (see [research_questions](../docs/research_questions.md)).

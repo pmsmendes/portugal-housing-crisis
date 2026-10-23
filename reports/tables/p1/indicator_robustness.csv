@@ -1,0 +1,7 @@
+definition,window,level_municipalities_n,rank_corr_level,change_municipalities_n,rank_corr_change,same_sign_pct,top20_shared,worse_pct,base_worse_pct,median_change_pct,base_median_change_pct
+Fixed 100 m² dwelling,2016-2024,299,0.99,296,0.999,95.27,16,70.27,75.0,16.722,19.46
+Mean instead of median income,2016-2024,299,0.996,296,0.995,94.595,16,80.405,75.0,24.971,19.46
+Bank appraisals instead of sales,2016-2024,253,0.924,198,0.839,83.333,14,86.869,84.343,22.106,27.093
+Existing dwellings only,2019-2024,297,0.991,271,0.91,92.251,19,73.801,75.646,18.905,18.334
+Rent instead of purchase,2020-2024,212,0.896,191,0.428,76.44,14,85.34,76.44,13.69,13.129
+Mortgage burden (adds the rate),2016-2024,299,1.0,296,1.0,79.392,20,95.608,75.0,64.125,19.46

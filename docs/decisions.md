@@ -2,6 +2,13 @@
 
 Analytic and engineering choices, newest first. One short entry each: what, why, alternatives rejected.
 
+## 2026-10-23 — Indicator definitions tested one at a time against the base (M1)
+- **What:** `descriptive.compare_definitions` and `p1_06`. Six alternatives to price-to-income (fixed 100 m² dwelling, mean income, bank appraisals, existing dwellings, rent-to-income, mortgage burden), each compared with the base on the municipalities where both exist: rank correlation of the 2024 level and of the log change over a window, share with the same sign, share worsening, top-20 overlap.
+- **Why one at a time and per-window:** the series differ in length (existing-dwelling prices from 2019, rents 2020-2024), so each alternative gets the longest window it supports and the base is recomputed on the same municipalities and window; a common window would drop the informative comparisons.
+- **Trend panel:** the median of each municipality's own change since 2016, not the median of levels. The median of levels changes identity from year to year and moved the fixed-size variant's rise from 17% to 10% for no reason that concerns affordability.
+- **Reading:** a high rank correlation says the choice does not matter for where, not for how much; both are reported. The sign of the change is not meaningful where the change is within about 3.5%.
+- **Rejected:** a composite or "best" indicator (the definitions answer different questions: purchase, rent, financing), testing definitions jointly (the alternatives are one-step changes that can each be explained).
+
 ## 2026-10-23 — Foreign residents described from titles, with the 2023 step kept (RQ3.2)
 - **What:** `analysis/demography.py` and `p1_05`: totals, nationalities, concentration, distribution by density, coast and district, and the location of each nationality, from `aima_foreigners` (2014-2023) and the panel's population.
 - **Why the 2023 step is kept, not smoothed:** it is +34% in the median municipality and above +20% in 222 of 308, so it is a national movement of the series, not a local event; dropping or interpolating 2023 would invent a figure. It is stated in the title note of the chart and in the limitations.

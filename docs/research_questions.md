@@ -111,7 +111,7 @@ Reference questions by ID (e.g. `RQ2.3`) in notebooks, reports and commits.
 ## M — Methodological questions (cross-cutting)
 | ID | Question | Status | Where |
 |---|---|---|---|
-| M1 | Which indicators best capture affordability, and how do conclusions change under alternative definitions? | — | |
+| M1 | Which indicators best capture affordability, and how do conclusions change under alternative definitions? | done | `p1_06`, `reports/p1_evidence.md` (definitions): rankings of places agree across purchase definitions (rank correlation 0.92-1.00), differ for rents (change correlation 0.43); the share worsening is 70-87% and the median rise 17-25% by definition; no single best indicator, so results are reported for price-to-income with the others as checks |
 | M2 | How can datasets with different frequencies, geographic coverage and definitions be harmonised? | — | |
 | M3 | Which factors are associated with price growth, and which relationships have a credible causal identification strategy? | wip | associations: `p2_02`, `reports/p2_explain.md`; the one design tried (IMI cuts, `p3_02`) fails its pre-trend test, so no relationship has a credible causal identification yet |
 | M4 | How can specific policy effects be estimated while accounting for confounders and macro trends? | — | |

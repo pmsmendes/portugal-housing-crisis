@@ -200,3 +200,49 @@ def test_block_r2_adds_blocks_in_order_on_a_fixed_sample():
     assert (out["n_obs"] == n - 1).all()
     assert out["r2"].is_monotonic_increasing
     assert out["r2_added"].sum() == pytest.approx(out["r2"].iloc[-1])
+
+
+def _definitions_panel():
+    rows = []
+    levels = {"a": (10.0, 12.0), "b": (8.0, 7.0), "c": (6.0, 9.0), "d": (4.0, 4.4)}
+    for muni, (start, end) in levels.items():
+        for year, value in ((2016, start), (2024, end)):
+            rows.append(
+                {
+                    "muni_code": muni,
+                    "year": year,
+                    "base": value,
+                    "same": value,
+                    "scaled": 2 * value,
+                    "reversed": 100 - value,
+                    "short": value if muni != "d" else np.nan,
+                }
+            )
+    return pd.DataFrame(rows)
+
+
+def test_compare_definitions_a_rescaled_indicator_agrees_on_everything():
+    out = d.compare_definitions(
+        _definitions_panel(), "base", {"scaled": ("scaled", 2016, 2024)}, level_year=2024, top_n=2
+    )
+    row = out.iloc[0]
+    assert row["rank_corr_level"] == pytest.approx(1.0)
+    assert row["rank_corr_change"] == pytest.approx(1.0)
+    assert row["same_sign_pct"] == pytest.approx(100.0)
+    assert row["top2_shared"] == 2
+    assert row["median_change_pct"] == pytest.approx(row["base_median_change_pct"])
+
+
+def test_compare_definitions_a_reversed_indicator_disagrees_and_short_series_use_fewer_places():
+    out = d.compare_definitions(
+        _definitions_panel(),
+        "base",
+        {"reversed": ("reversed", 2016, 2024), "short": ("short", 2016, 2024)},
+        level_year=2024,
+        top_n=2,
+    ).set_index("definition")
+    assert out.loc["reversed", "rank_corr_level"] == pytest.approx(-1.0)
+    assert out.loc["reversed", "top2_shared"] == 0
+    assert out.loc["reversed", "same_sign_pct"] < 100
+    assert out.loc["short", "level_municipalities_n"] == 3
+    assert out.loc["short", "change_municipalities_n"] == 3

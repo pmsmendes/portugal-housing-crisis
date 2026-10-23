@@ -237,3 +237,60 @@ def block_r2(df: pd.DataFrame, y: str, blocks: dict[str, list[str]]) -> pd.DataF
         )
         previous = res.rsquared
     return pd.DataFrame(rows)
+
+
+def compare_definitions(
+    panel: pd.DataFrame,
+    base: str,
+    others: dict[str, tuple[str, int, int]],
+    level_year: int,
+    top_n: int = 20,
+) -> pd.DataFrame:
+    """How far a conclusion about ``base`` survives another definition of the same indicator (M1).
+
+    ``others`` maps a label to ``(column, start, end)``: the alternative column and the window in which its
+    change is compared (windows differ because some series are shorter). For each alternative, on the
+    municipalities where both columns exist: the Spearman rank correlation of the levels in ``level_year``
+    and of the log changes over the window, the share of municipalities where both agree on the sign of the
+    change, how many of the ``top_n`` highest values in ``level_year`` they share, and the median
+    percentage change of each in the window, and the share of municipalities where it worsened
+    (``worse_pct``, against ``base_worse_pct``). Rank correlations near 1 mean the ranking of places does not
+    depend on the choice; the change columns say whether the story about direction does.
+    """
+    wide = panel.pivot(index=MUNI_KEY, columns=YEAR_KEY)
+    rows = []
+    for label, (column, start, end) in others.items():
+        level = pd.concat([wide[(base, level_year)], wide[(column, level_year)]], axis=1).dropna()
+        d = pd.concat(
+            [
+                np.log(wide[(base, end)] / wide[(base, start)]),
+                np.log(wide[(column, end)] / wide[(column, start)]),
+            ],
+            axis=1,
+            keys=["base", "alt"],
+        ).dropna()
+        shared = len(
+            set(level.iloc[:, 0].nlargest(top_n).index)
+            & set(level.iloc[:, 1].nlargest(top_n).index)
+        )
+        rows.append(
+            {
+                "definition": label,
+                "window": f"{start}-{end}",
+                "level_municipalities_n": len(level),
+                "rank_corr_level": level.corr(method="spearman").iloc[0, 1]
+                if len(level) > 2
+                else np.nan,
+                "change_municipalities_n": len(d),
+                "rank_corr_change": d.corr(method="spearman").iloc[0, 1] if len(d) > 2 else np.nan,
+                "same_sign_pct": 100 * ((d["base"] > 0) == (d["alt"] > 0)).mean()
+                if len(d)
+                else np.nan,
+                f"top{top_n}_shared": shared,
+                "worse_pct": 100 * (d["alt"] > 0).mean() if len(d) else np.nan,
+                "base_worse_pct": 100 * (d["base"] > 0).mean() if len(d) else np.nan,
+                "median_change_pct": 100 * np.expm1(d["alt"].median()) if len(d) else np.nan,
+                "base_median_change_pct": 100 * np.expm1(d["base"].median()) if len(d) else np.nan,
+            }
+        )
+    return pd.DataFrame(rows)
