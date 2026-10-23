@@ -1134,3 +1134,113 @@ def sensitivity_tornado(table: pd.DataFrame, base: float, year: int, n: int = 9)
     )
     fig.subplots_adjust(left=0.36, right=0.96)
     return fig
+
+
+# ---- regional outlook -----------------------------------------------------------------------------
+
+
+def regional_skill(acc: dict[str, pd.DataFrame]) -> Figure:
+    """Rank skill (Spearman correlation of predicted and actual change) of each method, one panel per level.
+
+    ``acc`` maps a panel title to a ``regional_forecast`` accuracy table (``method``, ``h``, ``spearman``). The
+    naive forecast predicts no change for everyone, so it has no ranking and is left out. One year ahead is
+    light blue, two years dark blue; zero is no skill.
+    """
+    fig, axes = plt.subplots(
+        1, len(acc), figsize=(4.1 * len(acc) + 1.2, 4.4), sharey=True, squeeze=False
+    )
+    first = next(iter(acc.values()))
+    methods = [m for m in dict.fromkeys(first["method"]) if m != "naive"]
+    light, dark = style.BLUE_RAMP[250], style.BLUE_RAMP[550]
+    for ax, (title, table) in zip(axes[0], acc.items(), strict=True):
+        for i, method in enumerate(methods):
+            for h, color in ((1, light), (2, dark)):
+                row = table[(table["method"] == method) & (table["h"] == h)]
+                if row.empty:
+                    continue
+                ax.plot(
+                    [row["spearman"].iloc[0]],
+                    [i],
+                    "o",
+                    ms=8,
+                    mfc=color,
+                    mec=SURFACE,
+                    mew=1.5,
+                    zorder=4,
+                )
+        ax.axvline(0, color=INK_2, lw=1, zorder=2)
+        ax.set_yticks(range(len(methods)), [m.replace("_", " ") for m in methods])
+        ax.set_ylim(len(methods) - 0.4, -0.6)
+        ax.set_xlim(-1, 1)
+        ax.tick_params(axis="y", length=0)
+        ax.grid(axis="y", visible=False)
+        _panel_title(ax, title)
+        ax.set_xlabel("Rank correlation, predicted vs actual change", color=INK_2)
+    axes[0][0].legend(
+        handles=[Line2D([], [], marker="o", ls="", ms=8, mfc=c, mec=SURFACE, label=text)
+                 for c, text in ((light, "1 year ahead"), (dark, "2 years ahead"))],
+        loc="lower left", fontsize=9, labelcolor=INK_2,
+    )  # fmt: skip
+    muni = next(iter(acc.values()))
+    best = muni[muni["method"] != "naive"].groupby("method")["spearman"].mean().idxmax()
+    rho = muni[muni["method"] == best]["spearman"].mean()
+    fig = style.finish(
+        fig,
+        f"A {best.replace('_', ' ')} ranks municipalities better than chance (rank correlation {rho:.2f}); regions are harder",
+        "Mean over rolling origins 2019 to 2023 of the rank correlation between the predicted and the actual change in price-to-income",
+        "Source: INE, own calculations. Naive (no change) has no ranking. Few groups and origins: the region and class panels are indicative.",
+        head_in=1.2,
+        foot_in=0.55,
+    )
+    fig.subplots_adjust(left=0.2, right=0.98, wspace=0.12)
+    return fig
+
+
+def outlook_ranking(
+    table: pd.DataFrame, label: str, n_name: str, horizon: int, end_year: int
+) -> Figure:
+    """Expected change in price-to-income relative to the median municipality, by group, with 80% intervals.
+
+    ``table`` is ``regional_forecast.outlook_summary`` output (columns ``relative``, ``relative_lo80``,
+    ``relative_hi80`` in %, ``change_pct``, ``share_rising`` and the group in ``label``); groups whose interval
+    excludes zero are drawn in colour, the rest in grey.
+    """
+    d = table.sort_values("relative").reset_index(drop=True)
+    fig, ax = plt.subplots(figsize=(8.6, 0.3 * len(d) + 2.0))
+    sure = (d["relative_lo80"] > 0) | (d["relative_hi80"] < 0)
+    for i, row in d.iterrows():
+        color = (ORANGE if row["relative"] > 0 else BLUE) if sure[i] else MUTED
+        ax.plot(
+            [row["relative_lo80"], row["relative_hi80"]],
+            [i, i],
+            color=color,
+            lw=2.2,
+            zorder=3,
+            solid_capstyle="round",
+        )
+        ax.plot([row["relative"]], [i], "o", ms=8, mfc=color, mec=SURFACE, mew=1.5, zorder=4)
+        ax.annotate(f"{row['change_pct']:+.0f}%", (row["relative_hi80"], i), xytext=(8, 0),
+                    textcoords="offset points", va="center", fontsize=9, color=INK_2)  # fmt: skip
+    ax.axvline(0, color=INK_2, lw=1, zorder=2)
+    ax.set_yticks(range(len(d)), d["label"], color=INK_2)
+    ax.set_ylim(-0.7, len(d) - 0.3)
+    ax.grid(axis="y", visible=False)
+    ax.xaxis.set_major_formatter(mticker.FuncFormatter(lambda v, _: "0" if v == 0 else f"{v:+.0f}"))
+    ax.set_xlabel(
+        "Change in price-to-income relative to the median municipality (percentage points)",
+        color=INK_2,
+    )
+    top, bottom = d.iloc[-1], d.iloc[0]
+    n_sure = int(sure.sum())
+    fig = style.finish(
+        fig,
+        f"{top['label']} is expected to worsen most ({top['relative']:+.0f} points above the median), {bottom['label']} least; "
+        f"{n_sure} of {len(d)} {n_name} differ clearly",
+        f"Median municipality of each {label}, {horizon} years to {end_year}; 80% interval from past errors (coloured: excludes zero). "
+        "Label: the group's own expected change",
+        "Source: INE; own calculations. A trend extrapolation from 2016-2024 (a boom period): it ranks places, it does not forecast their level.",
+        head_in=1.25,
+        foot_in=0.55,
+    )
+    fig.subplots_adjust(left=0.27, right=0.9)
+    return fig

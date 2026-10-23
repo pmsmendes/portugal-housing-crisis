@@ -29,7 +29,7 @@ These are descriptive results with stated limits (short municipal history, one n
 | 1. Establish the evidence | Data harmonisation, inflation adjustment, affordability indicators, choropleths | [report](reports/p1_evidence.md) |
 | 2. Explain the trends | Two-way fixed-effects panel regression, Moran's I / LISA / Gi*, segmentation | [report](reports/p2_explain.md) |
 | 3. Evaluate a policy | Difference-in-differences / event study, pre-trend and placebo tests | [report](reports/p3_policy.md) |
-| 4. Forecast and simulate | Naïve/ETS/ARIMA with rolling-origin validation, scenario simulator | [report](reports/p4_forecast.md) |
+| 4. Forecast and simulate | Naïve/ETS/ARIMA with rolling-origin validation, scenario simulator, regional outlook | [report](reports/p4_forecast.md) |
 
 Interactive dashboards (Streamlit, `uv run streamlit run app/Home.py`): a **geographic** explorer (municipality map of any indicator, level or change between two years, with rankings), **trends** (national price index and rates, a municipality against all others, group medians), **explanatory** (what accounts for where affordability worsened, and the policy test) and the forecast & policy **simulator**. They read only the committed processed data and report tables.
 

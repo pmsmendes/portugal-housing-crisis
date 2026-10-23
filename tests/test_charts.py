@@ -321,3 +321,39 @@ def test_sensitivity_tornado_title_names_the_widest_input():
         title
         == "Fade of the other-demand boom moves price-to-income in 2035 by 6.1 years, the most of any input"
     )
+
+
+def _skill(offset=0.0):
+    rows = [
+        {"method": m, "h": h, "spearman": s + offset}
+        for m, s in (
+            ("naive", np.nan),
+            ("national_drift", -0.1),
+            ("segment_trend", 0.4),
+            ("own_trend", 0.2),
+        )
+        for h in (1, 2)
+    ]
+    return pd.DataFrame(rows)
+
+
+def test_regional_skill_names_the_best_method_and_skips_naive():
+    fig = charts.regional_skill({"Municipalities": _skill(), "Regions": _skill(-0.2)})
+    assert "segment trend" in _title(fig)
+    labels = [t.get_text() for t in fig.axes[0].get_yticklabels()]
+    assert "naive" not in labels and len(labels) == 3
+
+
+def test_outlook_ranking_colours_only_clear_differences():
+    table = pd.DataFrame(
+        {
+            "label": ["A", "B", "C"],
+            "relative": [10.0, 0.5, -8.0],
+            "relative_lo80": [4.0, -5.0, -12.0],
+            "relative_hi80": [16.0, 6.0, -4.0],
+            "change_pct": [20.0, 8.0, 0.0],
+        }
+    )
+    fig = charts.outlook_ranking(table, "region", "regions", 2, 2026)
+    assert "A is expected to worsen most" in _title(fig)
+    assert "2 of 3 regions differ clearly" in _title(fig)

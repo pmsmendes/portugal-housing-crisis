@@ -3,7 +3,7 @@
 Write-up of findings. Figures: `reports/figures/p4/`, tables: `reports/tables/p4/`, notebooks: `notebooks/p4_forecast/`.
 
 **Status:** forecasting baselines and the national two-year forecast (`p4_01`) and the scenario simulator with its dashboard page
-(`p4_02`, `app/pages/4_Simulator.py`) done, 2026-10-23. Regional detail (RQ10.2) and rents are not covered.
+(`p4_02`, `app/pages/4_Simulator.py`) done, 2026-10-23; regional outlook (`p4_03`, RQ10.2) added below. Rents are not covered.
 
 ## Question
 
@@ -16,8 +16,7 @@ from an income scenario.
 ## Design
 
 - Series: national quarterly, 2009Q1 to 2026Q2 (70 quarters), on logs. Municipal series have 9 to 10 annual points (2016 to 2025), too
-  short to validate a time-series model, so regional detail comes from the explanatory results of phase 2 and the simulator, not from
-  municipal ETS or ARIMA.
+  short to validate a time-series model, so regional detail is a separate, simpler exercise (trends validated on rolling origins, `p4_03` below), not municipal ETS or ARIMA.
 - Methods (`analysis/forecasting.py`): naive, seasonal naive, drift, ETS (six forms, additive errors, chosen by AICc) and ARIMA(p,1,q)
   with or without drift (p, q ≤ 2, by AICc). Intervals: model-based for ETS and ARIMA, random-walk formulas for the baselines.
 - Validation: rolling origin, first window 36 quarters (origins from 2017Q4), refit at every origin, horizons 1 to 8 quarters, RMSE, MASE,
@@ -120,7 +119,7 @@ Tables: `policy_effects_baseline.csv`, `policy_gain_by_scenario.csv`, `imi_bound
   non-Portuguese studies; the income elasticity, additionality, reoccupation and crowd-out are assumptions with stated bounds. The phase 2 associations (supply and affordability
   fade once the coast and density are accounted for) are not used as estimates, since they are adjusted associations. Nothing here is a causal estimate of a policy.
 - **National and median.** One price, income and rate path moves the median municipality's ratio proportionally. Coast and city, where affordability worsened (phase 2), are not
-  modelled separately (RQ10.2 stays open), and a supply lever acts the same everywhere although where it is built matters.
+  modelled separately (the regional outlook of `p4_03` ranks places but does not feed the simulator), and a supply lever acts the same everywhere although where it is built matters.
 - **No feedback.** Completions are a scenario input, not a response to prices (phase 2 shows they follow prices); household formation does not react to affordability; rents are not
   modelled; demolitions are a fixed 11% of completions (census 2011 to 2021).
 - **Household and population base.** Households are population over persons per household extrapolated from the census trend; the 2025 population change is assumed equal to 2024's (INE's
@@ -130,7 +129,59 @@ Tables: `policy_effects_baseline.csv`, `policy_gain_by_scenario.csv`, `imi_bound
   Costs are not discounted and are in 2024 euros. Unit costs of supply levers come from press reports of PRR projects and a VAT calculation.
 - **Capitalisation of taxes** is run at both ends (none, full); the middle value of the uncertainty runs (0.5) is only the midpoint of the bound, not an estimate.
 
+## Regional outlook (`p4_03`, RQ10.2)
+
+**Question.** Which municipalities and regions are likely to see further deterioration, beyond the median municipality the simulator follows?
+
+**Design.** A municipality has nine annual points and a noisy published price-to-income (year-on-year growth has a lag-1 autocorrelation of -0.3 to -0.6),
+so the methods are straight-line trends on its log (`analysis/regional_forecast.py`): naive (no change), national drift, national trend, own trend, trend of its
+NUTS 3 region, of its coast x density class, and the own trend shrunk toward the region's by empirical Bayes. Validation is rolling-origin (origins 2019 to 2023,
+one and two years ahead, all methods on the same municipalities), scored by RMSE and by how well the predicted change *ranks* the actual change, for 272 municipalities
+and aggregated to the 24 NUTS 3 regions and six classes. The selection rule (lowest municipal RMSE, ties to the simpler) was fixed before looking and picks the
+**class trend**. The outlook is stated **relative to the median municipality**: the national swing is not predictable from municipal history and the simulator carries it.
+
+![Rank skill](figures/p4/regional_skill.png)
+
+### Key findings
+
+12. **Geography-aware trends beat the naive forecast modestly on error and clearly on ranking.** Class trend RMSE 0.141 (one year) and 0.156 (two) log points against 0.154
+    and 0.170 for no change (-8%); rank correlation of predicted and actual change 0.41 and 0.43, and 44% and 40% of the predicted top fifth are in the actual top fifth (chance: 20%).
+    A municipality's *own* trend is worse than no change (RMSE 0.181 and 0.238): the municipal series is too noisy to extrapolate; shrinking it toward the region's recovers
+    part of the loss but not all (0.155, 0.194). The ranking is stable to the method (rank correlation 0.35 to 0.55 between own, region and class trends, 0.78 between own and shrunk) and to
+    dropping the 2023 origin (same selection, same skill).
+13. **Only the coarse level is reliably predictable.** Across the six classes every own, region, class and shrunk trend ranks well two years ahead (rank correlation 0.76 to 0.89; the two national ones rank negatively); across the 24 NUTS 3 regions the
+    class trend ranks at 0.16 (one year) and 0.50 (two), and its error relative to the cross-region mean is no better than no change at one year (0.058 against 0.046) and better at two
+    (0.064 against 0.075). That is a handful of groups and five origins: indicative, not conclusive.
+14. **Intervals.** The 80% interval of a municipality's change is about -0.19 to +0.16 log points two years ahead (coverage leaving each origin out: 79%); relative to the median
+    municipality, -20 to +14 points for a municipality, about +/-9 for a region and -7 to +3 for a class.
+
+![Outlook, classes](figures/p4/regional_outlook_classes.png)
+
+15. **The outlook to 2026, relative to the median municipality.** Coastal urban municipalities are expected to worsen **14.6 points** more (80% interval 7.4 to 17.6) and coastal rural ones 9.4
+    (2.1 to 12.4); inland rural ones **5.5 points less** (-12.8 to -2.5). The other three classes are not distinguishable from the median (+4.6 coastal intermediate, +3.7 inland urban,
+    +0.4 inland intermediate). By NUTS 3 region, only three of 24 differ clearly: Alentejo Central, Médio Tejo and Lezíria do Tejo, expected to rise 12 to 15 points less. Grande Lisboa
+    ranks first (+8) but its interval includes zero (-0.8 to +16.6), as do the Porto metropolitan area, Douro and Algarve. Among municipalities, 14 sit clearly above and 40 clearly below the median.
+
+![Outlook, regions](figures/p4/regional_outlook_regions.png)
+
+![Outlook, municipalities](figures/p4/regional_outlook_map.png)
+
+16. **The level is the simulator's job.** The municipal trend of 2016 to 2024 extends to +8% in the median municipality by 2026; the simulator's baseline gives +26% because it is
+    pinned to the national forecast, which includes the 2025 price rise. Hence the outlook is relative; it is not a second forecast of the level.
+
+Tables: `regional_accuracy.csv`, `regional_outlook_classes.csv`, `regional_outlook_regions.csv`, `regional_outlook_municipalities.csv`.
+
+### Limitations of the regional outlook
+
+- **One regime, few origins.** Nine annual points, five origins, all in a rising market; a trend that persists in a boom may not at a turning point, and nothing here tests that.
+- **It mostly restates phase 2.** The ranking is "dense and coastal places keep rising"; it adds a validated measure of how much of that persists, not a new driver. No causal reading.
+- **Single municipalities are noisy.** The change is measured from the last published value, which includes reversion of a low or high last value toward the trend (the top municipality,
+  Armamar, goes from 2.4 to 4.8 years of income): read classes and regions, not single places. 80% of municipalities (218 of 272) have no clear difference from the median.
+- **Proxy classes.** Coast, density and tourism classes are own proxies (`data/external/muni_typology.csv`), not the INE typology, and the tourist flag is not used.
+- **Mainland only**, 272 of 278 mainland municipalities with at least three years of history; the Azores and Madeira are not covered. Price-to-income levels depend on the income concept and
+  dwelling size (`docs/methodology.md`); the outlook uses changes only. Rents are not forecast.
+
 ## Next
 
-Regional detail: apply the simulator to the municipality typology (coast, urban) to answer RQ10.2; rents and a tenure split; a price-to-supply feedback once there is
-an estimate of the supply response; the other dashboard pages (`1_Geographic`, `2_Trends`, `3_Explanatory`) are still stubs.
+Rents and a tenure split in the simulator; a price-to-supply feedback once there is an estimate of the supply response; feeding the regional ranking into the simulator's median
+municipality (a regional multiplier on the national path) once the national level is settled.

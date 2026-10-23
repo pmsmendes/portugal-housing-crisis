@@ -60,3 +60,12 @@ def test_geographic_every_indicator_runs():
         at.sidebar.selectbox[0].set_value(column)
         at.run()
         assert not at.exception, column
+
+
+def test_simulator_regional_outlook_tab_switches_between_classes_and_regions():
+    at = _run("4_Simulator.py")
+    assert not at.exception
+    radio = next(r for r in at.radio if r.label == "Group by")
+    radio.set_value("NUTS 3 region")
+    at.run()
+    assert not at.exception

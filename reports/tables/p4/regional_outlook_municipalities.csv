@@ -1,0 +1,273 @@
+muni_code,muni_name,district,region,segment,pti_last,pti_forecast,change_pct,relative,relative_lo80,relative_hi80
+1801,Armamar,Viseu,Douro,inland / rural,2.426,4.779,97.027,60.302,40.117,74.74
+1804,Cinfães,Viseu,Tâmega e Sousa,inland / rural,3.952,6.456,63.38,41.575,21.391,56.014
+1707,Murça,Vila Real,Douro,inland / rural,3.733,5.879,57.465,37.888,17.703,52.326
+1708,Peso da Régua,Vila Real,Douro,inland / intermediate,6.52,10.096,54.846,36.21,16.026,50.649
+1313,Póvoa de Varzim,Porto,Área Metropolitana do Porto,coast / urban,20.192,28.979,43.513,28.61,8.426,43.049
+1106,Lisboa,Lisboa,Grande Lisboa,coast / urban,24.814,35.426,42.764,28.087,7.902,42.525
+0110,Ílhavo,Aveiro,Região de Aveiro,coast / urban,16.027,22.615,41.104,26.917,6.733,41.356
+1819,Tabuaço,Viseu,Douro,inland / rural,3.924,5.476,39.554,25.813,5.628,40.252
+1316,Vila do Conde,Porto,Área Metropolitana do Porto,coast / urban,18.771,26.182,39.481,25.76,5.576,40.199
+0314,Vizela,Braga,Ave,inland / urban,11.179,15.229,36.238,23.408,3.224,37.847
+0112,Murtosa,Aveiro,Região de Aveiro,coast / intermediate,12.045,16.295,35.285,22.706,2.521,37.144
+0608,Mira,Coimbra,Região de Coimbra,coast / rural,15.667,20.78,32.631,20.724,0.54,35.163
+0911,Sabugal,Guarda,Beiras e Serra da Estrela,inland / rural,2.919,3.87,32.606,20.706,0.522,35.145
+0804,Castro Marim,Faro,Algarve,coast / rural,19.842,26.204,32.063,20.295,0.111,34.734
+0602,Cantanhede,Coimbra,Região de Coimbra,coast / rural,11.644,15.307,31.457,19.835,-0.349,34.274
+1105,Cascais,Lisboa,Grande Lisboa,coast / urban,28.73,37.732,31.335,19.742,-0.442,34.181
+0211,Odemira,Beja,Alentejo Litoral,coast / rural,13.807,18.123,31.259,19.685,-0.499,34.124
+0409,Torre de Moncorvo,Bragança,Douro,inland / rural,3.341,4.385,31.22,19.655,-0.53,34.093
+1110,Oeiras,Lisboa,Grande Lisboa,coast / urban,19.06,24.941,30.854,19.376,-0.809,33.814
+1107,Loures,Lisboa,Grande Lisboa,coast / urban,18.04,23.59,30.763,19.306,-0.878,33.745
+1805,Lamego,Viseu,Douro,inland / intermediate,7.723,10.083,30.563,19.153,-1.031,33.592
+1015,Pombal,Leiria,Região de Leiria,coast / rural,10.874,14.059,29.291,18.174,-2.01,32.613
+1602,Caminha,Viana do Castelo,Alto Minho,coast / intermediate,14.95,19.192,28.369,17.458,-2.726,31.897
+1308,Matosinhos,Porto,Área Metropolitana do Porto,coast / urban,19.654,25.017,27.291,16.615,-3.569,31.054
+0505,Idanha-a-Nova,Castelo Branco,Beira Baixa,inland / rural,2.502,3.158,26.203,15.756,-4.428,30.195
+1603,Melgaço,Viana do Castelo,Alto Minho,inland / rural,4.414,5.561,25.979,15.578,-4.606,30.017
+1701,Alijó,Vila Real,Douro,inland / rural,5.112,6.434,25.868,15.49,-4.694,29.929
+1302,Baião,Porto,Tâmega e Sousa,inland / rural,6.749,8.487,25.761,15.406,-4.778,29.845
+0412,Vinhais,Bragança,Terras de Trás-os-Montes,inland / rural,4.683,5.874,25.43,15.142,-5.042,29.581
+1312,Porto,Porto,Área Metropolitana do Porto,coast / urban,21.694,27.075,24.805,14.643,-5.542,29.081
+1413,Mação,Santarém,Médio Tejo,inland / rural,2.748,3.405,23.884,13.902,-6.282,28.341
+1012,Óbidos,Leiria,Oeste,coast / rural,20.198,24.886,23.211,13.357,-6.827,27.796
+1704,Mesão Frio,Vila Real,Douro,inland / intermediate,5.192,6.393,23.137,13.297,-6.887,27.736
+0905,Fornos de Algodres,Guarda,Beiras e Serra da Estrela,inland / rural,3.053,3.75,22.835,13.052,-7.133,27.491
+1706,Montalegre,Vila Real,Alto Tâmega e Barroso,inland / rural,6.063,7.425,22.463,12.748,-7.436,27.187
+1502,Alcochete,Setúbal,Península de Setúbal,coast / intermediate,15.759,19.27,22.278,12.597,-7.587,27.036
+1503,Almada,Setúbal,Península de Setúbal,coast / urban,17.848,21.811,22.202,12.535,-7.65,26.974
+0808,Loulé,Faro,Algarve,coast / intermediate,30.021,36.662,22.121,12.469,-7.716,26.908
+0118,Vagos,Aveiro,Região de Aveiro,coast / intermediate,16.765,20.349,21.381,11.861,-8.323,26.3
+0308,Guimarães,Braga,Ave,inland / urban,13.808,16.745,21.275,11.773,-8.411,26.212
+0401,Alfândega da Fé,Bragança,Terras de Trás-os-Montes,inland / rural,5.002,6.066,21.265,11.765,-8.419,26.204
+0806,Lagoa,Faro,Algarve,coast / intermediate,25.986,31.3,20.448,11.089,-9.095,25.528
+1821,Tondela,Viseu,Viseu Dão Lafões,inland / rural,6.557,7.887,20.284,10.953,-9.232,25.392
+0312,Vila Nova de Famalicão,Braga,Ave,inland / urban,14.859,17.853,20.148,10.84,-9.345,25.279
+0410,Vila Flor,Bragança,Terras de Trás-os-Montes,inland / rural,4.606,5.515,19.731,10.492,-9.692,24.931
+1505,Grândola,Setúbal,Alentejo Litoral,coast / rural,16.612,19.878,19.657,10.43,-9.754,24.869
+0801,Albufeira,Faro,Algarve,coast / intermediate,25.988,31.04,19.441,10.249,-9.935,24.688
+0109,Santa Maria da Feira,Aveiro,Área Metropolitana do Porto,inland / urban,13.997,16.694,19.266,10.103,-10.082,24.542
+1103,Azambuja,Lisboa,Lezíria do Tejo,coast / rural,10.948,13.049,19.194,10.043,-10.142,24.482
+0714,Vila Viçosa,Évora,Alentejo Central,inland / rural,5.295,6.304,19.048,9.92,-10.264,24.359
+1317,Vila Nova de Gaia,Porto,Área Metropolitana do Porto,coast / urban,17.819,21.198,18.967,9.852,-10.333,24.291
+1001,Alcobaça,Leiria,Oeste,coast / intermediate,13.334,15.842,18.807,9.717,-10.467,24.156
+1421,Ourém,Santarém,Médio Tejo,inland / intermediate,10.251,12.177,18.791,9.704,-10.48,24.143
+0814,Tavira,Faro,Algarve,coast / rural,27.285,32.311,18.421,9.392,-10.793,23.831
+1512,Setúbal,Setúbal,Península de Setúbal,coast / urban,14.825,17.552,18.399,9.373,-10.811,23.812
+1309,Paços de Ferreira,Porto,Tâmega e Sousa,inland / urban,13.0,15.362,18.165,9.176,-11.009,23.615
+0816,Vila Real de Santo António,Faro,Algarve,coast / intermediate,20.906,24.619,17.762,8.834,-11.35,23.273
+1301,Amarante,Porto,Tâmega e Sousa,inland / intermediate,10.972,12.905,17.62,8.713,-11.471,23.152
+0107,Espinho,Aveiro,Área Metropolitana do Porto,coast / urban,20.753,24.377,17.464,8.58,-11.604,23.019
+0408,Mogadouro,Bragança,Terras de Trás-os-Montes,inland / rural,4.561,5.353,17.362,8.493,-11.691,22.932
+1004,Batalha,Leiria,Região de Leiria,inland / intermediate,10.026,11.753,17.223,8.375,-11.809,22.814
+1510,Seixal,Setúbal,Península de Setúbal,coast / urban,15.727,18.418,17.111,8.28,-11.904,22.719
+0115,Ovar,Aveiro,Região de Aveiro,coast / intermediate,14.393,16.85,17.071,8.245,-11.939,22.684
+1111,Sintra,Lisboa,Grande Lisboa,coast / urban,16.142,18.864,16.867,8.071,-12.113,22.51
+1310,Paredes,Porto,Área Metropolitana do Porto,inland / urban,13.795,16.108,16.763,7.982,-12.203,22.421
+1806,Mangualde,Viseu,Viseu Dão Lafões,inland / rural,5.833,6.809,16.719,7.944,-12.24,22.383
+1206,Crato,Portalegre,Alto Alentejo,inland / rural,3.074,3.578,16.369,7.643,-12.541,22.082
+0908,Manteigas,Guarda,Beiras e Serra da Estrela,inland / rural,3.598,4.174,16.013,7.337,-12.847,21.776
+1811,Penalva do Castelo,Viseu,Viseu Dão Lafões,inland / rural,4.702,5.446,15.82,7.171,-13.013,21.61
+1009,Leiria,Leiria,Região de Leiria,coast / intermediate,14.043,16.221,15.514,6.906,-13.278,21.345
+0103,Anadia,Aveiro,Região de Aveiro,inland / intermediate,9.097,10.499,15.415,6.82,-13.364,21.259
+1711,Santa Marta de Penaguião,Vila Real,Douro,inland / rural,5.913,6.801,15.014,6.473,-13.712,20.912
+1608,Valença,Viana do Castelo,Alto Minho,inland / intermediate,9.573,11.007,14.979,6.442,-13.742,20.881
+1609,Viana do Castelo,Viana do Castelo,Alto Minho,coast / intermediate,15.647,17.871,14.216,5.776,-14.408,20.215
+1818,Sernancelhe,Viseu,Douro,inland / rural,3.387,3.867,14.181,5.745,-14.439,20.184
+1607,Ponte de Lima,Viana do Castelo,Alto Minho,inland / intermediate,14.156,16.158,14.147,5.716,-14.468,20.155
+1802,Carregal do Sal,Viseu,Viseu Dão Lafões,inland / rural,5.397,6.16,14.142,5.711,-14.473,20.15
+1824,Vouzela,Viseu,Viseu Dão Lafões,inland / rural,5.5,6.277,14.123,5.695,-14.489,20.134
+0810,Olhão,Faro,Algarve,coast / intermediate,19.406,22.146,14.118,5.691,-14.494,20.13
+0605,Figueira da Foz,Coimbra,Região de Coimbra,coast / intermediate,13.582,15.497,14.097,5.672,-14.512,20.111
+1406,Cartaxo,Santarém,Lezíria do Tejo,coast / intermediate,10.508,11.971,13.927,5.523,-14.662,19.961
+1108,Lourinhã,Lisboa,Oeste,coast / intermediate,16.754,19.055,13.732,5.352,-14.832,19.791
+0511,Vila Velha de Ródão,Castelo Branco,Beira Baixa,inland / rural,2.917,3.318,13.714,5.336,-14.848,19.775
+0210,Moura,Beja,Baixo Alentejo,inland / rural,5.256,5.958,13.352,5.017,-15.167,19.456
+1003,Ansião,Leiria,Região de Leiria,inland / rural,6.279,7.094,12.987,4.694,-15.49,19.133
+1318,Trofa,Porto,Área Metropolitana do Porto,inland / urban,15.235,17.206,12.938,4.651,-15.533,19.09
+1415,Salvaterra de Magos,Santarém,Lezíria do Tejo,coast / rural,14.144,15.943,12.723,4.46,-15.724,18.899
+1307,Marco de Canaveses,Porto,Tâmega e Sousa,inland / intermediate,11.752,13.241,12.669,4.412,-15.772,18.851
+0309,Póvoa de Lanhoso,Braga,Ave,inland / intermediate,11.555,13.007,12.564,4.32,-15.865,18.759
+1418,Tomar,Santarém,Médio Tejo,inland / intermediate,8.712,9.793,12.411,4.183,-16.001,18.622
+0305,Celorico de Basto,Braga,Tâmega e Sousa,inland / rural,8.325,9.353,12.348,4.127,-16.057,18.566
+1209,Gavião,Portalegre,Alto Alentejo,inland / rural,3.174,3.56,12.164,3.963,-16.221,18.402
+0310,Terras de Bouro,Braga,Cávado,inland / rural,8.431,9.451,12.103,3.909,-16.275,18.348
+0101,Águeda,Aveiro,Região de Aveiro,inland / intermediate,10.92,12.233,12.023,3.838,-16.346,18.277
+1014,Peniche,Leiria,Oeste,coast / intermediate,16.269,18.223,12.009,3.825,-16.359,18.264
+0805,Faro,Faro,Algarve,coast / intermediate,19.6,21.919,11.832,3.667,-16.517,18.106
+0116,São João da Madeira,Aveiro,Área Metropolitana do Porto,inland / urban,11.951,13.364,11.828,3.664,-16.52,18.103
+0610,Montemor-o-Velho,Coimbra,Região de Coimbra,inland / intermediate,9.757,10.899,11.71,3.558,-16.626,17.997
+1113,Torres Vedras,Lisboa,Oeste,coast / intermediate,16.963,18.943,11.669,3.521,-16.663,17.96
+0811,Portimão,Faro,Algarve,coast / intermediate,22.095,24.671,11.658,3.512,-16.673,17.951
+1803,Castro Daire,Viseu,Viseu Dão Lafões,inland / rural,5.708,6.37,11.609,3.467,-16.717,17.906
+0202,Almodôvar,Beja,Baixo Alentejo,inland / rural,5.859,6.53,11.453,3.328,-16.857,17.767
+0510,Vila de Rei,Castelo Branco,Beira Baixa,inland / rural,4.255,4.742,11.451,3.325,-16.859,17.764
+0616,Tábua,Coimbra,Região de Coimbra,inland / rural,6.396,7.097,10.961,2.885,-17.299,17.324
+0813,Silves,Faro,Algarve,coast / rural,22.368,24.789,10.826,2.763,-17.421,17.202
+1311,Penafiel,Porto,Tâmega e Sousa,inland / intermediate,11.999,13.297,10.811,2.75,-17.434,17.189
+0407,Mirandela,Bragança,Terras de Trás-os-Montes,inland / rural,8.611,9.54,10.793,2.734,-17.45,17.173
+1304,Gondomar,Porto,Área Metropolitana do Porto,inland / urban,14.98,16.591,10.761,2.705,-17.48,17.143
+1501,Alcácer do Sal,Setúbal,Alentejo Litoral,coast / rural,12.978,14.355,10.607,2.565,-17.619,17.004
+1511,Sesimbra,Setúbal,Península de Setúbal,coast / intermediate,17.605,19.458,10.52,2.487,-17.697,16.926
+0212,Ourique,Beja,Baixo Alentejo,inland / rural,6.085,6.721,10.446,2.42,-17.765,16.859
+1010,Marinha Grande,Leiria,Região de Leiria,coast / intermediate,10.972,12.115,10.414,2.391,-17.793,16.83
+1303,Felgueiras,Porto,Tâmega e Sousa,inland / intermediate,10.878,12.01,10.408,2.385,-17.799,16.824
+1807,Moimenta da Beira,Viseu,Douro,inland / rural,5.388,5.944,10.33,2.315,-17.869,16.754
+1809,Nelas,Viseu,Viseu Dão Lafões,inland / intermediate,7.325,8.078,10.282,2.272,-17.913,16.71
+0304,Cabeceiras de Basto,Braga,Ave,inland / rural,8.595,9.46,10.063,2.072,-18.112,16.511
+0311,Vieira do Minho,Braga,Ave,inland / rural,7.861,8.647,9.996,2.012,-18.173,16.45
+0106,Castelo de Paiva,Aveiro,Tâmega e Sousa,inland / intermediate,9.457,10.369,9.649,1.696,-18.488,16.135
+0111,Mealhada,Aveiro,Região de Coimbra,inland / intermediate,10.614,11.638,9.642,1.689,-18.495,16.128
+0807,Lagos,Faro,Algarve,coast / intermediate,31.649,34.677,9.567,1.621,-18.563,16.06
+1315,Valongo,Porto,Área Metropolitana do Porto,inland / urban,14.577,15.959,9.48,1.542,-18.643,15.981
+1006,Caldas da Rainha,Leiria,Oeste,coast / intermediate,15.654,17.098,9.226,1.309,-18.875,15.748
+0405,Macedo de Cavaleiros,Bragança,Terras de Trás-os-Montes,inland / rural,7.598,8.298,9.207,1.291,-18.893,15.73
+1823,Viseu,Viseu,Viseu Dão Lafões,inland / intermediate,12.288,13.379,8.879,0.991,-19.193,15.43
+1109,Mafra,Lisboa,Grande Lisboa,coast / intermediate,20.105,21.89,8.876,0.988,-19.196,15.427
+0502,Castelo Branco,Castelo Branco,Beira Baixa,inland / rural,6.578,7.155,8.765,0.886,-19.298,15.325
+1314,Santo Tirso,Porto,Área Metropolitana do Porto,inland / intermediate,12.586,13.678,8.677,0.805,-19.379,15.244
+1816,São Pedro do Sul,Viseu,Viseu Dão Lafões,inland / rural,7.976,8.662,8.595,0.729,-19.455,15.168
+1504,Barreiro,Setúbal,Península de Setúbal,coast / urban,12.936,13.984,8.098,0.271,-19.913,14.71
+1116,Odivelas,Lisboa,Grande Lisboa,inland / urban,19.465,21.037,8.075,0.249,-19.935,14.688
+0201,Aljustrel,Beja,Baixo Alentejo,inland / rural,5.272,5.696,8.041,0.219,-19.966,14.658
+0411,Vimioso,Bragança,Terras de Trás-os-Montes,inland / rural,3.835,4.141,7.97,0.153,-20.032,14.592
+1306,Maia,Porto,Área Metropolitana do Porto,inland / urban,16.564,17.881,7.955,0.139,-20.045,14.578
+0603,Coimbra,Coimbra,Região de Coimbra,inland / intermediate,13.814,14.9,7.859,0.049,-20.135,14.488
+1513,Sines,Setúbal,Alentejo Litoral,coast / rural,14.871,16.036,7.833,0.025,-20.159,14.464
+1214,Portalegre,Portalegre,Alto Alentejo,inland / rural,6.49,6.997,7.815,0.009,-20.175,14.448
+1114,Vila Franca de Xira,Lisboa,Grande Lisboa,coast / intermediate,13.939,15.026,7.796,-0.009,-20.193,14.43
+0613,Penacova,Coimbra,Região de Coimbra,inland / rural,6.962,7.495,7.655,-0.139,-20.324,14.3
+0303,Braga,Braga,Cávado,inland / urban,16.242,17.452,7.45,-0.331,-20.515,14.108
+0119,Vale de Cambra,Aveiro,Área Metropolitana do Porto,inland / intermediate,11.289,12.114,7.311,-0.46,-20.644,13.979
+1506,Moita,Setúbal,Península de Setúbal,coast / urban,12.128,13.009,7.27,-0.498,-20.682,13.941
+0914,Vila Nova de Foz Côa,Guarda,Douro,inland / rural,4.506,4.814,6.823,-0.916,-21.1,13.523
+0912,Seia,Guarda,Beiras e Serra da Estrela,inland / rural,5.252,5.6,6.631,-1.095,-21.28,13.344
+0617,Vila Nova de Poiares,Coimbra,Região de Coimbra,inland / rural,7.903,8.423,6.584,-1.139,-21.324,13.299
+1007,Castanheira de Pêra,Leiria,Região de Leiria,inland / rural,4.731,5.037,6.46,-1.256,-21.44,13.183
+0815,Vila do Bispo,Faro,Algarve,coast / rural,26.667,28.371,6.388,-1.323,-21.508,13.115
+0306,Esposende,Braga,Cávado,coast / intermediate,22.6,24.032,6.334,-1.375,-21.559,13.064
+0214,Vidigueira,Beja,Baixo Alentejo,inland / rural,6.532,6.942,6.29,-1.415,-21.6,13.024
+0105,Aveiro,Aveiro,Região de Aveiro,coast / intermediate,18.059,19.173,6.166,-1.532,-21.716,12.907
+0208,Ferreira do Alentejo,Beja,Baixo Alentejo,inland / rural,5.937,6.295,6.035,-1.655,-21.84,12.784
+1509,Santiago do Cacém,Setúbal,Alentejo Litoral,coast / rural,13.717,14.542,6.014,-1.676,-21.86,12.763
+0307,Fafe,Braga,Ave,inland / intermediate,11.49,12.169,5.905,-1.778,-21.963,12.661
+0301,Amares,Braga,Cávado,inland / intermediate,13.458,14.213,5.607,-2.06,-22.244,12.379
+1419,Torres Novas,Santarém,Médio Tejo,inland / intermediate,8.335,8.791,5.465,-2.195,-22.379,12.244
+0501,Belmonte,Castelo Branco,Beiras e Serra da Estrela,inland / rural,5.594,5.888,5.244,-2.405,-22.589,12.034
+0601,Arganil,Coimbra,Região de Coimbra,inland / rural,5.6,5.886,5.106,-2.536,-22.72,11.903
+1808,Mortágua,Viseu,Região de Coimbra,inland / rural,7.767,8.163,5.092,-2.549,-22.734,11.89
+1605,Paredes de Coura,Viana do Castelo,Alto Minho,inland / rural,8.102,8.513,5.076,-2.565,-22.749,11.874
+1714,Vila Real,Vila Real,Douro,inland / intermediate,13.22,13.867,4.888,-2.744,-22.928,11.695
+1712,Valpaços,Vila Real,Alto Tâmega e Barroso,inland / rural,7.711,8.082,4.817,-2.811,-22.995,11.628
+0906,Gouveia,Guarda,Beiras e Serra da Estrela,inland / rural,4.493,4.7,4.61,-3.009,-23.193,11.43
+1405,Benavente,Santarém,Lezíria do Tejo,coast / rural,13.5,14.11,4.52,-3.095,-23.279,11.344
+0117,Sever do Vouga,Aveiro,Região de Aveiro,inland / rural,7.794,8.117,4.151,-3.449,-23.633,10.99
+0611,Oliveira do Hospital,Coimbra,Região de Coimbra,inland / rural,7.019,7.306,4.084,-3.513,-23.698,10.926
+0803,Aljezur,Faro,Algarve,coast / rural,30.858,32.059,3.893,-3.697,-23.881,10.742
+1813,Resende,Viseu,Tâmega e Sousa,inland / rural,6.631,6.885,3.837,-3.751,-23.935,10.688
+1610,Vila Nova de Cerveira,Viana do Castelo,Alto Minho,inland / rural,9.659,10.025,3.795,-3.791,-23.975,10.648
+0406,Miranda do Douro,Bragança,Terras de Trás-os-Montes,inland / rural,5.699,5.903,3.579,-3.999,-24.183,10.44
+1101,Alenquer,Lisboa,Oeste,coast / intermediate,13.216,13.677,3.489,-4.086,-24.27,10.353
+1815,São João da Pesqueira,Viseu,Douro,inland / rural,4.953,5.123,3.417,-4.156,-24.34,10.283
+0207,Cuba,Beja,Baixo Alentejo,inland / rural,7.44,7.694,3.411,-4.161,-24.346,10.277
+1204,Campo Maior,Portalegre,Alto Alentejo,inland / rural,4.766,4.914,3.108,-4.455,-24.639,9.984
+0503,Covilhã,Castelo Branco,Beiras e Serra da Estrela,inland / rural,7.937,8.161,2.816,-4.738,-24.923,9.701
+0108,Estarreja,Aveiro,Região de Aveiro,inland / intermediate,11.157,11.469,2.8,-4.754,-24.938,9.685
+0907,Guarda,Guarda,Beiras e Serra da Estrela,inland / rural,7.374,7.578,2.768,-4.786,-24.97,9.653
+1508,Palmela,Setúbal,Península de Setúbal,coast / intermediate,15.515,15.931,2.682,-4.869,-25.054,9.57
+0612,Pampilhosa da Serra,Coimbra,Região de Coimbra,inland / rural,2.652,2.723,2.678,-4.873,-25.057,9.566
+1507,Montijo,Setúbal,Península de Setúbal,coast / intermediate,16.428,16.865,2.662,-4.889,-25.073,9.55
+1115,Amadora,Lisboa,Grande Lisboa,inland / urban,15.791,16.191,2.534,-5.013,-25.198,9.426
+0710,Redondo,Évora,Alentejo Central,inland / rural,7.033,7.182,2.107,-5.43,-25.615,9.008
+1008,Figueiró dos Vinhos,Leiria,Região de Leiria,inland / rural,6.14,6.267,2.061,-5.476,-25.66,8.963
+1011,Nazaré,Leiria,Oeste,coast / intermediate,22.663,23.123,2.031,-5.506,-25.69,8.933
+1212,Nisa,Portalegre,Alto Alentejo,inland / rural,3.853,3.931,2.026,-5.51,-25.694,8.929
+1203,Avis,Portalegre,Alto Alentejo,inland / rural,5.638,5.732,1.673,-5.856,-26.041,8.583
+1817,Sátão,Viseu,Viseu Dão Lafões,inland / rural,7.269,7.356,1.185,-6.337,-26.522,8.102
+0910,Pinhel,Guarda,Beiras e Serra da Estrela,inland / rural,3.967,4.005,0.952,-6.568,-26.753,7.87
+0615,Soure,Coimbra,Região de Coimbra,inland / rural,7.117,7.157,0.564,-6.954,-27.138,7.485
+0114,Oliveira do Bairro,Aveiro,Região de Aveiro,inland / intermediate,13.082,13.138,0.43,-7.087,-27.271,7.352
+1213,Ponte de Sor,Portalegre,Alto Alentejo,inland / rural,8.049,8.078,0.362,-7.154,-27.338,7.285
+0902,Almeida,Guarda,Beiras e Serra da Estrela,inland / rural,3.467,3.477,0.295,-7.221,-27.405,7.218
+1703,Chaves,Vila Real,Alto Tâmega e Barroso,inland / rural,11.054,11.071,0.152,-7.364,-27.548,7.075
+0113,Oliveira de Azeméis,Aveiro,Área Metropolitana do Porto,inland / intermediate,11.845,11.814,-0.256,-7.772,-27.956,6.667
+0609,Miranda do Corvo,Coimbra,Região de Coimbra,inland / rural,7.902,7.872,-0.381,-7.898,-28.082,6.541
+0313,Vila Verde,Braga,Cávado,inland / intermediate,14.837,14.749,-0.593,-8.111,-28.295,6.328
+0604,Condeixa-a-Nova,Coimbra,Região de Coimbra,inland / intermediate,12.743,12.656,-0.683,-8.201,-28.385,6.238
+1002,Alvaiázere,Leiria,Região de Leiria,inland / rural,6.309,6.26,-0.776,-8.295,-28.479,6.144
+0607,Lousã,Coimbra,Região de Coimbra,inland / intermediate,10.011,9.925,-0.858,-8.377,-28.562,6.062
+1411,Ferreira do Zêzere,Santarém,Médio Tejo,inland / rural,8.926,8.838,-0.988,-8.508,-28.693,5.931
+0102,Albergaria-a-Velha,Aveiro,Região de Aveiro,inland / intermediate,12.204,12.07,-1.097,-8.619,-28.803,5.82
+1713,Vila Pouca de Aguiar,Vila Real,Alto Tâmega e Barroso,inland / rural,9.189,9.06,-1.404,-8.93,-29.114,5.509
+0403,Carrazeda de Ansiães,Bragança,Douro,inland / rural,5.126,5.041,-1.651,-9.181,-29.365,5.258
+1201,Alter do Chão,Portalegre,Alto Alentejo,inland / rural,4.385,4.309,-1.738,-9.269,-29.453,5.17
+0713,Viana do Alentejo,Évora,Alentejo Central,inland / rural,7.327,7.199,-1.744,-9.276,-29.46,5.163
+1305,Lousada,Porto,Tâmega e Sousa,inland / intermediate,12.848,12.615,-1.816,-9.349,-29.533,5.09
+0504,Fundão,Castelo Branco,Beiras e Serra da Estrela,inland / rural,7.133,6.983,-2.103,-9.641,-29.825,4.798
+1013,Pedrógão Grande,Leiria,Região de Leiria,inland / rural,6.105,5.962,-2.348,-9.892,-30.076,4.547
+0205,Beja,Beja,Baixo Alentejo,inland / rural,8.047,7.848,-2.474,-10.021,-30.206,4.418
+0302,Barcelos,Braga,Cávado,inland / intermediate,15.629,15.222,-2.608,-10.158,-30.343,4.281
+0703,Borba,Évora,Alentejo Central,inland / rural,6.196,6.034,-2.613,-10.163,-30.347,4.276
+0507,Penamacor,Castelo Branco,Beira Baixa,inland / rural,2.634,2.563,-2.729,-10.282,-30.466,4.157
+1822,Vila Nova de Paiva,Viseu,Viseu Dão Lafões,inland / rural,5.706,5.551,-2.729,-10.283,-30.467,4.156
+1412,Golegã,Santarém,Lezíria do Tejo,inland / rural,8.226,7.996,-2.802,-10.358,-30.542,4.081
+1112,Sobral de Monte Agraço,Lisboa,Oeste,inland / intermediate,12.291,11.911,-3.093,-10.658,-30.842,3.781
+0901,Aguiar da Beira,Guarda,Viseu Dão Lafões,inland / rural,5.123,4.962,-3.152,-10.719,-30.903,3.72
+1820,Tarouca,Viseu,Douro,inland / rural,7.93,7.678,-3.179,-10.747,-30.931,3.692
+0904,Figueira de Castelo Rodrigo,Guarda,Beiras e Serra da Estrela,inland / rural,2.522,2.433,-3.509,-11.088,-31.272,3.351
+1210,Marvão,Portalegre,Alto Alentejo,inland / rural,5.256,5.064,-3.66,-11.245,-31.429,3.194
+0104,Arouca,Aveiro,Área Metropolitana do Porto,inland / rural,11.414,10.993,-3.683,-11.269,-31.453,3.17
+0606,Góis,Coimbra,Região de Coimbra,inland / rural,4.536,4.357,-3.927,-11.522,-31.706,2.917
+1403,Almeirim,Santarém,Lezíria do Tejo,inland / intermediate,11.158,10.719,-3.937,-11.532,-31.717,2.906
+0402,Bragança,Bragança,Terras de Trás-os-Montes,inland / rural,9.198,8.821,-4.099,-11.701,-31.885,2.738
+0903,Celorico da Beira,Guarda,Beiras e Serra da Estrela,inland / rural,3.788,3.632,-4.114,-11.717,-31.901,2.722
+1601,Arcos de Valdevez,Viana do Castelo,Alto Minho,inland / rural,10.738,10.248,-4.561,-12.185,-32.369,2.254
+1420,Vila Nova da Barquinha,Santarém,Médio Tejo,inland / intermediate,9.273,8.751,-5.629,-13.31,-33.494,1.129
+0506,Oleiros,Castelo Branco,Beira Baixa,inland / rural,4.49,4.233,-5.725,-13.412,-33.596,1.027
+0508,Proença-a-Nova,Castelo Branco,Beira Baixa,inland / rural,6.587,6.208,-5.751,-13.439,-33.623,1.0
+0213,Serpa,Beja,Baixo Alentejo,inland / rural,6.871,6.47,-5.829,-13.522,-33.706,0.917
+0709,Portel,Évora,Alentejo Central,inland / rural,5.434,5.108,-6.01,-13.714,-33.898,0.725
+1016,Porto de Mós,Leiria,Região de Leiria,inland / rural,8.863,8.322,-6.103,-13.813,-33.997,0.626
+0702,Arraiolos,Évora,Alentejo Central,inland / rural,7.769,7.293,-6.119,-13.83,-34.014,0.609
+1710,Sabrosa,Vila Real,Douro,inland / rural,6.125,5.741,-6.284,-14.006,-34.19,0.433
+0509,Sertã,Castelo Branco,Beira Baixa,inland / rural,9.034,8.466,-6.285,-14.007,-34.191,0.432
+0704,Estremoz,Évora,Alentejo Central,inland / rural,6.971,6.488,-6.922,-14.689,-34.873,-0.25
+1401,Abrantes,Santarém,Médio Tejo,inland / rural,6.646,6.115,-8.002,-15.856,-36.04,-1.417
+1810,Oliveira de Frades,Viseu,Viseu Dão Lafões,inland / rural,8.968,8.233,-8.2,-16.072,-36.256,-1.633
+1102,Arruda dos Vinhos,Lisboa,Oeste,inland / intermediate,14.75,13.508,-8.423,-16.314,-36.499,-1.875
+1606,Ponte da Barca,Viana do Castelo,Alto Minho,inland / rural,10.757,9.85,-8.427,-16.319,-36.504,-1.88
+1410,Entroncamento,Santarém,Médio Tejo,inland / urban,10.192,9.284,-8.91,-16.848,-37.032,-2.409
+0913,Trancoso,Guarda,Beiras e Serra da Estrela,inland / rural,4.599,4.171,-9.314,-17.293,-37.477,-2.854
+1416,Santarém,Santarém,Lezíria do Tejo,inland / intermediate,11.352,10.101,-11.022,-19.194,-39.378,-4.755
+1407,Chamusca,Santarém,Lezíria do Tejo,inland / rural,6.994,6.216,-11.122,-19.306,-39.491,-4.868
+0706,Montemor-o-Novo,Évora,Alentejo Central,inland / rural,10.331,9.132,-11.605,-19.851,-40.035,-5.412
+0711,Reguengos de Monsaraz,Évora,Alentejo Central,inland / rural,9.019,7.969,-11.646,-19.897,-40.082,-5.458
+1814,Santa Comba Dão,Viseu,Viseu Dão Lafões,inland / rural,8.023,7.069,-11.883,-20.166,-40.35,-5.727
+1402,Alcanena,Santarém,Médio Tejo,inland / rural,7.226,6.366,-11.909,-20.196,-40.38,-5.757
+0404,Freixo de Espada à Cinta,Bragança,Douro,inland / rural,3.864,3.403,-11.943,-20.234,-40.419,-5.796
+1208,Fronteira,Portalegre,Alto Alentejo,inland / rural,5.775,5.083,-11.976,-20.271,-40.456,-5.832
+1705,Mondim de Basto,Vila Real,Ave,inland / rural,7.623,6.702,-12.078,-20.387,-40.572,-5.949
+1207,Elvas,Portalegre,Alto Alentejo,inland / rural,6.894,6.029,-12.542,-20.917,-41.101,-6.478
+0705,Évora,Évora,Alentejo Central,inland / rural,13.888,12.127,-12.684,-21.08,-41.264,-6.641
+0909,Mêda,Guarda,Beiras e Serra da Estrela,inland / rural,4.721,4.114,-12.846,-21.266,-41.45,-6.827
+1604,Monção,Viana do Castelo,Alto Minho,inland / rural,13.187,11.493,-12.847,-21.266,-41.45,-6.827
+1414,Rio Maior,Santarém,Lezíria do Tejo,inland / rural,10.781,9.346,-13.312,-21.802,-41.986,-7.363
+0206,Castro Verde,Beja,Baixo Alentejo,inland / rural,6.97,6.025,-13.57,-22.099,-42.283,-7.66
+0614,Penela,Coimbra,Região de Coimbra,inland / rural,9.023,7.733,-14.301,-22.949,-43.133,-8.51
+1404,Alpiarça,Santarém,Lezíria do Tejo,inland / rural,10.493,8.937,-14.826,-23.563,-43.747,-9.124
+1104,Cadaval,Lisboa,Oeste,inland / rural,11.262,9.565,-15.062,-23.841,-44.025,-9.402
+0209,Mértola,Beja,Baixo Alentejo,inland / rural,4.363,3.669,-15.914,-24.848,-45.033,-10.409
+1005,Bombarral,Leiria,Oeste,inland / intermediate,13.705,11.51,-16.02,-24.975,-45.159,-10.536
+0701,Alandroal,Évora,Alentejo Central,inland / rural,7.155,5.934,-17.057,-26.217,-46.401,-11.778
+0812,São Brás de Alportel,Faro,Algarve,inland / rural,19.652,16.253,-17.3,-26.511,-46.695,-12.072
+1702,Boticas,Vila Real,Alto Tâmega e Barroso,inland / rural,6.583,5.425,-17.59,-26.862,-47.047,-12.423
+0809,Monchique,Faro,Algarve,inland / rural,11.305,9.205,-18.58,-28.07,-48.255,-13.631
+1417,Sardoal,Santarém,Médio Tejo,inland / rural,5.898,4.799,-18.635,-28.139,-48.323,-13.7
+1215,Sousel,Portalegre,Alto Alentejo,inland / rural,6.007,4.857,-19.142,-28.763,-48.947,-14.324
+1409,Coruche,Santarém,Lezíria do Tejo,inland / rural,11.091,8.886,-19.884,-29.685,-49.87,-15.246
+1408,Constância,Santarém,Médio Tejo,inland / rural,8.731,6.993,-19.912,-29.72,-49.905,-15.281
+0712,Vendas Novas,Évora,Alentejo Central,inland / rural,12.246,9.732,-20.525,-30.488,-50.673,-16.049
+1202,Arronches,Portalegre,Alto Alentejo,inland / rural,5.777,4.544,-21.336,-31.515,-51.699,-17.076
+1205,Castelo de Vide,Portalegre,Alto Alentejo,inland / rural,4.899,3.819,-22.049,-32.425,-52.609,-17.986
+0707,Mora,Évora,Alentejo Central,inland / rural,7.684,5.821,-24.245,-35.283,-55.467,-20.844
+1709,Ribeira de Pena,Vila Real,Alto Tâmega e Barroso,inland / rural,8.703,6.217,-28.567,-41.156,-61.341,-26.717

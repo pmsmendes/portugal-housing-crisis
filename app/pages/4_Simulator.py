@@ -250,8 +250,8 @@ reference = {
     "hi80": (real["hi80"] * scale).to_numpy(),
 }
 
-tab1, tab2, tab3, tab4 = st.tabs(
-    ["Affordability", "Housing balance and cost", "Assumptions", "Sensitivity"]
+tab1, tab2, tab3, tab4, tab5 = st.tabs(
+    ["Affordability", "Housing balance and cost", "Assumptions", "Sensitivity", "Regional outlook"]
 )
 with tab1:
     left, right = st.columns(2)
@@ -359,4 +359,54 @@ with tab4:
     st.dataframe(
         sens[["parameter", "kind", "low_pti_end", "high_pti_end", "swing_pti_end"]].round(2),
         hide_index=True,
+    )
+
+with tab5:
+    st.markdown(
+        "**Where will affordability worsen more than elsewhere?** A validated trend extrapolation (phase 4, "
+        "`p4_03`), stated *relative to the median municipality*: it ranks places, it does not give their level, "
+        "which is the scenario above. Coloured: the 80% interval (from past errors) excludes zero."
+    )
+    unit = st.radio("Group by", ["Coast x density class", "NUTS 3 region"], horizontal=True)
+    name, col = ("classes", "segment") if unit.startswith("Coast") else ("regions", "region")
+    out = pd.read_csv(TABLES / "p4" / f"regional_outlook_{name}.csv").sort_values("relative")
+    sure = (out["relative_lo80"] > 0) | (out["relative_hi80"] < 0)
+    colors = [
+        (style.ORANGE if r > 0 else style.BLUE) if k else style.MUTED
+        for r, k in zip(out["relative"], sure, strict=True)
+    ]
+    fig = go.Figure(
+        go.Scatter(
+            x=out["relative"],
+            y=out[col],
+            mode="markers",
+            marker=dict(size=10, color=colors),
+            error_x=dict(
+                type="data",
+                symmetric=False,
+                array=out["relative_hi80"] - out["relative"],
+                arrayminus=out["relative"] - out["relative_lo80"],
+                color=style.MUTED,
+            ),
+            customdata=out[["change_pct", "municipalities_n"]],
+            hovertemplate="%{y}<br>%{x:+.1f} points vs median (own change %{customdata[0]:+.0f}%, "
+            "%{customdata[1]} municipalities)<extra></extra>",
+        )
+    )
+    fig.add_vline(x=0, line_color=style.INK_2, line_width=1)
+    fig.update_layout(
+        title=f"Expected change in price-to-income to 2026 relative to the median municipality ({unit.lower()})",
+        height=max(320, 22 * len(out) + 120),
+        margin=dict(l=10, r=10, t=50, b=10),
+        plot_bgcolor=TRANSPARENT,
+        paper_bgcolor=TRANSPARENT,
+        xaxis_title="percentage points",
+    )
+    fig.update_xaxes(gridcolor=GRID)
+    fig.update_yaxes(showgrid=False)
+    st.plotly_chart(fig, width="stretch")
+    st.caption(
+        "Class or region trend of 2016 to 2024 (a boom), validated on rolling origins 2019 to 2023: municipal rank "
+        "correlation 0.43 two years ahead, region-level skill weak, class-level strong. Mainland only. Adjusted "
+        "associations, not causal; single municipalities are noisy (see `reports/p4_forecast.md`)."
     )
