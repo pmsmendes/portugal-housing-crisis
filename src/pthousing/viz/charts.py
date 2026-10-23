@@ -1295,3 +1295,139 @@ def long_run_prices(long: pd.DataFrame, seam_year: int = 2009) -> Figure:
         head_in=1.3,
         foot_in=0.6,
     )
+
+
+# ---- renting versus buying ------------------------------------------------------------------------
+
+
+def rent_vs_buy_long_run(
+    nat: pd.DataFrame,
+    measured_yield: pd.Series,
+    forward_growth: pd.Series,
+    flat_real_growth: float,
+) -> Figure:
+    """National cost of owning against the rent yield, and the price growth that makes owning pay.
+
+    ``nat`` is ``rent_vs_buy.national_breakeven`` (indexed by year). Left: yearly cost of owning and rent
+    yield, both in % of the price, with the municipal measure of the yield where it exists. Right: the
+    break-even price growth against the growth that followed over the next five years (``forward_growth``,
+    nominal, per year) and the growth with flat real prices (``flat_real_growth``).
+    """
+    fig, (left, right) = plt.subplots(1, 2, figsize=(11, 4.6))
+    own, rent, be = nat["owner_cost_pct"], nat["rent_yield_pct"], nat["breakeven_pct"]
+    _line(left, rent.index, rent, BLUE)
+    _line(left, own.index, own, ORANGE, z=4)
+    left.plot(
+        measured_yield.index, measured_yield, "o", ms=5, mfc=SURFACE, mec=BLUE, mew=1.5, zorder=5
+    )
+    for series, color in ((rent, BLUE), (own, ORANGE)):
+        _end_dot(left, series.index[-1], series.iloc[-1], color)
+        _label(left, series.index[-1], series.iloc[-1], f"{series.iloc[-1]:.1f}%")
+    _legend(left, [Line2D([], [], color=ORANGE, lw=LINE_WIDTH, label="Yearly cost of owning"),
+                   Line2D([], [], color=BLUE, lw=LINE_WIDTH, label="Rent yield"),
+                   Line2D([], [], color=BLUE, marker="o", ls="", mfc=SURFACE, mew=1.5, label="Rent yield, measured")], loc="upper left")  # fmt: skip
+    fwd = forward_growth.dropna()
+    right.axhline(0, color=style.BASELINE, lw=1, zorder=1)
+    right.axhline(flat_real_growth, color=MUTED, lw=1, ls=(0, (2, 3)), zorder=1)
+    right.text(
+        be.index[0],
+        flat_real_growth + 0.25,
+        "flat real prices",
+        fontsize=8,
+        color=MUTED,
+        va="bottom",
+    )
+    _line(right, be.index, be, BLUE)
+    _line(right, fwd.index, fwd, ORANGE, z=4)
+    for series, color in ((be, BLUE), (fwd, ORANGE)):
+        _end_dot(right, series.index[-1], series.iloc[-1], color)
+        _label(right, series.index[-1], series.iloc[-1], f"{series.iloc[-1]:.1f}%")
+    _legend(right, [Line2D([], [], color=BLUE, lw=LINE_WIDTH, label="Break-even price growth"),
+                    Line2D([], [], color=ORANGE, lw=LINE_WIDTH, label="Price growth, next five years")], loc="upper left")  # fmt: skip
+    for ax in (left, right):
+        ax.set_xlim(ax.get_xlim()[0], 2025 + 4.5)
+        ax.set_xticks(range(2005, 2026, 5))
+        ax.yaxis.set_major_formatter(mticker.FuncFormatter(lambda v, _: f"{v:g}%"))
+    left.set_ylim(2.5, 11)
+    right.set_ylim(-5, 17)
+    _panel_title(left, "Owning against renting, % of the price a year")
+    _panel_title(right, "Price growth that makes owning pay, % a year")
+    low_year = int(be.idxmin())
+    title = (
+        f"The price growth that makes owning pay rose from {be.min():.1f}% a year in {low_year} "
+        f"to {be.iloc[-1]:.1f}% in {be.index[-1]}"
+    )
+    return style.finish(
+        fig,
+        title,
+        "National, annual; costs in % of the price; break-even = yearly cost of owning minus the rent yield",
+        "Source: OECD (price-to-rent), Banco de Portugal, INE (rents of new leases, IMI rates via AT), own calculations. Assumptions: "
+        "80% loan, 3% on the deposit, 1% upkeep, 6% buying costs over 10 years, IMI on 60% of the price.",
+        head_in=1.3,
+        foot_in=0.6,
+    )
+
+
+def owner_cost_stack(table: pd.DataFrame, rent_yield: pd.Series) -> Figure:
+    """Yearly cost of owning by component for chosen years, against the rent yield.
+
+    ``table`` has one row per year with the five ``rent_vs_buy.COMPONENTS`` columns (% of the price);
+    ``rent_yield`` the yield for the same years. Components are grouped as financing (interest and the
+    return forgone on the deposit), running costs (property tax, upkeep) and buying costs.
+    """
+    groups = {
+        "Interest and return forgone on the deposit": ["interest", "deposit_return"],
+        "Property tax and upkeep": ["property_tax", "maintenance"],
+        "Buying costs (IMT, stamp duty, fees)": ["buying_costs"],
+    }
+    shades = [style.BLUE_RAMP[s] for s in (600, 350, 150)]
+    fig, ax = plt.subplots(figsize=(9, 3.4 + 0.45 * len(table)))
+    y = np.arange(len(table))[::-1]
+    left = np.zeros(len(table))
+    for (label, cols), color in zip(groups.items(), shades, strict=True):
+        width = table[cols].sum(axis=1).to_numpy()
+        ax.barh(y, width, left=left, height=0.55, color=color, label=label, zorder=3)
+        left = left + width
+    for yi, total in zip(y, left, strict=True):
+        ax.text(
+            total + 0.08,
+            yi + 0.36,
+            f"{total:.1f}%",
+            fontsize=9.5,
+            color=INK,
+            fontweight="bold",
+            va="center",
+        )
+    ax.plot(
+        rent_yield.to_numpy(),
+        y,
+        "D",
+        ms=9,
+        mfc=ORANGE,
+        mec=SURFACE,
+        mew=2,
+        zorder=6,
+        label="Rent yield",
+    )
+    ax.set_yticks(y, [str(i) for i in table.index])
+    ax.set_xlim(0, max(left.max(), rent_yield.max()) * 1.12)
+    ax.xaxis.set_major_formatter(mticker.FuncFormatter(lambda v, _: f"{v:g}%"))
+    ax.grid(axis="y", visible=False)
+    ax.legend(
+        loc="upper left",
+        bbox_to_anchor=(0, -0.08),
+        ncol=2,
+        fontsize=9,
+        labelcolor=INK_2,
+        frameon=False,
+    )
+    low = int(np.argmin(left))
+    return style.finish(
+        fig,
+        f"Owning cost {left[low]:.1f}% of the price a year in {table.index[low]} and {left[-1]:.1f}% in {table.index[-1]}, "
+        f"against a rent yield of {rent_yield.iloc[-1]:.1f}%",
+        "Yearly cost of owning a home in % of its price, before price gains, against the rent yield (diamonds)",
+        "Source: Banco de Portugal, INE, OECD, AT; own calculations. Assumptions as in docs/methodology.md.",
+        head_in=1.0,
+        foot_in=1.1,
+    )

@@ -15,7 +15,7 @@ Reference questions by ID (e.g. `RQ2.3`) in notebooks, reports and commits.
 | RQ1.3 | How have prices and rents evolved in real (inflation-adjusted) terms? | done | `p1_01`, `reports/p1_evidence.md` (national 2009-2026, municipal prices 2016-2025, rents 2020-2024) |
 | RQ1.4 | How has affordability changed relative to household income and wage growth? | wip | `p1_02`: relative to income (PTI, RTI, burden, 2016-2024); `p1_03`: national price-to-income per head 1995-2025 (167 in 2025 vs 142 in 1995, 97 in 2013); wage growth not covered |
 | RQ1.5 | How many years of gross household income are needed to buy a typical home in each region? | done | `p1_02`: map, municipality and district tables (2024); levels depend on the income concept |
-| RQ1.6 | How does the total cost of buying compare with renting (interest, down payment, taxes, maintenance, other costs)? | — | |
+| RQ1.6 | How does the total cost of buying compare with renting (interest, down payment, taxes, maintenance, other costs)? | done | `p1_04`, `reports/p1_evidence.md` (renting or buying): 2024 owning costs 5.9% of the price a year against a 5.6% rent yield (assumed costs, observed rates); break-even price growth went from -3.9% (2016) to +1.2% (2024), driven by the mortgage rate; owning cheaper with no price gain in 41% of municipalities with a rent; deposit plus buying costs a median 2.5 years of income; rents of new leases 2020-2024 only |
 | RQ1.7 | How have mortgage rates and lending conditions affected ownership affordability? | wip | `p1_01`, `p1_02`: rates and the rate effect on the burden; lending conditions (LTV, term, credit standards) not covered |
 | RQ1.8 | How has the gap between advertised and actual transaction prices evolved? | — | |
 

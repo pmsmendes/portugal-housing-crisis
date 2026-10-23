@@ -1,0 +1,7 @@
+dimension,group,municipalities_n,with_rent_n,rent_yield_pct,breakeven_pct,cash_cost_vs_rent,pti_years,upfront_cash_years
+density,intermediate,84,78,5.18,0.69,1.15,13.22,3.44
+density,rural,189,99,6.34,-0.44,0.95,6.81,1.77
+density,urban,35,35,5.09,0.78,1.17,16.14,4.2
+coast,coast,87,69,4.9,1.02,1.23,15.73,4.09
+coast,estuary,9,9,5.28,0.68,1.15,13.22,3.44
+coast,inland,212,134,6.21,-0.32,0.96,7.33,1.9

@@ -2,6 +2,13 @@
 
 Analytic and engineering choices, newest first. One short entry each: what, why, alternatives rejected.
 
+## 2026-10-23 — Renting versus buying as a user cost with assumed components (RQ1.6)
+- **What:** `features/rent_vs_buy.py` and `p1_04`. Yearly cost of owning (interest on the loan, return forgone on the deposit, IMI on part of the price, upkeep, buying costs over ten years) as a % of the price, against the rent yield; the difference is the break-even price growth. Municipal for 2020-2024 (the only years with rents), national for 2003-2025 with the OECD price-to-rent index scaled to the municipal yield. The columns are computed by `add_indicators`, not stored in the panel.
+- **Why a user cost, not a cash comparison:** payments include principal, which is saving; the economic cost of owning is interest, forgone return, taxes and upkeep. The cash view is kept as a second indicator because it is what a household must pay each month.
+- **Why assumed parameters:** the project has no data on deposit returns, taxable values or IMT paid, and inventing precision would mislead. They live in `config.py`, the sensitivity is a table, and the conclusion about change over time rests on the observed mortgage rate, not on them.
+- **Anchoring:** the OECD rent index covers all leases (slow), municipal rents are new leases (market): they diverge by -0.5 to +0.6 pp in 2020-2024. The scale is calibrated on 2020-2024 as a geometric mean rather than on one year, and the gap is published.
+- **Rejected:** adding the columns to the municipal panel (nothing else uses them yet, and the panel feeds the dashboard); modelling expected appreciation (the break-even avoids a forecast); comparing the mortgage payment with the rent alone (ignores that principal builds wealth).
+
 ## 2026-10-23 — Thirty-year national series from the BIS and the OECD, not spliced
 - **What:** sources `bis` (WS_SPP, Portugal quarterly, 1988 on) and `oecd` (DSD_AN_HOUSE_PRICES, annual); interim tables `bis_spp` and `oecd_house_prices`; processed `national_annual_long` (1988 to 2025) with the BIS annual mean rebased to 2015, a real index from the project CPI, and the OECD rent, price-to-rent and price-to-income. Notebook `p1_03`.
 - **Why no splice:** from 2009 the BIS index is INE's exactly (constant ratio over 69 quarters), so the BIS series already is the long INE series; before 2009 nothing overlaps, so a join cannot be tested. Re-chaining would only hide that, so the seam is marked on the chart and written in `data_quality.md`.

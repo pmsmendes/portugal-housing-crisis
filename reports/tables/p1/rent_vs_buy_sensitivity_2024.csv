@@ -1,0 +1,14 @@
+assumption,value,median_owner_cost_pct,median_breakeven_pct,share_owning_cheaper_pct
+base,,5.87,0.31,96.23
+opportunity_rate_pct,0.0,5.27,-0.29,99.06
+opportunity_rate_pct,5.0,6.27,0.71,89.62
+maintenance_pct,0.5,5.37,-0.19,99.06
+maintenance_pct,2.0,6.87,1.31,74.06
+buying_costs_pct,3.0,5.57,0.01,98.11
+buying_costs_pct,9.0,6.17,0.61,91.51
+holding_years,5.0,6.47,0.91,86.32
+holding_years,20.0,5.57,0.01,98.11
+imi_taxable_share,0.3,5.78,0.22,96.7
+imi_taxable_share,1.0,5.99,0.43,95.28
+ltv,0.6,5.6,0.03,97.64
+ltv,0.9,6.01,0.44,94.81

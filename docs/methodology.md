@@ -11,6 +11,11 @@ Definitions are implemented once in code; this file states them and points to th
 | Ownership cost index | Real house price index × monthly payment per 100,000 EUR of a 30-year annuity at the quarter's average contract rate, rebased to 100 over a base year | `ownership_cost_index` | National quarterly (`national_quarterly`); the income-neutral affordability indicator forecast in p4 (no quarterly national income exists; the simulator divides by an income scenario) |
 | Housing vs household growth | (Δ conventional dwellings − Δ private households) per 1,000 households at the start, census 2011 → 2021 | `supply_gap_per_1000` | Panel column `supply_gap_2011_2021_per_1000` (one value per municipality) (RQ2.3, RQ4.5) |
 | Implied housing gap | (completions − new households) per 1,000 households at the start, 2021 → 2023; new households = Δ population / persons per household in 2021 (population estimate / census households) | `implied_gap_per_1000`, `analysis/supply.py` | Proxy for the years after the last census (RQ2.3, RQ4.5): completions are new family dwellings only, households are implied, not counted |
+| Rent yield | 12 × median monthly rent per m² of new leases / median sale price per m², in % | `gross_rent_yield_pct` (`features/rent_vs_buy.py`) | 2020–2024 (RQ1.6) |
+| Cost of owning | % of the price per year, before price gains: `LTV × mortgage rate` + `(1 − LTV) × OPPORTUNITY_RATE_PCT` + `IMI_TAXABLE_SHARE × municipal IMI rate` + `MAINTENANCE_PCT` + `BUYING_COSTS_PCT / HOLDING_YEARS` | `owner_cost_components`, `owner_cost_rate_pct` | User cost of housing. Interest only, since principal repaid is saving. Columns added by `add_indicators` (not stored in the panel) |
+| Break-even appreciation | Cost of owning − rent yield (percentage points of yearly nominal price growth) | `breakeven_appreciation_pct` | Negative: owning is cheaper even if prices fall; above `EXPECTED_APPRECIATION_PCT` (2%, flat real prices): renting is cheaper |
+| Owner cash bill / rent | (annuity payments on the loan + IMI + upkeep) / rent, yearly | `owner_cash_cost_pct` | Includes principal, so above 1 can mean saving, not cost |
+| Upfront cash | `PTI × ((1 − LTV) + BUYING_COSTS_PCT / 100)`, years of income | `upfront_cash_years` | Deposit plus buying costs |
 
 ### Inputs and conventions
 - **Price and rent are per m²**: INE publishes no total dwelling price, so a dwelling is the per-m² value times an area. The area is the municipality's census mean useful area of dwellings of usual residence (`dwelling_area_sqm`, linearly interpolated between 2011 and 2021, flat outside). That is the size of *occupied* homes, probably larger than what is typically bought or newly let, so levels are biased upwards; the `_100sqm` columns use a fixed `BENCHMARK_AREA_SQM` (100 m²) to compare municipalities on one dwelling.
@@ -28,6 +33,18 @@ Definitions are implemented once in code; this file states them and points to th
 | APRC (5.98%) instead of the agreed rate | 54.3% |
 | 100 m² benchmark dwelling | 36.9% |
 | Same prices and incomes with the 2021 rate (2.5%) | 27.8% |
+
+### Assumptions of the rent-vs-buy comparison (`config.py`; assumptions, not estimates)
+| Parameter | Value | Why / range tried |
+|---|---|---|
+| `OPPORTUNITY_RATE_PCT` | 3% | Return forgone on the deposit; no deposit-rate series in the project. 0% to 5% |
+| `MAINTENANCE_PCT` | 1% of the price | Common rule of thumb (1-2%). 0.5% to 2% |
+| `BUYING_COSTS_PCT` | 6% | IMT, stamp duty, notary and registry on a typical purchase; not computed from the IMT brackets. 3% to 9% |
+| `HOLDING_YEARS` | 10 | Spreads the buying costs; selling costs ignored. 5 to 20 |
+| `IMI_TAXABLE_SHARE` | 0.6 | Taxable value (VPT) as a share of the market price; VPT is not in the data. 0.3 to 1.0 |
+| Mortgage rate | observed | Agreed rate on new floating-rate loans, as in the mortgage burden |
+
+Municipalities without one urban IMI rate (parish rates) take the year's mean rate (8 of 308 in 2024). The 2024 median break-even moves between -0.3 and +1.3 pp across these ranges (`rent_vs_buy_sensitivity_2024.csv`). The national long series divides a scale by the OECD price-to-rent index; the scale makes it match the lease-weighted municipal yield over 2020-2024 (`calibrate_yield_scale`).
 
 ### Alternative definitions for robustness (M1)
 `pti_years_100sqm`, `pti_years_mean_income` (mean instead of median income, for the 3% of municipality-years where the median is missing and as a check), `rti_pct_100sqm`, `mortgage_burden_pct_100sqm`; other LTV, term and rate choices through the function arguments.

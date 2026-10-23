@@ -91,6 +91,47 @@ Tables: `long_run_summary.csv`, `national_vs_municipal_pti.csv`.
 Tables: `affordability_by_municipality_2024.csv`, `pti_by_district_2016_2024.csv`,
 `pti_change_by_municipality_2016_2024.csv`.
 
+## Renting or buying? (RQ1.6)
+
+A year of owning costs the interest on the loan, the return forgone on the deposit, property tax (IMI), upkeep and the
+one-off costs of buying spread over ten years: **5.9% of the price in 2024** (median municipality), against a rent yield
+(twelve rents over the price) of 5.6%. The difference is the **break-even appreciation**, the yearly price growth at which
+owning costs the same as renting. Only the mortgage rate and the IMI rate are observed; the loan (80%), the 3% return on
+the deposit, 1% upkeep, 6% buying costs, ten years and IMI on 60% of the price are assumptions (`config.py`), so the
+levels carry about a point of doubt and the **changes** are the finding (sensitivity below).
+
+![Owning against renting, national](figures/p1/rent_vs_buy_long_run.png)
+
+- **The rate decides, not the price.** The cost of owning fell from 5.5% of the price in 2012 to 2.9% in 2021 and went
+  back to 5.9% in 2024 as the mortgage rate went from 3.9% to 0.7% to 4.4%. The rent yield moved much less (5.5% in the
+  median municipality in both 2020 and 2024). The break-even went from -3.9% a year in 2016 (owning was cheaper even if
+  prices fell 4% a year) to +1.2% in 2024 and +0.6% in 2025. In the median municipality the owner's cash bill
+  (payments including principal, IMI, upkeep) went from 0.77 of the rent in 2020 to 1.09 in 2024.
+- **At flat real prices owning has been cheaper in every year since 2003** (break-even below 2%), and by hindsight it paid in
+  15 of 18 years (2003-2020), not in 2006-2008, when the next five years brought falling prices. That says what happened,
+  not what to expect: rents of new leases are used, existing leases follow inflation and are cheaper to hold.
+- **Not every place.** In 2024 owning is cheaper than renting with no price gain in 86 of the 212 municipalities with a
+  rent (41%), and dearer even at 2% growth in 8, all tourist or coastal (Algarve, Madeira, Nazaré). Break-even is
+  0.8 pp in urban and -0.4 pp in rural municipalities, 1.0 on the coast and -0.3 inland: renting is relatively cheaper where
+  prices are high.
+
+![Cost of owning by component](figures/p1/rent_vs_buy_cost_stack.png)
+
+| Break-even price growth, 2024 | Cash needed on the day, 2024 |
+|---|---|
+| ![Break-even map](figures/p1/rent_vs_buy_breakeven_map_2024.png) | ![Upfront cash map](figures/p1/rent_vs_buy_upfront_cash_map_2024.png) |
+
+- **The barrier is cash, not the yearly cost.** The deposit plus buying costs are a median 2.5 years of income (10th to
+  90th percentile 1.2 to 4.8), above three years in 111 of 299 municipalities and above six in the Algarve, Madeira and
+  Lisbon's coast. A household that cannot save that, or that cannot get an 80% loan at a burden of 45% of income
+  (`p1_02`), is renting whatever the yearly arithmetic says; this analysis compares costs, not access.
+- **Sensitivity (2024, median municipality):** the break-even of 0.3 pp moves between -0.3 (no return forgone on the deposit)
+  and 1.3 (2% upkeep); with 2% upkeep owning is cheaper at flat real prices in 74% of municipalities instead of 96%. The
+  sign of the change since 2021 does not depend on any assumption, since only the rate moves.
+
+Tables: `rent_vs_buy_trend_2020_2024.csv`, `rent_vs_buy_by_municipality_2024.csv`, `rent_vs_buy_by_type_2024.csv`,
+`rent_vs_buy_sensitivity_2024.csv`, `rent_vs_buy_anchor_check.csv`.
+
 ## Limitations
 
 - **Short municipal history.** Municipal prices exist from 2016 and rents from 2020; INE's national index starts in
@@ -108,11 +149,16 @@ Tables: `affordability_by_municipality_2024.csv`, `pti_by_district_2016_2024.csv
   (mostly inland) are missing in 2024; rents are those of new leases, not of existing contracts.
 - **Thin markets are volatile.** The largest percentage price rises (for example Lajes do Pico, +547%) come from
   municipalities with few sales; use the tables with the sales count in the panel.
+- **Rent versus buy rests on assumptions and mixes two rent concepts.** Municipal rents are those of new leases for
+  2020-2024 only; the national history applies the OECD price-to-rent index, which covers all leases, scaled to the
+  municipal yield, and differs from the measured yield by -0.5 to +0.6 pp in 2020-2024 (`rent_vs_buy_anchor_check.csv`).
+  Dwellings that are rented are not those that are sold (size, age, quality), the taxable value for IMI is assumed to be
+  60% of the price, and the comparison ignores risk, mobility, rent control and who can get a loan.
 - **One national mortgage rate** (agreed rate on new floating-rate loans) applies to every municipality, and the loan
   (80% of the price over 30 years) is an assumption, not an estimate.
 - **Descriptive, not causal.** The report says what changed and where, not why; that is phase 2.
 
 ## Questions answered
 
-RQ1.3, RQ1.5, RQ4.1 and RQ4.2 are answered with the available data; RQ1.1 (national thirty years done, municipal from 2016), RQ1.4 and RQ1.7 are partly answered
+RQ1.3, RQ1.5, RQ1.6, RQ4.1 and RQ4.2 are answered with the available data; RQ1.1 (national thirty years done, municipal from 2016), RQ1.4 and RQ1.7 are partly answered
 (see [research_questions](../docs/research_questions.md)).

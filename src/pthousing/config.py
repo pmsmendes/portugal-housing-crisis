@@ -27,6 +27,13 @@ BASE_YEAR = 2024
 # with sensitivity to both; see docs/methodology.md and docs/decisions.md).
 MORTGAGE_LTV = 0.80  # loan as a share of the dwelling price
 MORTGAGE_TERM_YEARS = 30
+# Rent-vs-buy assumptions (features/rent_vs_buy.py; assumptions, not estimates, shown with sensitivity).
+OPPORTUNITY_RATE_PCT = 3.0  # yearly return forgone on the deposit
+MAINTENANCE_PCT = 1.0  # yearly upkeep as a share of the price
+BUYING_COSTS_PCT = 6.0  # IMT, stamp duty, notary and registry, share of the price
+HOLDING_YEARS = 10  # years over which the buying costs are spread
+IMI_TAXABLE_SHARE = 0.6  # taxable value (VPT) as a share of the market price
+EXPECTED_APPRECIATION_PCT = 2.0  # yearly nominal price growth with flat real prices (ECB target)
 # Benchmark dwelling for the fixed-size variants of PTI / RTI (comparable across municipalities).
 BENCHMARK_AREA_SQM = 100
 
