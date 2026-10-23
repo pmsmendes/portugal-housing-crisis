@@ -967,3 +967,170 @@ def forecast_fans(panels: list[dict]) -> Figure:
     )
     fig.subplots_adjust(left=0.06, right=0.95, wspace=0.28)
     return fig
+
+
+# ---- scenarios and the simulator ------------------------------------------------------------------
+
+SCENARIO_COLORS = {"optimistic": BLUE, "baseline": INK_2, "pessimistic": ORANGE}
+PARAMETER_LABELS = {
+    "other_demand_half_life_years": "Fade of the other-demand boom",
+    "net_migration_per_year": "Net migration",
+    "mortgage_rate_pct": "Mortgage rate",
+    "household_income_growth_real_pct": "Real income growth",
+    "completions_per_year": "Completions",
+    "income_elasticity_of_price": "Price response to income",
+    "usable_share_of_additions": "Share of new homes that house households",
+    "price_flexibility_balance": "Price response to the housing balance",
+    "mortgage_rate_semi_elasticity": "Price response to the mortgage rate",
+}
+
+
+def scenario_fans(
+    panels: list[dict], reference: dict | None = None, headline: str | None = None
+) -> Figure:
+    """Median and 80% range of each scenario over time, one panel per indicator.
+
+    Each dict has ``title``, ``unit_fmt`` (end label, e.g. "{:.1f}") and ``bands``: scenario name ->
+    frame with ``year``, ``p10``, ``p50``, ``p90``. ``reference`` (optional, for the first panel) is the
+    forecast the baseline was pinned to: a dict with ``years``, ``mean``, ``lo80``, ``hi80``.
+    """
+    fig, axes = plt.subplots(1, len(panels), figsize=(5.4 * len(panels), 4.6), squeeze=False)
+    for i, (ax, spec) in enumerate(zip(axes[0], panels, strict=True)):
+        for name, band in spec["bands"].items():
+            color = SCENARIO_COLORS[name]
+            ax.fill_between(
+                band["year"], band["p10"], band["p90"], color=color, alpha=0.12, lw=0, zorder=1
+            )
+            _line(ax, band["year"], band["p50"], color, name)
+            _end_dot(ax, band["year"].iloc[-1], band["p50"].iloc[-1], color)
+            _label(
+                ax,
+                band["year"].iloc[-1],
+                band["p50"].iloc[-1],
+                spec["unit_fmt"].format(band["p50"].iloc[-1]),
+                dx=7,
+            )
+        if reference is not None and i == 0:
+            ax.errorbar(
+                reference["years"], reference["mean"],
+                yerr=[reference["mean"] - reference["lo80"], reference["hi80"] - reference["mean"]],
+                fmt="D", ms=5, color=INK, ecolor=INK, elinewidth=1.2, capsize=3, zorder=5,
+                label="ETS forecast (80% range)",
+            )  # fmt: skip
+        ax.xaxis.set_major_locator(mticker.MultipleLocator(2))
+        ax.xaxis.set_major_formatter(mticker.FuncFormatter(lambda v, _: f"{v:.0f}"))
+        first = next(iter(spec["bands"].values()))
+        ax.set_xlim(first["year"].iloc[0] - 0.2, first["year"].iloc[-1] + 1.8)
+        ax.margins(y=0.06)
+        _panel_title(ax, spec["title"])
+    axes[0][0].legend(loc="upper left", fontsize=9, labelcolor=INK_2)
+    if headline is None:
+        end = {k: v["p50"].iloc[-1] for k, v in panels[0]["bands"].items()}
+        headline = "Scenarios, median in the last year: " + ", ".join(
+            f"{k} {v:.1f}" for k, v in end.items()
+        )
+    fig = style.finish(
+        fig,
+        headline,
+        "Median (line) and 80% range over parameter uncertainty (band); the first years are pinned to the ETS forecast of p4_01, later years are scenarios",
+        "Source: INE, Banco de Portugal; own simulation (config/scenarios.yaml). Median municipality with national price, income and rate paths; conditional paths, not forecasts.",
+        head_in=1.25,
+        foot_in=0.6,
+    )
+    fig.subplots_adjust(left=0.06, right=0.95, wspace=0.3)
+    return fig
+
+
+def policy_effects(table: pd.DataFrame, year: int, unit: str = "years of income") -> Figure:
+    """Effect of each policy package on price-to-income in the last year, with its cost.
+
+    ``table`` has ``label``, ``pti_gain_p10``, ``pti_gain_p50``, ``pti_gain_p90`` (positive: more affordable)
+    and ``cost_bn`` (median cumulative budget cost in billions).
+    """
+    d = table.sort_values("pti_gain_p50")
+    fig, ax = plt.subplots(figsize=(9.2, 0.55 * len(d) + 1.6))
+    y = np.arange(len(d))
+    colors = [BLUE if g > 0 else ORANGE for g in d["pti_gain_p50"]]
+    ax.hlines(y, d["pti_gain_p10"], d["pti_gain_p90"], color=colors, lw=2.2, zorder=3)
+    ax.scatter(d["pti_gain_p50"], y, s=64, c=colors, edgecolors=SURFACE, linewidths=1.5, zorder=4)
+    ax.axvline(0, color=INK_2, lw=1, zorder=2)
+    ax.set_yticks(y, d["label"], color=INK_2)
+    ax.grid(axis="y", visible=False)
+    ax.grid(axis="x", visible=True)
+    span = float(d["pti_gain_p90"].max() - d["pti_gain_p10"].min())
+    for yi, (_, row) in zip(y, d.iterrows(), strict=True):
+        text = (
+            f"{row['pti_gain_p50']:+.2f}   cost {row['cost_bn']:.1f} bn"
+            if row["cost_bn"] > 0
+            else f"{row['pti_gain_p50']:+.2f}   no cost"
+        )
+        ax.annotate(
+            text, (max(row["pti_gain_p90"], 0), yi), xytext=(8, 0), textcoords="offset points",
+            va="center", fontsize=9, color=INK,
+        )  # fmt: skip
+    ax.set_xlim(min(d["pti_gain_p10"].min(), 0) - 0.05 * span, d["pti_gain_p90"].max() + 0.5 * span)
+    ax.set_xlabel(
+        f"Fall in price-to-income in {year}, {unit} (right = more affordable)", color=INK_2
+    )
+    best = d.iloc[-1]
+    worse = int((d["pti_gain_p50"] < 0).sum())
+    ending = f"{worse} of {len(d)} packages raise the ratio" if worse else "all lower the ratio"
+    fig = style.finish(
+        fig,
+        f"{best['label']} helps most ({best['pti_gain_p50']:+.2f} {unit}); {ending}",
+        f"Change in price-to-income against no policy, baseline scenario, {year} (dot: median, line: 80% range over parameter uncertainty)",
+        "Source: own simulation. Packages are illustrative sizes from 2027; a tax cut is judged by its price effect only, not by the saving to owners.",
+        head_in=1.2,
+        foot_in=0.55,
+    )
+    fig.subplots_adjust(left=0.27, right=0.97)
+    return fig
+
+
+def sensitivity_tornado(table: pd.DataFrame, base: float, year: int, n: int = 9) -> Figure:
+    """Price-to-income in the last year when each input moves from its low to its high value (others at mid).
+
+    ``table`` is ``engine.sensitivity`` output (``parameter``, ``kind``, ``low_pti_end``, ``high_pti_end``,
+    ``swing_pti_end``); ``base`` is the central value.
+    """
+    d = table.sort_values("swing_pti_end", ascending=False).head(n).iloc[::-1]
+    fig, ax = plt.subplots(figsize=(9.2, 0.5 * len(d) + 1.7))
+    y = np.arange(len(d))
+    for yi, (_, row) in zip(y, d.iterrows(), strict=True):
+        lo, hi = sorted((row["low_pti_end"], row["high_pti_end"]))
+        color = BLUE if row["kind"] == "scenario" else ORANGE
+        ax.barh(yi, hi - lo, left=lo, height=0.55, color=color, alpha=0.85, zorder=3)
+        for value, dx, ha in ((lo, -5, "right"), (hi, 5, "left")):
+            ax.annotate(
+                f"{value:.1f}", (value, yi), xytext=(dx, 0), textcoords="offset points",
+                ha=ha, va="center", fontsize=9, color=INK,
+            )  # fmt: skip
+    ax.axvline(base, color=INK_2, lw=1, zorder=4)
+    low = float(d[["low_pti_end", "high_pti_end"]].min().min())
+    high = float(d[["low_pti_end", "high_pti_end"]].max().max())
+    ax.set_xlim(low - 0.08 * (high - low), high + 0.08 * (high - low))
+    ax.set_yticks(y, [PARAMETER_LABELS.get(p, p) for p in d["parameter"]], color=INK_2)
+    ax.grid(axis="y", visible=False)
+    ax.grid(axis="x", visible=True)
+    ax.set_xlabel(
+        f"Price-to-income in {year} (years of income); line: central value {base:.1f}", color=INK_2
+    )
+    ax.legend(
+        handles=[
+            Patch(color=BLUE, label="scenario input (range across the three scenarios)"),
+            Patch(color=ORANGE, label="behavioural parameter (low to high)"),
+        ],
+        loc="lower right", fontsize=9, labelcolor=INK_2,
+    )  # fmt: skip
+    top = d.iloc[-1]
+    label = PARAMETER_LABELS.get(top["parameter"], top["parameter"])
+    fig = style.finish(
+        fig,
+        f"{label} moves price-to-income in {year} by {top['swing_pti_end']:.1f} years, the most of any input",
+        "One input at a time between its low and high value, baseline scenario, all others at their central value",
+        "Source: own simulation. Behavioural parameters are recalibrated to the forecast, so they move the long run only through the scenarios.",
+        head_in=1.2,
+        foot_in=0.55,
+    )
+    fig.subplots_adjust(left=0.36, right=0.96)
+    return fig

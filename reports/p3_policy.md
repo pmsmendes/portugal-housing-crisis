@@ -88,7 +88,7 @@ so the 87 municipalities that first cut in 2016 have no pre-period.
 3. **Done:** `analysis/causal.py` (event table, stacks, stacked event study, cohort 2×2 check, dose-response, benchmark) with
    tests on synthetic data with a known effect and a known pre-trend.
 4. **Done:** notebooks `p3_01` (who cuts and when), `p3_02` (event study, dose-response), `p3_03` (robustness, rent, power).
-5. **Open:** hand the bound to the phase 4 fiscal lever (`config/scenarios.yaml`, `imi_capitalisation_benchmark`; the simulator does not read it yet);
+5. **Done (2026-10-23):** the bound is in the phase 4 IMI lever (`config/scenarios.yaml`, `policies.imi_reform`; the simulator runs capitalisation from none to full, `reports/p4_forecast.md`). **Open:**
    the placebo "a cut in *t*+1 as treatment of *t*" is covered by the future-cut leads of the dose-response, not run separately.
 
 ## Key findings

@@ -86,7 +86,7 @@ Reference questions by ID (e.g. `RQ2.3`) in notebooks, reports and commits.
 | RQ8.2 | How cost-effective are existing programmes (households supported, units delivered)? | — | |
 | RQ8.3 | Which expenditure could be reduced or made more efficient without harming vulnerable households or essential services? | — | |
 | RQ8.4 | Which mix of spending, tax policy and investment improves affordability within fiscal constraints? | — | |
-| RQ8.5 | How would alternative policies affect revenue, expenditure and budget balance over short/medium/long horizons? | — | |
+| RQ8.5 | How would alternative policies affect revenue, expenditure and budget balance over short/medium/long horizons? | wip | `p4_02`, `reports/p4_forecast.md`: direct cost of supply levers and revenue lost to IMI/IMT changes to 2035, national and order-of-magnitude; no behavioural revenue effects |
 | RQ8.6 | How should resources be allocated to maximise affordability gains per euro spent? | — | |
 
 ## RQ9 — Macroeconomic and financial conditions (Phase 2)
@@ -101,12 +101,12 @@ Reference questions by ID (e.g. `RQ2.3`) in notebooks, reports and commits.
 ## RQ10 — Forecasting and scenario analysis (Phase 4)
 | ID | Question | Status | Where |
 |---|---|---|---|
-| RQ10.1 | How are prices, rents and affordability likely to evolve over 5–10 years under different scenarios? | wip | `p4_01`, `reports/p4_forecast.md`: national two-year forecast of real prices and the ownership cost index (ETS, validated); rents and the 5-10 year scenarios still to do in the simulator |
+| RQ10.1 | How are prices, rents and affordability likely to evolve over 5–10 years under different scenarios? | wip | `p4_01`, `reports/p4_forecast.md`: national two-year forecast of real prices and the ownership cost index (ETS, validated); `p4_02`, `reports/p4_forecast.md`: 5-10 year scenarios of real prices, price-to-income and the mortgage burden (national, median municipality, first three years pinned to the forecast); rents not modelled |
 | RQ10.2 | Which regions are most likely to see further affordability deterioration? | — | |
-| RQ10.3 | How would scenarios for population, immigration, construction, interest rates and income affect future demand? | — | |
-| RQ10.4 | What is the estimated affordability impact of more construction, public housing or vacant-home renovation? | — | |
-| RQ10.5 | Which mix of supply-side, demand-side and fiscal policies gives the largest improvement under realistic budgets? | — | |
-| RQ10.6 | How sensitive are projections to assumptions on growth, demographics, construction costs and policy effectiveness? | — | |
+| RQ10.3 | How would scenarios for population, immigration, construction, interest rates and income affect future demand? | done | `p4_02`, `reports/p4_forecast.md`: three scenarios and a one-at-a-time sensitivity; net migration moves 2035's price-to-income by 2 years across the scenarios' range, the fade of the other-demand boom by 6 |
+| RQ10.4 | What is the estimated affordability impact of more construction, public housing or vacant-home renovation? | done | `p4_02`, `reports/p4_forecast.md`: 0.16 to 0.38 years of income (1% to 3% of the 2035 ratio) for 5,000 to 10,000 homes a year; modelled effects with literature and assumed parameters, not causal estimates |
+| RQ10.5 | Which mix of supply-side, demand-side and fiscal policies gives the largest improvement under realistic budgets? | wip | `p4_02`, `reports/p4_forecast.md`: budget search over five levers; supply levers dominate, tax cuts raise the ratio, but the ranking of supply levers depends on assumed unit costs |
+| RQ10.6 | How sensitive are projections to assumptions on growth, demographics, construction costs and policy effectiveness? | done | `p4_02`, `reports/p4_forecast.md`: tornado of the 2035 ratio and of a lever's gain, unit-cost check of the lever ranking |
 
 ## M — Methodological questions (cross-cutting)
 | ID | Question | Status | Where |
@@ -116,4 +116,4 @@ Reference questions by ID (e.g. `RQ2.3`) in notebooks, reports and commits.
 | M3 | Which factors are associated with price growth, and which relationships have a credible causal identification strategy? | wip | associations: `p2_02`, `reports/p2_explain.md`; the one design tried (IMI cuts, `p3_02`) fails its pre-trend test, so no relationship has a credible causal identification yet |
 | M4 | How can specific policy effects be estimated while accounting for confounders and macro trends? | — | |
 | M5 | How reliable are price forecasts under rolling time-based validation vs random splits? | — | |
-| M6 | How can uncertainty in data, estimates and policy assumptions be carried into projections and cost-benefit analysis? | — | |
+| M6 | How can uncertainty in data, estimates and policy assumptions be carried into projections and cost-benefit analysis? | done | `p4_02`, `reports/p4_forecast.md`: 1,000 joint triangular draws over every behavioural parameter and over the forecast's 80% interval, common random numbers across scenarios and policies; scenario inputs are conditional, not drawn |

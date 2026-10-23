@@ -1,0 +1,7 @@
+package,optimistic,baseline,pessimistic
+construction,0.222,0.274,0.357
+imi_cut,-0.054,-0.069,-0.09
+imt_cut,-0.061,-0.077,-0.102
+public,0.132,0.161,0.213
+renovation,0.261,0.323,0.425
+supply_mix,0.306,0.379,0.497

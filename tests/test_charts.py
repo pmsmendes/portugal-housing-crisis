@@ -266,3 +266,58 @@ def test_robustness_ladder_title_counts_rejected_pretrends_and_ambiguous_interva
             )
     title = _title(charts.robustness_ladder(pd.DataFrame(rows), "Main", (0.1, 0.19, 0.33)))
     assert title.startswith("1 of 2 specifications") and "1 fail the pre-trend test" in title
+
+
+def _bands(end):
+    years = np.arange(2025, 2036)
+    return pd.DataFrame(
+        {"year": years, "p10": end * 0.8, "p50": np.linspace(10, end, len(years)), "p90": end * 1.2}
+    )
+
+
+def test_scenario_fans_title_lists_the_end_value_of_each_scenario():
+    bands = {"optimistic": _bands(12), "baseline": _bands(15), "pessimistic": _bands(20)}
+    ref = {
+        "years": np.array([2027.5]),
+        "mean": np.array([12.0]),
+        "lo80": np.array([11.0]),
+        "hi80": np.array([13.0]),
+    }
+    fig = charts.scenario_fans(
+        [{"title": "PTI", "unit_fmt": "{:.1f}", "bands": bands}], reference=ref
+    )
+    assert (
+        _title(fig)
+        == "Scenarios, median in the last year: optimistic 12.0, baseline 15.0, pessimistic 20.0"
+    )
+
+
+def test_policy_effects_title_names_the_best_package_and_counts_the_harmful():
+    table = pd.DataFrame(
+        {
+            "label": ["Build", "Tax cut", "Free"],
+            "pti_gain_p10": [0.1, -0.2, -0.1],
+            "pti_gain_p50": [0.3, -0.1, 0.0],
+            "pti_gain_p90": [0.5, -0.05, 0.1],
+            "cost_bn": [3.0, 2.0, 0.0],
+        }
+    )
+    title = _title(charts.policy_effects(table, 2035))
+    assert title == "Build helps most (+0.30 years of income); 1 of 3 packages raise the ratio"
+
+
+def test_sensitivity_tornado_title_names_the_widest_input():
+    table = pd.DataFrame(
+        {
+            "parameter": ["mortgage_rate_pct", "other_demand_half_life_years"],
+            "kind": ["scenario", "scenario"],
+            "low_pti_end": [14.5, 13.0],
+            "high_pti_end": [15.7, 19.1],
+            "swing_pti_end": [1.2, 6.1],
+        }
+    )
+    title = _title(charts.sensitivity_tornado(table, 15.2, 2035))
+    assert (
+        title
+        == "Fade of the other-demand boom moves price-to-income in 2035 by 6.1 years, the most of any input"
+    )

@@ -1,0 +1,4 @@
+scenario,"real price, % vs start",PTI (median),PTI 10th pct,PTI 90th pct,burden % (median),"cumulative shortfall, households"
+optimistic,45.39,12.06,10.61,13.58,45.75,-220729.74
+baseline,66.13,15.2,12.43,18.64,63.5,19657.15
+pessimistic,102.92,20.5,15.0,28.14,99.71,334277.43

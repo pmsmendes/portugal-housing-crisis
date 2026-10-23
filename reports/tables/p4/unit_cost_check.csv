@@ -1,0 +1,10 @@
+package,unit_cost,unit_cost_eur,gain_per_bn
+construction,low,12000,0.2496
+construction,mid,25000,0.1198
+construction,high,60000,0.0499
+renovation,low,17000,0.2145
+renovation,mid,50000,0.0729
+renovation,high,101000,0.0361
+public,low,50000,0.0733
+public,mid,159000,0.0231
+public,high,252000,0.0145

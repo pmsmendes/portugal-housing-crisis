@@ -1,43 +1,146 @@
 # Scenario assumptions for the Phase 4 simulator (read by src/pthousing/simulation/scenarios.py).
-# Every number must cite its source or rationale in docs/decisions.md.
-# Values are placeholders (null) until estimated in Phases 2-4.
+# Every number is explained in docs/decisions.md ("Phase 4 simulator"). Status of each behavioural parameter:
+#   literature  = a published estimate or survey range (source given)
+#   project     = an estimate or fact from earlier phases of this project
+#   assumption  = no estimate exists; low/high are bounds, mid is a central value, and results are shown over the range
+# Scenario names describe pressure on affordability ("optimistic" = favourable to affordability), not a judgement on
+# migration or any other input.
 
 horizon_years: 10
-base_year: 2024
+base_year: 2024        # constant euros of this year (config.BASE_YEAR)
+start_year: 2025       # last year with observed prices, rates and completions; projections are 2026 onwards
+near_term_year: 2028   # year of the validated ETS forecast (p4_01) that pins the baseline's first three steps
+policy_start_year: 2027  # levers act from this year on (a law passed in 2026 cannot change 2026)
+
+# Shared by all scenarios.
+common:
+  natural_change_per_year: -34000        # births minus deaths; INE: -32,596 (2023), -33,732 (2024)
+  completions_ramp_years: 3              # years to move from the last observed completions to the scenario's level
+  rate_ramp_years: 3                     # same for the mortgage rate
+  population_change_2024: 109909         # INE, resident population 2024 vs 2023 (the 2025 change is assumed equal: not verified)
+  income_growth_2025_pct: 2.3            # 2021-2024 compound growth of the real median income (panel); 2025 income is not published
 
 scenarios:
-  optimistic:
-    population_growth_pct: null
-    net_migration_per_year: null
-    household_income_growth_real_pct: null
-    mortgage_rate_pct: null
-    completions_per_year: null
+  optimistic:   # low pressure: slower household growth, more building, cheaper credit, faster incomes, short-lived boom
+    net_migration_per_year: 40000
+    household_income_growth_real_pct: 2.5
+    mortgage_rate_pct: 2.5
+    completions_per_year: 50000
+    other_demand_half_life_years: 1
   baseline:
-    population_growth_pct: null
-    net_migration_per_year: null
-    household_income_growth_real_pct: null
-    mortgage_rate_pct: null
-    completions_per_year: null
-  pessimistic:
-    population_growth_pct: null
-    net_migration_per_year: null
-    household_income_growth_real_pct: null
-    mortgage_rate_pct: null
-    completions_per_year: null
+    net_migration_per_year: 80000
+    household_income_growth_real_pct: 1.5
+    mortgage_rate_pct: 3.25
+    completions_per_year: 38000
+    other_demand_half_life_years: 2
+  pessimistic:  # high pressure
+    net_migration_per_year: 140000
+    household_income_growth_real_pct: 0.5
+    mortgage_rate_pct: 4.5
+    completions_per_year: 27000
+    other_demand_half_life_years: 4
+# Basis: net migration 143,641 (2024) and 155,701 (2023) are INE estimates, pre-2017 it was near zero or negative, so 140k is
+# the recent peak, 80k a halving and 40k the lower end. Income growth: 3.3% a year 2015-2024 and 2.3% 2021-2024 (panel, real
+# median income). Mortgage rate (new floating loans, agreed rate): 4.36% in 2024, 3.07% in 2025, a trough of 0.66% in 2021 and
+# 5.4% in 2008. Completions: 27,301 in 2025 (INE), 42,066 licensed in 2025 (completions follow licences with a lag of
+# about two years), 126,000 in 2002. Half-life of the "other demand" boom (tourism, foreign buyers, credit, expectations):
+# assumption, the single least certain scenario input.
 
-# Policy levers. "direct" = accounting effect; "behavioural" = requires an elasticity
-# estimated in Phase 2/3 or taken from literature (cite in docs/decisions.md).
+# Behavioural parameters of prices and construction: low / mid / high, drawn as a triangular distribution in uncertainty runs.
+behaviour:
+  price_flexibility_balance:   # % real price per 1% of households that dwellings fail to cover, per year
+    low: 1.0
+    mid: 1.5
+    high: 2.0
+    status: literature
+    source: >-
+      Inverse of the price elasticity of housing demand. Goodman and Kawai (survey of Mayo and Quigley) put best estimates
+      at -0.6 to -0.7 for owners and renters; -1.0 and -0.5 give the bounds (flexibility 1.0 to 2.0).
+  income_elasticity_of_price:  # % real price per 1% real income
+    low: 0.5
+    mid: 0.75
+    high: 1.0
+    status: assumption
+    source: >-
+      1.0 is the long-run benchmark; Portuguese evidence (AIMS Net Assets and Real Estate, 2024) finds prices inelastic to
+      income, and prices rose 51% against incomes 29% in 2016-2024 (reports/p2_explain.md). 0.5 to 1.0, mid at the centre.
+  mortgage_rate_semi_elasticity:  # % fall in real prices per +1 pp of the mortgage rate, spread over two years
+    low: 3.0
+    mid: 4.0
+    high: 5.0
+    status: literature
+    source: >-
+      ECB working paper 2789: the literature average is about -3 per pp. ECB Economic Bulletin 6/2022: -5% after about two
+      years. Mid is the midpoint. In 2022-2023 Portuguese real prices kept rising as rates jumped, so a larger effect is not
+      supported.
+  usable_share_of_additions:  # share of net additions to the stock that become usual residences
+    low: 0.69
+    mid: 0.82
+    high: 0.95
+    status: project
+    source: >-
+      Census: usual residences are 69% of the 2021 stock (the average) and +105,000 of the +111,000 net additions of 2011-2021
+      (95%, the marginal share). Mid is the midpoint.
+  net_additions_per_completion:  # net change in the stock per completed dwelling (demolitions, conversions)
+    value: 0.89
+    status: project
+    source: Census 2011-2021 net change in dwellings (+111,000) over completions 2012-2021 (124,600).
+
+# Policy levers. Sizes are chosen by the user; the entries here are unit costs and behavioural responses.
 policies:
-  construction_boost: {extra_units_per_year: null, cost_per_unit_eur: null}
-  vacant_renovation: {units_per_year: null, cost_per_unit_eur: null}
-  public_housing: {units_per_year: null, cost_per_unit_eur: null}
-  imi_reform: {rate_change_pp: null}
-  imt_reform: {rate_change_pp: null, first_buyer_exemption_eur: null}
+  construction_boost:      # incentives or simplification that raise completions
+    cost_per_unit_eur: {low: 12000, mid: 25000, high: 60000}   # public cost per additional unit
+    additionality: {low: 0.5, mid: 0.75, high: 1.0}            # share of supported units that would not be built anyway
+    status: assumption
+    source: >-
+      Cost: a VAT cut from 23% to 6% on works of 794 EUR/m2 (planned average cost of public housing, 2021 press) on 90 m2 is
+      about 12,000 EUR per supported unit, divided by additionality gives the range; mid and high are assumptions.
+      Additionality: no estimate; 0.5 to 1.0.
+  vacant_renovation:      # renovation grants that return vacant dwellings to use
+    cost_per_unit_eur: {low: 17000, mid: 50000, high: 101000}
+    reoccupation: {low: 0.5, mid: 0.75, high: 1.0}             # share of renovated units that become additional usual residences
+    status: assumption
+    source: >-
+      Cost: reported PRR 1.o Direito cases and totals: 17,444 EUR (one rehabilitation, Vila do Conde), about 50,000 EUR per
+      dwelling on average (568 million EUR for 11,361 dwellings delivered by July 2025, mixed works), 100,900 EUR (a T2
+      purchase, Viseu). Reoccupation: no estimate; vacant stock is 723,000 (12.1% of 2021) but much of it is unusable or
+      in low-demand places, so 0.5 to 1.0.
+  public_housing:         # new publicly owned dwellings for rent
+    cost_per_unit_eur: {low: 50000, mid: 159000, high: 252000}
+    crowd_out: {low: 0.0, mid: 0.25, high: 0.5}                # private completions displaced per public unit
+    status: assumption
+    source: >-
+      Cost: 50,000 EUR (1.o Direito average, mixed works), 159,000 EUR (17 new dwellings for 2.7 million EUR, Cantanhede),
+      252,000 EUR (60 dwellings for 15.1 million EUR, Loulé) from press reports of PRR projects. Crowd-out: no estimate;
+      0 to 0.5, mid at the centre.
+  imi_reform:             # change in the national average municipal IMI rate (pp); negative is a cut
+    tax_value_ratio: {low: 0.5, mid: 0.75, high: 1.0}          # assessed value (VPT) over market price
+    discount_rate: {low: 0.03, mid: 0.04, high: 0.05}          # perpetuity rate
+    capitalisation_share: {low: 0.0, mid: 0.5, high: 1.0}      # share of the cut that shows up in the price
+    status: project
+    source: >-
+      reports/p3_policy.md: capitalisation is not identified (every interval contains zero and full capitalisation), so
+      both ends are run; the mid value is only the midpoint of the bound, not an estimate. Full capitalisation of a 0.01 pp
+      cut is 0.19% of the price (0.10% to 0.33%).
+  imt_reform:             # change in the average IMT rate on dwelling purchases (pp of the price)
+    capitalisation_share: {low: 0.0, mid: 0.5, high: 1.0}
+    status: assumption
+    source: >-
+      A transaction tax paid by the buyer lowers what the buyer can offer one for one if fully capitalised (price falls by
+      the tax cut's share of the price); no Portuguese estimate. Both ends are run; mid is the midpoint of the bound.
 
-# Benchmark for the p3 IMI capitalisation estimate (reports/p3_policy.md): the price effect if a permanent cut were
-# fully capitalised = cut x (assessed value / price) / discount rate. Ranges are assumptions, not estimates.
-imi_capitalisation_benchmark:
-  tax_value_ratio: {low: 0.5, mid: 0.75, high: 1.0}   # assessed value (VPT) over market price
-  discount_rate: {low: 0.03, mid: 0.04, high: 0.05}   # perpetuity rate
-# p3 result (reports/p3_policy.md): the capitalisation of municipal cuts is not identified, so the simulator runs both ends.
-imi_capitalisation_share: {low: 0.0, high: 1.0}
+# Fiscal bases. National totals, because no municipal revenue series is available (docs/data_quality.md).
+fiscal:
+  imi_revenue_eur: 1630000000        # IMI assessed (liquidado) for 2024, Autoridade Tributaria via idealista (8.4 million urban properties)
+  imt_revenue_eur: 1732800000        # IMT collected in 2024 (Execucao orcamental, press 2025-01-31); used for scale only
+  imi_average_rate_pct_source: panel # simple mean of the municipal urban rates in the start year (not weighted by tax base)
+
+# Named packages for the comparison table and the dashboard. Sizes are per year from policy_start_year.
+packages:
+  none: {}
+  construction: {construction_boost_units: 10000}
+  renovation: {vacant_renovation_units: 10000}
+  public: {public_housing_units: 5000}
+  imi_cut: {imi_rate_change_pp: -0.05}
+  imt_cut: {imt_rate_change_pp: -1.0}
+  supply_mix: {construction_boost_units: 5000, vacant_renovation_units: 5000, public_housing_units: 2500}

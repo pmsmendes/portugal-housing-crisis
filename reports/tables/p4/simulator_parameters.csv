@@ -1,0 +1,15 @@
+parameter,low,mid,high,status
+price_flexibility_balance,1.0,1.5,2.0,literature
+income_elasticity_of_price,0.5,0.75,1.0,assumption
+mortgage_rate_semi_elasticity,3.0,4.0,5.0,literature
+usable_share_of_additions,0.69,0.82,0.95,project
+construction_boost.cost_per_unit_eur,12000.0,25000.0,60000.0,assumption
+construction_boost.additionality,0.5,0.75,1.0,assumption
+vacant_renovation.cost_per_unit_eur,17000.0,50000.0,101000.0,assumption
+vacant_renovation.reoccupation,0.5,0.75,1.0,assumption
+public_housing.cost_per_unit_eur,50000.0,159000.0,252000.0,assumption
+public_housing.crowd_out,0.0,0.25,0.5,assumption
+imi_reform.tax_value_ratio,0.5,0.75,1.0,project
+imi_reform.discount_rate,0.03,0.04,0.05,project
+imi_reform.capitalisation_share,0.0,0.5,1.0,project
+imt_reform.capitalisation_share,0.0,0.5,1.0,assumption

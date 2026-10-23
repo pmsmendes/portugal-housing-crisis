@@ -1,0 +1,4 @@
+scenario,net_migration_per_year,household_income_growth_real_pct,mortgage_rate_pct,completions_per_year,other_demand_half_life_years
+optimistic,40000.0,2.5,2.5,50000.0,1.0
+baseline,80000.0,1.5,3.25,38000.0,2.0
+pessimistic,140000.0,0.5,4.5,27000.0,4.0
