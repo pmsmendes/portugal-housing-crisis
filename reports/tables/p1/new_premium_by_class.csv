@@ -1,0 +1,13 @@
+grouping,class,municipalities_n,median_premium_pct
+"density_class, 2019",intermediate,65,23.9
+"density_class, 2019",rural,40,28.2
+"density_class, 2019",urban,33,23.1
+"density_class, 2025",intermediate,74,13.6
+"density_class, 2025",rural,55,17.5
+"density_class, 2025",urban,35,11.6
+"coast_class, 2019",coast,61,22.5
+"coast_class, 2019",estuary,8,31.9
+"coast_class, 2019",inland,69,26.5
+"coast_class, 2025",coast,64,14.5
+"coast_class, 2025",estuary,9,10.7
+"coast_class, 2025",inland,91,13.5

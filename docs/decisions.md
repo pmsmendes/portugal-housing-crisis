@@ -2,6 +2,12 @@
 
 Analytic and engineering choices, newest first. One short entry each: what, why, alternatives rejected.
 
+## 2026-10-24 — Kinds of price: balanced municipalities, appraisal as the only second price measure
+- **What:** `p1_08` (`analysis/price_types.py`) compares new and existing homes (2019-2025), appraised flats and villas (2011-2025) and appraisal against transaction price (2016-2025). Trends use municipalities observed in every compared year ("balanced"); the unbalanced median is shown beside the appraisal ratio; real values use the project deflator.
+- **Why:** appraisals are suppressed for small municipalities and coverage grows from 198 to 261 municipalities, which moved the unbalanced ratio the opposite way (1.04 to 1.03) from the balanced one (1.04 to 0.94). Flats against villas uses a within-municipality ratio for the same reason.
+- **Limits that shape the claim:** no price by number of rooms and no asking prices exist in the data, so RQ1.2 and RQ1.8 stay "partly"; appraisal against transaction is a gap between two measures with different timing, not asking against paid.
+- **Rejected:** treating the bank appraisal as an asking price; a regression of the gap on municipality traits (not enough to separate coverage from behaviour).
+
 ## 2026-10-24 — National accounts for wages: Eurostat series, labour force survey unemployment
 - **What:** `eurostat_macro` combines Eurostat GDP growth (`nama_10_gdp`, chain-linked volumes), the unemployment rate from `lfsa_urgan` (1995 onward) and compensation per employee (compensation of employees `nama_10_a10` over employees `nama_10_a10_e`, whole economy). `p2_09` uses them against national real and nominal prices, annual 1995-2025.
 - **Why:** it gives a wage concept thirty years long; INE's income per taxable person starts in 2015 and the OECD's income per head is not a wage. The shorter `une_rt_a` is skipped because it starts in 2009 for Portugal.

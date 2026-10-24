@@ -1787,3 +1787,69 @@ def wages_and_prices(annual: pd.DataFrame) -> Figure:
         head_in=1.3,
         foot_in=0.6,
     )
+
+
+# ---- kinds of home and kinds of price -------------------------------------------------------------
+
+
+def price_kinds(
+    premium: pd.DataFrame, flats_villas: pd.DataFrame, appraisal: pd.DataFrame
+) -> Figure:
+    """New against existing homes, flats against villas, and appraisal against transaction prices.
+
+    ``premium`` is ``price_types.new_vs_existing``, ``flats_villas`` ``price_types.flats_vs_villas`` and
+    ``appraisal`` ``price_types.appraisal_vs_transaction``. Left: median premium of new over existing homes, %.
+    Middle: median appraised price of flats over villas (1 = equal). Right: appraised over transaction price,
+    balanced municipalities with the quartile band, and the median of all municipalities with both (grey).
+    """
+    fig, (left, mid, right) = plt.subplots(1, 3, figsize=(13, 4.6))
+    prem = premium["median_premium_pct"]
+    _line(left, prem.index, prem, BLUE)
+    _end_dot(left, prem.index[-1], prem.iloc[-1], BLUE)
+    _label(left, prem.index[-1], prem.iloc[-1], f"{prem.iloc[-1]:.0f}%")
+    left.set_ylim(0, 32)
+    left.set_xlim(prem.index[0] - 0.3, prem.index[-1] + 1.6)
+    left.set_xticks(range(prem.index[0], prem.index[-1] + 1, 2))
+    left.yaxis.set_major_formatter(mticker.FuncFormatter(lambda v, _: f"{v:g}%"))
+    n_new = int(premium["municipalities_n"].iloc[0])
+    _panel_title(left, f"New over existing homes ({n_new} municipalities)")
+
+    ratio = flats_villas["flats_to_villas"]
+    mid.axhline(1, color=MUTED, lw=1, ls=(0, (2, 3)), zorder=1)
+    _line(mid, ratio.index, ratio, BLUE)
+    _end_dot(mid, ratio.index[-1], ratio.iloc[-1], BLUE)
+    _label(mid, ratio.index[-1], ratio.iloc[-1], f"{ratio.iloc[-1]:.2f}")
+    mid.set_ylim(0.8, 1.35)
+    mid.set_xlim(ratio.index[0] - 0.5, ratio.index[-1] + 2.2)
+    mid.set_xticks(range(ratio.index[0] + (-ratio.index[0] % 5), ratio.index[-1] + 1, 5))
+    _panel_title(mid, "Appraised flats over villas, per m2")
+
+    years = appraisal.index
+    right.axhline(1, color=MUTED, lw=1, ls=(0, (2, 3)), zorder=1)
+    right.fill_between(
+        years, appraisal["balanced_q25"], appraisal["balanced_q75"], color=BLUE, alpha=0.10, lw=0
+    )
+    _line(right, years, appraisal["all_median"], MUTED, width=1.4, z=2)
+    _line(right, years, appraisal["balanced_median"], BLUE, z=4)
+    last = appraisal["balanced_median"].iloc[-1]
+    _end_dot(right, years[-1], last, BLUE)
+    _label(right, years[-1], last, f"{last:.2f}")
+    right.set_ylim(0.75, 1.35)
+    right.set_xlim(years[0] - 0.4, years[-1] + 1.8)
+    right.set_xticks(range(years[0], years[-1] + 1, 3))
+    n_bal = int(appraisal["balanced_n"].iloc[0])
+    _legend(right, [Line2D([], [], color=BLUE, lw=LINE_WIDTH, label=f"Same {n_bal} municipalities"),
+                    Line2D([], [], color=MUTED, lw=1.4, label="All with both")], loc="upper right")  # fmt: skip
+    _panel_title(right, "Appraisal over transaction price")
+
+    first = prem.index[0]
+    return style.finish(
+        fig,
+        f"New homes cost {prem.loc[first]:.0f}% more than existing ones in {first} and {prem.iloc[-1]:.0f}% in {prem.index[-1]}; "
+        f"in {n_bal} municipalities appraisals went from {100 * (appraisal['balanced_median'].iloc[0] - 1):.0f}% above to {100 * (1 - last):.0f}% below transactions",
+        "Median over municipalities, price per m2; left: real transaction prices; middle: bank appraisals; right: the same municipalities every year",
+        "Source: INE (median transaction value, bank appraisals), own calculations. Appraisals are annual, transactions the last twelve months to Q4. "
+        "Property types by rooms are not published for prices.",
+        head_in=1.3,
+        foot_in=0.6,
+    )

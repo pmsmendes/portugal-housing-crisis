@@ -2,7 +2,7 @@
 
 How have prices, rents and affordability evolved, and where? Descriptive evidence only: nothing here is a causal
 claim. Figures: `reports/figures/p1/`, tables: `reports/tables/p1/`, notebooks: `notebooks/p1_evidence/`
-(`p1_01_prices_rents_rates`, `p1_02_affordability_indicators`, `p1_03_long_run_prices`). Definitions: [methodology](../docs/methodology.md).
+(`p1_01` to `p1_08`). Definitions: [methodology](../docs/methodology.md).
 
 ## Key findings
 
@@ -33,6 +33,10 @@ claim. Figures: `reports/figures/p1/`, tables: `reports/tables/p1/`, notebooks: 
    (-34,000 in 2025). Over 1995-2025 net migration added 1.56 million people and natural change took away 350,000; in
    2022-2023 net migration was 307,000 to 371,000 a year, enough to make 248 of 308 municipalities grow despite a
    natural decline, after a 2012-2019 in which 186 lost people on both counts (section *Population change*).
+9. **The premium of new homes has halved and flats now cost more than villas.** Among 118 municipalities, new homes cost
+   a median 24.5% more per m² than existing ones in 2019 and 12.3% in 2025 (existing prices rose faster after inflation:
+   +61% against +50%). Appraised flats were 6% cheaper than villas per m² in 2011 and are 17% dearer in 2025 (section
+   *Kinds of home and kinds of price*).
 
 ## Prices and rents
 
@@ -230,6 +234,28 @@ correlation of the 2024 levels and of the change over a window) and the directio
 
 Tables: `indicator_robustness.csv`, `indicator_robustness_trends.csv`, `indicator_robustness_sign_differs.csv`.
 
+## Kinds of home and kinds of price (RQ1.2, RQ1.8)
+
+![New and existing homes, flats and villas, appraisal and transaction prices](figures/p1/price_kinds.png)
+
+Prices by number of rooms are not published, and neither are asking prices (`p1_08`). What the data give:
+
+- **New against existing homes** (INE transaction values, 2019-2025, 118 municipalities with both every year). The median
+  premium of new homes fell from 24.5% to 12.3%, in two steps (2022: 20.7%; 2025: 12.3%); they were dearer in 97% of the
+  municipalities in 2019 and 85% in 2025. Real prices of new homes rose 50% and of existing ones 61% since 2019. The
+  premium is larger in rural municipalities (28% in 2019, 18% in 2025) than in urban ones (23%, 12%).
+- **Flats against villas** (bank appraisals, 2011-2025). The median flats-to-villas ratio of the appraised price per m²
+  was 0.94 in 2011, 1.02 in 2020 and 1.17 in 2025; in the 112 municipalities with both in both years, real appraisals of
+  flats rose 81% and of villas 43%.
+- **Appraisal against transaction** (2016-2025). In the 189 municipalities with both every year the median appraised price
+  fell from 4% above to 6% below the transaction price (quartiles 0.88 to 1.09 in 2025); with all municipalities that
+  have both, the ratio stays near 1.03 because the sample grows toward smaller markets. A year's appraisal growth is
+  correlated 0.32 with the same year's transaction growth and 0.05 to 0.10 at one or two years either side: appraisals
+  neither lead nor follow by a year, they under-react over the decade.
+
+Tables: `new_vs_existing.csv`, `new_premium_by_class.csv`, `flats_vs_villas.csv`, `flats_vs_villas_change.csv`,
+`appraisal_vs_transaction.csv`, `appraisal_growth_leadlag.csv`.
+
 ## Limitations
 
 - **Short municipal history.** Municipal prices exist from 2016 and rents from 2020; INE's national index starts in
@@ -260,11 +286,15 @@ Tables: `indicator_robustness.csv`, `indicator_robustness_trends.csv`, `indicato
   post-census revision of 2020-2021, so those two years are left out of the municipal comparison; 2011 starts at the census
   (17,000 lower than the national flow) and the latest national years may be revised. Municipal data cover 2011-2023 only,
   so the thirty-year split is national.
+- **Kinds of price.** New-against-existing starts in 2019 and needs both prices in a municipality (118 of 308, larger
+  markets); appraisals are annual, suppressed below about 33 valuations, and measure what a bank values, not what is paid
+  or asked. The appraisal and transaction series differ in timing (year against twelve months to Q4), so the level of the
+  ratio matters less than its drift. Types by number of rooms and asking prices cannot be examined with these data.
 - **One national mortgage rate** (agreed rate on new floating-rate loans) applies to every municipality, and the loan
   (80% of the price over 30 years) is an assumption, not an estimate.
 - **Descriptive, not causal.** The report says what changed and where, not why; that is phase 2.
 
 ## Questions answered
 
-RQ1.3, RQ1.5, RQ1.6, RQ3.1, RQ3.2, M1, RQ4.1 and RQ4.2 are answered with the available data; RQ1.1 (national thirty years done, municipal from 2016), RQ1.4 and RQ1.7 are partly answered
+RQ1.3, RQ1.4, RQ1.5, RQ1.6, RQ3.1, RQ3.2, M1, RQ4.1 and RQ4.2 are answered with the available data; RQ1.1 (national thirty years done, municipal from 2016), RQ1.2 (new/existing, flats/villas), RQ1.7 and RQ1.8 (appraisal against transaction only) are partly answered
 (see [research_questions](../docs/research_questions.md)).
