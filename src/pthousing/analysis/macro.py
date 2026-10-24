@@ -1,4 +1,4 @@
-"""Mortgage rates and the house-price cycle: episodes and a timing test (RQ1.7, RQ9.2, RQ9.5).
+"""Mortgage rates, wages, unemployment and the house-price cycle (RQ1.7, RQ1.4, RQ9.1, RQ9.2, RQ9.5).
 
 National quarterly series only (2003 to 2026): the BIS real and nominal house price index (INE's from 2009),
 the agreed rate on new housing loans (Banco de Portugal) and the payment it implies on a 100,000 euro loan.
@@ -141,3 +141,69 @@ def rate_timing(
         out["lead_coef_pct_per_pp"] = res.params["x_lead"]
         out["lead_p_value"] = res.pvalues["x_lead"]
     return out
+
+
+# ---- wages, unemployment and GDP (annual) ---------------------------------------------------------
+
+BASE = 2015  # index base of the annual long series (``build_panel.national_annual_long``)
+
+
+def annual_frame(long: pd.DataFrame, macro: pd.DataFrame) -> pd.DataFrame:
+    """Annual national prices, wages, unemployment and GDP growth, 1995 to the last year.
+
+    ``long`` is ``national_annual_long`` (nominal and real price index, CPI, OECD price-to-income; 2015 = 100) and
+    ``macro`` the ``eurostat_macro`` interim table. Adds real compensation per employee (deflated with the same
+    CPI as the real price index), the price-to-wage index (nominal price over nominal compensation per employee,
+    2015 = 100) and yearly changes: log points for prices and wages, percentage points for unemployment.
+    """
+    d = long.set_index("year")[
+        ["hpi_nominal_b2015", "hpi_real_b2015", "cpi_index_b2015", "price_to_income_b2015"]
+    ].join(macro.set_index("year"))
+    wage_real = d["compensation_per_employee_eur"] / d["cpi_index_b2015"]
+    d["wage_real_b2015"] = 100 * wage_real / wage_real.loc[BASE]
+    ratio = d["hpi_nominal_b2015"] / d["compensation_per_employee_eur"]
+    d["price_to_wage_b2015"] = 100 * ratio / ratio.loc[BASE]
+    d["price_growth_real_pct"] = 100 * np.log(d["hpi_real_b2015"]).diff()
+    d["price_growth_nominal_pct"] = 100 * np.log(d["hpi_nominal_b2015"]).diff()
+    d["wage_growth_real_pct"] = 100 * np.log(wage_real).diff()
+    d["wage_growth_nominal_pct"] = 100 * np.log(d["compensation_per_employee_eur"]).diff()
+    d["inflation_pct"] = 100 * np.log(d["cpi_index_b2015"]).diff()
+    d["unemployment_change_pp"] = d["unemployment_pct"].diff()
+    return d
+
+
+def fundamentals(
+    annual: pd.DataFrame,
+    xs: list[str],
+    y: str = "price_growth_real_pct",
+    lag: int = 0,
+    own_lag: bool = False,
+    drop_years: tuple[int, ...] = (),
+) -> pd.DataFrame:
+    """Yearly price growth on wage growth, unemployment change and GDP growth (``xs``), lagged ``lag`` years.
+
+    ``own_lag`` adds last year's price growth (momentum). Newey-West standard errors with two lags; ``drop_years``
+    removes years from the sample (the pandemic, when wages and the CPI jumped). Returns one row per term with the
+    coefficient, 95% interval and p-value, and the R2 and number of years on every row. With lag 0 these are
+    co-movements within the year, with lag 1 the variables lead.
+    """
+    d = annual[[y]].copy()
+    for x in xs:
+        d[x] = annual[x].shift(lag)
+    if own_lag:
+        d["price_growth_lag"] = annual[y].shift(1)
+    d = d.drop(index=list(drop_years)).dropna()
+    cols = [c for c in d.columns if c != y]
+    res = sm.OLS(d[y], sm.add_constant(d[cols])).fit(cov_type="HAC", cov_kwds={"maxlags": 2})
+    ci = res.conf_int()
+    out = pd.DataFrame(
+        {
+            "coef": res.params,
+            "ci_low": ci[0],
+            "ci_high": ci[1],
+            "p_value": res.pvalues,
+            "r2": res.rsquared,
+            "n": int(res.nobs),
+        }
+    )
+    return out.drop(index="const").rename_axis("term")

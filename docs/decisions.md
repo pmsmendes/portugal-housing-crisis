@@ -2,6 +2,12 @@
 
 Analytic and engineering choices, newest first. One short entry each: what, why, alternatives rejected.
 
+## 2026-10-24 — National accounts for wages: Eurostat series, labour force survey unemployment
+- **What:** `eurostat_macro` combines Eurostat GDP growth (`nama_10_gdp`, chain-linked volumes), the unemployment rate from `lfsa_urgan` (1995 onward) and compensation per employee (compensation of employees `nama_10_a10` over employees `nama_10_a10_e`, whole economy). `p2_09` uses them against national real and nominal prices, annual 1995-2025.
+- **Why:** it gives a wage concept thirty years long; INE's income per taxable person starts in 2015 and the OECD's income per head is not a wage. The shorter `une_rt_a` is skipped because it starts in 2009 for Portugal.
+- **Design:** yearly real price growth on wage growth, change in unemployment and GDP growth, Newey-West errors (2 lags), same year and one year earlier, with last year's growth, without 2020-2022, and in nominal terms (so the deflator shared by real prices and real wages cannot drive the result). No fixed-effects or VAR: 30 observations.
+- **Rejected:** claiming that wages or unemployment cause prices (cycle co-movement; credit and expectations omitted); using GDP growth as the headline driver (it adds nothing in the same year once the labour market is in, and is slightly negative when lagged).
+
 ## 2026-10-24 — Rates and prices: pre-specified timing test, episodes from turning points
 - **What:** `p2_08` tests whether the rate moves prices with one specification fixed before the lag profile was drawn: a year's real price growth on the rate change of the year before (non-overlapping windows), Newey-West errors (6 lags), then last year's growth, a next-year-rate placebo, nominal prices and the two halves of the sample. Episodes are bounded by the 2008Q3 crisis start and by turning points computed from the data (price low, rate low, rate peak).
 - **Why:** with one national series and a persistent rate, choosing the lag with the best correlation would manufacture a result (the profile peaks at 1 quarter, where the specification we fixed is 4). The headline is the pre-specified one; the profile is drawn only as description.

@@ -1,0 +1,23 @@
+specification,term,coef,ci_low,ci_high,p_value,r2,n
+lag 0: wages,wage_growth_real_pct,1.253,0.763,1.742,0.0,0.355,30
+"lag 0: wages, unemployment",wage_growth_real_pct,1.003,0.662,1.344,0.0,0.574,30
+"lag 0: wages, unemployment",unemployment_change_pp,-2.131,-2.744,-1.518,0.0,0.574,30
+"lag 0: wages, unemployment, GDP",wage_growth_real_pct,1.047,0.634,1.461,0.0,0.582,30
+"lag 0: wages, unemployment, GDP",unemployment_change_pp,-2.368,-3.141,-1.594,0.0,0.582,30
+"lag 0: wages, unemployment, GDP",gdp_growth_pct,-0.205,-0.774,0.364,0.48,0.582,30
+lag 0: ... + last year's growth,wage_growth_real_pct,0.88,0.538,1.221,0.0,0.755,30
+lag 0: ... + last year's growth,unemployment_change_pp,-1.381,-2.321,-0.441,0.004,0.755,30
+lag 0: ... + last year's growth,gdp_growth_pct,-0.297,-0.542,-0.052,0.018,0.755,30
+lag 0: ... + last year's growth,price_growth_lag,0.545,0.345,0.745,0.0,0.755,30
+lag 0: without 2020-2022,wage_growth_real_pct,1.026,0.653,1.399,0.0,0.626,27
+lag 0: without 2020-2022,unemployment_change_pp,-2.125,-2.818,-1.431,0.0,0.626,27
+"lag 1: wages, unemployment, GDP",wage_growth_real_pct,1.015,0.501,1.53,0.0,0.573,29
+"lag 1: wages, unemployment, GDP",unemployment_change_pp,-2.726,-3.964,-1.487,0.0,0.573,29
+"lag 1: wages, unemployment, GDP",gdp_growth_pct,-0.515,-0.981,-0.049,0.03,0.573,29
+lag 1: ... + last year's growth,wage_growth_real_pct,0.6,0.107,1.094,0.017,0.628,29
+lag 1: ... + last year's growth,unemployment_change_pp,-1.779,-3.214,-0.345,0.015,0.628,29
+lag 1: ... + last year's growth,gdp_growth_pct,-0.44,-0.846,-0.033,0.034,0.628,29
+lag 1: ... + last year's growth,price_growth_lag,0.418,0.189,0.647,0.0,0.628,29
+"nominal: wages, inflation, unemployment",wage_growth_nominal_pct,0.991,0.713,1.27,0.0,0.548,30
+"nominal: wages, inflation, unemployment",inflation_pct,-0.056,-0.904,0.792,0.897,0.548,30
+"nominal: wages, inflation, unemployment",unemployment_change_pp,-2.122,-2.766,-1.478,0.0,0.548,30

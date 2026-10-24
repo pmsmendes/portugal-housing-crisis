@@ -130,6 +130,29 @@ def _demography(**override):
     return df.assign(**override)
 
 
+def _macro(**override):
+    years = np.arange(2018, 2024)
+    df = pd.DataFrame(
+        {
+            "year": years,
+            "gdp_growth_pct": 2.0,
+            "unemployment_pct": 7.0,
+            "compensation_per_employee_eur": 20_000.0 * 1.03 ** (years - 2018),
+        }
+    )
+    return df.assign(**override)
+
+
+def test_eurostat_macro_checks_consecutive_years_and_wage_jumps():
+    assert _failures("eurostat_macro", _macro()) == []
+    gap = _macro().drop(index=2)
+    assert any("consecutive" in r["detail"] for r in _failures("eurostat_macro", gap))
+    wages = _macro(
+        compensation_per_employee_eur=[20_000.0, 20_500.0, 31_000.0, 31_500.0, 32_000.0, 32_500.0]
+    )
+    assert any("jumps" in r["detail"] for r in _failures("eurostat_macro", wages))
+
+
 def test_eurostat_demography_checks_the_balance_identities_and_revisions():
     assert _failures("eurostat_demography", _demography()) == []
     broken = _demography(net_migration_n=5000.0)

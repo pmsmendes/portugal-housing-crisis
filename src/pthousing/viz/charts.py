@@ -1741,3 +1741,49 @@ def rates_and_cycles(frame: pd.DataFrame, episodes: pd.DataFrame, profile: pd.Da
         head_in=1.3,
         foot_in=0.6,
     )
+
+
+def wages_and_prices(annual: pd.DataFrame) -> Figure:
+    """Real house prices against real wages (left) and two price-to-earnings ratios (right), 1995 onward.
+
+    ``annual`` is ``macro.annual_frame`` (2015 = 100). Left: real house price index and real compensation per
+    employee. Right: house price over compensation per employee and the OECD's house price over disposable income
+    per head, the second only from its first year.
+    """
+    d = annual.loc[1995:]
+    price, wage = d["hpi_real_b2015"], d["wage_real_b2015"]
+    p2w, p2i = d["price_to_wage_b2015"], d["price_to_income_b2015"].dropna()
+    fig, (left, right) = plt.subplots(1, 2, figsize=(11, 4.6))
+    _line(left, wage.index, wage, ORANGE)
+    _line(left, price.index, price, BLUE, z=4)
+    for series, color in ((wage, ORANGE), (price, BLUE)):
+        _end_dot(left, series.index[-1], series.iloc[-1], color)
+        _label(left, series.index[-1], series.iloc[-1], f"{series.iloc[-1]:.0f}")
+    _legend(left, [Line2D([], [], color=BLUE, lw=LINE_WIDTH, label="Real house price index"),
+                   Line2D([], [], color=ORANGE, lw=LINE_WIDTH, label="Real compensation per employee")], loc="upper left")  # fmt: skip
+    _line(right, p2i.index, p2i, MUTED, width=1.4, z=2)
+    _line(right, p2w.index, p2w, BLUE, z=4)
+    for series, color, va in (
+        (p2w, BLUE, "top"),
+        (p2i, MUTED, "bottom"),
+    ):  # ends are 2 points apart
+        _end_dot(right, series.index[-1], series.iloc[-1], color)
+        _label(right, series.index[-1], series.iloc[-1], f"{series.iloc[-1]:.0f}", va=va)
+    _legend(right, [Line2D([], [], color=BLUE, lw=LINE_WIDTH, label="Price over compensation per employee"),
+                    Line2D([], [], color=MUTED, lw=1.4, label="Price over disposable income per head (OECD)")], loc="upper left")  # fmt: skip
+    for ax in (left, right):
+        ax.set_xlim(1994, d.index.max() + 4.5)
+        ax.set_xticks(range(1995, 2026, 5))
+        ax.set_ylim(60, 230)
+    _panel_title(left, "After inflation (2015 = 100)")
+    _panel_title(right, "House price to earnings (2015 = 100)")
+    low = p2w.loc[2008:].idxmin()
+    return style.finish(
+        fig,
+        f"Prices rose {100 * (price.iloc[-1] / price.loc[low] - 1):.0f}% after inflation since {low} and wages {100 * (wage.iloc[-1] / wage.loc[low] - 1):.0f}%: "
+        f"the price-to-wage ratio is {p2w.iloc[-1] / p2w.loc[low]:.1f} times its {low} low",
+        "Annual, national, 1995 to 2025; compensation of employees over employees (whole economy), deflated with the consumer price index",
+        "Source: BIS, INE, OECD, Eurostat (national accounts), own calculations. Per employee: hours and the mix of jobs are not held fixed.",
+        head_in=1.3,
+        foot_in=0.6,
+    )

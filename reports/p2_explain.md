@@ -2,7 +2,7 @@
 
 Why did affordability deteriorate, and where? This phase moves from description to association; nothing here is a
 causal claim. Figures: `reports/figures/p2/`, tables: `reports/tables/p2/`, notebooks: `notebooks/p2_explain/`
-(`p2_01` to `p2_08`). Methods: [methodology](../docs/methodology.md), choices:
+(`p2_01` to `p2_09`). Methods: [methodology](../docs/methodology.md), choices:
 [decisions](../docs/decisions.md).
 
 ## Summary
@@ -209,6 +209,27 @@ housing loans and the payment it implies.
 
 Tables: `rate_episodes.csv`, `rate_lag_profile.csv`, `rate_timing.csv`.
 
+## Wages, unemployment and GDP (`p2_09_wages_and_labour_market`)
+
+![Prices against wages](figures/p2/wages_and_prices.png)
+
+National annual series, 1995 to 2025, from national accounts and the labour force survey (RQ9.1, RQ1.4).
+
+27. **Prices left wages behind after 2013.** Since the 2013 low, real house prices are up 129% and real compensation per
+    employee up 27%. The price-to-wage ratio is 1.8 times its 2013 low and 165 (2015 = 100), against 134 in 1995 and
+    136 in 2001; the OECD's price-to-income gives 167, so the two earnings concepts agree.
+28. **Price growth follows the labour market.** In a year, one more point of real wage growth goes with +1.0 points of real
+    price growth [+0.7, +1.3] and one point more unemployment with −2.1 [−2.7, −1.5] (R2 0.57, 30 years); GDP growth adds
+    nothing in the same year once those are in (−0.2, [−0.8, +0.4]) and takes a small negative sign when lagged
+    (−0.5, [−1.0, −0.1]), which is not a demand story: it probably picks up the cycle's turning points. With last year's variables the signs and sizes hold (+1.0 and −2.7),
+    and with last year's price growth added they shrink to +0.6 and −1.8 but stay clear of zero. Nominal prices on
+    nominal wages give the same (+1.0, −2.1), with inflation at 0.0, so the shared deflator is not the reason.
+29. **Read as co-movement.** These are two or three business cycles (the 2008 and 2011-2013 recessions, the recovery, the
+    pandemic) in one country. Removing 2020-2022 changes nothing (+1.0, −2.1), but wages and unemployment move together
+    with credit, rates and expectations, none of which are separated here.
+
+Tables: `wages_prices_levels.csv`, `price_growth_fundamentals.csv`.
+
 ## Limitations
 
 - **A pattern, not a mechanism.** Spatial autocorrelation does not show that price changes spill over: shared
@@ -244,10 +265,13 @@ Tables: `rate_episodes.csv`, `rate_lag_profile.csv`, `rate_timing.csv`.
   the real price through the deflator; the nominal check is weaker, −0.8 [−1.9, +0.4]). A null does not mean no
   effect, only that this series cannot tell. Credit supply is not tested: the loan volume we hold covers loans fixed
   for up to one year (the share of fixed-rate loans grew after 2018), not total lending.
+- **Wages and the labour market.** Thirty yearly observations, one economy; compensation per employee does not hold hours
+  or the mix of jobs fixed and is not the income of buyers (who are older, richer and more often foreign than the
+  average employee); Newey-West errors with two lags are approximate at this length. Rents are not analysed.
 - **Missing municipalities.** 12 municipalities have no price-to-income for 2016 or 2024 and are left out (hatched on
   the map); their neighbours' weights are re-standardised without them.
 
 ## Questions answered
 
 RQ4.4 (little evidence of spillovers beyond the regional pattern), RQ4.6 (coastal and urban, not tourism as such), RQ2.1 to
-RQ2.3 and RQ4.5 (supply against households) and RQ5.4 (second homes separated) are answered; RQ3.6 is answered as far as these data allow (demand differences cannot be told from the regional pattern); RQ4.3, RQ3.3, RQ5.1, RQ5.3, RQ1.7, RQ9.2 and RQ9.5 are partly answered (see [research_questions](../docs/research_questions.md)).
+RQ2.3 and RQ4.5 (supply against households) and RQ5.4 (second homes separated) are answered; RQ3.6 is answered as far as these data allow (demand differences cannot be told from the regional pattern); RQ4.3, RQ3.3, RQ5.1, RQ5.3, RQ1.7, RQ9.1, RQ9.2 and RQ9.5 are partly answered; RQ1.4 is answered (income and wages) (see [research_questions](../docs/research_questions.md)).

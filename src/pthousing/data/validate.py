@@ -267,6 +267,16 @@ def schemas() -> dict[str, DataFrameSchema]:
             unique=["year"],
             strict=True,
         ),
+        "eurostat_macro": DataFrameSchema(
+            {
+                "year": _year(1970),
+                "gdp_growth_pct": _num(-15, 15),
+                "unemployment_pct": _num(2, 20),
+                "compensation_per_employee_eur": _num(1_000, 60_000),
+            },
+            unique=["year"],
+            strict=True,
+        ),
         "rnal_al": DataFrameSchema(
             {
                 "rnal_n": Column(int, Check.ge(1), coerce=True),
@@ -460,6 +470,14 @@ def check_eurostat_demography(df: pd.DataFrame) -> list[str | None]:
     ]
 
 
+def check_eurostat_macro(df: pd.DataFrame) -> list[str | None]:
+    years = df["year"]
+    gaps = None if years.diff().dropna().eq(1).all() else "years are not consecutive"
+    comp = df.set_index("year")["compensation_per_employee_eur"].dropna()
+    jump = comp.pct_change().abs().max()
+    return [gaps, None if jump < 0.25 else f"compensation per employee jumps {jump:.0%} in a year"]
+
+
 def check_aima_foreigners(df: pd.DataFrame) -> list[str | None]:
     key = [MUNI_KEY, "year"]
     tot = df[df["nationality"] == "total"].set_index(key)["foreign_residents_n"]
@@ -600,6 +618,7 @@ CHECKS: dict[str, Callable[[pd.DataFrame], list[str | None]]] = {
     "bp_mortgage": check_bp,
     "eurostat_hpi": check_eurostat_hpi,
     "eurostat_demography": check_eurostat_demography,
+    "eurostat_macro": check_eurostat_macro,
     "bis_spp": check_bis_spp,
     "oecd_house_prices": check_oecd_house_prices,
     "rnal_al": check_rnal,

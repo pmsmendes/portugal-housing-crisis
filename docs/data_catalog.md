@@ -28,6 +28,7 @@ Registry of every dataset. **Read this before opening any data file or source mo
 | caop_boundaries | caop | Municipality boundaries (CAOP 2024), 308 municipalities | Municipality | Annual vintage | 2024 | caop_municipalities.parquet | ingested |
 | bis_spp | bis | BIS residential property price index, nominal and real (CPI-deflated), index 2010=100 and y/y % | National | Quarterly | 1988-Q1–2026-Q1 (WS_SPP, key Q.PT..); equals INE's index exactly from 2009 | bis_spp.parquet | ingested (pre-2009 source not stated; join untestable) |
 | oecd_house_prices | oecd | OECD analytical house price indicators: nominal and real house price index, rent prices, price-to-rent and price-to-income (2015=100) and the ratios against their long-term average | National | Annual | HPI and price-to-rent 1988–2025; price-to-income 1995–2025; rent prices 1959–2025 (DSD_AN_HOUSE_PRICES) | oecd_house_prices.parquet | ingested (own real series not used: different deflator) |
+| eurostat_macro | eurostat | GDP growth (nama_10_gdp), unemployment rate (lfsa_urgan), compensation of employees (nama_10_a10) and employees (nama_10_a10_e), combined into compensation per employee | Country (PT) | Annual | GDP growth 1996–2025; unemployment 1995–2025; compensation per employee 1995–2025 | eurostat_macro.parquet | ingested |
 | aima_foreigners | aima | Foreign residents with a legal residence title on 31 December (ex-SEF, via INE), by nationality | Municipality | Annual | 2014–2023 (0010247, NUTS 2013) | aima_foreigners.parquet | ingested (ends 2023) |
 
 ## Interim tables (`data/interim/`, built by `interim.py`, checked by `validate.py`)
@@ -48,6 +49,7 @@ Full 308-municipality grid for municipal tables; suppressed cells are NaN, never
 | aima_foreigners | muni_code × year (2014–2023) × nationality (br, cn, cv, gb, gw, md, ro, st, ua, ao, other, total) | foreign_residents_n (total = sum of the others) |
 | ine_cpi / ine_cpi_monthly | year / period_start | cpi_index_b2025 (2025 = 100) |
 | ine_hpi | period_start × category | hpi_index_b2025 (2025 = 100), national |
+| eurostat_macro | year (1995–2025) | gdp_growth_pct (real, % on the previous year), unemployment_pct (15 to 74, labour force survey), compensation_per_employee_eur (whole economy, nominal) |
 | bp_mortgage | date (month end) | mortgage_aprc_new_pct, mortgage_rate_new_lt1y_pct, mortgage_rate_stock_gt5y_pct, mortgage_new_lt1y_volume_eur_m, mortgage_rate_new_fixed_p50_pct |
 | eurostat_hpi | geo × period_start | hpi_index_b2015 (PT, ES, IT, FR, DE, IE, EU27) |
 | eurostat_hicp | geo × year | hicp_index_b2015 (PT, EU27) |

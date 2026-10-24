@@ -1,3 +1,4 @@
+import numpy as np
 import pandas as pd
 import pytest
 
@@ -202,6 +203,32 @@ def test_eurostat_demography_names_columns_and_splits_out_the_revision(monkeypat
     assert out.loc[2020, kept].tolist() == [-2.0, 7.0, 8.0, 10.0]
 
 
+def test_eurostat_macro_divides_compensation_by_employees(monkeypatch):
+    def series(dataset_id):
+        values = {
+            "eurostat_gdp": {1996: 3.0, 1997: 4.0},
+            "eurostat_unemployment": {1995: 7.0, 1996: 7.5, 1997: 6.5},
+            "eurostat_compensation": {
+                1995: 90_000.0,
+                1996: 100_000.0,
+                1997: 110_000.0,
+            },  # EUR million
+            "eurostat_employees": {1995: 4_500.0, 1996: 4_500.0, 1997: 5_000.0},  # thousand
+        }[dataset_id]
+        return pd.DataFrame({"year": list(values), "value": list(values.values())})
+
+    monkeypatch.setattr(interim.eurostat, "read", series)
+    out = interim.build_eurostat_macro().set_index("year")
+    assert out.loc[1996, "compensation_per_employee_eur"] == pytest.approx(100_000 * 1000 / 4_500)
+    assert out.loc[1997, "compensation_per_employee_eur"] == pytest.approx(22_000.0)
+    assert np.isnan(out.loc[1995, "gdp_growth_pct"])  # growth starts a year later
+    assert list(out.columns) == [
+        "gdp_growth_pct",
+        "unemployment_pct",
+        "compensation_per_employee_eur",
+    ]
+
+
 def test_aima_foreigners_labels_nationalities_and_keeps_the_total(monkeypatch):
     rows = [
         {"muni_code": "0101", "period_start": "2023-01-01", "dim_3": code, "value": v}
@@ -264,6 +291,10 @@ def test_download_calls_each_chosen_source_and_rejects_unknown(monkeypatch):
         ("eurostat", "eurostat_hpi"),
         ("eurostat", "eurostat_hicp"),
         ("eurostat", "eurostat_demography"),
+        ("eurostat", "eurostat_gdp"),
+        ("eurostat", "eurostat_unemployment"),
+        ("eurostat", "eurostat_compensation"),
+        ("eurostat", "eurostat_employees"),
         ("rnal",),
     ]
     calls.clear()

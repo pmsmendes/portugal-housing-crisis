@@ -402,6 +402,32 @@ INE_CODES = (
     "0008273", "0014642", "0014640", "0014765",  # population, CPI annual / monthly, HPI
     "0008269", "0008270", "0008271",  # net migration, natural increase, population change
 )  # fmt: skip
+
+
+def build_eurostat_macro() -> pd.DataFrame:
+    """Portugal's annual macro series: GDP growth, unemployment rate and compensation per employee.
+
+    GDP growth is the change in chain-linked volumes (%); the unemployment rate is the labour force survey's
+    (15 to 74); ``compensation_per_employee_eur`` is whole-economy compensation of employees over employees
+    (domestic concept), nominal. Years without a value stay NaN (GDP growth starts in 1996).
+    """
+
+    def column(dataset_id: str, name: str) -> pd.Series:
+        return eurostat.read(dataset_id).set_index("year")["value"].rename(name)
+
+    comp = column("eurostat_compensation", "compensation_eur_m")
+    employees = column("eurostat_employees", "employees_ths")
+    out = pd.concat(
+        [
+            column("eurostat_gdp", "gdp_growth_pct"),
+            column("eurostat_unemployment", "unemployment_pct"),
+            (comp * 1000 / employees).rename("compensation_per_employee_eur"),
+        ],
+        axis=1,
+    )
+    return out.rename_axis("year").reset_index().sort_values("year", ignore_index=True)
+
+
 # Census tables that exceed INE's row limit as a whole: only the totals of the dimensions we do not split by.
 INE_FILTERED = {
     "0006304": {"Dim4": "T", "Dim5": "T"},  # conventional dwellings 2011 by occupancy status
@@ -409,6 +435,15 @@ INE_FILTERED = {
     "0006457": {"Dim3": "T", "Dim4": "T", "Dim5": "T"},  # private households 2011
     "0012856": {"Dim3": "T", "Dim4": "T", "Dim5": "T"},  # private households 2021
 }
+EUROSTAT_DATASETS = (
+    "eurostat_hpi",
+    "eurostat_hicp",
+    "eurostat_demography",
+    "eurostat_gdp",
+    "eurostat_unemployment",
+    "eurostat_compensation",
+    "eurostat_employees",
+)
 SOURCES = ("ine", "aima", "at", "bportugal", "eurostat", "bis", "oecd", "rnal", "caop")
 
 
@@ -429,7 +464,7 @@ def download(sources: list[str] | None = None, refresh: bool = False) -> None:
     if "bportugal" in chosen:
         bportugal.fetch_all(refresh=refresh)
     if "eurostat" in chosen:
-        for dataset_id in ("eurostat_hpi", "eurostat_hicp", "eurostat_demography"):
+        for dataset_id in EUROSTAT_DATASETS:
             eurostat.fetch(dataset_id, refresh=refresh)
     if "bis" in chosen:
         bis.fetch("bis_spp", refresh=refresh)
@@ -460,6 +495,7 @@ BUILDERS: dict[str, Callable[[], pd.DataFrame]] = {
     "eurostat_hpi": build_eurostat_hpi,
     "eurostat_hicp": build_eurostat_hicp,
     "eurostat_demography": build_eurostat_demography,
+    "eurostat_macro": build_eurostat_macro,
     "bis_spp": build_bis_spp,
     "oecd_house_prices": build_oecd_house_prices,
     "rnal_al": build_rnal_al,

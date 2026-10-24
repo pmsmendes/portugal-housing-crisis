@@ -73,3 +73,63 @@ def test_lag_profile_peaks_at_the_planted_lag():
     p = macro.lag_profile(d, "y", "x", range(0, 6))
     assert p.loc[p["corr"].idxmax(), "lag_quarters"] == 3
     assert p["band"].iloc[0] == pytest.approx(1.96 / np.sqrt(len(d.dropna()) / 4))
+
+
+def _annual(n=30, seed=3):
+    rng = np.random.default_rng(seed)
+    years = np.arange(1995, 1995 + n)
+    cpi = 100 * np.cumprod(1 + rng.normal(0.02, 0.005, n))
+    wage_nominal = 10_000 * np.cumprod(1 + rng.normal(0.03, 0.01, n))
+    long = pd.DataFrame(
+        {
+            "year": years,
+            "hpi_nominal_b2015": 100 * np.cumprod(1 + rng.normal(0.04, 0.03, n)),
+            "hpi_real_b2015": 100 * np.cumprod(1 + rng.normal(0.02, 0.03, n)),
+            "cpi_index_b2015": cpi,
+            "price_to_income_b2015": 100.0,
+        }
+    )
+    macro_tbl = pd.DataFrame(
+        {
+            "year": years,
+            "gdp_growth_pct": rng.normal(2, 2, n),
+            "unemployment_pct": 8 + np.cumsum(rng.normal(0, 0.5, n)),
+            "compensation_per_employee_eur": wage_nominal,
+        }
+    )
+    return long, macro_tbl
+
+
+def test_annual_frame_rebases_wages_and_ratio_to_2015():
+    long, macro_tbl = _annual()
+    d = macro.annual_frame(long, macro_tbl)
+    assert d.loc[2015, "wage_real_b2015"] == pytest.approx(100)
+    assert d.loc[2015, "price_to_wage_b2015"] == pytest.approx(100)
+    expected = 100 * np.log(d["compensation_per_employee_eur"] / d["cpi_index_b2015"]).diff()
+    pd.testing.assert_series_equal(d["wage_growth_real_pct"], expected, check_names=False)
+    assert d["unemployment_change_pp"].iloc[1] == pytest.approx(
+        d["unemployment_pct"].iloc[1] - d["unemployment_pct"].iloc[0]
+    )
+
+
+def test_fundamentals_recovers_planted_wage_coefficient_and_lag():
+    long, macro_tbl = _annual(n=200)
+    d = macro.annual_frame(long, macro_tbl)
+    rng = np.random.default_rng(4)
+    d["price_growth_real_pct"] = 1.5 * d["wage_growth_real_pct"].shift(1) + rng.normal(
+        0, 0.3, len(d)
+    )
+    lead = macro.fundamentals(d, ["wage_growth_real_pct"], lag=1)
+    assert lead.loc["wage_growth_real_pct", "coef"] == pytest.approx(1.5, abs=0.1)
+    assert lead["n"].iloc[0] == len(d) - 2  # first year has no growth, the lag drops another
+    same_year = macro.fundamentals(d, ["wage_growth_real_pct"])
+    assert abs(same_year.loc["wage_growth_real_pct", "coef"]) < 0.5
+
+
+def test_fundamentals_drops_years_and_adds_own_lag():
+    long, macro_tbl = _annual()
+    d = macro.annual_frame(long, macro_tbl)
+    base = macro.fundamentals(d, ["wage_growth_real_pct"])
+    fewer = macro.fundamentals(d, ["wage_growth_real_pct"], drop_years=(2000, 2001))
+    assert fewer["n"].iloc[0] == base["n"].iloc[0] - 2
+    assert "price_growth_lag" in macro.fundamentals(d, ["wage_growth_real_pct"], own_lag=True).index

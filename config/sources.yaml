@@ -165,6 +165,32 @@ eurostat:
     notes: >
       Verified 2026-10-24; national, 1960 to the latest year. `CNMIGRAT` is net migration plus statistical adjustment,
       so it is the residual of total change after natural change. Gives the 30-year split that INE offers only from 2011.
+  eurostat_gdp:
+    dataset: nama_10_gdp
+    params: {na_item: B1GQ, unit: CLV_PCH_PRE}   # GDP at market prices, chain-linked volumes, % change on the previous year
+    geo: [PT]
+    format: json
+    notes: Verified 2026-10-24; annual, national.
+  eurostat_unemployment:
+    dataset: lfsa_urgan
+    params: {age: Y15-74, sex: T, citizen: TOTAL, unit: PC}  # unemployment rate, % of the active population aged 15 to 74
+    geo: [PT]
+    format: json
+    notes: >
+      Verified 2026-10-24; annual, national, 1995 onward (labour force survey). The shorter une_rt_a starts only in 2009
+      for Portugal.
+  eurostat_compensation:
+    dataset: nama_10_a10
+    params: {nace_r2: TOTAL, na_item: D1, unit: CP_MEUR}   # compensation of employees, current prices, EUR million
+    geo: [PT]
+    format: json
+    notes: Verified 2026-10-24; annual, whole economy. Divided by employees (eurostat_employees) for compensation per employee.
+  eurostat_employees:
+    dataset: nama_10_a10_e
+    params: {nace_r2: TOTAL, na_item: SAL_DC, unit: THS_PER}   # employees, domestic concept, thousand persons
+    geo: [PT]
+    format: json
+    notes: Verified 2026-10-24; annual, whole economy.
 
 at:
   # IMI rates: Portal das Financas "Consultar Taxas do Municipio" (public, read-only HTML, one page per year and district).
