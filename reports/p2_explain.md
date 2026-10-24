@@ -2,7 +2,7 @@
 
 Why did affordability deteriorate, and where? This phase moves from description to association; nothing here is a
 causal claim. Figures: `reports/figures/p2/`, tables: `reports/tables/p2/`, notebooks: `notebooks/p2_explain/`
-(`p2_01` to `p2_09`). Methods: [methodology](../docs/methodology.md), choices:
+(`p2_01` to `p2_10`). Methods: [methodology](../docs/methodology.md), choices:
 [decisions](../docs/decisions.md).
 
 ## Summary
@@ -36,9 +36,9 @@ available, so a credible answer to "what would change affordability?" needs a po
 (phase 3) and a simulator that keeps accounting effects apart from behavioural responses (phase 4). Tables:
 `synthesis_r2_ladder.csv`, `synthesis_r2_order_check.csv`, `synthesis_joint_model.csv`.
 
-**Contents:** spatial autocorrelation (`p2_01`, RQ4.3 partly), fixed-effects regressions with foreign residents
+**Contents:** spatial autocorrelation (`p2_01`), fixed-effects regressions with foreign residents
 (`p2_02`, RQ3.3, RQ5.1), spillover tests (`p2_03`, RQ4.4), segmentation (`p2_04`, RQ4.6), supply against demand
-(`p2_05`, RQ2.1 to RQ2.4, RQ3.4, RQ4.5), second homes (`p2_06`, RQ5.3, RQ5.4) and the synthesis (`p2_07`, RQ3.6).
+(`p2_05`, RQ2.1 to RQ2.4, RQ3.4, RQ4.5), second homes (`p2_06`, RQ5.3, RQ5.4) the synthesis (`p2_07`, RQ3.6), mortgage rates (`p2_08`, RQ1.7, RQ9.2, RQ9.5), wages and the labour market (`p2_09`, RQ9.1, RQ1.4) and big municipalities against their surroundings (`p2_10`, RQ4.3).
 
 ## Key findings
 
@@ -188,6 +188,28 @@ Census secondary residences, 2011 and 2021, mainland; a cross-section, so the pa
 Tables: `second_homes_by_class.csv`, `second_homes_cross_section.csv`, `second_homes_subsamples.csv`,
 `second_homes_interactions.csv`.
 
+## Big municipalities and their surroundings (`p2_10_centres_and_surroundings`)
+
+![Price change by distance from a large municipality](figures/p2/centres_and_surroundings.png)
+
+A centre is a municipality with at least 100,000 residents in 2021 (25: the two metropolitan cores and their large
+suburbs, plus Braga, Guimarães, Coimbra, Leiria, Viseu, Funchal and others); distance is the number of border steps to the
+nearest one (RQ4.3). Changes are 2016 to 2024, real, medians over municipalities.
+
+30. **Prices rose most in the big municipalities and less the further out.** Real price per m²: +108% in the 25 centres,
+    +63% one step away (58 municipalities), +45% two steps, +43% three and +44% four or more. Price-to-income follows
+    (+73%, +26%, +14%, +13%, +14%) because incomes rose least in the centres (+18% against 28 to 31% elsewhere).
+31. **It survives region effects.** Within the same NUTS 3 region, municipalities one step from a centre rose 9 log points
+    less than the centre (interval −15 to −3), two or more steps 19 less (−30 to −7); for price-to-income 14 and 24 to
+    25 less. Only 9 regions have a centre, so the intervals are approximate.
+32. **The cores themselves are not the same story.** Lisboa rose 75% (price-to-income +53%) against a median 112% (+92%) in the
+    rest of its metropolitan area, and all 17 other municipalities above it; Porto rose 124% (+104%) against 84% (+44%), with
+    2 of 16 above it. The pressure at the top of the ranking is large, dense municipalities, with Lisboa's own level
+    already the highest (4.4 times the median municipality in 2025).
+
+Tables: `centre_gradient.csv`, `centre_gradient_within_regions.csv`, `centre_gradient_within_regions_pti.csv`,
+`core_vs_metro.csv`.
+
 ## Mortgage rates and the price cycle (`p2_08_rates_and_cycles`)
 
 ![Rates and the price cycle](figures/p2/rates_and_cycles.png)
@@ -265,6 +287,10 @@ Tables: `wages_prices_levels.csv`, `price_growth_fundamentals.csv`.
   the real price through the deflator; the nominal check is weaker, −0.8 [−1.9, +0.4]). A null does not mean no
   effect, only that this series cannot tell. Credit supply is not tested: the loan volume we hold covers loans fixed
   for up to one year (the share of fixed-rate loans grew after 2018), not total lending.
+- **Centres.** The 100,000-resident rule is a size cut-off, not a functional urban area: it counts suburbs such as Sintra
+  and Amadora as centres and Coimbra or Viseu alongside Lisboa. Distance in border steps ignores how far a step is
+  (Alentejo municipalities are large) and commuting. The gradient is a description of 302 municipalities with prices in
+  2016 and 2024, one boom, and the contrast within regions rests on 9 regions.
 - **Wages and the labour market.** Thirty yearly observations, one economy; compensation per employee does not hold hours
   or the mix of jobs fixed and is not the income of buyers (who are older, richer and more often foreign than the
   average employee); Newey-West errors with two lags are approximate at this length. Rents are not analysed.
@@ -273,5 +299,5 @@ Tables: `wages_prices_levels.csv`, `price_growth_fundamentals.csv`.
 
 ## Questions answered
 
-RQ4.4 (little evidence of spillovers beyond the regional pattern), RQ4.6 (coastal and urban, not tourism as such), RQ2.1 to
-RQ2.3 and RQ4.5 (supply against households) and RQ5.4 (second homes separated) are answered; RQ3.6 is answered as far as these data allow (demand differences cannot be told from the regional pattern); RQ4.3, RQ3.3, RQ5.1, RQ5.3, RQ1.7, RQ9.1, RQ9.2 and RQ9.5 are partly answered; RQ1.4 is answered (income and wages) (see [research_questions](../docs/research_questions.md)).
+RQ4.3 (large municipalities rose most, less further out; Lisboa itself less than its suburbs), RQ4.4 (little evidence of spillovers beyond the regional pattern), RQ4.6 (coastal and urban, not tourism as such), RQ2.1 to
+RQ2.3 and RQ4.5 (supply against households) and RQ5.4 (second homes separated) are answered; RQ3.6 is answered as far as these data allow (demand differences cannot be told from the regional pattern); RQ3.3, RQ5.1, RQ5.3, RQ1.7, RQ9.1, RQ9.2 and RQ9.5 are partly answered; RQ1.4 is answered (income and wages) (see [research_questions](../docs/research_questions.md)).

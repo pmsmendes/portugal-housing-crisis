@@ -1853,3 +1853,65 @@ def price_kinds(
         head_in=1.3,
         foot_in=0.6,
     )
+
+
+# ---- big municipalities and their surroundings ----------------------------------------------------
+
+
+def centres_and_surroundings(
+    gradient: pd.DataFrame, cores: pd.DataFrame, names: pd.Series
+) -> Figure:
+    """Real price and income change by distance from a large municipality, and the two metropolitan cores.
+
+    ``gradient`` is ``centres.gradient`` (outcomes ``price`` and ``income``, indexed by steps from the nearest
+    municipality of 100,000 residents; the last step pools it and above), ``cores`` ``centres.core_vs_rest`` per
+    outcome (rows indexed by outcome and core code), ``names`` the municipality names by code. Left: median
+    change in % by distance. Right: each core's price change beside the median of the rest of its area.
+    """
+    fig, (left, right) = plt.subplots(1, 2, figsize=(11, 4.6), gridspec_kw={"width_ratios": [6, 5]})
+    price = gradient.xs("price", level="outcome")
+    income = gradient.xs("income", level="outcome")
+    steps = price.index.to_numpy()
+    _line(left, steps, income["median"], ORANGE)
+    _line(left, steps, price["median"], BLUE, z=4)
+    for series, color in ((income["median"], ORANGE), (price["median"], BLUE)):
+        _end_dot(left, steps[-1], series.iloc[-1], color)
+        _label(left, steps[-1], series.iloc[-1], f"{series.iloc[-1]:.0f}%")
+    _end_dot(left, steps[0], price["median"].iloc[0], BLUE)
+    _label(left, steps[0], price["median"].iloc[0], f"{price['median'].iloc[0]:.0f}%", dx=10)
+    labels = ["Large\nmunicipality"] + [
+        f"{int(s)} step" + ("s" if s > 1 else "") for s in steps[1:-1]
+    ]
+    labels.append(f"{int(steps[-1])}+ steps")
+    left.set_xticks(steps, labels, fontsize=8.5)
+    left.set_xlim(steps[0] - 0.5, steps[-1] + 0.9)
+    left.set_ylim(0, 125)
+    left.yaxis.set_major_formatter(mticker.FuncFormatter(lambda v, _: f"{v:g}%"))
+    _legend(left, [Line2D([], [], color=BLUE, lw=LINE_WIDTH, label="Price per m2"),
+                   Line2D([], [], color=ORANGE, lw=LINE_WIDTH, label="Median income")], loc="upper right")  # fmt: skip
+    _panel_title(left, "Change 2016 to 2024 by distance from a large municipality")
+
+    table = cores.xs("price", level="outcome")
+    width = 0.38
+    for i, (_code, row) in enumerate(table.iterrows()):
+        right.bar(i - width / 2, row["core"], width, color=BLUE, zorder=3)
+        right.bar(i + width / 2, row["rest_median"], width, color=MUTED, zorder=3)
+        right.annotate(f"{row['core']:.0f}%", (i - width / 2, row["core"]), xytext=(0, 3),
+                       textcoords="offset points", ha="center", fontsize=9, color=INK, fontweight="bold")  # fmt: skip
+        right.annotate(f"{row['rest_median']:.0f}%", (i + width / 2, row["rest_median"]), xytext=(0, 3),
+                       textcoords="offset points", ha="center", fontsize=9, color=INK_2, fontweight="bold")  # fmt: skip
+    right.set_xticks(range(len(table)), [names[c] for c in table.index], fontsize=9.5)
+    right.set_ylim(0, 175)
+    right.yaxis.set_major_formatter(mticker.FuncFormatter(lambda v, _: f"{v:g}%"))
+    _legend(right, [Patch(facecolor=BLUE, label="The core"), Patch(facecolor=MUTED, label="Rest of its metropolitan area, median")], loc="upper left")  # fmt: skip
+    _panel_title(right, "Price change 2016 to 2024: Lisboa and Porto")
+
+    return style.finish(
+        fig,
+        f"Real prices rose {price['median'].iloc[0]:.0f}% in large municipalities and {price['median'].iloc[-1]:.0f}% far from them; "
+        "Lisboa itself rose less than its suburbs, Porto more",
+        "Median over municipalities; distance = border steps to the nearest municipality with 100,000+ residents (2021); real = deflated with the consumer price index",
+        "Source: INE (prices, income, population), CAOP boundaries, own calculations. Large municipalities include the metropolitan suburbs (Sintra, Gaia, Amadora).",
+        head_in=1.3,
+        foot_in=0.6,
+    )

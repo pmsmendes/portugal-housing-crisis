@@ -2,6 +2,11 @@
 
 Analytic and engineering choices, newest first. One short entry each: what, why, alternatives rejected.
 
+## 2026-10-24 — Centres by size, distance by border steps
+- **What:** `p2_10` (`analysis/centres.py`) calls a municipality a centre if it had at least 100,000 residents in 2021 (25 municipalities), measures distance as border steps to the nearest centre on the queen contiguity graph (the one used for Moran's I, no links across the sea), compares medians by distance, then repeats it with NUTS 3 fixed effects (errors clustered by region) and compares Lisboa and Porto with the rest of their metropolitan areas.
+- **Why:** it answers RQ4.3 without a functional urban area, which the data do not contain (INE's parish typology is not ingested), and the same weights as `p2_01` keep neighbours consistent. The size rule is transparent and does not depend on the outcome.
+- **Rejected:** only Lisboa and Porto as centres (two points, no gradient); straight-line distance in km (islands, and the river Tejo makes neighbours across the estuary far in steps but near in km); choosing the cut-off by the result.
+
 ## 2026-10-24 — Kinds of price: balanced municipalities, appraisal as the only second price measure
 - **What:** `p1_08` (`analysis/price_types.py`) compares new and existing homes (2019-2025), appraised flats and villas (2011-2025) and appraisal against transaction price (2016-2025). Trends use municipalities observed in every compared year ("balanced"); the unbalanced median is shown beside the appraisal ratio; real values use the project deflator.
 - **Why:** appraisals are suppressed for small municipalities and coverage grows from 198 to 261 municipalities, which moved the unbalanced ratio the opposite way (1.04 to 1.03) from the balanced one (1.04 to 0.94). Flats against villas uses a within-municipality ratio for the same reason.
