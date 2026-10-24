@@ -2,7 +2,7 @@
 
 Why did affordability deteriorate, and where? This phase moves from description to association; nothing here is a
 causal claim. Figures: `reports/figures/p2/`, tables: `reports/tables/p2/`, notebooks: `notebooks/p2_explain/`
-(`p2_01` to `p2_10`). Methods: [methodology](../docs/methodology.md), choices:
+(`p2_01` to `p2_11`). Methods: [methodology](../docs/methodology.md), choices:
 [decisions](../docs/decisions.md).
 
 ## Summary
@@ -252,6 +252,25 @@ National annual series, 1995 to 2025, from national accounts and the labour forc
 
 Tables: `wages_prices_levels.csv`, `price_growth_fundamentals.csv`.
 
+## Age structure (`p2_11_age_structure`)
+
+![Age structure](figures/p2/age_structure.png)
+
+Resident population by five-year age group, 2011 to 2023 (RQ3.5).
+
+30. **The country aged; the pool of household-forming ages shrank, then recovered.** Residents aged 65+ went from 19.2% (2.02 million) to 22.9% (2.57 million),
+    80+ from 5.3% to 6.8%, children from 15.0% to 12.8%. People aged 25 to 44 fell from 2.99 million to 2.70 million (2016) and were back to 2.88 million in 2023 (share 28.3% to 25.7%).
+31. **The rural interior is oldest; inland towns aged fastest.** Median share aged 65+ in 2023: 31.7% in inland rural municipalities (296 people 65+ per 100 children), 20.5% in the 15 inland urban ones (up 6.7 points
+    from the lowest start), 21.5% to 23.6% in the coastal classes.
+32. **Neither age variable goes with the rise in price-to-income once foreign residents are in.** Across 267 mainland municipalities, 2016 to 2023: the 25 to 44 share +1.3% per point in the same district (p = 0.07),
+    +0.4% with coast and density (p = 0.54), −1.3% with the foreign-resident change (p = 0.15); the 65+ share −2.2% (p = 0.046), −1.7% (p = 0.11), −0.7% (p = 0.59). The foreign-resident
+    change stays +1.6% to +2.4% per point (p = 0.002 to 0.035). Consistent with P2.02, where the 65+ share had no robust association in the panel.
+33. **The young-adult share is carried by migrants.** The 25 to 44 share fell 1.9 points in the third of municipalities with the least growth in foreign residents and 0.4 in the third with the most
+    (correlation 0.58); the median log rise of price-to-income was 0.03 against 0.36. Age structure is mostly a restatement of where migrants went.
+
+Tables: `age_bands_national.csv`, `age_structure_by_class.csv`, `age_structure_associations.csv`, `age_structure_by_foreign_third.csv`. Limits: ages of residents (ageing in place cannot be told from the young leaving),
+no internal-migration flows by age and no single-person households between censuses, one cross-section, proxy classes.
+
 ## Limitations
 
 - **A pattern, not a mechanism.** Spatial autocorrelation does not show that price changes spill over: shared
@@ -300,4 +319,4 @@ Tables: `wages_prices_levels.csv`, `price_growth_fundamentals.csv`.
 ## Questions answered
 
 RQ4.3 (large municipalities rose most, less further out; Lisboa itself less than its suburbs), RQ4.4 (little evidence of spillovers beyond the regional pattern), RQ4.6 (coastal and urban, not tourism as such), RQ2.1 to
-RQ2.3 and RQ4.5 (supply against households) and RQ5.4 (second homes separated) are answered; RQ3.6 is answered as far as these data allow (demand differences cannot be told from the regional pattern); RQ3.3, RQ5.1, RQ5.3, RQ1.7, RQ9.1, RQ9.2 and RQ9.5 are partly answered; RQ1.4 is answered (income and wages) (see [research_questions](../docs/research_questions.md)).
+RQ3.5 (ageing and the 25-44 pool add nothing beyond the foreign-resident change; internal migration and single-person households not observable), RQ2.3 and RQ4.5 (supply against households) and RQ5.4 (second homes separated) are answered; RQ3.6 is answered as far as these data allow (demand differences cannot be told from the regional pattern); RQ3.3, RQ5.1, RQ5.3, RQ1.7, RQ9.1, RQ9.2 and RQ9.5 are partly answered; RQ1.4 is answered (income and wages) (see [research_questions](../docs/research_questions.md)).

@@ -2,6 +2,11 @@
 
 Analytic and engineering choices, newest first. One short entry each: what, why, alternatives rejected.
 
+## 2026-10-24 — Age structure as a cross-section next to the foreign-resident change
+- **What:** `p2_11` (`analysis/age_structure.py`) takes five age bands from the 2011-2023 five-year groups and regresses the log change of price-to-income 2016-2023 on the change in the 25-44 and 65+ shares, within district, with coast and density class, and with the foreign-resident change.
+- **Why:** the 65+ share is already in the P2.02 panel; the new question is the household-forming ages, and young adults arrive as migrants (correlation 0.58 with foreign-resident change), so an age coefficient without that control would restate the migration result. Rule for reading it fixed first.
+- **Rejected:** a panel with the 25-44 share and municipality effects (the share moves with migrants and the cycle, and ten years of data add little); an "ageing-in-place" split (residents only, no cohort flows).
+
 ## 2026-10-24 — Validation schemes tested with a plain regression, scored on common targets
 - **What:** `p4_04` (`forecasting.validation_schemes`, `scheme_scores`) scores one least-squares model of the h-quarter change on four lagged changes under rolling origin, random folds, purged leave-one-out and purged blocks, all on the targets the rolling origin can score.
 - **Why:** M5 asks how much random splits mislead; a plain model isolates the scheme from model choice, and common targets stop a different sample from reading as a different skill. The reading rule (gap beyond repeat spread) was fixed first.

@@ -1976,3 +1976,56 @@ def validation_schemes(panels: list[dict]) -> Figure:
     )
     fig.subplots_adjust(left=0.09, right=0.98, wspace=0.08)
     return fig
+
+
+def age_structure(profile: pd.DataFrame, groups: pd.DataFrame) -> Figure:
+    """National age profile in two years (left) and the 65+ share by kind of place in both years (right).
+
+    ``profile``: residents by five-year group (rows, age order) with the two years as columns. ``groups``: one row per
+    kind of place with ``label``, ``start`` and ``end`` (median share of residents aged 65+, %), in drawing order.
+    """
+    first, last = profile.columns[0], profile.columns[-1]
+    fig, (left, right) = plt.subplots(
+        1, 2, figsize=(11.5, 4.8), gridspec_kw={"width_ratios": [1.25, 1]}
+    )
+    x = np.arange(len(profile))
+    _line(left, x, profile[first] / 1e3, MUTED, width=LINE_WIDTH)
+    _line(left, x, profile[last] / 1e3, BLUE, width=LINE_WIDTH)
+    _label(left, x[-1], profile[first].iloc[-1] / 1e3, str(first), dx=6, weight="normal")
+    _label(left, x[-1], profile[last].iloc[-1] / 1e3, str(last), dx=6)
+    left.set_xticks(x[::2], list(profile.index[::2]), color=INK_2, fontsize=8.5)
+    left.set_xlim(-0.3, len(profile) + 0.8)
+    left.set_ylim(0, None)
+    left.set_xlabel("Age group", color=INK_2)
+    left.set_ylabel("Residents (thousands)", color=INK_2)
+    _panel_title(left, "Who lives in Portugal")
+    g = groups.iloc[::-1].reset_index(drop=True)
+    light, dark = style.BLUE_RAMP[250], style.BLUE_RAMP[550]
+    right.grid(axis="x")
+    right.grid(axis="y", visible=False)
+    for i, row in g.iterrows():
+        right.plot(
+            [row["start"], row["end"]], [i, i], color=GRID, lw=3, zorder=1, solid_capstyle="round"
+        )
+        right.plot([row["start"]], [i], "o", ms=8, mfc=light, mec=SURFACE, mew=2, zorder=3)
+        right.plot([row["end"]], [i], "o", ms=8, mfc=dark, mec=SURFACE, mew=2, zorder=4)
+        right.annotate(f"{row['end']:.0f}%", (row["end"], i), xytext=(9, 0), textcoords="offset points",
+                       va="center", fontsize=9, color=INK_2)  # fmt: skip
+    right.set_yticks(range(len(g)), g["label"], color=INK_2, fontsize=9.5)
+    right.set_xlim(0, g[["start", "end"]].to_numpy().max() * 1.15)
+    right.set_ylim(-0.7, len(g) - 0.3)
+    right.spines["bottom"].set_visible(False)
+    right.xaxis.set_major_formatter(mticker.PercentFormatter(decimals=0))
+    _legend(right, [Line2D([], [], marker="o", ls="", ms=8, mfc=light, mec=SURFACE, label=str(first)),
+                    Line2D([], [], marker="o", ls="", ms=8, mfc=dark, mec=SURFACE, label=str(last))], loc="lower right")  # fmt: skip
+    _panel_title(right, "Share aged 65+, median municipality")
+    fig = style.finish(
+        fig,
+        f"Every kind of place has aged; the rural interior is oldest, at {groups['end'].max():.0f}% aged 65+",
+        f"Residents by five-year age group in {first} and {last} (left); share aged 65+ by coast and density class (right)",
+        "Source: INE (resident population estimates); own calculations. Classes: own proxies (data/external/muni_typology.csv).",
+        head_in=1.25,
+        foot_in=0.6,
+    )
+    fig.subplots_adjust(left=0.07, right=0.97, wspace=0.28)
+    return fig
