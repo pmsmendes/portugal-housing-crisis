@@ -1,0 +1,25 @@
+scheme,rmse,rmse_sd,skill,n,series,h,skill_vs_rolling
+rolling origin,0.0168,,0.352,34.0,Real house price index,1,0.0
+random folds,0.0165,0.0006,0.3611,34.0,Real house price index,1,0.009
+"leave one out, purged",0.0159,,0.3867,34.0,Real house price index,1,0.0347
+"blocks, purged",0.0161,,0.3755,34.0,Real house price index,1,0.0235
+rolling origin,0.0424,,0.5167,31.0,Real house price index,4,0.0
+random folds,0.0409,0.0013,0.5334,31.0,Real house price index,4,0.0167
+"leave one out, purged",0.0447,,0.4905,31.0,Real house price index,4,-0.0262
+"blocks, purged",0.0439,,0.4993,31.0,Real house price index,4,-0.0174
+rolling origin,0.0892,,0.442,27.0,Real house price index,8,0.0
+random folds,0.0785,0.0026,0.5091,27.0,Real house price index,8,0.0671
+"leave one out, purged",0.0836,,0.477,27.0,Real house price index,8,0.035
+"blocks, purged",0.0932,,0.4175,27.0,Real house price index,8,-0.0245
+rolling origin,0.0312,,0.3239,34.0,Ownership cost index,1,0.0
+random folds,0.0303,0.0008,0.3426,34.0,Ownership cost index,1,0.0187
+"leave one out, purged",0.0336,,0.2723,34.0,Ownership cost index,1,-0.0516
+"blocks, purged",0.0334,,0.2758,34.0,Ownership cost index,1,-0.0481
+rolling origin,0.1485,,0.1014,31.0,Ownership cost index,4,0.0
+random folds,0.1205,0.0031,0.2708,31.0,Ownership cost index,4,0.1694
+"leave one out, purged",0.1523,,0.0782,31.0,Ownership cost index,4,-0.0232
+"blocks, purged",0.1667,,-0.0092,31.0,Ownership cost index,4,-0.1106
+rolling origin,0.319,,-0.0495,27.0,Ownership cost index,8,0.0
+random folds,0.2426,0.0048,0.2019,27.0,Ownership cost index,8,0.2514
+"leave one out, purged",0.3158,,-0.0391,27.0,Ownership cost index,8,0.0104
+"blocks, purged",0.3651,,-0.2013,27.0,Ownership cost index,8,-0.1518

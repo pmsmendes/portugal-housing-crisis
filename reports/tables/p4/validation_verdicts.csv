@@ -1,0 +1,7 @@
+series,h,rolling origin,random folds,"leave one out, purged","blocks, purged"
+Ownership cost index,1,True,True,True,True
+Ownership cost index,4,True,True,True,False
+Ownership cost index,8,False,True,False,False
+Real house price index,1,True,True,True,True
+Real house price index,4,True,True,True,True
+Real house price index,8,True,True,True,True

@@ -132,3 +132,47 @@ def test_intervals_cover_close_to_nominal_on_a_random_walk():
     ]
     acc = fc.accuracy(pd.concat(res), scale=0.01, by="h").query("method == 'drift'")
     assert acc["coverage80"].between(0.7, 0.9).all() and acc["coverage95"].between(0.9, 0.99).all()
+
+
+# ---- validation schemes -----------------------------------------------------------------------------
+
+
+def test_direct_design_rows_use_only_the_past_and_a_target_h_ahead():
+    y = _series(np.arange(30.0) ** 1.5)
+    X, target, t = fc.direct_design(y, h=3, lags=4)
+    v = y.to_numpy()
+    assert t[0] == 4 and t[-1] == len(y) - 1 - 3
+    assert target == pytest.approx(v[t + 3] - v[t])
+    assert X[:, 1] == pytest.approx(v[t] - v[t - 1])  # first lag is the latest change
+    assert (X[:, 0] == 1).all()
+
+
+def test_rolling_origin_scheme_never_trains_on_a_target_unknown_at_the_origin():
+    # a series that breaks upward after quarter 40: a model trained only on the past predicts the old drift
+    y = _series(np.r_[np.arange(40) * 0.01, 0.4 + np.arange(30) * 0.05])
+    out = fc.validation_schemes(y, h=4, lags=2, initial=30, repeats=2)
+    roll = out[out["scheme"] == "rolling origin"]
+    assert roll["t"].min() == 29
+    just_after = roll[roll["t"].between(40, 41)]
+    assert (just_after["pred"] < just_after["actual"]).all()  # the new regime is under-predicted
+
+
+def test_random_folds_look_better_than_rolling_origin_after_a_regime_change():
+    y = _series(np.r_[np.arange(40) * 0.01, 0.4 + np.arange(30) * 0.05])
+    scores = fc.scheme_scores(
+        fc.validation_schemes(y, h=4, lags=2, initial=30, repeats=5)
+    ).set_index("scheme")
+    assert scores.loc["random folds", "rmse"] < scores.loc["rolling origin", "rmse"]
+    assert (
+        scores.loc["random folds", "n"] == scores.loc["rolling origin", "n"]
+    )  # scored on the same rows
+
+
+def test_all_schemes_score_the_same_rows_and_return_finite_values():
+    rng = np.random.default_rng(1)
+    y = _series(np.cumsum(rng.normal(0.01, 0.02, 80)))
+    out = fc.validation_schemes(y, h=4, lags=4, initial=30, repeats=3)
+    assert set(out["scheme"]) == set(fc.SCHEMES)
+    assert out.groupby("scheme")["t"].apply(lambda s: s.min() >= 29).all()
+    assert out.groupby("scheme")["t"].nunique().nunique() == 1
+    assert np.isfinite(out[["actual", "pred"]].to_numpy()).all()

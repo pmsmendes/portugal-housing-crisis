@@ -244,3 +244,125 @@ def relative_to(table: pd.DataFrame, baseline: str, column: str = "rmse") -> pd.
     """Each method's ``column`` divided by the baseline's at the same ``h`` (below 1 means better)."""
     wide = table.pivot(index="h", columns="method", values=column)
     return wide.div(wide[baseline], axis=0)
+
+
+# ---- validation schemes: why random splits flatter a forecast -----------------------------------
+
+SCHEMES = ["rolling origin", "random folds", "leave one out, purged", "blocks, purged"]
+
+
+def direct_design(y: pd.Series, h: int, lags: int = 4) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """Rows for a direct ``h``-step model of the change: ``y[t+h] - y[t]`` on the last ``lags`` one-step changes.
+
+    Returns ``X`` (intercept plus the changes at t, t-1, ...), the target and the position ``t`` of each row
+    (the last observation a row uses). A row's features reach back to ``t - lags`` and its target forward to ``t + h``.
+    """
+    v = y.to_numpy(dtype=float)
+    step = np.diff(v, prepend=np.nan)
+    t = np.arange(lags, len(v) - h)
+    X = np.column_stack([np.ones(len(t))] + [step[t - k] for k in range(lags)])
+    return X, v[t + h] - v[t], t
+
+
+def _ols_predict(X_train, y_train, X_test) -> np.ndarray:
+    beta, *_ = np.linalg.lstsq(X_train, y_train, rcond=None)
+    return X_test @ beta
+
+
+def validation_schemes(
+    y: pd.Series,
+    h: int = 4,
+    lags: int = 4,
+    initial: int = 36,
+    folds: int = 5,
+    repeats: int = 20,
+    seed: int = 0,
+) -> pd.DataFrame:
+    """Out-of-sample errors of one model under four ways of splitting the same rows.
+
+    The model is a least-squares regression of the ``h``-quarter change on the last ``lags`` quarterly changes
+    (``direct_design``). Every scheme predicts every row it can, and only rows whose last observation is at or after
+    ``initial`` quarters are returned, so all schemes are scored on the same targets.
+
+    * ``rolling origin``: train on rows whose target was known at the origin, predict the row at the origin.
+    * ``random folds``: shuffle the rows into ``folds`` folds, train on the rest (rows from the future, rows whose
+      windows overlap the test row's), the usual k-fold.
+    * ``leave one out, purged``: each row is predicted from a model trained on all rows more than ``h + lags``
+      quarters away, on either side (the future is used, but no window overlaps the row).
+    * ``blocks, purged``: ``folds`` contiguous blocks in time order, the training rows within ``h + lags`` quarters
+      of a block dropped (the future is used, no overlap).
+
+    The random scheme is repeated ``repeats`` times with different shuffles. Returns tidy rows: ``scheme``, ``repeat``,
+    ``t`` (position of the row), ``actual`` and ``pred`` (changes in the units of ``y``).
+    """
+    X, target, t = direct_design(y, h, lags)
+    first = int(
+        np.searchsorted(t, initial - 1)
+    )  # rows with t >= initial - 1: a first origin of `initial` quarters
+    rows = []
+
+    def add(scheme, repeat, idx, pred):
+        rows.append(
+            pd.DataFrame(
+                {
+                    "scheme": scheme,
+                    "repeat": repeat,
+                    "t": t[idx],
+                    "actual": target[idx],
+                    "pred": pred,
+                }
+            )
+        )
+
+    idx = np.arange(first, len(t))
+    pred = np.array(
+        [_ols_predict(X[t + h <= t[i]], target[t + h <= t[i]], X[i : i + 1])[0] for i in idx]
+    )
+    add("rolling origin", 0, idx, pred)
+
+    reach = h + lags
+
+    def run_folds(scheme, repeat, assignment, purge):
+        out_idx, out_pred = [], []
+        for k in range(folds):
+            test = np.flatnonzero(assignment == k)
+            train = assignment != k
+            if purge:
+                train &= np.abs(t[:, None] - t[test][None, :]).min(axis=1) > reach
+            keep = test[test >= first]
+            if len(keep) == 0 or train.sum() < X.shape[1] + 2:
+                continue
+            out_idx.append(keep)
+            out_pred.append(_ols_predict(X[train], target[train], X[keep]))
+        if out_idx:
+            add(scheme, repeat, np.concatenate(out_idx), np.concatenate(out_pred))
+
+    rng = np.random.default_rng(seed)
+    n = len(t)
+    for r in range(repeats):
+        run_folds("random folds", r, rng.permutation(np.arange(n) % folds), purge=False)
+    run_folds("blocks, purged", 0, np.minimum(np.arange(n) * folds // n, folds - 1), purge=True)
+    loo_idx, loo_pred = idx, []
+    for i in idx:
+        train = np.abs(t - t[i]) > reach
+        loo_pred.append(_ols_predict(X[train], target[train], X[i : i + 1])[0])
+    add("leave one out, purged", 0, loo_idx, np.array(loo_pred))
+    return pd.concat(rows, ignore_index=True)
+
+
+def scheme_scores(errors: pd.DataFrame) -> pd.DataFrame:
+    """RMSE of each scheme and of the no-change forecast on the same rows, and the skill against it.
+
+    ``skill`` is 1 - RMSE/RMSE of predicting no change; above 0 the model beats naive. Averaged over repeats
+    (the spread across repeats is ``rmse_sd``).
+    """
+    e = errors.assign(sq=(errors["actual"] - errors["pred"]) ** 2, sq0=errors["actual"] ** 2)
+    per = e.groupby(["scheme", "repeat"]).agg(
+        sq=("sq", "mean"), sq0=("sq0", "mean"), n=("sq", "size")
+    )
+    per["rmse"] = np.sqrt(per["sq"])
+    per["skill"] = 1 - np.sqrt(per["sq"] / per["sq0"])
+    out = per.groupby("scheme").agg(
+        rmse=("rmse", "mean"), rmse_sd=("rmse", "std"), skill=("skill", "mean"), n=("n", "mean")
+    )
+    return out.reindex([s for s in SCHEMES if s in out.index]).reset_index()

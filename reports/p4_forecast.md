@@ -3,7 +3,7 @@
 Write-up of findings. Figures: `reports/figures/p4/`, tables: `reports/tables/p4/`, notebooks: `notebooks/p4_forecast/`.
 
 **Status:** forecasting baselines and the national two-year forecast (`p4_01`) and the scenario simulator with its dashboard page
-(`p4_02`, `app/pages/4_Simulator.py`) done, 2026-10-23; regional outlook (`p4_03`, RQ10.2) added below. Rents are not covered.
+(`p4_02`, `app/pages/4_Simulator.py`) done, 2026-10-23; regional outlook (`p4_03`, RQ10.2) and a test of validation schemes (`p4_04`, M5) added below. Rents are not covered.
 
 ## Question
 
@@ -180,6 +180,34 @@ Tables: `regional_accuracy.csv`, `regional_outlook_classes.csv`, `regional_outlo
 - **Proxy classes.** Coast, density and tourism classes are own proxies (`data/external/muni_typology.csv`), not the INE typology, and the tourist flag is not used.
 - **Mainland only**, 272 of 278 mainland municipalities with at least three years of history; the Azores and Madeira are not covered. Price-to-income levels depend on the income concept and
   dwelling size (`docs/methodology.md`); the outlook uses changes only. Rents are not forecast.
+
+## Validation schemes (`p4_04`, M5)
+
+**Question.** How much does the project's rule of validating on rolling origins matter? The same model is scored four ways on the same targets: a least-squares regression of the
+h-quarter change (h = 1, 4, 8) on the last four quarterly changes, for the real price index and the ownership cost index (a test case, not the forecaster). Schemes: rolling origin
+(real time); five random folds (20 shuffles); leave one out with the h + 4 quarters around the row purged; five contiguous blocks, edges purged. Targets are those a rolling origin scores
+(origins from 2017Q4; 27 to 34 per cell). Skill is 1 minus the RMSE ratio to a no-change forecast. The reading rule (a scheme overstates if it exceeds the rolling skill by more than the
+spread across random repeats, 1.5 to 2.3 points) was fixed before looking.
+
+![Validation schemes](figures/p4/validation_schemes.png)
+
+### Key findings
+
+17. **For prices, random folds flatter modestly.** Skill 36%, 53% and 51% at 1, 4 and 8 quarters against 35%, 52% and 44% in real time (+0.9, +1.7, +6.7 points); only the eight-quarter gap is
+    clearly beyond the repeat spread. Every scheme says the model beats no-change.
+18. **For the cost of ownership, random folds change the verdict.** Skill 34%, 27% and 20% against 32%, 10% and -5% in real time (+1.9, +16.9, +25.1 points). At eight quarters random folds say the model
+    beats a no-change forecast by a fifth; a forecaster using only what was known at the time did 5% worse. The series is dominated by the 2022 rate shock, which random folds see in training.
+19. **Overlap explains most of it, but not all.** Leave-one-out with purging, which still uses the future, lands within 5 points of the rolling origin in five of six cells (-5.2 to +3.5). Contiguous blocks
+    swing the other way (-4.8 to -15.2 points on the cost index) because a held-out block takes a whole regime, such as 2022 to 2023, out of training. So the sign of the error depends on the scheme; the rolling origin is the only one that answers the forecasting question.
+20. **What this justifies.** Rolling-origin validation with intervals (`p4_01`, `p4_03`) is kept as the rule; a model "validated" with shuffled folds on a series like these would have looked usable at eight quarters when it was not.
+
+Tables: `validation_schemes.csv`, `validation_verdicts.csv`.
+
+### Limitations of the validation test
+
+- **One simple model, two series, one regime.** The size of the gap depends on the model and series; the cost index has a rate shock, the price index does not. Flexible models would likely show larger gaps; none was tried (no machine learning for its own sake).
+- **Few targets.** 27 to 34 per cell and overlapping windows, so differences of a few points are not distinguishable from noise; only the large gaps are read.
+- **Quarterly national data only.** Annual municipal panels (`p4_03`) were validated on rolling origins and not re-scored with random splits.
 
 ## Next
 

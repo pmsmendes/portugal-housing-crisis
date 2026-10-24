@@ -2,6 +2,11 @@
 
 Analytic and engineering choices, newest first. One short entry each: what, why, alternatives rejected.
 
+## 2026-10-24 — Validation schemes tested with a plain regression, scored on common targets
+- **What:** `p4_04` (`forecasting.validation_schemes`, `scheme_scores`) scores one least-squares model of the h-quarter change on four lagged changes under rolling origin, random folds, purged leave-one-out and purged blocks, all on the targets the rolling origin can score.
+- **Why:** M5 asks how much random splits mislead; a plain model isolates the scheme from model choice, and common targets stop a different sample from reading as a different skill. The reading rule (gap beyond repeat spread) was fixed first.
+- **Rejected:** a tree ensemble or other ML as the test model (would add complexity for its own sake, against the project guardrail); re-scoring ETS/ARIMA with random folds (they are refitted sequentially, random folds do not apply).
+
 ## 2026-10-24 — Centres by size, distance by border steps
 - **What:** `p2_10` (`analysis/centres.py`) calls a municipality a centre if it had at least 100,000 residents in 2021 (25 municipalities), measures distance as border steps to the nearest centre on the queen contiguity graph (the one used for Moran's I, no links across the sea), compares medians by distance, then repeats it with NUTS 3 fixed effects (errors clustered by region) and compares Lisboa and Porto with the rest of their metropolitan areas.
 - **Why:** it answers RQ4.3 without a functional urban area, which the data do not contain (INE's parish typology is not ingested), and the same weights as `p2_01` keep neighbours consistent. The size rule is transparent and does not depend on the outcome.

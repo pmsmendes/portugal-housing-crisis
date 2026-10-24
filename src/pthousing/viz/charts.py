@@ -1915,3 +1915,64 @@ def centres_and_surroundings(
         head_in=1.3,
         foot_in=0.6,
     )
+
+
+VALIDATION_COLORS = {
+    "rolling origin": INK_2,
+    "random folds": ORANGE,
+    "leave one out, purged": BLUE,
+    "blocks, purged": MUTED,
+}
+
+
+def validation_schemes(panels: list[dict]) -> Figure:
+    """Skill against a no-change forecast by validation scheme and horizon, one panel per series.
+
+    Each dict has ``title`` and ``scores`` (``forecasting.scheme_scores`` rows with ``scheme``, ``h`` and ``skill``).
+    Skill is 1 minus the ratio of the model's RMSE to that of no change: above 0 the model beats naive. The rolling
+    origin is the real-time answer; any scheme that sits above it is overstating what a forecaster could have done.
+    """
+    fig, axes = plt.subplots(
+        1, len(panels), figsize=(5.4 * len(panels), 4.6), sharey=True, squeeze=False
+    )
+    schemes = list(VALIDATION_COLORS)
+    offsets = np.linspace(-0.27, 0.27, len(schemes))
+    for ax, spec in zip(axes[0], panels, strict=True):
+        s = spec["scores"]
+        horizons = sorted(s["h"].unique())
+        for off, scheme in zip(offsets, schemes, strict=True):
+            d = s[s["scheme"] == scheme].set_index("h").reindex(horizons)
+            real = scheme == "rolling origin"
+            ax.plot(
+                np.arange(len(horizons)) + off,
+                d["skill"],
+                "o",
+                ms=10 if real else 7,
+                mfc=VALIDATION_COLORS[scheme],
+                mec=SURFACE,
+                mew=1.5,
+                zorder=5 if real else 4,
+                label=scheme,
+            )
+        ax.axhline(0, color=INK_2, lw=1, zorder=2)
+        for i, h in enumerate(horizons):
+            roll = s[(s["scheme"] == "rolling origin") & (s["h"] == h)]["skill"].iloc[0]
+            ax.plot([i - 0.4, i + 0.4], [roll, roll], color=INK_2, lw=0.8, ls=(0, (3, 3)), zorder=1)
+        ax.set_xticks(np.arange(len(horizons)), [f"{h}" for h in horizons])
+        ax.set_xlabel("Quarters ahead", color=INK_2)
+        ax.yaxis.set_major_formatter(mticker.PercentFormatter(1, decimals=0))
+        _panel_title(ax, spec["title"])
+    axes[0][0].set_ylabel("Skill against a no-change forecast", color=INK_2)
+    axes[0][-1].legend(loc="upper right", frameon=False, fontsize=8.5)
+    cost = panels[-1]["scores"]
+    cost = cost[cost["h"] == cost["h"].max()].set_index("scheme")["skill"]
+    fig = style.finish(
+        fig,
+        f"Random folds give the cost-of-ownership model {100 * cost['random folds']:.0f}% skill at the longest horizon; in real time it has {100 * cost['rolling origin']:.0f}%",
+        "Skill of one regression on the last four quarterly changes, scored on the same targets under four ways of splitting the data (dashed = rolling origin)",
+        "Source: INE, Banco de Portugal; own calculations. The model is a validation test case, not the project's forecaster.",
+        head_in=1.25,
+        foot_in=0.55,
+    )
+    fig.subplots_adjust(left=0.09, right=0.98, wspace=0.08)
+    return fig
