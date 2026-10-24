@@ -2,6 +2,11 @@
 
 Analytic and engineering choices, newest first. One short entry each: what, why, alternatives rejected.
 
+## 2026-10-24 — Rates and prices: pre-specified timing test, episodes from turning points
+- **What:** `p2_08` tests whether the rate moves prices with one specification fixed before the lag profile was drawn: a year's real price growth on the rate change of the year before (non-overlapping windows), Newey-West errors (6 lags), then last year's growth, a next-year-rate placebo, nominal prices and the two halves of the sample. Episodes are bounded by the 2008Q3 crisis start and by turning points computed from the data (price low, rate low, rate peak).
+- **Why:** with one national series and a persistent rate, choosing the lag with the best correlation would manufacture a result (the profile peaks at 1 quarter, where the specification we fixed is 4). The headline is the pre-specified one; the profile is drawn only as description.
+- **Rejected:** new loan volume as a credit-supply regressor (our series is loans fixed up to one year only, so it falls when borrowers move to fixed rates); a cointegration or VAR model (two regimes, 93 quarters: it would not beat the simple test); a causal reading of any coefficient.
+
 ## 2026-10-24 — Population split: national from 1960, municipal 2011-2023, revision kept apart
 - **What:** `p1_07` splits population change into natural change and net migration with Eurostat `demo_gind` (national, 1960-2025) and INE's municipal demographic indicators 0008269-0008271 (2011-2023). INE's +201,000 post-census revision of 2020-2021 is a separate `revision_n` nationally, and the municipal windows are 2012-2019 and 2022-2023.
 - **Why:** the municipal series has no pre-2011 data, so the thirty-year answer (RQ3.1) is national; the revision sits in the municipal net migration of 2020-2021 (250,000 in 2021 against 72,000 in Eurostat's flow), which would show a migration surge that is partly a statistical correction.

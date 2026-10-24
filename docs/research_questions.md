@@ -16,7 +16,7 @@ Reference questions by ID (e.g. `RQ2.3`) in notebooks, reports and commits.
 | RQ1.4 | How has affordability changed relative to household income and wage growth? | wip | `p1_02`: relative to income (PTI, RTI, burden, 2016-2024); `p1_03`: national price-to-income per head 1995-2025 (167 in 2025 vs 142 in 1995, 97 in 2013); wage growth not covered |
 | RQ1.5 | How many years of gross household income are needed to buy a typical home in each region? | done | `p1_02`: map, municipality and district tables (2024); levels depend on the income concept |
 | RQ1.6 | How does the total cost of buying compare with renting (interest, down payment, taxes, maintenance, other costs)? | done | `p1_04`, `reports/p1_evidence.md` (renting or buying): 2024 owning costs 5.9% of the price a year against a 5.6% rent yield (assumed costs, observed rates); break-even price growth went from -3.9% (2016) to +1.2% (2024), driven by the mortgage rate; owning cheaper with no price gain in 41% of municipalities with a rent; deposit plus buying costs a median 2.5 years of income; rents of new leases 2020-2024 only |
-| RQ1.7 | How have mortgage rates and lending conditions affected ownership affordability? | wip | `p1_01`, `p1_02`: rates and the rate effect on the burden; lending conditions (LTV, term, credit standards) not covered |
+| RQ1.7 | How have mortgage rates and lending conditions affected ownership affordability? | wip | `p1_01`, `p1_02`: rates and the rate effect on the burden; `p2_08`, `reports/p2_explain.md`: the 2021-2023 rate shock raised the payment 73% while real prices rose 9%, so it worsened affordability through the burden, not the price; lending conditions (LTV, term, credit standards) not covered |
 | RQ1.8 | How has the gap between advertised and actual transaction prices evolved? | — | |
 
 ## RQ2 — Housing supply and construction (Phases 1–2)
@@ -93,10 +93,10 @@ Reference questions by ID (e.g. `RQ2.3`) in notebooks, reports and commits.
 | ID | Question | Status | Where |
 |---|---|---|---|
 | RQ9.1 | How have wage growth, inflation, unemployment and GDP growth influenced prices and rents? | — | |
-| RQ9.2 | What is the relationship between interest rates, mortgage lending, household debt and prices? | — | |
+| RQ9.2 | What is the relationship between interest rates, mortgage lending, household debt and prices? | partly | `p2_08`, `reports/p2_explain.md`: national rate changes do not time the price cycle (−1.0 points of real price growth per pp the year before, interval −3.6 to +1.7; −2.0 in 2003-2013, −0.2 since 2014; placebo as large); lending volume and household debt not covered |
 | RQ9.3 | How have credit availability and lending standards affected access to ownership? | — | |
 | RQ9.4 | How much of price growth is explained by fundamentals vs investment demand and expectations? | — | |
-| RQ9.5 | How have economic crises and monetary-policy shifts affected affordability and construction? | — | |
+| RQ9.5 | How have economic crises and monetary-policy shifts affected affordability and construction? | partly | `p2_08`, `reports/p2_explain.md`: five episodes 2003-2026; real prices −19% in the 2008-2013 crisis then +78% as rates fell; completions 73,000 a year before the crisis, 34,000 during, 11,700 in the recovery; the 2022 rate shock hit the burden; descriptive, not causal |
 
 ## RQ10 — Forecasting and scenario analysis (Phase 4)
 | ID | Question | Status | Where |

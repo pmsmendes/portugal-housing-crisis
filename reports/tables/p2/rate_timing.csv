@@ -1,0 +1,7 @@
+specification,coef_pct_per_pp,ci_low,ci_high,p_value,r2,n,own_lag_coef,lead_coef_pct_per_pp,lead_p_value
+rate change only,-0.991,-3.644,1.662,0.464,0.026,85.0,,,
++ last year's growth,-0.02,-1.447,1.407,0.978,0.472,85.0,0.742,,
++ placebo: next year's rate change,0.203,-1.393,1.799,0.803,0.45,81.0,0.677,0.423,0.668
+nominal prices,-0.76,-1.921,0.402,0.2,0.591,85.0,0.829,,
+2003-2013,-2.031,-3.472,-0.59,0.006,0.221,36.0,-0.259,,
+2014-2026,-0.212,-0.722,0.298,0.415,0.122,49.0,0.315,,

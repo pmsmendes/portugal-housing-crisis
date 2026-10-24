@@ -2,7 +2,7 @@
 
 Why did affordability deteriorate, and where? This phase moves from description to association; nothing here is a
 causal claim. Figures: `reports/figures/p2/`, tables: `reports/tables/p2/`, notebooks: `notebooks/p2_explain/`
-(`p2_01` to `p2_07`). Methods: [methodology](../docs/methodology.md), choices:
+(`p2_01` to `p2_08`). Methods: [methodology](../docs/methodology.md), choices:
 [decisions](../docs/decisions.md).
 
 ## Summary
@@ -188,6 +188,27 @@ Census secondary residences, 2011 and 2021, mainland; a cross-section, so the pa
 Tables: `second_homes_by_class.csv`, `second_homes_cross_section.csv`, `second_homes_subsamples.csv`,
 `second_homes_interactions.csv`.
 
+## Mortgage rates and the price cycle (`p2_08_rates_and_cycles`)
+
+![Rates and the price cycle](figures/p2/rates_and_cycles.png)
+
+National quarterly series, 2003 to 2026 (RQ1.7, RQ9.2, RQ9.5): real prices (BIS, INE's from 2009), the agreed rate on new
+housing loans and the payment it implies.
+
+24. **The rate shock hit the burden, not the price.** From 2021Q3 to 2023Q4 the rate rose from 0.6% to 4.8% and the
+    payment on a loan of 100,000 euros by 73%, while real prices rose 9% (nominal +23%). The later fall of the rate to
+    2.9% came with real prices up another 31%. Affordability fell because of the rate, not through a price response.
+25. **Crisis and recovery.** Real prices fell 19% from 2008Q3 to the 2013Q2 low and then rose 78% to 2021Q3 while the rate
+    fell from 3.2% to 0.6% (payment −30%). Completions averaged 73,000 a year before the crisis, 34,000 during it and
+    11,700 in the recovery: building did not come back with prices (21,000 to 25,000 a year since 2021).
+26. **Rate changes do not time the price cycle.** Correlations of a year's real price growth with the rate change 0 to 3
+    quarters earlier are −0.26 to −0.33, all inside the 95% limit for no relation (±0.42). The pre-specified test (price
+    growth on the rate change of the year before) gives −1.0 points per pp [−3.6, +1.7]; with last year's growth it is
+    0.0 [−1.4, +1.4], and a placebo with next year's rate change is as large in size (+0.2, +0.4). The association is
+    −2.0 per pp in 2003 to 2013 (p = 0.006, the sovereign-debt crisis moving both) and −0.2 since 2014 (p = 0.42).
+
+Tables: `rate_episodes.csv`, `rate_lag_profile.csv`, `rate_timing.csv`.
+
 ## Limitations
 
 - **A pattern, not a mechanism.** Spatial autocorrelation does not show that price changes spill over: shared
@@ -218,10 +239,15 @@ Tables: `second_homes_by_class.csv`, `second_homes_cross_section.csv`, `second_h
 - **Implied households.** The 2021 to 2023 gap divides new residents by 2021 persons per household, ignores
   household-size change and revisions of population estimates, and completions exclude renovation, conversion and
   demolition; it is a proxy (almost minus population growth, correlation −0.99). Census years are ten years apart.
+- **Rates and prices.** One national series with a persistent rate: 23 years hold roughly two cycles, annual changes
+  overlap, and the rate is set for the euro area in response to conditions that also move prices (inflation enters
+  the real price through the deflator; the nominal check is weaker, −0.8 [−1.9, +0.4]). A null does not mean no
+  effect, only that this series cannot tell. Credit supply is not tested: the loan volume we hold covers loans fixed
+  for up to one year (the share of fixed-rate loans grew after 2018), not total lending.
 - **Missing municipalities.** 12 municipalities have no price-to-income for 2016 or 2024 and are left out (hatched on
   the map); their neighbours' weights are re-standardised without them.
 
 ## Questions answered
 
 RQ4.4 (little evidence of spillovers beyond the regional pattern), RQ4.6 (coastal and urban, not tourism as such), RQ2.1 to
-RQ2.3 and RQ4.5 (supply against households) and RQ5.4 (second homes separated) are answered; RQ3.6 is answered as far as these data allow (demand differences cannot be told from the regional pattern); RQ4.3, RQ3.3, RQ5.1 and RQ5.3 are partly answered (see [research_questions](../docs/research_questions.md)).
+RQ2.3 and RQ4.5 (supply against households) and RQ5.4 (second homes separated) are answered; RQ3.6 is answered as far as these data allow (demand differences cannot be told from the regional pattern); RQ4.3, RQ3.3, RQ5.1, RQ5.3, RQ1.7, RQ9.2 and RQ9.5 are partly answered (see [research_questions](../docs/research_questions.md)).

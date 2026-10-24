@@ -1672,3 +1672,72 @@ def population_components(
         head_in=1.3,
         foot_in=0.6,
     )
+
+
+# ---- rates and the price cycle --------------------------------------------------------------------
+
+
+def rates_and_cycles(frame: pd.DataFrame, episodes: pd.DataFrame, profile: pd.DataFrame) -> Figure:
+    """Real prices and the mortgage rate by episode (left), and how price growth lines up with rate changes (right).
+
+    ``frame`` is ``macro.quarterly_frame``, ``episodes`` ``macro.episodes`` (``start`` and ``end`` as quarter
+    labels; alternate episodes are shaded), ``profile`` ``macro.lag_profile``: bars show the correlation of a
+    year's real price growth with the rate change that many quarters earlier, the dotted lines the 95% limit for
+    no relation.
+    """
+    fig = plt.figure(figsize=(11, 5.6))
+    grid = fig.add_gridspec(2, 2, width_ratios=[6, 5], hspace=0.35, wspace=0.22)
+    top, bottom = fig.add_subplot(grid[0, 0]), fig.add_subplot(grid[1, 0], sharex=None)
+    right = fig.add_subplot(grid[:, 1])
+    dates = frame.index
+    price, rate = frame["hpi_real_b2010"], frame["mortgage_rate_new_lt1y_pct"]
+    _line(top, dates, price, BLUE)
+    _line(bottom, dates, rate, ORANGE)
+    for ax, series, color, fmt in ((top, price, BLUE, "{:.0f}"), (bottom, rate, ORANGE, "{:.1f}%")):
+        _end_dot(ax, dates[-1], series.iloc[-1], color)
+        _label(ax, dates[-1], series.iloc[-1], fmt.format(series.iloc[-1]))
+        for i, (_, row) in enumerate(episodes.iterrows()):
+            if i % 2 == 0:
+                ax.axvspan(
+                    pd.Period(row["start"], "Q").to_timestamp(),
+                    pd.Period(row["end"], "Q").to_timestamp(),
+                    color=GRID, alpha=0.55, lw=0, zorder=0,
+                )  # fmt: skip
+        ax.set_xlim(dates[0], dates[-1] + pd.Timedelta(days=400))
+        _quarter_axis(ax, dates.to_series(), base=4)
+    top.set_ylim(bottom=0)
+    bottom.set_ylim(bottom=0)
+    bottom.yaxis.set_major_formatter(mticker.FuncFormatter(lambda v, _: f"{v:g}%"))
+    _panel_title(top, "Real house price index (2010 = 100)")
+    _panel_title(bottom, "Agreed rate on new housing loans")
+
+    lags = profile["lag_quarters"]
+    right.axhline(0, color=INK_2, lw=1, zorder=2)
+    right.bar(lags, profile["corr"], width=0.7, color=BLUE, zorder=3)
+    band = profile["band"].iloc[0]
+    for sign in (-1, 1):
+        right.axhline(sign * band, color=MUTED, lw=1, ls=(0, (2, 3)), zorder=1)
+    right.set_xticks(list(lags)[::2])
+    right.set_ylim(-0.7, 0.7)
+    right.set_xlabel(
+        "Quarters between the rate change and the price growth", fontsize=9, color=INK_2
+    )
+    _panel_title(right, "Price growth against an earlier rate change (correlation)")
+
+    shock = episodes.loc[episodes["rate_change_pp"].idxmax()]
+    beyond = int((profile["corr"].abs() > band).sum())
+    verdict = (
+        "No correlation reaches the limit: rate changes alone do not time the price cycle."
+        if beyond == 0
+        else f"{beyond} of {len(profile)} correlations pass the limit."
+    )
+    return style.finish(
+        fig,
+        f"Rates rose {shock['rate_change_pp']:.1f} points and the payment {shock['payment_change_pct']:.0f}% "
+        f"in {shock['start']} to {shock['end']}, yet real prices rose {shock['real_price_change_pct']:.0f}%",
+        "Quarterly, national, 2003 to 2026; shaded and white bands alternate between episodes; right: four-quarter changes",
+        "Source: BIS and INE (house prices), Banco de Portugal (rates), own calculations. Real = deflated with the consumer price "
+        f"index. {verdict}",
+        head_in=1.3,
+        foot_in=0.6,
+    )

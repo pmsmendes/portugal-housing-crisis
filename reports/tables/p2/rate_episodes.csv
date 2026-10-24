@@ -1,0 +1,6 @@
+episode,start,end,real_price_change_pct,nominal_price_change_pct,rate_start_pct,rate_end_pct,rate_change_pp,payment_change_pct,completions_per_year_n
+before the crisis,2003Q1,2008Q2,-12.1,1.6,4.2,5.4,1.2,15.0,73062.5
+crisis and troika,2008Q3,2013Q2,-19.4,-13.4,5.7,3.2,-2.5,-25.3,33571.7
+"recovery, falling rates",2013Q2,2021Q3,77.9,85.7,3.2,0.6,-2.6,-29.5,11654.2
+rate shock,2021Q3,2023Q4,9.0,23.3,0.6,4.8,4.2,72.6,21084.3
+since the peak,2023Q4,2026Q1,31.3,37.7,4.8,2.9,-2.0,-21.4,24749.0
