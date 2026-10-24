@@ -74,6 +74,16 @@ ine:
     notes: >
       dim_3 sex (T/M/F) x dim_4 five-year age groups. Total sex/age: 10.56 M (2011) to 11.20 M (2023), +2-3% a year
       2021-2023. A newer vintage through 2025 (NUTS 2024) exists; indicator id todo. Pre-2011 series todo.
+  ine_population_change:
+    indicator_ids:
+      net_migration: "0008269"       # net migration (No.), annual 2011 - 2023, NUTS 2013, 308 municipalities
+      natural_increase: "0008270"    # natural increase = live births - deaths (No.)
+      population_change: "0008271"   # population change (No.)
+    format: json
+    notes: >
+      Demographic indicators of INE's annual estimates. Verified 2026-10-24: all three are municipal counts with
+      no extra dimension, 2011 - 2023. Population change = natural increase + net migration (the estimate has no
+      separate statistical adjustment at municipal level; checked in validate.py). Crude rates are 0008262 - 0008265.
   ine_census:
     # Decennial; municipality rows are 4-char codes, parishes 6-char.
     indicator_ids:
@@ -147,6 +157,14 @@ eurostat:
     geo: [PT, EU27_2020]
     format: json
     notes: Verified; annual average index 1996-2025. Cross-check for the INE CPI deflator.
+  eurostat_demography:
+    dataset: demo_gind
+    params: {indic_de: [JAN, GROW, NATGROW, CNMIGRAT, LBIRTH, DEATH]}   # counts: 1 January population, change, natural change, net migration plus adjustment, births, deaths
+    geo: [PT]
+    format: json
+    notes: >
+      Verified 2026-10-24; national, 1960 to the latest year. `CNMIGRAT` is net migration plus statistical adjustment,
+      so it is the residual of total change after natural change. Gives the 30-year split that INE offers only from 2011.
 
 at:
   # IMI rates: Portal das Financas "Consultar Taxas do Municipio" (public, read-only HTML, one page per year and district).

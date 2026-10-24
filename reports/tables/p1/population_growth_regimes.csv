@@ -1,0 +1,10 @@
+window,regime,municipalities_n,population_start_n,population_change_n,share_of_municipalities_pct
+2012-19,decline_both,186,3959297.0,-234600,60.4
+2012-19,migration_too_small,60,986908.0,-31136,19.5
+2012-19,migration_offsets_decline,28,2320583.0,49352,9.1
+2012-19,migration_loss,23,2159880.0,-6140,7.5
+2012-19,natural_and_migration_gain,11,1077221.0,38969,3.6
+2022-23,migration_offsets_decline,248,8872492.0,464474,80.5
+2022-23,migration_too_small,41,247716.0,-2236,13.3
+2022-23,natural_and_migration_gain,14,1778743.0,143875,4.5
+2022-23,decline_both,5,30753.0,-883,1.6

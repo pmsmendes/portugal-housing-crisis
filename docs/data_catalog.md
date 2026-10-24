@@ -14,10 +14,12 @@ Registry of every dataset. **Read this before opening any data file or source mo
 | ine_median_rent_sqm | ine | Median rent per m² of new leases | Municipality | Semiannual / annual | 2020–2024 (0012598 / 0012600) | ine_median_rent_sqm.parquet | ingested (short) |
 | ine_bank_valuation | ine | Bank appraisal median €/m² by construction type | Municipality | Monthly / annual | Jan 2011–Aug 2026 (0012248) | ine_bank_valuation.parquet, ine_bank_valuation_annual.parquet | ingested |
 | ine_income | ine | Gross reported income per taxable person, mean and median (IRS) | Municipality | Annual | 2018–2024 (0012748/9, NUTS 2024); 2015–2021 (0009933/4, NUTS 2013) | ine_income.parquet | ingested |
-| ine_population | ine | Resident population estimates, natural change, migration | Municipality | Annual | 2011–2023 (0008273; earlier + migration todo) | ine_population.parquet | ingested (partial) |
+| ine_population | ine | Resident population estimates by sex and age (natural change and migration: `ine_population_change`) | Municipality | Annual | 2011–2023 (0008273; earlier todo) | ine_population.parquet | ingested (partial) |
+| ine_population_change | ine | Population change, natural increase (births minus deaths) and net migration, counts per year | Municipality | Annual | 2011–2023 (0008271 / 0008270 / 0008269, NUTS 2013) | ine_population_change.parquet | ingested |
 | ine_census | ine | Census: dwellings (primary/secondary/vacant), tenure, households, mean dwelling area | Municipality / parish | 1991, 2001, 2011, 2021 | 2011 and 2021 stock and area (0006304, 0012502, 0006457, 0012856, 0006988, 0012518); 2021 vacancy and tenure (0012517, 0012531); 2001 and 1991 todo | ine_census.parquet, ine_census_stock.parquet | ingested (2011 and 2021) |
 | ine_construction | ine | New family dwellings licensed and completed | Municipality | Annual (monthly licensed) | Licensed 1995–2025 (0000087, 0013235); completed 1995–2025 (0000076, 0013248) | ine_construction.parquet | ingested |
 | ine_cpi | ine | Consumer Price Index (deflator) | National | Monthly / annual | 1948–2026 (0014640 / 0014642, base 2025) | ine_cpi.parquet, ine_cpi_monthly.parquet | ingested |
+| eurostat_demography | eurostat | Demographic balance: population on 1 January, births, deaths, natural change, net migration plus statistical adjustment (demo_gind) | Country (PT) | Annual | 1960–2025 flows (latest year may be provisional) | eurostat_demography.parquet | ingested |
 | bp_mortgage | bportugal | Mortgage interest rates (APRC, agreed rate, stocks), new loan volumes | National | Monthly | Jan 2003–Aug 2026 (series 12533714, 12533730, 12519759, 12533719); fixed-rate median from Dec 2018 (12710738) | bp_mortgage.parquet | ingested (household debt series todo) |
 | eurostat_hpi | eurostat | HPI (prc_hpi_q) and HICP (prc_hicp_aind) for EU comparison | Country | Quarterly / annual | PT 2008-Q1–2026-Q2 (EU27 from 2005, IT from 2010) / PT 1996–2025 | eurostat_hpi.parquet, eurostat_hicp.parquet | ingested |
 | at_imi_rates | at | Municipal urban IMI rate per tax year (Portal das Finanças "Taxas do Município"), with a flag for parish-specific rates | Municipality | Annual | 2012–2025 (308 municipalities every year; portal offers 1989–2026) | at_imi_rates.parquet | ingested (raw HTML snapshot kept; parish-link and 2025 caveats in data_quality) |
@@ -41,6 +43,8 @@ Full 308-municipality grid for municipal tables; suppressed cells are NaN, never
 | ine_bank_valuation_annual | muni_code × year × type | valuation_sqm_eur |
 | ine_census | muni_code (census_year 2021) | vacant_dwellings_pct, occupied_dwellings_n, owner_occupied_n, rented_n, other_tenure_n |
 | ine_population | muni_code × year × sex × age_group (totals included) | population_n |
+| ine_population_change | muni_code × year (2011–2023) | population_change_n, natural_increase_n, net_migration_n (change = natural + migration; counts of persons over the year) |
+| eurostat_demography | year (1960–2025) | population_jan_n, population_change_n, natural_change_n, net_migration_n (plus statistical adjustment), births_n, deaths_n, revision_n (what the 1 January levels add beyond the flows: 2020 and 2021 only) |
 | aima_foreigners | muni_code × year (2014–2023) × nationality (br, cn, cv, gb, gw, md, ro, st, ua, ao, other, total) | foreign_residents_n (total = sum of the others) |
 | ine_cpi / ine_cpi_monthly | year / period_start | cpi_index_b2025 (2025 = 100) |
 | ine_hpi | period_start × category | hpi_index_b2025 (2025 = 100), national |

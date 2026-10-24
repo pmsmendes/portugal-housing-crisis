@@ -376,3 +376,31 @@ def test_long_run_prices_title_is_computed_from_the_cycle():
     assert "peaked in 2001" in title and "fell 36% to 2013" in title
     assert "passed that peak again in 2019" in title or "again in 2020" in title
     assert "1.2x its 1995 level" in title
+
+
+def test_population_components_title_names_the_final_run_of_natural_decline():
+    years = np.arange(1990, 2026)
+    natural = np.where(years < 2005, 5000.0, -5000.0)
+    natural[
+        (years >= 1998) & (years < 2000)
+    ] = -100.0  # an earlier dip does not start the final run
+    balance = pd.DataFrame(
+        {
+            "natural_change_n": natural,
+            "net_migration_n": np.full(len(years), 20000.0),
+            "revision_n": np.where(years == 2021, 90000.0, 0.0),
+        },
+        index=pd.Index(years, name="year"),
+    )
+    rates = {
+        label: pd.DataFrame(
+            {
+                "natural_per_1000_year": [0.0, -1.0, -5.0],
+                "migration_per_1000_year": [3.0, 1.0, 0.0],
+            },
+            index=["urban", "intermediate", "rural"],
+        )
+        for label in ("2012-19", "2022-23")
+    }
+    fig = charts.population_components(balance, rates, first_year=1990)
+    assert "Since 2005 deaths outnumber births" in _title(fig)

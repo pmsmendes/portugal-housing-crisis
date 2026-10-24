@@ -150,6 +150,58 @@ def test_population_labels_sex_and_age(monkeypatch):
     assert len(out) == 9
 
 
+def test_population_change_joins_the_three_components_one_row_per_municipality_year(monkeypatch):
+    def frame(values):
+        return _ine(
+            [
+                {"muni_code": c, "period_start": f"{y}-01-01", "value": v}
+                for c, y, v in zip(
+                    ("0101", "0101", "0102"), (2022, 2023, 2022), values, strict=True
+                )
+            ]
+        )
+
+    _patch_municipal(
+        monkeypatch,
+        {
+            "0008271": frame([5.0, -3.0, 2.0]),
+            "0008270": frame([-1.0, -2.0, 1.0]),
+            "0008269": frame([6.0, -1.0, 1.0]),
+        },
+    )
+    out = interim.build_ine_population_change().set_index(["muni_code", "year"])
+    assert len(out) == 3
+    assert out.loc[("0101", 2023)].to_dict() == {
+        "population_change_n": -3.0,
+        "natural_increase_n": -2.0,
+        "net_migration_n": -1.0,
+    }
+    assert (out["population_change_n"] == out["natural_increase_n"] + out["net_migration_n"]).all()
+
+
+def test_eurostat_demography_names_columns_and_splits_out_the_revision(monkeypatch):
+    rows = []
+    jan = {2019: 100.0, 2020: 110.0, 2021: 125.0}
+    flows = {2019: (10.0, -2.0, 12.0), 2020: (5.0, -2.0, 7.0)}  # change, natural, migration
+    for year, value in jan.items():
+        rows.append({"indic_de": "JAN", "year": year, "value": value})
+    for year, (grow, nat, mig) in flows.items():
+        rows += [
+            {"indic_de": "GROW", "year": year, "value": grow},
+            {"indic_de": "NATGROW", "year": year, "value": nat},
+            {"indic_de": "CNMIGRAT", "year": year, "value": mig},
+            {"indic_de": "LBIRTH", "year": year, "value": 8.0},
+            {"indic_de": "DEATH", "year": year, "value": 10.0},
+        ]
+    monkeypatch.setattr(interim.eurostat, "read", lambda ds: pd.DataFrame(rows))
+    out = interim.build_eurostat_demography().set_index("year")
+    assert list(out.index) == [2019, 2020]  # 2021 has no flow yet
+    assert out.loc[2019, "revision_n"] == 0.0
+    assert out.loc[2020, "revision_n"] == 10.0  # 125 - 110 - 5
+    kept = ["natural_change_n", "net_migration_n", "births_n", "deaths_n"]
+    assert out.loc[2020, kept].tolist() == [-2.0, 7.0, 8.0, 10.0]
+
+
 def test_aima_foreigners_labels_nationalities_and_keeps_the_total(monkeypatch):
     rows = [
         {"muni_code": "0101", "period_start": "2023-01-01", "dim_3": code, "value": v}
@@ -208,7 +260,12 @@ def test_download_calls_each_chosen_source_and_rejects_unknown(monkeypatch):
     monkeypatch.setattr(caop, "download", lambda refresh=False: calls.append(("caop",)))
 
     interim.download(["eurostat", "rnal"])
-    assert calls == [("eurostat", "eurostat_hpi"), ("eurostat", "eurostat_hicp"), ("rnal",)]
+    assert calls == [
+        ("eurostat", "eurostat_hpi"),
+        ("eurostat", "eurostat_hicp"),
+        ("eurostat", "eurostat_demography"),
+        ("rnal",),
+    ]
     calls.clear()
     interim.download()
     expected = [("ine", code, None) for code in interim.INE_CODES]

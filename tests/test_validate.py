@@ -95,6 +95,72 @@ def test_population_totals_must_equal_sum_of_parts():
     assert any("max difference" in r["detail"] for r in _failures("ine_population", df))
 
 
+def test_population_change_must_equal_natural_plus_migration():
+    rows = [
+        {
+            "muni_code": c,
+            "year": y,
+            "population_change_n": 3.0,
+            "natural_increase_n": -1.0,
+            "net_migration_n": 4.0,
+        }
+        for c in CODES
+        for y in (2022, 2023)
+    ]
+    df = pd.DataFrame(rows)
+    assert _failures("ine_population_change", df) == []
+    df.loc[0, "net_migration_n"] = 9.0
+    assert any("max difference" in r["detail"] for r in _failures("ine_population_change", df))
+
+
+def _demography(**override):
+    years = np.arange(2018, 2024)
+    df = pd.DataFrame(
+        {
+            "year": years,
+            "population_jan_n": 10_000_000.0 + 1000 * (years - 2018),
+            "population_change_n": 1000.0,
+            "natural_change_n": -2000.0,
+            "net_migration_n": 3000.0,
+            "births_n": 80_000.0,
+            "deaths_n": 82_000.0,
+            "revision_n": 0.0,
+        }
+    )
+    return df.assign(**override)
+
+
+def test_eurostat_demography_checks_the_balance_identities_and_revisions():
+    assert _failures("eurostat_demography", _demography()) == []
+    broken = _demography(net_migration_n=5000.0)
+    assert any("max difference" in r["detail"] for r in _failures("eurostat_demography", broken))
+    many = _demography(revision_n=[0.0, 5000.0, 5000.0, 5000.0, 5000.0, 0.0])
+    assert any("revisions" in r["detail"] for r in _failures("eurostat_demography", many))
+
+
+def test_population_change_cross_check_allows_the_revision_but_flags_other_gaps():
+    years = [2012, 2013]
+    change = pd.DataFrame(
+        {
+            "muni_code": "0101",
+            "year": years,
+            "natural_increase_n": [-100.0, -100.0],
+            "population_change_n": [-50.0, 400.0],
+        }
+    )
+    euro = pd.DataFrame(
+        {
+            "year": years,
+            "natural_change_n": [-100.0, -100.0],
+            "population_change_n": [-50.0, 100.0],
+            "revision_n": [0.0, 300.0],
+        }
+    )
+    assert validate._population_change_vs_eurostat(change, euro) is None
+    euro["revision_n"] = 0.0
+    assert validate._population_change_vs_eurostat(change, euro) is not None
+
+
 def _construction(completed_total=10.0, completed_parts=(2.0, 2.0, 3.0, 3.0), year=2010):
     rows = []
     for c in CODES:

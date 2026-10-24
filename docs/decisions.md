@@ -2,6 +2,12 @@
 
 Analytic and engineering choices, newest first. One short entry each: what, why, alternatives rejected.
 
+## 2026-10-24 — Population split: national from 1960, municipal 2011-2023, revision kept apart
+- **What:** `p1_07` splits population change into natural change and net migration with Eurostat `demo_gind` (national, 1960-2025) and INE's municipal demographic indicators 0008269-0008271 (2011-2023). INE's +201,000 post-census revision of 2020-2021 is a separate `revision_n` nationally, and the municipal windows are 2012-2019 and 2022-2023.
+- **Why:** the municipal series has no pre-2011 data, so the thirty-year answer (RQ3.1) is national; the revision sits in the municipal net migration of 2020-2021 (250,000 in 2021 against 72,000 in Eurostat's flow), which would show a migration surge that is partly a statistical correction.
+- **Rejected:** deriving natural change and migration from the age-sex population table (no births or deaths); using the crude rates (0008262-0008265: rounded, and the counts are available); dropping 2020-2021 from the national chart (the revision is shown instead, so the levels still reconcile).
+- **Found by:** reading INE's indicator names one at a time around the id of the crude birth rate (0008264); a wide scan of ids with many parallel requests got this machine blocked by INE for a while, so look ids up singly and slowly.
+
 ## 2026-10-23 — Indicator definitions tested one at a time against the base (M1)
 - **What:** `descriptive.compare_definitions` and `p1_06`. Six alternatives to price-to-income (fixed 100 m² dwelling, mean income, bank appraisals, existing dwellings, rent-to-income, mortgage burden), each compared with the base on the municipalities where both exist: rank correlation of the 2024 level and of the log change over a window, share with the same sign, share worsening, top-20 overlap.
 - **Why one at a time and per-window:** the series differ in length (existing-dwelling prices from 2019, rents 2020-2024), so each alternative gets the longest window it supports and the base is recomputed on the same municipalities and window; a common window would drop the informative comparisons.

@@ -146,6 +146,17 @@ def schemas() -> dict[str, DataFrameSchema]:
             unique=[MUNI_KEY, "year", "sex", "age_group"],
             strict=True,
         ),
+        "ine_population_change": DataFrameSchema(
+            {
+                MUNI_KEY: muni,
+                "year": _year(2011, 2030),
+                "population_change_n": _num(-50_000, 150_000, nullable=False),
+                "natural_increase_n": _num(-10_000, 10_000, nullable=False),
+                "net_migration_n": _num(-50_000, 150_000, nullable=False),
+            },
+            unique=[MUNI_KEY, "year"],
+            strict=True,
+        ),
         "aima_foreigners": DataFrameSchema(
             {
                 MUNI_KEY: muni,
@@ -240,6 +251,20 @@ def schemas() -> dict[str, DataFrameSchema]:
                 "hicp_index_b2015": _num(10, 300, nullable=False),
             },
             unique=["geo", "year"],
+            strict=True,
+        ),
+        "eurostat_demography": DataFrameSchema(
+            {
+                "year": _year(1960),
+                "population_jan_n": _num(5e6, 15e6, nullable=False),
+                "population_change_n": _num(-300_000, 600_000, nullable=False),
+                "natural_change_n": _num(-100_000, 200_000, nullable=False),
+                "net_migration_n": _num(-300_000, 600_000, nullable=False),
+                "births_n": _num(50_000, 300_000, nullable=False),
+                "deaths_n": _num(50_000, 200_000, nullable=False),
+                "revision_n": _num(-300_000, 300_000, nullable=False),
+            },
+            unique=["year"],
             strict=True,
         ),
         "rnal_al": DataFrameSchema(
@@ -415,6 +440,26 @@ def check_population(df: pd.DataFrame) -> list[str | None]:
     ]
 
 
+def check_population_change(df: pd.DataFrame) -> list[str | None]:
+    parts = df["natural_increase_n"] + df["net_migration_n"]
+    return [_grid(df, ["year"]), _sum_equals(df["population_change_n"], parts)]
+
+
+def check_eurostat_demography(df: pd.DataFrame) -> list[str | None]:
+    years = df["year"]
+    gaps = None if years.diff().dropna().eq(1).all() else "years are not consecutive"
+    natural = df["births_n"] - df["deaths_n"]
+    parts = df["natural_change_n"] + df["net_migration_n"]
+    return [
+        gaps,
+        _sum_equals(df["natural_change_n"], natural),
+        _sum_equals(df["population_change_n"], parts),
+        None
+        if df["revision_n"].abs().le(1).sum() >= len(df) - 3
+        else "revisions in more than 3 years",
+    ]
+
+
 def check_aima_foreigners(df: pd.DataFrame) -> list[str | None]:
     key = [MUNI_KEY, "year"]
     tot = df[df["nationality"] == "total"].set_index(key)["foreign_residents_n"]
@@ -547,12 +592,14 @@ CHECKS: dict[str, Callable[[pd.DataFrame], list[str | None]]] = {
     "ine_census": check_census,
     "ine_census_stock": check_census_stock,
     "ine_population": check_population,
+    "ine_population_change": check_population_change,
     "aima_foreigners": check_aima_foreigners,
     "ine_cpi": check_cpi,
     "ine_cpi_monthly": check_cpi_monthly,
     "ine_hpi": check_hpi,
     "bp_mortgage": check_bp,
     "eurostat_hpi": check_eurostat_hpi,
+    "eurostat_demography": check_eurostat_demography,
     "bis_spp": check_bis_spp,
     "oecd_house_prices": check_oecd_house_prices,
     "rnal_al": check_rnal,
@@ -633,7 +680,32 @@ def cross_checks(tables: dict[str, pd.DataFrame]) -> list[tuple[str, str | None]
 
     pop = tables["ine_population"].query("sex == 'total' and age_group == 'total'")
     out.append(("population_covers_all_municipalities", _grid(pop, ["year"])))
+    if "ine_population_change" in tables and "eurostat_demography" in tables:
+        out.append(
+            (
+                "ine_population_change_vs_eurostat",
+                _population_change_vs_eurostat(
+                    tables["ine_population_change"], tables["eurostat_demography"]
+                ),
+            )
+        )
     return out
+
+
+def _population_change_vs_eurostat(change: pd.DataFrame, euro: pd.DataFrame) -> str | None:
+    """Municipal natural increase and population change add up to the national figures (2011 starts at the census)."""
+    national = change.groupby("year")[["natural_increase_n", "population_change_n"]].sum()
+    es = euro.set_index("year")
+    years = [y for y in national.index if y > 2011 and y in es.index]
+    natural = _rel_diff(
+        national.loc[years, "natural_increase_n"], es.loc[years, "natural_change_n"]
+    )
+    # the municipal series carries the 2020-2021 revision, which Eurostat's flows leave out
+    total = es.loc[years, "population_change_n"] + es.loc[years, "revision_n"]
+    change_gap = _rel_diff(national.loc[years, "population_change_n"], total)
+    if natural > 0.001 or change_gap > 0.001:
+        return f"natural increase differs by {natural:.4f}, population change by {change_gap:.4f}"
+    return None
 
 
 # ---- processed panels -----------------------------------------------------------------------------

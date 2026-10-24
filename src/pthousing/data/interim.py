@@ -231,6 +231,24 @@ def build_ine_population() -> pd.DataFrame:
     return df[[*cols, "population_n"]].sort_values(cols, ignore_index=True)
 
 
+def build_ine_population_change() -> pd.DataFrame:
+    """Natural increase, net migration and total population change by municipality and year, 2011-2023.
+
+    Counts of persons over the year (INE annual estimates): population change = natural increase (births minus
+    deaths) + net migration.
+    """
+    parts = {
+        "population_change_n": "0008271",
+        "natural_increase_n": "0008270",
+        "net_migration_n": "0008269",
+    }
+    out = None
+    for column, code in parts.items():
+        df = _municipal(code)[[MUNI_KEY, "year", "value"]].rename(columns={"value": column})
+        out = df if out is None else out.merge(df, on=[MUNI_KEY, "year"], validate="one_to_one")
+    return out.sort_values([MUNI_KEY, "year"], ignore_index=True)
+
+
 def build_aima_foreigners() -> pd.DataFrame:
     """Foreign residents with a legal residence title by municipality, year and nationality, 2014-2023.
 
@@ -301,6 +319,35 @@ def build_eurostat_hicp() -> pd.DataFrame:
     return df[["geo", "year", "hicp_index_b2015"]].sort_values(["geo", "year"], ignore_index=True)
 
 
+def build_eurostat_demography() -> pd.DataFrame:
+    """Portugal's demographic balance by year: population on 1 January, births, deaths, natural change, net migration.
+
+    ``net_migration_n`` is Eurostat's net migration plus statistical adjustment, the residual of the flow
+    ``population_change_n`` after natural change. ``revision_n`` is what the 1 January levels add beyond the
+    flows (2020 and 2021: INE's post-census revision of the series); it is zero in every other year. Years are
+    the calendar year the change occurs in; the latest may be provisional.
+    """
+    df = eurostat.read("eurostat_demography")
+    names = {
+        "JAN": "population_jan_n",
+        "GROW": "population_change_n",
+        "NATGROW": "natural_change_n",
+        "CNMIGRAT": "net_migration_n",
+        "LBIRTH": "births_n",
+        "DEATH": "deaths_n",
+    }
+    wide = df.pivot(index="year", columns="indic_de", values="value").rename(columns=names)
+    wide.columns.name = None
+    jan = wide["population_jan_n"]
+    wide["revision_n"] = jan.shift(-1) - jan - wide["population_change_n"]
+    wide = wide.dropna(
+        subset=["population_change_n"]
+    )  # drops the latest 1 January, with no flow yet
+    return (
+        wide[[*names.values(), "revision_n"]].reset_index().sort_values("year", ignore_index=True)
+    )
+
+
 def build_bis_spp() -> pd.DataFrame:
     """BIS residential property price index for Portugal (2010 = 100), nominal and real, quarterly from 1988."""
     df = bis.read("bis_spp")
@@ -353,6 +400,7 @@ INE_CODES = (
     "0012517", "0012531",  # census 2021: vacancy, tenure
     "0006988", "0012518",  # census 2011 / 2021: mean useful area of dwellings of usual residence
     "0008273", "0014642", "0014640", "0014765",  # population, CPI annual / monthly, HPI
+    "0008269", "0008270", "0008271",  # net migration, natural increase, population change
 )  # fmt: skip
 # Census tables that exceed INE's row limit as a whole: only the totals of the dimensions we do not split by.
 INE_FILTERED = {
@@ -381,7 +429,7 @@ def download(sources: list[str] | None = None, refresh: bool = False) -> None:
     if "bportugal" in chosen:
         bportugal.fetch_all(refresh=refresh)
     if "eurostat" in chosen:
-        for dataset_id in ("eurostat_hpi", "eurostat_hicp"):
+        for dataset_id in ("eurostat_hpi", "eurostat_hicp", "eurostat_demography"):
             eurostat.fetch(dataset_id, refresh=refresh)
     if "bis" in chosen:
         bis.fetch("bis_spp", refresh=refresh)
@@ -406,10 +454,12 @@ BUILDERS: dict[str, Callable[[], pd.DataFrame]] = {
     "ine_cpi": build_ine_cpi,
     "ine_cpi_monthly": build_ine_cpi_monthly,
     "ine_hpi": build_ine_hpi,
+    "ine_population_change": build_ine_population_change,
     "aima_foreigners": build_aima_foreigners,
     "bp_mortgage": build_bp_mortgage,
     "eurostat_hpi": build_eurostat_hpi,
     "eurostat_hicp": build_eurostat_hicp,
+    "eurostat_demography": build_eurostat_demography,
     "bis_spp": build_bis_spp,
     "oecd_house_prices": build_oecd_house_prices,
     "rnal_al": build_rnal_al,

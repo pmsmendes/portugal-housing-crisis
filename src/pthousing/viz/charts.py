@@ -1592,3 +1592,83 @@ def indicator_robustness(table: pd.DataFrame, trends: pd.DataFrame, base_label: 
         head_in=1.3,
         foot_in=0.6,
     )
+
+
+def population_components(
+    balance: pd.DataFrame, rates: dict[str, pd.DataFrame], first_year: int = 1961
+) -> Figure:
+    """What moved the population: natural change and net migration, nationally and by density class.
+
+    ``balance`` is ``demography.national_balance`` (thousands per year are plotted from ``first_year``; the
+    2020-2021 revision is drawn as grey bars so it is not read as migration). ``rates`` maps a period label to
+    ``demography.municipal_balance(..., by="density_class")``: bars of natural change and net migration per
+    1,000 residents a year for urban, intermediate and rural municipalities in each period.
+    """
+    fig, (left, right) = plt.subplots(1, 2, figsize=(11, 4.6), gridspec_kw={"width_ratios": [6, 5]})
+    d = balance.loc[first_year:]
+    natural, migration = d["natural_change_n"] / 1000, d["net_migration_n"] / 1000
+    revision = d["revision_n"] / 1000
+    left.axhline(0, color=GRID, lw=1, zorder=1)
+    rev = revision[revision.abs() > 1]
+    left.bar(rev.index, rev, color=MUTED, alpha=0.5, width=0.8, zorder=2)
+    _line(left, d.index, natural, BLUE)
+    _line(left, d.index, migration, ORANGE)
+    for s, color in ((natural, BLUE), (migration, ORANGE)):
+        _end_dot(left, s.index[-1], s.iloc[-1], color)
+    _legend(left, [Line2D([], [], color=BLUE, lw=LINE_WIDTH, label="Natural change (births minus deaths)"),
+                   Line2D([], [], color=ORANGE, lw=LINE_WIDTH, label="Net migration"),
+                   Patch(facecolor=MUTED, alpha=0.5, label="Post-census revision")], loc="upper center")  # fmt: skip
+    left.get_legend().set_bbox_to_anchor((0.62, 1.0))
+    if first_year <= 1975 <= d.index.max():
+        left.annotate(
+            "1975: return from the colonies", (1975, migration.loc[1975]), xytext=(-6, 0),
+            textcoords="offset points", ha="right", va="center", fontsize=8.5, color=INK_2,
+        )  # fmt: skip
+    left.set_xticks(range(first_year - first_year % 10 + 10, int(d.index.max()) + 1, 10))
+    left.set_xlim(first_year - 1, d.index.max() + 1.5)
+    left.yaxis.set_major_formatter(mticker.FuncFormatter(lambda v, _: f"{v:,.0f}k"))
+    _panel_title(left, "Persons a year, national")
+
+    classes = ["urban", "intermediate", "rural"]
+    width, step = 0.38, 1.0
+    ticks, labels = [], []
+    pos = 0.0
+    short = {"urban": "Urban", "intermediate": "Interm.", "rural": "Rural"}
+    for period, table in rates.items():
+        group_start = pos
+        for name in classes:
+            row = table.loc[name]
+            right.bar(pos - width / 2, row["natural_per_1000_year"], width, color=BLUE, zorder=3)
+            right.bar(
+                pos + width / 2, row["migration_per_1000_year"], width, color=ORANGE, zorder=3
+            )
+            ticks.append(pos)
+            labels.append(short[name])
+            pos += step
+        right.annotate(
+            period, ((group_start + pos - step) / 2, 0), xycoords=("data", "axes fraction"),
+            xytext=(0, -22), textcoords="offset points", ha="center", fontsize=9, color=INK_2,
+            fontweight="bold",
+        )  # fmt: skip
+        pos += 0.6
+    right.axhline(0, color=INK_2, lw=1, zorder=4)
+    right.set_xticks(ticks, labels, fontsize=8.5)
+    right.yaxis.set_major_formatter(mticker.FuncFormatter(lambda v, _: f"{v:g}"))
+    _panel_title(right, "Per 1,000 residents a year, municipalities")
+    for ax in (left, right):
+        ax.grid(axis="y", color=GRID, lw=0.8)
+        ax.set_axisbelow(True)
+
+    first_p, last_p = list(rates)[0], list(rates)[-1]
+    negative = d["natural_change_n"] < 0
+    since = int(negative[~negative].index.max()) + 1  # first year of the final run with more deaths
+    peak = d["net_migration_n"].idxmax()
+    return style.finish(
+        fig,
+        f"Since {since} deaths outnumber births; net migration decides if the population grows",
+        f"Natural change, net migration (incl. statistical adjustment) and the 2020-2021 revision; municipal rates for {first_p} and {last_p}",
+        "Source: Eurostat (demo_gind), INE annual estimates, own calculations. Net migration is a residual of the estimate; "
+        f"{int(d.index.max())} may be provisional. Peak: {d.loc[peak, 'net_migration_n'] / 1000:,.0f}k in {int(peak)}.",
+        head_in=1.3,
+        foot_in=0.6,
+    )

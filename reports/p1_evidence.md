@@ -29,6 +29,10 @@ claim. Figures: `reports/figures/p1/`, tables: `reports/tables/p1/`, notebooks: 
    the 2013 low. The OECD price-to-income index (2015 = 100) was 142 in 1995, fell to 97 in 2013 and is 167 in 2025,
    33% above its long-term average. Real rents barely moved between 1995 and 2015 and are 11% higher in 2025 than in
    2015: the rise is in the price of buying, not of renting (section *Thirty years*).
+8. **Migration, not births, decides whether the population grows.** Deaths have outnumbered births every year since 2009
+   (-34,000 in 2025). Over 1995-2025 net migration added 1.56 million people and natural change took away 350,000; in
+   2022-2023 net migration was 307,000 to 371,000 a year, enough to make 248 of 308 municipalities grow despite a
+   natural decline, after a 2012-2019 in which 186 lost people on both counts (section *Population change*).
 
 ## Prices and rents
 
@@ -132,6 +136,38 @@ levels carry about a point of doubt and the **changes** are the finding (sensiti
 Tables: `rent_vs_buy_trend_2020_2024.csv`, `rent_vs_buy_by_municipality_2024.csv`, `rent_vs_buy_by_type_2024.csv`,
 `rent_vs_buy_sensitivity_2024.csv`, `rent_vs_buy_anchor_check.csv`.
 
+## Population change: births, deaths and migration (RQ3.1)
+
+Population change is natural change (births minus deaths) plus net migration. Nationally Eurostat gives both from 1960
+(INE data); at municipal level INE has them only for 2011-2023. Net migration is the residual of the estimate, so it also
+holds statistical adjustments. INE's post-census revision of 2020-2021 (+201,000 persons) is not a flow: it is drawn
+apart (grey bars) and the municipal comparison uses 2012-2019 and 2022-2023.
+
+![Natural change and net migration](figures/p1/population_components.png)
+
+- **Since 2009 deaths outnumber births, every year.** Natural change was +118,000 a year in 1961 and fell steadily to
+  about zero in the 2000s; it is negative in all 17 years 2009-2025 and between -33,000 and -45,000 a year since 2020
+  (-34,000 in 2025).
+- **Migration decides the population.** Over 1995-2025 the population grew by 1.42 million: natural change contributed
+  -350,000, net migration +1.56 million and the census revision +201,000. Migration moves in much bigger swings: -1.58
+  million in 1961-1973 (emigration), +0.63 million in 1974-1985 (returns from the colonies, a spike of +347,000 in 1975),
+  -108,000 in the crisis years 2011-2014 and +966,000 in 2022-2025, 242,000 a year. The peak is 371,000 in 2022; the
+  provisional figure for 2025 is 71,000.
+- **The population fell until 2018, then the surge came.** In 2011-2019 it fell by about 197,000 and net migration was
+  negative until 2016; it was +67,000 in 2019 and +307,000 to +371,000 in 2022-2023. The surge falls in the years of the
+  steepest price rises reported above (an association in time, not a test of cause: that is phase 2).
+- **Where: stagnation, then growth almost everywhere.** In 2012-2019, 186 of 308 municipalities (38% of the population)
+  lost people on both counts and 60 more could not offset their natural decline; only 39 grew. In 2022-2023, 248 (81% of
+  the population) grew only because migrants offset a natural decline, 14 grew on both counts and 5 lost both.
+- **Rural and inland places.** In 2012-2019 rural municipalities lost 165,000 people (natural -7.7 and migration -1.5
+  per 1,000 residents a year) and inland ones 210,000, while the coast gained 7,000. In 2022-2023 net migration is 28 to
+  32 per 1,000 a year in every density class (urban 32, intermediate 31, rural 28), 35 on the coast, 41 on the estuaries
+  and 25 inland: it covers the rural natural decline (-9 per 1,000), so rural municipalities grew too (+79,000), but
+  rural places depend most on migrants.
+
+Tables: `population_change_by_period.csv`, `population_components_by_density.csv`,
+`population_components_by_coast.csv`, `population_growth_regimes.csv`.
+
 ## Foreign residents: how many, who, where (RQ3.2)
 
 Foreign nationals with a residence title on 31 December (INE, from AIMA/SEF), 2014 to 2023. This is a stock of titles, not
@@ -218,13 +254,17 @@ Tables: `indicator_robustness.csv`, `indicator_robustness_trends.csv`, `indicato
   60% of the price, and the comparison ignores risk, mobility, rent control and who can get a loan.
 - **Foreign residents are titles, not people.** The series ends in 2023, excludes naturalised citizens and has an
   unexplained +34% step in 2023; the share divides by an estimate of residents of a different vintage and logic, so levels
-  are indicative (Vila do Bispo's 38% is the extreme). Natural change and emigration are not separated, so how much of the
-  population growth is immigration is read from titles alone.
+  are indicative (Vila do Bispo's 38% is the extreme). Titles are not net migration: the population balance (section
+  *Population change*) gives net migration of all nationalities, but not of foreign nationals only.
+- **Net migration is a residual.** It holds statistical adjustments and, in the municipal series, INE's +201,000
+  post-census revision of 2020-2021, so those two years are left out of the municipal comparison; 2011 starts at the census
+  (17,000 lower than the national flow) and the latest national years may be revised. Municipal data cover 2011-2023 only,
+  so the thirty-year split is national.
 - **One national mortgage rate** (agreed rate on new floating-rate loans) applies to every municipality, and the loan
   (80% of the price over 30 years) is an assumption, not an estimate.
 - **Descriptive, not causal.** The report says what changed and where, not why; that is phase 2.
 
 ## Questions answered
 
-RQ1.3, RQ1.5, RQ1.6, RQ3.2, M1, RQ4.1 and RQ4.2 are answered with the available data; RQ1.1 (national thirty years done, municipal from 2016), RQ1.4 and RQ1.7 are partly answered
+RQ1.3, RQ1.5, RQ1.6, RQ3.1, RQ3.2, M1, RQ4.1 and RQ4.2 are answered with the available data; RQ1.1 (national thirty years done, municipal from 2016), RQ1.4 and RQ1.7 are partly answered
 (see [research_questions](../docs/research_questions.md)).
