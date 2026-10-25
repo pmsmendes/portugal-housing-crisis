@@ -870,12 +870,21 @@ FORECAST_COLORS = {
 }
 
 
-def forecast_accuracy(panels: list[dict], baseline: str = "naive") -> Figure:
+def forecast_accuracy(
+    panels: list[dict],
+    baseline: str = "naive",
+    unit: str = "quarters",
+    note: str = "Origins from 2017Q4: one boom period, no downturn to test against.",
+    headline: str | None = None,
+    source: str = "INE, Banco de Portugal",
+) -> Figure:
     """Rolling-origin accuracy by horizon: RMSE relative to the baseline (top) and 80% interval coverage (bottom).
 
     Each dict has ``title``, ``rel`` (rows h, columns methods: RMSE divided by the baseline's) and ``acc`` (the
     ``forecasting.accuracy`` table with ``method``, ``h``, ``coverage80``). Lines below 1 beat the baseline; the
-    coverage lines should sit on the dashed 80% line.
+    coverage lines should sit on the dashed 80% line. ``unit`` names the horizon step in the labels, ``note``
+    ends the source line and ``headline`` replaces the computed title (which describes the best method of the first
+    panel and is only right when one method wins in every panel).
     """
     fig, axes = plt.subplots(
         2, len(panels), figsize=(5.2 * len(panels), 6.4), sharex=True, squeeze=False
@@ -912,7 +921,7 @@ def forecast_accuracy(panels: list[dict], baseline: str = "naive") -> Figure:
         bottom.set_ylim(0, 1.02)
         bottom.yaxis.set_major_formatter(mticker.PercentFormatter(1, decimals=0))
         bottom.set_xticks(sorted(acc["h"].unique()))
-        bottom.set_xlabel("Quarters ahead", color=INK_2)
+        bottom.set_xlabel(f"{unit.capitalize()} ahead", color=INK_2)
     axes[0][0].set_ylabel(f"RMSE relative to {baseline}", color=INK_2)
     axes[1][0].set_ylabel("80% interval coverage", color=INK_2)
     axes[0][0].legend(loc="lower left", frameon=False, ncols=2, fontsize=8.5)
@@ -921,9 +930,10 @@ def forecast_accuracy(panels: list[dict], baseline: str = "naive") -> Figure:
     cover = float(np.mean([p["acc"].query("method == @best")["coverage80"].mean() for p in panels]))
     fig = style.finish(
         fig,
-        f"{best} cuts the error of a naive forecast by {100 * (1 - first[best].mean()):.0f}% on average; its 80% intervals hold {100 * cover:.0f}% of outcomes",
-        "Rolling-origin validation, 1 to 8 quarters ahead (top: RMSE relative to the naive forecast; bottom: share of outcomes inside the 80% interval, dashed = 80%)",
-        "Source: INE, Banco de Portugal; own calculations. Origins from 2017Q4: one boom period, no downturn to test against.",
+        headline
+        or f"{best} cuts the error of a naive forecast by {100 * (1 - first[best].mean()):.0f}% on average; its 80% intervals hold {100 * cover:.0f}% of outcomes",
+        f"Rolling-origin validation, 1 to {int(max(p['acc']['h'].max() for p in panels))} {unit} ahead (top: RMSE relative to the naive forecast; bottom: share of outcomes inside the 80% interval, dashed = 80%)",
+        f"Source: {source}; own calculations. {note}",
         head_in=1.25,
         foot_in=0.55,
     )
@@ -931,11 +941,16 @@ def forecast_accuracy(panels: list[dict], baseline: str = "naive") -> Figure:
     return fig
 
 
-def forecast_fans(panels: list[dict]) -> Figure:
+def forecast_fans(
+    panels: list[dict],
+    step: int = 4,
+    footer: str = "Source: INE, Banco de Portugal; own calculations. Eight quarters is the validated range; 5 to 10 year paths come from the scenarios.",
+) -> Figure:
     """History and forecast with 80% and 95% intervals, one panel per series.
 
     Each dict has ``title``, ``history`` (a Series indexed by year as a float, e.g. 2024.25), ``forecast`` (a frame
-    with ``mean``, ``lo80``, ``hi80``, ``lo95``, ``hi95``, same index type) and ``unit_fmt`` for the end label.
+    with ``mean``, ``lo80``, ``hi80``, ``lo95``, ``hi95``, same index type) and ``unit_fmt`` for the end label. ``step`` is the spacing of the x ticks and ``footer`` the
+    source line.
     """
     fig, axes = plt.subplots(1, len(panels), figsize=(5.4 * len(panels), 4.4), squeeze=False)
     for ax, spec in zip(axes[0], panels, strict=True):
@@ -953,7 +968,7 @@ def forecast_fans(panels: list[dict]) -> Figure:
         ax.set_xlim(h.index[0] - 0.3, f.index[-1] + 1.6)
         ax.margins(y=0.05)
         _panel_title(ax, spec["title"])
-        ax.xaxis.set_major_locator(mticker.MultipleLocator(4))
+        ax.xaxis.set_major_locator(mticker.MultipleLocator(step))
         ax.xaxis.set_major_formatter(mticker.FuncFormatter(lambda v, _: f"{v:.0f}"))
     first = panels[0]
     f = first["forecast"]
@@ -961,7 +976,7 @@ def forecast_fans(panels: list[dict]) -> Figure:
         fig,
         first.get("headline", "Forecast"),
         "History (grey) and forecast (blue) with 80% and 95% intervals; the model extends the recent trend and knows nothing of policy or rate shocks",
-        "Source: INE, Banco de Portugal; own calculations. Eight quarters is the validated range; 5 to 10 year paths come from the scenarios.",
+        footer,
         head_in=1.25,
         foot_in=0.55,
     )

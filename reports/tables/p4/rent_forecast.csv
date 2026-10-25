@@ -1,0 +1,11 @@
+period,mean,lo80,hi80,lo95,hi95,series,method
+2026,111.78,108.1,115.6,106.19,117.67,Real rent index,drift
+2027,113.04,107.73,118.6,105.03,121.66,Real rent index,drift
+2028,114.31,107.69,121.33,104.35,125.22,Real rent index,drift
+2029,115.59,107.81,123.93,103.9,128.59,Real rent index,drift
+2030,116.88,108.02,126.47,103.6,131.86,Real rent index,drift
+2026,210.39,201.21,219.99,196.51,225.25,Price-to-rent,ARIMA
+2027,224.42,204.99,245.7,195.39,257.76,Price-to-rent,ARIMA
+2028,235.79,205.26,270.87,190.73,291.5,Price-to-rent,ARIMA
+2029,244.9,203.18,295.18,184.06,325.85,Price-to-rent,ARIMA
+2030,252.11,199.58,318.46,176.36,360.39,Price-to-rent,ARIMA

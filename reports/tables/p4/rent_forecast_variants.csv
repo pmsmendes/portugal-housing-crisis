@@ -1,0 +1,9 @@
+series,variant,ARIMA,ETS,drift,naive
+Price-to-rent,first window 15 years,0.73,0.85,1.06,1.0
+Price-to-rent,"first window 15 years, without 2020-21 origins",0.77,0.9,1.06,1.0
+Price-to-rent,first window 20 years,0.72,0.85,1.07,1.0
+Price-to-rent,"first window 20 years, without 2020-21 origins",0.76,0.91,1.08,1.0
+Real rent index,first window 15 years,1.25,1.24,1.03,1.0
+Real rent index,"first window 15 years, without 2020-21 origins",1.25,1.24,0.97,1.0
+Real rent index,first window 20 years,1.26,1.23,0.87,1.0
+Real rent index,"first window 20 years, without 2020-21 origins",1.25,1.23,0.78,1.0

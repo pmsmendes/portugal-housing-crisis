@@ -1,0 +1,9 @@
+series,method,rmse,bias,coverage80,coverage95
+Price-to-rent,ARIMA,0.123,0.054,0.557,0.885
+Price-to-rent,ETS,0.145,0.086,0.576,0.785
+Price-to-rent,drift,0.181,0.103,0.24,0.486
+Price-to-rent,naive,0.166,0.068,0.215,0.43
+Real rent index,ARIMA,0.05,0.015,0.803,0.965
+Real rent index,ETS,0.049,0.012,0.589,0.955
+Real rent index,drift,0.033,-0.011,0.883,0.977
+Real rent index,naive,0.039,0.024,0.819,0.977

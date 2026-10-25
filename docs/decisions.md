@@ -2,6 +2,12 @@
 
 Analytic and engineering choices, newest first. One short entry each: what, why, alternatives rejected.
 
+## 2026-10-25 — Rents: forecast the slow index and price-to-rent, keep rents out of the simulator
+- **What:** `p4_05` applies the `p4_01` methods to annual series (ETS without seasonal forms, `ANNUAL_METHODS`): the OECD real rent index and price-to-rent, rolling origin from 2007, method chosen per series.
+- **Why per series:** the pooled rule of `p4_01` would have picked ARIMA for both, though it is 26% worse than no change for rents; a model must beat the baseline on the series it is used for.
+- **Why not in the simulator:** the index covers all leases (+0.2% real 2020-2024 against +24.0% for new leases), the new-lease series is five years long, and a forecast of the first says little about a tenant's affordability.
+- **Rejected:** forecasting INE's municipal rents (five annual points); using the OECD rent series back to 1959 (hyperinflation and rent regimes of other eras).
+
 ## 2026-10-24 — Age structure as a cross-section next to the foreign-resident change
 - **What:** `p2_11` (`analysis/age_structure.py`) takes five age bands from the 2011-2023 five-year groups and regresses the log change of price-to-income 2016-2023 on the change in the 25-44 and 65+ shares, within district, with coast and density class, and with the foreign-resident change.
 - **Why:** the 65+ share is already in the P2.02 panel; the new question is the household-forming ages, and young adults arrive as migrants (correlation 0.58 with foreign-resident change), so an age coefficient without that control would restate the migration result. Rule for reading it fixed first.

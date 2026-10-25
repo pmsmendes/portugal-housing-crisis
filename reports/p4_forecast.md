@@ -3,7 +3,7 @@
 Write-up of findings. Figures: `reports/figures/p4/`, tables: `reports/tables/p4/`, notebooks: `notebooks/p4_forecast/`.
 
 **Status:** forecasting baselines and the national two-year forecast (`p4_01`) and the scenario simulator with its dashboard page
-(`p4_02`, `app/pages/4_Simulator.py`) done, 2026-10-23; regional outlook (`p4_03`, RQ10.2) and a test of validation schemes (`p4_04`, M5) added below. Rents are not covered.
+(`p4_02`, `app/pages/4_Simulator.py`) done, 2026-10-23; regional outlook (`p4_03`, RQ10.2), a test of validation schemes (`p4_04`, M5) and a rent forecast (`p4_05`) added below. Rents: the stock index is not forecastable, new-lease rents are too short (`p4_05`).
 
 ## Question
 
@@ -208,6 +208,34 @@ Tables: `validation_schemes.csv`, `validation_verdicts.csv`.
 - **One simple model, two series, one regime.** The size of the gap depends on the model and series; the cost index has a rate shock, the price index does not. Flexible models would likely show larger gaps; none was tried (no machine learning for its own sake).
 - **Few targets.** 27 to 34 per cell and overlapping windows, so differences of a few points are not distinguishable from noise; only the large gaps are read.
 - **Quarterly national data only.** Annual municipal panels (`p4_03`) were validated on rolling origins and not re-scored with random splits.
+
+## Rents (`p4_05`, RQ10.1)
+
+**Question.** Is a statistical forecast of rents worth carrying into the simulator, which follows prices and the ownership burden? National annual series, 1988 to 2025 (38 points): the OECD
+real rent index (all leases, 2015 = 100) and price-to-rent. Same methods as `p4_01` without the seasonal naive (ETS drops its seasonal forms), rolling origin from 2007, 1 to 5 years ahead, the
+method chosen per series by lowest mean RMSE (rule written after a first look at the table; stability checks are the safeguard).
+
+![Rent forecast accuracy](figures/p4/rent_forecast_accuracy.png)
+
+### Key findings
+
+21. **No model reliably forecasts real rents.** ETS and ARIMA are 7% to 45% worse than no change at every horizon (mean RMSE relative to naive 1.23 and 1.26). Drift beats no change by the rule (0.87;
+    0.78 without the 2020-21 origins) but not with a 15-year first window (1.03, 0.97): the gain is not stable. The index stayed between 93 and 111 since 1995.
+22. **Price-to-rent can be forecast, with intervals that are too narrow.** ARIMA cuts the naive RMSE by 28% (0.73 with a shorter window, 0.76 without 2020-21), ETS by 15%, drift is worse than no change. ARIMA's 80%
+    intervals hold 56% of outcomes (95%: 89%).
+23. **Forecast to 2030.** Real rent index 110.5 (2025) to 116.9 (drift; 80% range 108.0 to 126.5), price-to-rent 193 to 252 (ARIMA; 200 to 318). The second extends the 2015-2025 climb with understated intervals:
+    read it as no sign of reversal, not as a level.
+24. **The index is not what a new tenant pays.** Over 2020 to 2024 the index of all leases rose 0.2% in real terms; INE's median rent per m2 of new leases rose 24.0% in the median of 191 municipalities.
+
+![Rent forecast](figures/p4/rent_forecast.png)
+
+Tables: `rent_forecast_accuracy_by_horizon.csv`, `rent_forecast_accuracy_summary.csv`, `rent_forecast_variants.csv`, `rent_forecast.csv`, `rent_measures_2020_2024.csv`.
+
+### Limitations of the rent forecast
+
+- **Not in the simulator.** A forecast of the slow stock index says little about a tenant's affordability, and new-lease rents (2020 to 2024, municipal) are too short to validate. Rents stay outside the simulator.
+- **38 annual points, one country, one regime change** (the 2012 rent-law reform); intervals for price-to-rent are too narrow.
+- **Stock of leases, not new leases**; no national new-lease series before 2020.
 
 ## Next
 

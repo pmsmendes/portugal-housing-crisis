@@ -176,3 +176,31 @@ def test_all_schemes_score_the_same_rows_and_return_finite_values():
     assert out.groupby("scheme")["t"].apply(lambda s: s.min() >= 29).all()
     assert out.groupby("scheme")["t"].nunique().nunique() == 1
     assert np.isfinite(out[["actual", "pred"]].to_numpy()).all()
+
+
+# ---- annual series ----------------------------------------------------------------------------------
+
+
+def _annual(n=40, drift=0.02, sd=0.01, seed=2):
+    rng = np.random.default_rng(seed)
+    return pd.Series(
+        np.cumsum(rng.normal(drift, sd, n)), index=pd.period_range("1990", periods=n, freq="Y")
+    )
+
+
+def test_ets_on_an_annual_series_never_picks_a_seasonal_form():
+    out, spec = fc.ets(_annual(), 3, return_spec=True)
+    assert spec["seasonal"] is None
+    assert out.index[0] == pd.Period("2030", "Y") and len(out) == 3
+    assert (out["hi80"] > out["lo80"]).all()
+
+
+def test_rolling_origin_runs_on_annual_methods_and_beats_naive_on_a_trend():
+    y = _annual(n=34)
+    res = fc.rolling_origin(y, methods=fc.ANNUAL_METHODS, initial=20, horizon=3)
+    assert set(res["method"]) == set(fc.ANNUAL_METHODS) and "seasonal naive" not in set(
+        res["method"]
+    )
+    acc = fc.accuracy(res, fc.mase_scale(y, 20))
+    rel = fc.relative_to(acc, "naive").mean()
+    assert rel["drift"] < 1  # a steady trend: carrying the trend beats no change

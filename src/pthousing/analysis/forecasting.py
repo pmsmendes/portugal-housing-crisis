@@ -91,11 +91,21 @@ def _aicc(res, n: int, k: int) -> float:
     return aic + 2 * k * (k + 1) / max(n - k - 1, 1)
 
 
+def _season(y: pd.Series) -> int | None:
+    """Seasonal period of a series: the quarters in a year for quarterly data, none for annual data."""
+    return SEASON if str(y.index.freqstr).startswith("Q") else None
+
+
 def ets(y: pd.Series, h: int, return_spec: bool = False):
-    """ETS with additive errors, chosen among six trend/seasonal forms by AICc (on the log series)."""
+    """ETS with additive errors, chosen among six trend/seasonal forms by AICc (on the log series).
+
+    The seasonal forms are candidates only for quarterly series with at least three years of data; an annual
+    series gets the three non-seasonal forms.
+    """
+    season = _season(y)
     best, best_spec = None, None
     for spec in ETS_CANDIDATES:
-        if spec["seasonal"] and len(y) < 3 * SEASON:
+        if spec["seasonal"] and (season is None or len(y) < 3 * season):
             continue
         try:
             with warnings.catch_warnings():
@@ -103,7 +113,7 @@ def ets(y: pd.Series, h: int, return_spec: bool = False):
                 res = ETSModel(
                     y,
                     error="add",
-                    seasonal_periods=SEASON if spec["seasonal"] else None,
+                    seasonal_periods=season if spec["seasonal"] else None,
                     **spec,
                 ).fit(disp=False, maxiter=200)
         except Exception:  # a form that does not converge is not a candidate
@@ -160,6 +170,10 @@ METHODS: dict[str, Callable[[pd.Series, int], pd.DataFrame]] = {
     "ETS": ets,
     "ARIMA": arima,
 }
+
+
+# annual series (no seasonal pattern): the same methods without the seasonal naive
+ANNUAL_METHODS = {name: fn for name, fn in METHODS.items() if name != "seasonal naive"}
 
 
 # ---- rolling-origin validation --------------------------------------------------------------------
