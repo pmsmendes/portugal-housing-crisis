@@ -159,7 +159,9 @@ def annual_frame(long: pd.DataFrame, macro: pd.DataFrame) -> pd.DataFrame:
     ``long`` is ``national_annual_long`` (nominal and real price index, CPI, OECD price-to-income; 2015 = 100) and
     ``macro`` the ``eurostat_macro`` interim table. Adds real compensation per employee (deflated with the same
     CPI as the real price index), the price-to-wage index (nominal price over nominal compensation per employee,
-    2015 = 100) and yearly changes: log points for prices and wages, percentage points for unemployment.
+    2015 = 100) and yearly changes: log points for prices and wages, percentage points for unemployment. When
+    ``long`` holds the OECD real rent index (``rent_real_b2015``, all leases) its yearly change is added as
+    ``rent_growth_real_pct``.
     """
     d = long.set_index("year")[
         ["hpi_nominal_b2015", "hpi_real_b2015", "cpi_index_b2015", "price_to_income_b2015"]
@@ -174,6 +176,9 @@ def annual_frame(long: pd.DataFrame, macro: pd.DataFrame) -> pd.DataFrame:
     d["wage_growth_nominal_pct"] = 100 * np.log(d["compensation_per_employee_eur"]).diff()
     d["inflation_pct"] = 100 * np.log(d["cpi_index_b2015"]).diff()
     d["unemployment_change_pp"] = d["unemployment_pct"].diff()
+    if "rent_real_b2015" in long.columns:
+        d["rent_real_b2015"] = long.set_index("year")["rent_real_b2015"]
+        d["rent_growth_real_pct"] = 100 * np.log(d["rent_real_b2015"]).diff()
     return d
 
 

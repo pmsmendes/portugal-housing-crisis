@@ -250,7 +250,11 @@ National annual series, 1995 to 2025, from national accounts and the labour forc
     pandemic) in one country. Removing 2020-2022 changes nothing (+1.0, −2.1), but wages and unemployment move together
     with credit, rates and expectations, none of which are separated here.
 
-Tables: `wages_prices_levels.csv`, `price_growth_fundamentals.csv`.
+    Rents (the OECD index of all leases) move far less: since 2013 real rents are up 16% against 129% for prices. A year's real rent growth goes with +0.3 points per point of real wage growth [+0.0, +0.7] against +1.0 for prices,
+    nothing with unemployment alone (−0.1 [−0.8, +0.5]), and nothing a year later (+0.1 [−0.1, +0.4], R2 0.03). Adding GDP growth lifts the fit (R2 0.56) but with a negative GDP sign (−0.4 [−0.7, −0.2]), possibly the 2008-2013
+    recession and the 2012 change in the lease law at one end of a 30-year sample, not a demand story. The index follows the stock of leases, so it understates what new tenants pay (`p4_05`, data quality).
+
+Tables: `wages_prices_levels.csv`, `price_growth_fundamentals.csv`, `rent_growth_fundamentals.csv`.
 
 ## Age structure (`p2_11_age_structure`)
 
@@ -354,7 +358,7 @@ Tables: `nationality_group_sizes.csv`, `nationality_regressions_pti.csv`, `natio
   2016 and 2024, one boom, and the contrast within regions rests on 9 regions.
 - **Wages and the labour market.** Thirty yearly observations, one economy; compensation per employee does not hold hours
   or the mix of jobs fixed and is not the income of buyers (who are older, richer and more often foreign than the
-  average employee); Newey-West errors with two lags are approximate at this length. Rents are not analysed.
+  average employee); Newey-West errors with two lags are approximate at this length. Rents are the OECD index of all leases, which lags what new tenants pay.
 - **Missing municipalities.** 12 municipalities have no price-to-income for 2016 or 2024 and are left out (hatched on
   the map); their neighbours' weights are re-standardised without them.
 

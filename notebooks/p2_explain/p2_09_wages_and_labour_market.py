@@ -88,6 +88,29 @@ style.save_table(fits.round(3), "p2", "price_growth_fundamentals")
 fits.round(2)
 
 # %% [markdown]
+# ## Step 3 — And rents?
+# The same regressions with the real growth of the OECD rent index as the outcome. The index covers every lease, old regulated
+# ones included, so it moves slowly (see `data_quality.md`): it says how the rent of the whole stock of leases follows wages and
+# unemployment, not what a new tenant pays.
+
+# %%
+rent_specs = {
+    "lag 0: wages": dict(xs=real[:1]),
+    "lag 0: wages, unemployment": dict(xs=real[:2]),
+    "lag 0: wages, unemployment, GDP": dict(xs=real),
+    "lag 1: wages, unemployment": dict(xs=real[:2], lag=1),
+}
+rent_fits = pd.concat(
+    {
+        name: macro.fundamentals(annual, y="rent_growth_real_pct", **kw)
+        for name, kw in rent_specs.items()
+    },
+    names=["specification"],
+).reset_index()
+style.save_table(rent_fits.round(3), "p2", "rent_growth_fundamentals")
+rent_fits.round(2)
+
+# %% [markdown]
 # ## Key numbers
 
 # %%
@@ -103,3 +126,13 @@ for name, grp in fits.groupby("specification", sort=False):
         f"{r.term} {r.coef:+.2f} [{r.ci_low:+.2f}, {r.ci_high:+.2f}]" for r in grp.itertuples()
     )
     print(f"{name} (R2 {grp['r2'].iloc[0]:.2f}, n {grp['n'].iloc[0]}): {cells}")
+r = annual
+print(
+    f"real rents (all leases) since {low}: {100 * (r['rent_real_b2015'].iloc[-1] / r.loc[low, 'rent_real_b2015'] - 1):+.0f}% "
+    f"against prices {100 * (a['hpi_real_b2015'].iloc[-1] / a.loc[low, 'hpi_real_b2015'] - 1):+.0f}%"
+)
+for name, grp in rent_fits.groupby("specification", sort=False):
+    cells = ", ".join(
+        f"{r_.term} {r_.coef:+.2f} [{r_.ci_low:+.2f}, {r_.ci_high:+.2f}]" for r_ in grp.itertuples()
+    )
+    print(f"rents, {name} (R2 {grp['r2'].iloc[0]:.2f}, n {grp['n'].iloc[0]}): {cells}")

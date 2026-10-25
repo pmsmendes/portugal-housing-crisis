@@ -112,6 +112,14 @@ def test_annual_frame_rebases_wages_and_ratio_to_2015():
     )
 
 
+def test_annual_frame_adds_real_rent_growth_only_when_rents_are_given():
+    long, macro_tbl = _annual()
+    assert "rent_growth_real_pct" not in macro.annual_frame(long, macro_tbl)
+    long["rent_real_b2015"] = 100 * 1.02 ** np.arange(len(long))
+    d = macro.annual_frame(long, macro_tbl)
+    assert d["rent_growth_real_pct"].iloc[1:].to_numpy() == pytest.approx(100 * np.log(1.02))
+
+
 def test_fundamentals_recovers_planted_wage_coefficient_and_lag():
     long, macro_tbl = _annual(n=200)
     d = macro.annual_frame(long, macro_tbl)

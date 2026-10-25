@@ -1,0 +1,9 @@
+specification,term,coef,ci_low,ci_high,p_value,r2,n
+lag 0: wages,wage_growth_real_pct,0.355,0.106,0.604,0.005,0.238,30
+"lag 0: wages, unemployment",wage_growth_real_pct,0.339,0.027,0.651,0.033,0.245,30
+"lag 0: wages, unemployment",unemployment_change_pp,-0.134,-0.791,0.523,0.69,0.245,30
+"lag 0: wages, unemployment, GDP",wage_growth_real_pct,0.436,0.204,0.667,0.0,0.564,30
+"lag 0: wages, unemployment, GDP",unemployment_change_pp,-0.644,-1.277,-0.011,0.046,0.564,30
+"lag 0: wages, unemployment, GDP",gdp_growth_pct,-0.442,-0.695,-0.189,0.001,0.564,30
+"lag 1: wages, unemployment",wage_growth_real_pct,0.125,-0.127,0.376,0.332,0.033,29
+"lag 1: wages, unemployment",unemployment_change_pp,-0.048,-0.458,0.363,0.82,0.033,29
