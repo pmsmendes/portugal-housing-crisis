@@ -472,3 +472,31 @@ def test_peers_policy_mix_title_ranks_portugal_on_each_indicator():
     title = _title(charts.peers_policy_mix(table, names))
     assert "1st of 5 on price growth" in title and "3rd of 5 on property tax" in title
     assert "4th of 5 on housing support" in title
+
+
+def test_vacancy_vs_shortfall_title_quotes_the_full_and_the_quarter_usable_coverage():
+    groups = pd.DataFrame(
+        {
+            "excess_n": [70_000.0, 110_000.0, 240_000.0],
+            "shortfall_n": [5_000.0, 26_000.0, 164_000.0],
+            "coverage_pct": [100.0, 100.0, 87.0],
+        },
+        index=pd.Index(["low", "mid", "high"]),
+    )
+    top = pd.DataFrame(
+        {
+            "name": ["Lisboa", "Sintra"],
+            "vacancy_2021_pct": [15.0, 9.0],
+            "excess_n": [31_000.0, 8_000.0],
+            "shortfall_n": [19_000.0, 12_000.0],
+        }
+    )
+    sens = pd.DataFrame(
+        {
+            "frictional_pct": [5.0, 5.0],
+            "usable_share": [1.0, 0.25],
+            "coverage_pct": [89.0, 41.0],
+        }
+    )
+    title = _title(charts.vacancy_vs_shortfall(groups, top, sens))
+    assert "89%" in title and "41%" in title

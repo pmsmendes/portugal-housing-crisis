@@ -38,7 +38,7 @@ available, so a credible answer to "what would change affordability?" needs a po
 
 **Contents:** spatial autocorrelation (`p2_01`), fixed-effects regressions with foreign residents
 (`p2_02`, RQ3.3, RQ5.1), spillover tests (`p2_03`, RQ4.4), segmentation (`p2_04`, RQ4.6), supply against demand
-(`p2_05`, RQ2.1 to RQ2.4, RQ3.4, RQ4.5), second homes (`p2_06`, RQ5.3, RQ5.4) the synthesis (`p2_07`, RQ3.6), mortgage rates (`p2_08`, RQ1.7, RQ9.2, RQ9.5), wages and the labour market (`p2_09`, RQ9.1, RQ1.4), big municipalities against their surroundings (`p2_10`, RQ4.3), age structure (`p2_11`, RQ3.5) mortgage credit and household debt (`p2_12`, RQ9.2, RQ9.3) what wages and rates could finance (`p2_13`, RQ9.4) and foreign residents by nationality group (`p2_14`, RQ3.3).
+(`p2_05`, RQ2.1 to RQ2.4, RQ3.4, RQ4.5), second homes (`p2_06`, RQ5.3, RQ5.4) the synthesis (`p2_07`, RQ3.6), mortgage rates (`p2_08`, RQ1.7, RQ9.2, RQ9.5), wages and the labour market (`p2_09`, RQ9.1, RQ1.4), big municipalities against their surroundings (`p2_10`, RQ4.3), age structure (`p2_11`, RQ3.5) mortgage credit and household debt (`p2_12`, RQ9.2, RQ9.3) what wages and rates could finance (`p2_13`, RQ9.4) and foreign residents by nationality group (`p2_14`, RQ3.3) and vacant dwellings against the shortfall (`p2_16`, RQ2.5).
 
 ## Key findings
 
@@ -327,6 +327,19 @@ Completed family dwellings by number of bedrooms against private households by n
 
 Tables: `households_and_completions_by_size.csv`, `completion_shares_by_bedrooms.csv`, `small_dwelling_gap_by_density.csv`, `small_dwelling_gap_association.csv`, `small_dwelling_gap_terciles.csv`. Limits: a nominal pairing, flows only (who lives in the existing T3s is not observed: the households that left large sizes may have freed them), 2011-2021 completions against two census dates, flats against houses not covered.
 
+## Vacant dwellings against housing pressure (`p2_16_vacant_dwellings`)
+
+![Vacancy against the shortfall](figures/p2/vacancy_vs_shortfall.png)
+
+Census vacant dwellings (2011, 2021) against the household shortfall of `p2_05` (implied new households 2021-2023 minus completions, floored at zero), municipality by municipality (RQ2.5). Only vacancy above a frictional 5% of the stock counts (3% and 8% as checks); a vacant home helps only in the municipality where it stands.
+
+46. **Vacancy barely moved, but left the cities.** Vacant dwellings 735,000 (12.5% of the stock, 2011) to 723,000 (12.1%, 2021). Urban municipalities lost 42,000 (12.3% to 10.4%), intermediate ones gained 1,000 and rural ones 28,000 (13.0% to 14.6%). Vacancy is highest where prices are lowest (Spearman -0.39 with 2024 price-to-income).
+47. **On paper, vacant homes are enough where they are needed.** Above 5%, 425,000 dwellings are excess vacancy, against a shortfall of 195,000 in 2021-2023; counted municipality by municipality, excess vacancy could house 174,000 of it (89%): 100% in the low and middle price-to-income terciles, 87% in the high one, which holds 164,000 of the shortfall.
+48. **The answer hangs on how much is usable.** With a quarter of the excess usable the coverage falls to 41%; at frictional levels of 3% and 8% it is 51% and 24%. Local coverage reaches half of the shortfall when a third of the excess is usable (5%) and three quarters when 60% is; at an 8% frictional level three quarters cannot be reached. Nothing in the data says what share of vacant homes is habitable, for sale or let, or worth the repair (the simulator prices a renovation at about 17,000 to 101,000 EUR a unit, assumed).
+49. **The largest shortfalls are in the suburbs, where vacancy is lowest.** Ten municipalities hold 40% of the shortfall; Lisboa, Porto and Cascais could cover theirs, but Sintra (67%), Amadora (52%), Odivelas (41%) and Seixal (44%), at 8% to 9% vacancy, could not. Lisboa and Porto hold the most excess (32,000 and 14,000, at 15% vacancy), a stock the census cannot tell apart from short-term lets, second homes and homes awaiting works.
+
+Tables: `vacancy_by_density.csv`, `vacancy_by_price_pressure.csv`, `vacancy_largest_shortfalls.csv`, `vacancy_sensitivity.csv`, `vacancy_usable_share_needed.csv`. Limits: census dates ten years apart, the shortfall is the `p2_05` proxy (implied households, no demolitions), a frictional level that is assumed, and a count of dwellings, not of homes anyone could move into.
+
 ## Limitations
 
 - **A pattern, not a mechanism.** Spatial autocorrelation does not show that price changes spill over: shared
@@ -377,4 +390,4 @@ Tables: `households_and_completions_by_size.csv`, `completion_shares_by_bedrooms
 ## Questions answered
 
 RQ4.3 (large municipalities rose most, less further out; Lisboa itself less than its suburbs), RQ4.4 (little evidence of spillovers beyond the regional pattern), RQ4.6 (coastal and urban, not tourism as such), RQ2.1 to
-RQ3.5 (ageing and the 25-44 pool add nothing beyond the foreign-resident change; internal migration and single-person households not observable), RQ2.3 and RQ4.5 (supply against households) and RQ5.4 (second homes separated) are answered; RQ3.6 is answered as far as these data allow (demand differences cannot be told from the regional pattern); RQ3.3, RQ5.1, RQ5.3, RQ1.7, RQ9.1, RQ9.2 and RQ9.5 are partly answered; RQ1.4 is answered (income and wages) (see [research_questions](../docs/research_questions.md)).
+RQ3.5 (ageing and the 25-44 pool add nothing beyond the foreign-resident change; internal migration and single-person households not observable), RQ2.3 and RQ4.5 (supply against households) and RQ5.4 (second homes separated) are answered; RQ3.6 is answered as far as these data allow (demand differences cannot be told from the regional pattern); RQ2.5, RQ3.3, RQ5.1, RQ5.3, RQ1.7, RQ9.1, RQ9.2 and RQ9.5 are partly answered; RQ1.4 is answered (income and wages) (see [research_questions](../docs/research_questions.md)).

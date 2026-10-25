@@ -37,6 +37,9 @@ EXPECTED_APPRECIATION_PCT = 2.0  # yearly nominal price growth with flat real pr
 IMI_URBAN_MIN_PCT = (
     0.30  # legal floor of the municipal urban IMI rate (CIMI); no rate in 2012-2025 is lower
 )
+# Vacancy (analysis/vacancy.py): the share of dwellings that are vacant at any time because homes are being sold, let,
+# inherited or repaired; vacancy above it is "excess". An assumption, shown with sensitivity (3 and 8).
+FRICTIONAL_VACANCY_PCT = 5.0
 # Benchmark dwelling for the fixed-size variants of PTI / RTI (comparable across municipalities).
 BENCHMARK_AREA_SQM = 100
 

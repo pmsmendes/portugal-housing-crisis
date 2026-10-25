@@ -2405,3 +2405,57 @@ def age_structure(profile: pd.DataFrame, groups: pd.DataFrame) -> Figure:
     )
     fig.subplots_adjust(left=0.07, right=0.97, wspace=0.28)
     return fig
+
+
+def vacancy_vs_shortfall(groups: pd.DataFrame, top: pd.DataFrame, sens: pd.DataFrame) -> Figure:
+    """Excess vacancy against the household shortfall by price pressure (left) and in the largest shortfalls (right).
+
+    ``groups`` is ``vacancy.by_group`` by price-to-income tercile (rows low, mid, high), ``top`` is
+    ``vacancy.largest_shortfalls`` (municipalities in rank order) and ``sens`` ``vacancy.sensitivity``; the title
+    quotes the coverage at the default frictional level with all and a quarter of the excess usable.
+    """
+    fig, (left, right) = plt.subplots(1, 2, figsize=(11, 4.8), gridspec_kw={"width_ratios": [5, 6]})
+    x = np.arange(len(groups))
+    width = 0.38
+    excess_k, short_k = groups["excess_n"] / 1000, groups["shortfall_n"] / 1000
+    left.bar(x - width / 2, excess_k, width, color=ORANGE, zorder=3)
+    left.bar(x + width / 2, short_k, width, color=BLUE, zorder=3)
+    for pos, value in zip(x - width / 2, excess_k, strict=True):
+        left.annotate(f"{value:,.0f}k", (pos, value), xytext=(0, 4), textcoords="offset points",
+                      ha="center", va="bottom", fontsize=8.5, color=INK)  # fmt: skip
+    for pos, value in zip(x + width / 2, short_k, strict=True):
+        left.annotate(f"{value:,.0f}k", (pos, value), xytext=(0, 4), textcoords="offset points",
+                      ha="center", va="bottom", fontsize=8.5, color=INK)  # fmt: skip
+    left.set_xticks(x)
+    labels = [f"{g}\nprice-to-income\ncovered {c:.0f}%" for g, c in zip(groups.index, groups["coverage_pct"], strict=True)]  # fmt: skip
+    left.set_xticklabels(labels)
+    left.set_ylim(0, max(excess_k.max(), short_k.max()) * 1.3)
+    _legend(left, [Patch(facecolor=ORANGE, label="Excess vacant dwellings, 2021"),
+                   Patch(facecolor=BLUE, label="Shortfall of homes, 2021-2023")], loc="upper left")  # fmt: skip
+    _panel_title(left, "By price pressure, 2024 terciles (thousands)")
+
+    y = np.arange(len(top))[::-1]
+    right.barh(y + 0.19, top["excess_n"] / 1000, 0.36, color=ORANGE, zorder=3)
+    right.barh(y - 0.19, top["shortfall_n"] / 1000, 0.36, color=BLUE, zorder=3)
+    for pos, vacancy_pct, big in zip(
+        y, top["vacancy_2021_pct"], top[["excess_n", "shortfall_n"]].max(axis=1), strict=True
+    ):
+        right.annotate(f"{vacancy_pct:.0f}% vacant", (big / 1000, pos), xytext=(6, 0), textcoords="offset points",
+                       va="center", fontsize=8.5, color=INK_2)  # fmt: skip
+    right.set_yticks(y, top["name"], color=INK_2, fontsize=9.5)
+    right.set_xlim(0, top[["excess_n", "shortfall_n"]].to_numpy().max() / 1000 * 1.3)
+    right.set_ylim(-0.7, len(top) - 0.3)
+    _panel_title(right, "The ten municipalities with the largest shortfall (thousands)")
+
+    def pick(share: float) -> float:
+        row = sens[(sens["frictional_pct"] == 5.0) & (sens["usable_share"] == share)]
+        return row["coverage_pct"].iloc[0]
+
+    return style.finish(
+        fig,
+        f"On paper excess vacancy could house {pick(1.0):.0f}% of the shortfall where it arises; if a quarter is usable, {pick(0.25):.0f}%",
+        "Vacant dwellings above a 5% frictional level (census 2021) against implied new households minus completions (2021-2023), municipality by municipality",
+        "Source: INE (census 2021, population estimates, completions), own calculations. Vacancy is not condition or availability; the shortfall is a proxy.",
+        head_in=1.3,
+        foot_in=0.95,
+    )

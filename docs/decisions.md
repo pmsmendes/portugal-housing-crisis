@@ -2,6 +2,12 @@
 
 Analytic and engineering choices, newest first. One short entry each: what, why, alternatives rejected.
 
+## 2026-10-25 — Vacant dwellings: excess over a frictional level, matched locally
+- **What:** `analysis/vacancy.py`; excess vacancy = vacant dwellings above `FRICTIONAL_VACANCY_PCT` (5% of the stock, `config.py`; 3% and 8% as checks); the household shortfall of 2021-2023 (implied households minus completions, floored at zero) is matched with excess vacancy municipality by municipality; the usable share of the excess is varied (100%, 50%, 25%) and inverted (`usable_share_for`), never assumed.
+- **Why:** the census gives counts of vacant homes but no condition, ownership or availability, so the one defensible bound is what could house the shortage where it arises. Every market has some vacancy (turnover, sales, inheritance, works), and a surplus in one municipality cannot house households in another.
+- **Reading:** an upper bound on what vacancy could do, not a forecast; the 5% level is an assumption (not an estimate for Portugal), and the shortfall is the `p2_05` proxy.
+- **Rejected:** counting all 723,000 vacant dwellings as available; a national comparison of vacant homes with the shortfall (hides that vacancy is in the interior); estimating a usable share from the data (none observed); regressing prices on vacancy (second homes and rentals are in the same census category).
+
 ## 2026-10-25 — Peer comparison of taxes, spending and prices
 - **What:** `eurostat_property_tax_peers` (D29A and D214C, generic column names) beside the Portugal-only IMI/IMT table; `analysis/peers.py` joins price change, mean recurrent property tax and mean housing support over 2015-2024.
 - **Why separate tables:** the existing table names its columns after the Portuguese taxes (IMI, IMT), which would mislead for other countries; a generic peer table keeps both honest.
