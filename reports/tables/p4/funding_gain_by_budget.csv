@@ -1,0 +1,11 @@
+budget,eur_m_a_year,lever,units_a_year,gain_p10,gain_p50,gain_p90,gain_share_of_rise_pct,cost_eur_p50
+"Surcharge, 25% of excess classified vacant",55.3,extra completions,2212.0,0.043,0.061,0.083,1.33,635001053.021
+"Surcharge, 25% of excess classified vacant",55.3,renovated vacant homes,1106.0,0.026,0.036,0.05,0.787,545297180.315
+"Surcharge, 50% of excess classified vacant",110.6,extra completions,4424.0,0.085,0.122,0.166,2.656,1270002106.042
+"Surcharge, 50% of excess classified vacant",110.6,renovated vacant homes,2212.0,0.052,0.072,0.099,1.573,1090594360.63
+"Surcharge, 100% of excess classified vacant",221.2,extra completions,8848.0,0.17,0.242,0.329,5.291,2540004212.084
+"Surcharge, 100% of excess classified vacant",221.2,renovated vacant homes,4424.0,0.104,0.144,0.198,3.139,2181188721.259
+10% more housing spending,161.46,extra completions,6458.4,0.124,0.177,0.241,3.87,1854019349.381
+10% more housing spending,161.46,renovated vacant homes,3229.2,0.076,0.105,0.145,2.294,1592109995.183
+Reference of p4_02,500.0,extra completions,20000.0,0.382,0.542,0.734,11.833,5741420009.232
+Reference of p4_02,500.0,renovated vacant homes,10000.0,0.235,0.323,0.443,7.051,4930354252.395

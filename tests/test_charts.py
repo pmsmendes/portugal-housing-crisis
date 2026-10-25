@@ -514,3 +514,23 @@ def test_vacant_surcharge_title_gives_the_revenue_range_and_the_median_bite():
         and "3% to 13% of IMI" in title
         and "5% of a year's rent" in title
     )
+
+
+def test_funding_gain_title_quotes_the_full_surcharge_gain_and_the_baseline_rise():
+    rows = []
+    for budget, eur in (("Surcharge, 100% of excess", 221.0), ("Reference", 500.0)):
+        for lever, scale in (("extra completions", 1.0), ("renovated vacant homes", 0.6)):
+            gain = 0.001 * eur * scale
+            rows.append(
+                {
+                    "budget": budget,
+                    "eur_m_a_year": eur,
+                    "lever": lever,
+                    "units_a_year": 1000.0,
+                    "gain_p10": 0.8 * gain,
+                    "gain_p50": gain,
+                    "gain_p90": 1.2 * gain,
+                }
+            )
+    title = _title(charts.funding_gain(pd.DataFrame(rows), 4.58))
+    assert "0.22 years" in title and "4.6-year" in title

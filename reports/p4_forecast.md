@@ -238,6 +238,18 @@ Tables: `rent_forecast_accuracy_by_horizon.csv`, `rent_forecast_accuracy_summary
 - **38 annual points, one country, one regime change** (the 2012 rent-law reform); intervals for price-to-rent are too narrow.
 - **Stock of leases, not new leases**; no national new-lease series before 2020.
 
+## What identified money buys (`p4_06`, RQ8.4, RQ8.6)
+
+![Funding the levers](figures/p4/funding_gain.png)
+
+`p4_02` ranks the levers per euro but takes the budget as given. Here each budget has a source: the vacant-home surcharge of `p3_08` (an upper bound on revenue; municipal money), a 10% rise in housing spending (development plus allowances, 1,615 EUR m in 2024) and the 0.5 billion EUR a year reference of `p4_02`. Each is spent from 2027 on one lever at mid unit cost in the baseline scenario; the gain is the fall in the 2035 median price-to-income (80% range over 1,000 draws), set against the baseline's rise of 4.6 years (10.6 in the start year).
+
+- **The money in sight buys little.** The surcharge revenue of 55, 111 and 221 EUR m a year buys 2,200, 4,400 and 8,800 extra completions a year, lowering 2035's ratio by 0.06, 0.12 and 0.24 years (1.3%, 2.7% and 5.3% of the rise); spent on renovating vacant homes it buys half the homes and lowers the ratio by 0.04, 0.07 and 0.14 years. A 10% rise in housing spending (161 EUR m) gives 0.18 years (3.9% of the rise) on completions.
+- **It scales with the money.** Gain per euro is the same at every size (0.24 years for 221 EUR m, 0.54 for 500), so the allocation rule of `p4_02` holds here too: the whole budget goes to the lever with the largest gain per euro, extra completions at mid costs, renovation second, public housing last, and the order flips at the high end of the unit costs (`unit_cost_check.csv`).
+- **What it does not measure.** The indicator is the ownership ratio of a median municipality, so it gives public housing no credit for housing its tenants directly, and renovation none for the vacant stock it removes. The gains are modelled with assumed parameters, and the surcharge raises its money only if owners do not respond, which is its purpose; the net revenue may be much less.
+
+Tables: `funding_gain_by_budget.csv`. Limits: baseline scenario only, one lever at a time, mid unit costs, no source-side behaviour (the surcharge, the central budget) and no tax lever (cuts raise the ratio, `p4_02`).
+
 ## Next
 
 Rents and a tenure split in the simulator; a price-to-supply feedback once there is an estimate of the supply response; feeding the regional ranking into the simulator's median

@@ -2502,3 +2502,49 @@ def vacant_surcharge(table: pd.DataFrame, bite: pd.Series, national_imi_eur_m: f
         head_in=1.3,
         foot_in=0.9,
     )
+
+
+def funding_gain(result: pd.DataFrame, baseline_rise_years: float) -> Figure:
+    """Fall in the end-year price-to-income for each budget and lever, with its 80% range over the draws.
+
+    ``result`` has one row per budget and lever (``funding.gain_for_budget`` plus ``budget``, ``eur_m_a_year`` and
+    ``lever``: "extra completions" or "renovated vacant homes"); ``baseline_rise_years`` is the rise of the baseline over
+    the horizon, quoted in the title as the yardstick.
+    """
+    fig, ax = plt.subplots(figsize=(11, 4.8))
+    budgets = list(dict.fromkeys(result["budget"]))
+    y = np.arange(len(budgets))[::-1]
+    for offset, lever, color in (
+        (0.19, "extra completions", ORANGE),
+        (-0.19, "renovated vacant homes", BLUE),
+    ):
+        d = result[result["lever"] == lever].set_index("budget").loc[budgets]
+        ax.barh(y + offset, d["gain_p50"], 0.36, color=color, zorder=3)
+        ax.errorbar(d["gain_p50"], y + offset, xerr=[d["gain_p50"] - d["gain_p10"], d["gain_p90"] - d["gain_p50"]],
+                    fmt="none", ecolor=INK_2, elinewidth=1, capsize=3, zorder=4)  # fmt: skip
+        for pos, high, value, units in zip(
+            y + offset, d["gain_p90"], d["gain_p50"], d["units_a_year"], strict=True
+        ):
+            ax.annotate(f"{value:.2f} yrs, {units:,.0f} homes a year", (high, pos), xytext=(6, 0),
+                        textcoords="offset points", va="center", fontsize=8.5, color=INK_2)  # fmt: skip
+    labels = [
+        f"{b}\n{result.loc[result['budget'] == b, 'eur_m_a_year'].iloc[0]:,.0f} EUR m a year"
+        for b in budgets
+    ]
+    ax.set_yticks(y, labels, color=INK_2, fontsize=9.5)
+    ax.set_xlim(0, result["gain_p90"].max() * 2.0)
+    ax.set_ylim(-0.7, len(budgets) - 0.3)
+    ax.set_xlabel(
+        "Fall in 2035 price-to-income, years of income (median and 80% range)", color=INK_2
+    )
+    _legend(ax, [Patch(facecolor=ORANGE, label="Extra completions"),
+                 Patch(facecolor=BLUE, label="Renovated vacant homes")], loc="lower right")  # fmt: skip
+    best = result[result["budget"].str.startswith("Surcharge, 100%")]["gain_p50"].max()
+    return style.finish(
+        fig,
+        f"Building with the whole vacant-home surcharge cuts 2035 price-to-income by {best:.2f} years of a {baseline_rise_years:.1f}-year rise",
+        "Baseline scenario, budgets from 2027 to 2035 at mid unit costs, one lever at a time; behavioural parameters are the simulator's assumptions",
+        "Source: simulator (p4_02), surcharge revenue (p3_08), Eurostat (government spending by function), own calculations. Modelled, not estimated.",
+        head_in=1.3,
+        foot_in=0.9,
+    )

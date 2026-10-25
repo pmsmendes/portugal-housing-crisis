@@ -2,6 +2,12 @@
 
 Analytic and engineering choices, newest first. One short entry each: what, why, alternatives rejected.
 
+## 2026-10-25 — Funding the levers from identified sources
+- **What:** `simulation/funding.py` (`gain_for_budget`) runs the simulator for a yearly budget at mid unit costs with and without it on the same draws; `p4_06` uses the surcharge revenue (`p3_08`), 10% of 2024 housing spending (`p3_06`) and the 0.5 bn EUR reference of `p4_02`.
+- **Why:** `p4_02` takes the budget as given; tying it to sources that exist in the project says what the policy room is worth in affordability terms.
+- **Reading:** the gain is as modelled in the simulator (assumed parameters), and a source is not modelled: the surcharge revenue is an upper bound that ignores owners' response, municipal not central money.
+- **Rejected:** netting the revenue against the cost of enforcement or the response of owners (no estimate); mixing sources and levers (the model is linear, so one lever at a time loses nothing at mid costs).
+
 ## 2026-10-25 — Vacant-home surcharge as bottom-up IMI scaled to the national total
 - **What:** `revenue.imi_per_dwelling` (taxable share x price per m2 x census area x urban rate), `calibration` (scale to national-accounts IMI, 2024), `vacant_surcharge` (excess vacant homes x classified share x (multiple - 1) x typical bill), `surcharge_bite` (extra tax over a year's rent). `VACANT_IMI_MULTIPLE = 3` in `config.py` (CIMI art. 112(3), the multiple used by councils in 2017).
 - **Why:** municipal IMI revenue and assessed values are not in the data (`data_quality`), so the typical bill is built from prices and rates and anchored to the one revenue total that exists. The classified share is varied (25%, 50%, 100%) because the census does not say which vacant homes meet the legal test.

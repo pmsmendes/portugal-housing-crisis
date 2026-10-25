@@ -5,7 +5,7 @@ import yaml
 
 from pthousing.features import affordability as aff
 from pthousing.simulation import engine as E
-from pthousing.simulation import fiscal, scenarios, supply
+from pthousing.simulation import fiscal, funding, scenarios, supply
 
 A = scenarios.load()
 
@@ -253,3 +253,15 @@ def test_sensitivity_covers_every_parameter_and_scenario_input(anc):
     assert (
         flex["high_pti_gain"] > flex["low_pti_gain"]
     )  # a stiffer price response magnifies the lever
+
+
+def test_gain_for_budget_buys_units_at_mid_cost_and_gains_scale_with_the_budget(anc):
+    p = E.draw(A, 40)
+    small = funding.gain_for_budget(A, anc, "baseline", p, 1e8, {"construction_boost_units": 1.0})
+    large = funding.gain_for_budget(A, anc, "baseline", p, 4e8, {"construction_boost_units": 1.0})
+    unit = A.ranges["construction_boost.cost_per_unit_eur"].mid
+    assert small["construction_boost_units"] == pytest.approx(1e8 / unit)
+    assert small["vacant_renovation_units"] == 0
+    assert 0 < small["gain_p10"] <= small["gain_p50"] <= small["gain_p90"]
+    assert large["gain_p50"] > 2 * small["gain_p50"]  # a larger budget buys more
+    assert np.isnan(small["gain_share_of_rise_pct"])  # the synthetic baseline does not rise
