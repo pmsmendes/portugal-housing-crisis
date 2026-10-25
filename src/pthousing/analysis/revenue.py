@@ -15,6 +15,7 @@ reads files.
 import numpy as np
 import pandas as pd
 
+from pthousing.config import BENCHMARK_AREA_SQM, IMI_URBAN_MIN_PCT
 from pthousing.data.harmonize import annual_deflator
 
 BASE = 2015  # index base of the annual frame, as in ``macro.annual_frame``
@@ -93,5 +94,75 @@ def decompose_imi(frame: pd.DataFrame, start: int, end: int) -> pd.Series:
             "base": base,
             "price": change["hpi_nominal_b2015"],
             "gap": base - change["hpi_nominal_b2015"],
+        }
+    )
+
+
+def imi_headroom(
+    panel: pd.DataFrame,
+    year: int,
+    weight: str = "dwellings_2021_n",
+    floor: float = IMI_URBAN_MIN_PCT,
+) -> pd.Series:
+    """How far councils can cut the urban IMI rate within the legal floor, nationally, in a year.
+
+    Municipalities with a single rate that year, weighted by ``weight``. Returns the number of municipalities, how many
+    sit at the floor, the average rate, the headroom (average of rate minus floor, in pp) and that headroom as a share
+    of the average rate: the largest cut of the bill that councils can make without a change of the law.
+    """
+    d = panel.loc[panel["year"] == year].dropna(subset=["imi_urban_pct", weight])
+    average = np.average(d["imi_urban_pct"], weights=d[weight])
+    room = np.average((d["imi_urban_pct"] - floor).clip(lower=0), weights=d[weight])
+    return pd.Series(
+        {
+            "municipalities_n": len(d),
+            "at_floor_n": int((d["imi_urban_pct"] <= floor + 1e-9).sum()),
+            "average_rate_pct": average,
+            "headroom_pp": room,
+            "headroom_share": room / average,
+        }
+    )
+
+
+def dwelling_sales_value(panel: pd.DataFrame, year: int) -> float:
+    """Value of dwellings sold in a year, EUR in constant base-year euros.
+
+    Transactions over twelve months times the median price per m² times the benchmark dwelling of
+    ``BENCHMARK_AREA_SQM``: a benchmark, not the registered value of sales, and dwellings only. NaN when the
+    year has no sales (the panel has them from 2019).
+    """
+    sold = panel.loc[panel["year"] == year]
+    value = (sold["sales_12m_n"] * sold["price_sqm_eur_real"]).sum(min_count=1)
+    return float(value * BENCHMARK_AREA_SQM)
+
+
+def offset_growth(cut_share: float) -> float:
+    """Growth of the base that restores the revenue lost to a cut of ``cut_share`` of the bill (a fraction).
+
+    Revenue is rate times base, so a cut of a share c of the bill needs the base to grow by c / (1 - c).
+    """
+    return cut_share / (1 - cut_share)
+
+
+def capped_cut(
+    panel: pd.DataFrame,
+    year: int,
+    cut_pp: float,
+    weight: str = "dwellings_2021_n",
+    floor: float = IMI_URBAN_MIN_PCT,
+) -> pd.Series:
+    """Average cut that results if every council cuts its urban IMI rate by ``cut_pp`` but none goes below the floor.
+
+    Returns the number of municipalities that can make the whole cut, the weighted average cut (pp) and that cut as a
+    share of the weighted average rate: what a uniform cut of ``cut_pp`` delivers inside the current law.
+    """
+    d = panel.loc[panel["year"] == year].dropna(subset=["imi_urban_pct", weight])
+    cut = np.minimum(cut_pp, (d["imi_urban_pct"] - floor).clip(lower=0))
+    average = np.average(cut, weights=d[weight])
+    return pd.Series(
+        {
+            "full_cut_n": int((cut >= cut_pp - 1e-9).sum()),
+            "average_cut_pp": average,
+            "average_cut_share": average / np.average(d["imi_urban_pct"], weights=d[weight]),
         }
     )

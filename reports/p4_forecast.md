@@ -124,6 +124,7 @@ Tables: `policy_effects_baseline.csv`, `policy_gain_by_scenario.csv`, `imi_bound
   modelled; demolitions are a fixed 11% of completions (census 2011 to 2021).
 - **Household and population base.** Households are population over persons per household extrapolated from the census trend; the 2025 population change is assumed equal to 2024's (INE's
   figure for 2025 was not verified); the INE population series was revised between vintages, so only changes are used.
+- **The IMI cut is larger than current law allows.** 0.05 pp is 15% of the bill; the 0.30% floor leaves 8% (`p3_05`). The cost shown is an upper bound for what councils can do today.
 - **Fiscal figures are order-of-magnitude.** IMI revenue (1,630 million EUR, 2024, AT through the press) is scaled by the rate change relative to the simple mean of municipal rates (not
   weighted by the tax base); the IMT base is the value of dwellings sold from the panel, with a 100 m² benchmark dwelling. No behavioural change in transactions or assessed values.
   Costs are not discounted and are in 2024 euros. Unit costs of supply levers come from press reports of PRR projects and a VAT calculation.

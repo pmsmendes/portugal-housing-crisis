@@ -141,6 +141,6 @@ packages:
   construction: {construction_boost_units: 10000}
   renovation: {vacant_renovation_units: 10000}
   public: {public_housing_units: 5000}
-  imi_cut: {imi_rate_change_pp: -0.05}
+  imi_cut: {imi_rate_change_pp: -0.05}   # 15% of the bill; the legal floor (0.30%) leaves 0.027 pp of room today (reports/p3_policy.md, p3_05)
   imt_cut: {imt_rate_change_pp: -1.0}
   supply_mix: {construction_boost_units: 5000, vacant_renovation_units: 5000, public_housing_units: 2500}

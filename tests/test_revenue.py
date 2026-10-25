@@ -78,3 +78,46 @@ def test_changes_reports_percentage_change_per_window():
     d = revenue.annual_frame(tax, cpi, long)
     out = revenue.changes(d, {"a": (2012, 2014)}, ["imt_eur_m"])
     assert out.loc["a", "imt_eur_m"] == pytest.approx(100 * (1.08**2 - 1))
+
+
+def _panel():
+    return pd.DataFrame(
+        {
+            "year": 2025,
+            "imi_urban_pct": [0.30, 0.30, 0.40, np.nan],
+            "dwellings_2021_n": [100.0, 100.0, 200.0, 500.0],
+            "sales_12m_n": [10.0, 20.0, 30.0, 40.0],
+            "price_sqm_eur_real": [1_000.0, 2_000.0, 3_000.0, 4_000.0],
+        }
+    )
+
+
+def test_imi_headroom_counts_the_floor_and_weights_the_gap_to_it():
+    out = revenue.imi_headroom(_panel(), 2025)
+    assert out["municipalities_n"] == 3 and out["at_floor_n"] == 2  # the NaN rate is left out
+    assert out["average_rate_pct"] == pytest.approx((0.3 * 100 + 0.3 * 100 + 0.4 * 200) / 400)
+    assert out["headroom_pp"] == pytest.approx(0.1 * 200 / 400)
+    assert out["headroom_share"] == pytest.approx(out["headroom_pp"] / out["average_rate_pct"])
+
+
+def test_dwelling_sales_value_uses_the_benchmark_dwelling():
+    # (10*1000 + 20*2000 + 30*3000 + 40*4000) * 100 m2
+    assert revenue.dwelling_sales_value(_panel(), 2025) == pytest.approx(300_000 * 100)
+
+
+def test_offset_growth_restores_the_revenue_after_the_cut():
+    for share in (0.05, 0.2, 0.5):
+        assert (1 - share) * (1 + revenue.offset_growth(share)) == pytest.approx(1)
+
+
+def test_capped_cut_never_goes_below_the_floor():
+    out = revenue.capped_cut(_panel(), 2025, 0.05)
+    assert out["full_cut_n"] == 1  # only the 0.40 council can cut 0.05 and stay above 0.30
+    assert out["average_cut_pp"] == pytest.approx(0.05 * 200 / 400)
+    assert revenue.capped_cut(_panel(), 2025, 0.5)["average_cut_pp"] == pytest.approx(
+        revenue.imi_headroom(_panel(), 2025)["headroom_pp"]
+    )
+
+
+def test_dwelling_sales_value_is_nan_without_sales():
+    assert np.isnan(revenue.dwelling_sales_value(_panel().assign(sales_12m_n=np.nan), 2025))

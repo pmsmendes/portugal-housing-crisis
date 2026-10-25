@@ -2,6 +2,12 @@
 
 Analytic and engineering choices, newest first. One short entry each: what, why, alternatives rejected.
 
+## 2026-10-25 — Legal floor for the IMI rate and what it means for the simulator's cut
+- **What:** `config.IMI_URBAN_MIN_PCT` (0.30) and `revenue.imi_headroom` / `capped_cut` measure how far councils can cut inside the law; `p3_05` reports that headroom as 0.027 pp (8.2% of the bill) in 2025, 199 of 300 councils being on the floor. `revenue.dwelling_sales_value` is the one formula for the value of dwellings sold, now also used by the engine (same number).
+- **Why:** the 0.05 pp IMI package of the simulator is 15% of the bill. Data show every rate in 2012-2025 between 0.30% and 0.45%, so a uniform 0.05 pp cut is not available in full to 233 of the 300 councils.
+- **Kept:** the package and its costs (the lever is a policy option that would need a lower floor); the comment in `scenarios.yaml` and the p3 report say so. Rejected: silently capping the lever (it would change published results), and using revenue per council (no municipal revenue exists, so incidence by municipality is not estimated).
+- **Reading:** IMI and IMT are municipal revenue, so "central revenue" is unaffected; the loss is the councils' (the national accounts also hold AIMI, which is the State's).
+
 ## 2026-10-25 — National IMI and IMT revenue from the national accounts
 - **What:** `eurostat_property_tax` takes D29A and D214C of general government from Eurostat (`gov_10a_taxag`) with nominal GDP; `analysis/revenue.py` and `p3_04` read them against house prices and the weighted average municipal IMI rate (fixed 2021 dwelling weights, so only rate changes move it).
 - **Why:** no municipal revenue is machine-readable. The national accounts are a different measure from the simulator's anchors (accrual, not assessed or cash) but agree within 3% for 2024, which supports using the anchors for scale.

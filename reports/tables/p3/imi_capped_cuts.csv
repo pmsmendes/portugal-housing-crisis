@@ -1,0 +1,5 @@
+uniform cut,full_cut_n,average_cut_pp,average_cut_share,revenue_lost_eur_m
+0.01 pp,100.0,0.0047,0.0144,25.9146
+0.02 pp,97.0,0.0092,0.0281,50.6614
+0.03 pp,87.0,0.0132,0.0403,72.7889
+0.05 pp,67.0,0.0197,0.0604,109.0224

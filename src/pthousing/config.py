@@ -34,6 +34,9 @@ BUYING_COSTS_PCT = 6.0  # IMT, stamp duty, notary and registry, share of the pri
 HOLDING_YEARS = 10  # years over which the buying costs are spread
 IMI_TAXABLE_SHARE = 0.6  # taxable value (VPT) as a share of the market price
 EXPECTED_APPRECIATION_PCT = 2.0  # yearly nominal price growth with flat real prices (ECB target)
+IMI_URBAN_MIN_PCT = (
+    0.30  # legal floor of the municipal urban IMI rate (CIMI); no rate in 2012-2025 is lower
+)
 # Benchmark dwelling for the fixed-size variants of PTI / RTI (comparable across municipalities).
 BENCHMARK_AREA_SQM = 100
 

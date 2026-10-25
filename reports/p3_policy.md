@@ -129,6 +129,14 @@ National general-government revenue, accrual basis (Eurostat; no municipal serie
   The base also carries reassessments, exemptions and the additional IMI, so the lag is an upper-level reading, not an assessment ratio.
 - **Scale for a cut.** A 0.01 pp cut of the average rate costs about 55 EUR m a year (linear, 2025). The 2024 anchors of the simulator are within 3% of these series.
 
+### Room for cuts and who pays (`p3_05`, RQ7.2, RQ7.3)
+
+- **The revenue is municipal.** IMI and IMT are municipal revenue (art. 14 of Lei 73/2013, as quoted in the press); the 2023 IMT of the national accounts (1,676 EUR m) is within 1% of the municipal figure reported in the press (1,695), and IMI is 161 EUR m higher, about the size of a State-collected additional IMI (not verified). A rate cut costs councils, not the central budget.
+- **The IMI rate has a floor.** The urban rate is legally between 0.30% and 0.45%, and no municipality is below 0.30% in 2012-2025. Councils at the floor rose from 131 (2012) to **199 of 300 (2025)**. The weighted average gap to the floor is **0.027 pp, 8.2% of the bill (about 147 EUR m)**, down from 19.8% in 2012. That is the largest cut councils can make without a change of the law.
+- **The simulator's IMI cut does not fit that room.** The package cuts the average rate by 0.05 pp (15% of the bill, about 276 EUR m a year). If each council cuts 0.05 pp but none below the floor, only 67 can do it in full and the average cut is 0.020 pp (6.0%, 109 EUR m). The 0.05 pp lever is therefore an assumption about a changed floor, not a cut available today; the cost in `p4_forecast` is an upper bound for current law.
+- **Recovering the loss.** Revenue is rate times base, so a cut of a share c needs the base to grow by c / (1 - c) at the new rate. The full headroom needs +8.9%, which is 22 years of completions (0.41% of the 2021 stock a year, new homes taken to carry the average bill); 0.05 pp everywhere needs +18.1%, 44 years. For IMT, revenue is 5.7% of the benchmark value of dwellings sold in 2024, a 1 pp cut is 18% of it, and dwelling sales value would have to rise at least 21% to pay for it (the lower bound: revenue also holds land, other buildings and stamp duty). The value rose 34% in 2019-2024, mostly through prices, with one year (2021, a rebound from 2020) above 21%. A cut that is capitalised into prices raises the base too, but that response is not estimated here.
+- **The cost is the same in every scenario** (`p4_02`): revenue is held at the level of the base year, so a scenario with higher prices does not raise the bill that a cut applies to. For IMI that is a fair simplification, since the base grew 41 log points against 104 for prices in 2013-2025 (`p3_04`); for IMT, which follows prices and sales, the cost would differ between scenarios.
+
 Revenue is the cost side of a rate cut; the capitalisation result above is the benefit side, and it is inconclusive.
 
 ## Limitations

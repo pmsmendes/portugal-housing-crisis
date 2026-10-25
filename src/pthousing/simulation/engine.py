@@ -26,7 +26,8 @@ from dataclasses import dataclass, field
 import numpy as np
 import pandas as pd
 
-from pthousing.config import BENCHMARK_AREA_SQM, MUNI_KEY, TABLES, YEAR_KEY
+from pthousing.analysis import revenue
+from pthousing.config import MUNI_KEY, TABLES, YEAR_KEY
 from pthousing.data import build_panel
 from pthousing.features import affordability as aff
 from pthousing.simulation import fiscal, supply
@@ -154,8 +155,7 @@ def anchors(
     sigma = (np.log(row["hi80"]) - np.log(row["lo80"])) / (2 * Z80)
 
     sales_year = base  # 2025 transactions are not complete in the panel
-    sold = panel[panel[YEAR_KEY] == sales_year]
-    value = float((sold["sales_12m_n"] * sold["price_sqm_eur_real"]).sum() * BENCHMARK_AREA_SQM)
+    value = revenue.dwelling_sales_value(panel, sales_year)
     rates = panel.loc[panel[YEAR_KEY] == s, "imi_urban_pct"].dropna()
     if rates.empty:
         rates = panel.loc[panel[YEAR_KEY] == base, "imi_urban_pct"].dropna()
