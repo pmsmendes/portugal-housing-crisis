@@ -54,6 +54,10 @@ cols = [
 ]
 levels = pt.loc[years, cols]
 style.save_table(levels.round(2).reset_index(), "p3", "housing_spending_levels")
+series = pt[["housing_development_real_eur_m", "housing_benefits_real_eur_m", "support_gdp_pct"]]
+style.save_table(
+    series.round(2).reset_index(), "p3", "housing_spending_series"
+)  # every year, for the dashboard
 levels.round(2)
 
 # %% [markdown]

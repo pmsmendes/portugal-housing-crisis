@@ -4,6 +4,7 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 import streamlit as st
+from plotly.subplots import make_subplots
 
 from pthousing.analysis.panel import LABELS
 from pthousing.viz import dashboard as D
@@ -412,4 +413,111 @@ with tab_policy:
         f"(`p3_02`). The dashed line is what full capitalisation of the tax saving would imply ({bench:.2f}% per 0.01 pp). "
         f"The data are too noisy to tell: the smallest effect this design could detect is {power['detectable_over_benchmark'].iloc[0]:.0f} "
         "times the benchmark one year after the cut. Phase 4 therefore treats capitalisation as unknown, anywhere from none to full."
+    )
+
+    st.divider()
+    st.subheader("What is at stake: the money")
+    st.markdown(
+        "IMI and IMT are **municipal** revenue, so a cut costs councils, not the central budget. National figures only: "
+        "no municipal revenue series exists (`p3_04`, `p3_05`)."
+    )
+    revenue = table("p3", "property_tax_series").set_index("year")
+    spend = table("p3", "housing_spending_series").set_index("year")
+    left, right = st.columns(2)
+    fig = go.Figure()
+    fig.add_scatter(
+        x=revenue.index,
+        y=revenue["imt_real_eur_m"],
+        name="IMT (with stamp duty)",
+        line=dict(color=style.BLUE),
+    )
+    fig.add_scatter(
+        x=revenue.index, y=revenue["imi_real_eur_m"], name="IMI", line=dict(color=style.ORANGE)
+    )
+    fig.update_yaxes(title="Million euros, constant prices", rangemode="tozero")
+    left.plotly_chart(_style(fig, "Property-tax revenue", 360), width="stretch")
+    left.caption(
+        f"IMT follows the market (+{100 * (revenue.loc[2025, 'imt_real_b2015'] / revenue.loc[2013, 'imt_real_b2015'] - 1):.0f}% real since 2013); "
+        f"IMI has not followed prices (real {100 * (revenue.loc[2025, 'imi_real_eur_m'] / revenue.loc[2019, 'imi_real_eur_m'] - 1):+.0f}% since 2019 "
+        f"while real prices rose {100 * (revenue.loc[2025, 'hpi_real_b2015'] / revenue.loc[2019, 'hpi_real_b2015'] - 1):.0f}%). National accounts, accrual basis."
+    )
+    fig = go.Figure()
+    fig.add_scatter(
+        x=spend.index,
+        y=spend["housing_development_real_eur_m"],
+        name="Housing development",
+        stackgroup="s",
+        line=dict(color=style.BLUE, width=0.5),
+    )
+    fig.add_scatter(
+        x=spend.index,
+        y=spend["housing_benefits_real_eur_m"],
+        name="Allowances and rent subsidies",
+        stackgroup="s",
+        line=dict(color=style.ORANGE, width=0.5),
+    )
+    fig.update_yaxes(title="Million euros, constant prices")
+    right.plotly_chart(_style(fig, "State spending on housing", 360), width="stretch")
+    right.caption(
+        f"{spend.loc[2024, 'support_gdp_pct']:.2f}% of GDP in 2024 ({spend['support_gdp_pct'].min():.2f}% at the low, "
+        f"{spend['support_gdp_pct'].max():.2f}% at the 2001 peak). Spending only: tax expenditures are not included (`p3_06`)."
+    )
+
+    room = table("p3", "imi_headroom").set_index("year")
+    left, right = st.columns(2)
+    fig = go.Figure()
+    fig.add_bar(
+        x=room.index, y=room["at_floor_n"], marker_color=style.BLUE, name="Councils at the floor"
+    )
+    fig.update_yaxes(title="Councils at the 0.30% legal floor", range=[0, 310])
+    left.plotly_chart(
+        _style(fig, "Most councils cannot cut the IMI rate further", 360), width="stretch"
+    )
+    last_room = room.iloc[-1]
+    left.caption(
+        f"{int(last_room['at_floor_n'])} of {int(last_room['municipalities_n'])} councils are at the floor in {int(room.index[-1])}. "
+        f"Without a change of the law the average rate can fall by {last_room['headroom_pp']:.3f} pp, "
+        f"{100 * last_room['headroom_share']:.0f}% of the bill (about {last_room['headroom_eur_m']:.0f} million euros a year; "
+        f"{100 * room['headroom_share'].iloc[0]:.0f}% in {int(room.index[0])}). The simulator's 0.05 pp cut assumes a lower floor (`p3_05`)."
+    )
+    mix = table("p3", "peer_policy_mix").set_index("geo").drop(index="EU27_2020", errors="ignore")
+    names = {
+        "PT": "Portugal",
+        "ES": "Spain",
+        "IT": "Italy",
+        "FR": "France",
+        "DE": "Germany",
+        "IE": "Ireland",
+    }
+    mix = mix.loc[list(names)].sort_values("price_change_pct")
+    panels = (
+        ("price_change_pct", "Prices, %"),
+        ("property_tax_gdp_pct", "Tax, % GDP"),
+        ("housing_support_gdp_pct", "Support, % GDP"),
+    )
+    fig = make_subplots(
+        rows=1,
+        cols=3,
+        shared_yaxes=True,
+        subplot_titles=[t for _, t in panels],
+        horizontal_spacing=0.04,
+    )
+    for i, (col, _) in enumerate(panels, start=1):
+        fig.add_scatter(
+            x=mix[col],
+            y=[names[g] for g in mix.index],
+            mode="markers",
+            marker=dict(
+                size=[13 if g == "PT" else 9 for g in mix.index],
+                color=[style.BLUE if g == "PT" else style.MUTED for g in mix.index],
+            ),
+            showlegend=False,
+            row=1,
+            col=i,
+        )
+        fig.update_xaxes(rangemode="tozero", row=1, col=i)
+    right.plotly_chart(_style(fig, "Portugal against five peers", 360), width="stretch")
+    right.caption(
+        "Prices: nominal change 2015 to 2024. Tax: recurrent property tax; support: housing development plus allowances, both as the mean share of GDP 2015-2024. Italy has no housing-support value (2022-2023 spending far above trend). "
+        "Six countries and three indicators: a comparison, not a test (`p3_07`)."
     )

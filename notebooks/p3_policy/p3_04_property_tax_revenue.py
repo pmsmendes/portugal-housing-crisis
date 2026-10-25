@@ -53,6 +53,12 @@ levels = a.loc[
     years, ["imi_real_eur_m", "imt_real_eur_m", "imi_gdp_pct", "imt_gdp_pct", "hpi_real_b2015"]
 ]
 style.save_table(levels.round(2).reset_index(), "p3", "property_tax_levels")
+series = a[
+    ["imi_real_eur_m", "imt_real_eur_m", "imi_real_b2015", "imt_real_b2015", "hpi_real_b2015"]
+]
+style.save_table(
+    series.round(2).reset_index(), "p3", "property_tax_series"
+)  # every year, for the dashboard
 levels.round(2)
 
 # %% [markdown]
