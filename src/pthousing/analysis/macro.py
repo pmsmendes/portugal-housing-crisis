@@ -104,8 +104,12 @@ def rate_timing(
     own_lag: bool = False,
     lead: bool = False,
     sample: tuple[str, str] | None = None,
+    x_col: str = "rate_change_pp",
 ) -> dict:
     """Price growth over a year on the rate change over the year ``rate_lag`` quarters before.
+
+    ``x_col`` names another four-quarter change to use in place of the rate change (``credit.py`` passes
+    housing-loan growth); the output keys keep their "per pp" names.
 
     With ``rate_lag`` equal to the change window (4) the two windows do not overlap: this year's price growth
     on last year's rate change. ``own_lag`` adds the previous year's price growth (momentum); ``lead`` adds the
@@ -114,13 +118,13 @@ def rate_timing(
     lagged rate change (log points of price per pp), its 95% interval, p-value, the placebo coefficient and n.
     """
     d = changes.copy()
-    d["x"] = d["rate_change_pp"].shift(rate_lag)
+    d["x"] = d[x_col].shift(rate_lag)
     xs = ["x"]
     if own_lag:
         d["y_lag"] = d[y].shift(CHANGE_QUARTERS)
         xs.append("y_lag")
     if lead:
-        d["x_lead"] = d["rate_change_pp"].shift(-CHANGE_QUARTERS)
+        d["x_lead"] = d[x_col].shift(-CHANGE_QUARTERS)
         xs.append("x_lead")
     d = d[[y, *xs]].dropna()
     if sample is not None:

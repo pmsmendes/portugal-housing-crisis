@@ -1,4 +1,4 @@
-"""Banco de Portugal BPstat: mortgage rates, new lending, household debt.
+"""Banco de Portugal BPstat: mortgage rates, new lending (``bp_mortgage``), household debt (``bp_household_debt``).
 
 Series ids are listed in ``config/sources.yaml``. Each series is stored as one raw file
 ``data/raw/bportugal/<series_id>.json`` holding the series metadata and the dataset response filtered to it.
@@ -16,13 +16,14 @@ from pthousing.data.sources.jsonstat import parse_jsonstat
 
 SOURCE_ID = "bportugal"
 DATASET_ID = "bp_mortgage"
+DATASET_IDS = (DATASET_ID, "bp_household_debt")
 HEADERS = {"User-Agent": "pthousing/0.1 (research project)"}  # the default python UA gets a 403
 TIME_DIM = "reference_date"
 
 
-def series_ids() -> dict[str, int]:
-    """Series key -> BPstat series id, from ``config/sources.yaml``."""
-    entry = yaml.safe_load(SOURCES_YAML.read_text(encoding="utf-8"))[SOURCE_ID][DATASET_ID]
+def series_ids(dataset_id: str = DATASET_ID) -> dict[str, int]:
+    """Series key -> BPstat series id of one dataset, from ``config/sources.yaml``."""
+    entry = yaml.safe_load(SOURCES_YAML.read_text(encoding="utf-8"))[SOURCE_ID][dataset_id]
     return {key: int(value) for key, value in entry["series"].items()}
 
 
@@ -57,7 +58,11 @@ def fetch_series(series_id: int, refresh: bool = False) -> Path:
 
 
 def fetch_all(refresh: bool = False) -> list[Path]:
-    return [fetch_series(sid, refresh) for sid in series_ids().values()]
+    return [
+        fetch_series(sid, refresh)
+        for dataset_id in DATASET_IDS
+        for sid in series_ids(dataset_id).values()
+    ]
 
 
 def parse_series(raw: dict) -> pd.DataFrame:
@@ -88,7 +93,9 @@ def read_series(series_id: int) -> pd.DataFrame:
     return parse_series(json.loads(path.read_text(encoding="utf-8")))
 
 
-def read_all() -> pd.DataFrame:
-    """All configured series stacked, with the yaml key in ``series_key``."""
-    frames = [read_series(sid).assign(series_key=key) for key, sid in series_ids().items()]
+def read_all(dataset_id: str = DATASET_ID) -> pd.DataFrame:
+    """All series of one dataset stacked, with the yaml key in ``series_key``."""
+    frames = [
+        read_series(sid).assign(series_key=key) for key, sid in series_ids(dataset_id).items()
+    ]
     return pd.concat(frames, ignore_index=True)

@@ -140,7 +140,20 @@ bportugal:
     notes: >
       Domains 21 (interest rates), 186 (loans for house purchase), 39 (housing prices). All five series verified and fetched
       (284 months, Jan 2003-Aug 2026; the fixed-rate median 93 months from Dec 2018). Dataset and domain are looked up from the
-      series id at fetch time. Definitions differ (APRC vs agreed rate vs stock rate), see data_quality.md. Household debt (domain 18) todo.
+      series id at fetch time. Definitions differ (APRC vs agreed rate vs stock rate), see data_quality.md. Household debt: bp_household_debt below.
+  bp_household_debt:
+    base_url: https://bpstat.bportugal.pt/data/v1
+    series:
+      housing_loans_stock: 12458133      # household loans for house purchase, stock, EUR m, monthly (domain 18, non-consolidated, all lenders)
+      housing_loans_gdp: 12458135        # same, % of GDP, quarterly
+      housing_loans_growth: 12457869     # household housing loans, annual rate of change of transactions-based flows, %, monthly (consolidated)
+      household_debt_stock: 12457924     # household debt including trade credits, all purposes, EUR m, monthly
+      household_debt_gdp: 12457925       # same, % of GDP, quarterly
+      household_debt_income: 12457926    # same, % of disposable income, quarterly
+    format: json
+    notes: >
+      Domain 18 (indebtedness of the non-financial sector), households and non-profit institutions serving households.
+      Stocks are non-consolidated and cover all lenders, not only banks. Same fetch and parse as bp_mortgage.
 
 eurostat:
   # Dissemination API https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/<dataset> (JSON-stat 2.0).

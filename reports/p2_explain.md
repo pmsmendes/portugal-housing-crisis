@@ -38,7 +38,7 @@ available, so a credible answer to "what would change affordability?" needs a po
 
 **Contents:** spatial autocorrelation (`p2_01`), fixed-effects regressions with foreign residents
 (`p2_02`, RQ3.3, RQ5.1), spillover tests (`p2_03`, RQ4.4), segmentation (`p2_04`, RQ4.6), supply against demand
-(`p2_05`, RQ2.1 to RQ2.4, RQ3.4, RQ4.5), second homes (`p2_06`, RQ5.3, RQ5.4) the synthesis (`p2_07`, RQ3.6), mortgage rates (`p2_08`, RQ1.7, RQ9.2, RQ9.5), wages and the labour market (`p2_09`, RQ9.1, RQ1.4) and big municipalities against their surroundings (`p2_10`, RQ4.3).
+(`p2_05`, RQ2.1 to RQ2.4, RQ3.4, RQ4.5), second homes (`p2_06`, RQ5.3, RQ5.4) the synthesis (`p2_07`, RQ3.6), mortgage rates (`p2_08`, RQ1.7, RQ9.2, RQ9.5), wages and the labour market (`p2_09`, RQ9.1, RQ1.4), big municipalities against their surroundings (`p2_10`, RQ4.3), age structure (`p2_11`, RQ3.5) and mortgage credit and household debt (`p2_12`, RQ9.2, RQ9.3).
 
 ## Key findings
 
@@ -271,6 +271,22 @@ Resident population by five-year age group, 2011 to 2023 (RQ3.5).
 Tables: `age_bands_national.csv`, `age_structure_by_class.csv`, `age_structure_associations.csv`, `age_structure_by_foreign_third.csv`. Limits: ages of residents (ageing in place cannot be told from the young leaving),
 no internal-migration flows by age and no single-person households between censuses, one cross-section, proxy classes.
 
+## Mortgage credit and household debt (`p2_12_credit_and_household_debt`)
+
+![Credit and prices](figures/p2/credit_and_prices.png)
+
+National quarterly series, 2007 Q4 to 2026 Q1: the stock of household loans for house purchase and total household debt (Banco de Portugal, all lenders) against BIS real prices (RQ9.2, RQ9.3).
+
+34. **The price recovery ran on shrinking credit.** From 2013 Q2 to 2024 Q2 real prices rose 98% while the real housing-loan stock fell 27% (nominal −12%): housing loans per unit of price fell 63%. Housing loans went from 66% of GDP
+    (2007) to 37%, household debt from 110% to 72% of disposable income. Credit only revived from 2024 (real +12% to 2026 Q1, with prices +28%) and the ratio of loans to price kept falling (−13%).
+35. **Credit did not lead the price cycle; it followed it.** Price growth correlates with housing-loan growth four to eight quarters *later* (0.48 to 0.52, outside the ±0.47 limit for no relation) and not with growth that came earlier.
+    The test of price growth on credit growth a year before gives −0.3 points per pp [−1.1, +0.5]; once last year's price growth is in, −0.6 [−1.2, +0.1], and next year's credit growth (a placebo that should do nothing) is as large and opposite
+    (+0.8, p = 0.003, against −0.9). The negative sign is the regime (credit shrank in 2011-2019 while prices recovered), not an effect of credit on prices.
+36. **What this does and does not say.** Prices rose with little new borrowing, so the rise was not a borrowed bubble of the 2000s kind; it does not say who bought, with what (savings, inheritance, foreign or cash buyers, loans from outside the
+    stock counted here) or how strict lenders were. Lending standards (loan-to-value, maturity, income multiples) and new lending in total are not available (the volume we hold covers loans fixed up to a year), so RQ9.3 stays partly open.
+
+Tables: `credit_episodes.csv`, `credit_lag_profile.csv`, `credit_timing.csv`.
+
 ## Limitations
 
 - **A pattern, not a mechanism.** Spatial autocorrelation does not show that price changes spill over: shared
@@ -306,6 +322,7 @@ no internal-migration flows by age and no single-person households between censu
   the real price through the deflator; the nominal check is weaker, −0.8 [−1.9, +0.4]). A null does not mean no
   effect, only that this series cannot tell. Credit supply is not tested: the loan volume we hold covers loans fixed
   for up to one year (the share of fixed-rate loans grew after 2018), not total lending.
+- **Credit and household debt.** One national series of stocks (not new lending), two credit regimes in 18 years and overlapping annual changes; the stock changes with write-offs and sales of loans (the growth rate we use is transactions-based), covers all lenders and counts loans, not who bought. Loans per unit of price assumes a constant housing stock and share bought with a loan, so it is a gauge, not leverage. Lending standards are not observed.
 - **Centres.** The 100,000-resident rule is a size cut-off, not a functional urban area: it counts suburbs such as Sintra
   and Amadora as centres and Coimbra or Viseu alongside Lisboa. Distance in border steps ignores how far a step is
   (Alentejo municipalities are large) and commuting. The gradient is a description of 302 municipalities with prices in

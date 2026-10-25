@@ -258,6 +258,23 @@ def test_bp_mortgage_one_column_per_series_with_month_start(monkeypatch):
     assert out["month"].tolist() == [1, 2]
 
 
+def test_bp_household_debt_keeps_quarter_end_months(monkeypatch):
+    from pthousing.data.sources import bportugal
+
+    dates = pd.to_datetime(["2020-02-29", "2020-03-31", "2020-04-30", "2020-06-30"])
+    frames = [
+        pd.DataFrame({"date": dates, "value": [i + 1.0] * 4, "series_key": key})
+        for i, key in enumerate(interim.BP_DEBT_COLUMNS)
+    ]
+    monkeypatch.setattr(
+        bportugal, "read_all", lambda dataset_id="x": pd.concat(frames, ignore_index=True)
+    )
+    out = interim.build_bp_household_debt()
+    assert out["period_start"].dt.strftime("%Y-%m-%d").tolist() == ["2020-01-01", "2020-04-01"]
+    assert out["quarter"].tolist() == [1, 2]
+    assert set(interim.BP_DEBT_COLUMNS.values()) <= set(out.columns)
+
+
 def test_build_writes_parquet_and_read_roundtrips(tmp_path, monkeypatch):
     monkeypatch.setattr(interim, "INTERIM", tmp_path)
     monkeypatch.setitem(interim.BUILDERS, "toy", lambda: pd.DataFrame({"a": [1, 2]}))

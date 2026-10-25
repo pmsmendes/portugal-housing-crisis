@@ -1804,6 +1804,78 @@ def wages_and_prices(annual: pd.DataFrame) -> Figure:
     )
 
 
+def credit_and_prices(frame: pd.DataFrame, profile: pd.DataFrame) -> Figure:
+    """Real prices against real housing credit (left), debt ratios (middle), and which leads, prices or credit (right).
+
+    ``frame`` is ``credit.quarterly_frame`` (indices 2010 = 100), ``profile`` ``macro.lag_profile`` of a year's real
+    price growth on housing-loan growth shifted by each lag: a positive lag is credit growth that came earlier, a
+    negative lag credit growth that came later. Dotted lines mark the 95% limit for no relation.
+    """
+    fig, (left, mid, right) = plt.subplots(1, 3, figsize=(13, 4.6), gridspec_kw={"wspace": 0.3})
+    dates = frame.index
+    series = (
+        ("hpi_real_b2010", BLUE, "Real house price index"),
+        ("housing_loans_real_b2010", ORANGE, "Real housing-loan stock"),
+        ("loans_per_price_b2010", MUTED, "Loans per unit of price"),
+    )
+    for col, color, _ in series:
+        _line(left, dates, frame[col], color, width=1.4 if color == MUTED else LINE_WIDTH)
+        _end_dot(left, dates[-1], frame[col].iloc[-1], color)
+        _label(left, dates[-1], frame[col].iloc[-1], f"{frame[col].iloc[-1]:.0f}")
+    _legend(left, [Line2D([], [], color=c, lw=LINE_WIDTH, label=lab) for _, c, lab in series])
+    left.set_ylim(0, 230)
+    left.set_xlim(dates[0], dates[-1] + pd.Timedelta(days=500))
+    _quarter_axis(left, dates.to_series(), base=4)
+    _panel_title(left, "After inflation, 2010 = 100")
+
+    ratios = (
+        ("household_debt_income_pct", BLUE, "Household debt, % of disposable income"),
+        ("housing_loans_gdp_pct", ORANGE, "Housing loans, % of GDP"),
+    )
+    for col, color, _ in ratios:
+        _line(mid, dates, frame[col], color)
+        _end_dot(mid, dates[-1], frame[col].iloc[-1], color)
+        _label(mid, dates[-1], frame[col].iloc[-1], f"{frame[col].iloc[-1]:.0f}%")
+    _legend(
+        mid,
+        [Line2D([], [], color=c, lw=LINE_WIDTH, label=lab) for _, c, lab in ratios],
+        loc="lower left",
+    )
+    mid.set_ylim(0, 130)
+    mid.set_xlim(dates[0], dates[-1] + pd.Timedelta(days=500))
+    mid.yaxis.set_major_formatter(mticker.FuncFormatter(lambda v, _: f"{v:g}%"))
+    _quarter_axis(mid, dates.to_series(), base=4)
+    _panel_title(mid, "Debt in relation to income and GDP")
+
+    lags = profile["lag_quarters"]
+    right.axhline(0, color=INK_2, lw=1, zorder=2)
+    right.bar(lags, profile["corr"], width=0.7, color=BLUE, zorder=3)
+    band = profile["band"].iloc[0]
+    for sign in (-1, 1):
+        right.axhline(sign * band, color=MUTED, lw=1, ls=(0, (2, 3)), zorder=1)
+    right.set_xticks(list(lags)[::2])
+    right.set_ylim(-0.7, 0.7)
+    right.set_xlabel(
+        "Quarters credit growth came before (+) or after (-) price growth", fontsize=9, color=INK_2
+    )
+    _panel_title(right, "Price growth against housing-loan growth (correlation)")
+
+    low = frame["hpi_real_b2010"].loc["2008":].idxmin()
+    first, last = frame.loc[low], frame.iloc[-1]
+    price_gain = 100 * (last["hpi_real_b2010"] / first["hpi_real_b2010"] - 1)
+    loan_gain = 100 * (last["housing_loans_real_eur_m"] / first["housing_loans_real_eur_m"] - 1)
+    return style.finish(
+        fig,
+        f"Real prices rose {price_gain:.0f}% since {low.year} Q{low.quarter} while real housing credit "
+        f"{'fell' if loan_gain < 0 else 'rose'} {abs(loan_gain):.0f}%: credit did not drive the recovery",
+        f"Quarterly, national, {dates[0].year} Q{dates[0].quarter} to {dates[-1].year} Q{dates[-1].quarter}; right: four-quarter changes",
+        "Source: BIS and INE (house prices), Banco de Portugal (loans, household debt), own calculations. Loans per unit of price: "
+        "nominal loan stock over the nominal price index. Credit growth is transactions-based (no write-offs or loan sales).",
+        head_in=1.3,
+        foot_in=0.6,
+    )
+
+
 # ---- kinds of home and kinds of price -------------------------------------------------------------
 
 

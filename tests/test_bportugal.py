@@ -70,3 +70,10 @@ def test_read_series_missing_file_is_a_clear_error(tmp_path, monkeypatch):
     monkeypatch.setattr(bportugal, "RAW", tmp_path)
     with pytest.raises(FileNotFoundError, match="fetch_series"):
         bportugal.read_series(99)
+
+
+def test_series_ids_per_dataset_and_fetch_all_covers_both():
+    mortgage = bportugal.series_ids()
+    debt = bportugal.series_ids("bp_household_debt")
+    assert "new_housing_aprc" in mortgage and "housing_loans_stock" in debt
+    assert not set(mortgage.values()) & set(debt.values())

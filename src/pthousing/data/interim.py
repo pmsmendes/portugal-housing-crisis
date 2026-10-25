@@ -37,6 +37,14 @@ BP_COLUMNS = {
     "new_housing_volume_lt1y": "mortgage_new_lt1y_volume_eur_m",
     "new_fixed_rate_p50": "mortgage_rate_new_fixed_p50_pct",
 }
+BP_DEBT_COLUMNS = {
+    "housing_loans_stock": "housing_loans_stock_eur_m",
+    "housing_loans_gdp": "housing_loans_gdp_pct",
+    "housing_loans_growth": "housing_loans_growth_pct",
+    "household_debt_stock": "household_debt_stock_eur_m",
+    "household_debt_gdp": "household_debt_gdp_pct",
+    "household_debt_income": "household_debt_income_pct",
+}
 
 
 def _municipal(code: str) -> pd.DataFrame:
@@ -305,6 +313,25 @@ def build_bp_mortgage() -> pd.DataFrame:
     return wide.sort_values("date", ignore_index=True)
 
 
+def build_bp_household_debt() -> pd.DataFrame:
+    """Household debt by quarter: housing-loan and total stocks, shares of GDP and income, housing-loan growth.
+
+    The stocks and the growth rate are monthly (quarterly in the first years), the ratios quarterly: every
+    column is taken at the quarter-end month, so a quarter missing its last month (the current one) is dropped.
+    """
+    df = bportugal.read_all("bp_household_debt")
+    df = df[df["date"].dt.month.isin([3, 6, 9, 12])]
+    wide = df.pivot(index="date", columns="series_key", values="value").rename(
+        columns=BP_DEBT_COLUMNS
+    )
+    wide = wide.reset_index()
+    wide.columns.name = None
+    wide.insert(1, "period_start", wide["date"].dt.to_period("Q").dt.to_timestamp())
+    wide.insert(2, "year", wide["date"].dt.year)
+    wide.insert(3, "quarter", wide["date"].dt.quarter)
+    return wide.sort_values("date", ignore_index=True)
+
+
 def build_eurostat_hpi() -> pd.DataFrame:
     """House price index (2015 = 100) for Portugal, peers and the EU27, quarterly."""
     df = eurostat.read("eurostat_hpi")
@@ -492,6 +519,7 @@ BUILDERS: dict[str, Callable[[], pd.DataFrame]] = {
     "ine_population_change": build_ine_population_change,
     "aima_foreigners": build_aima_foreigners,
     "bp_mortgage": build_bp_mortgage,
+    "bp_household_debt": build_bp_household_debt,
     "eurostat_hpi": build_eurostat_hpi,
     "eurostat_hicp": build_eurostat_hicp,
     "eurostat_demography": build_eurostat_demography,

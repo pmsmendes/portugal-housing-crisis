@@ -20,7 +20,8 @@ Registry of every dataset. **Read this before opening any data file or source mo
 | ine_construction | ine | New family dwellings licensed and completed | Municipality | Annual (monthly licensed) | Licensed 1995–2025 (0000087, 0013235); completed 1995–2025 (0000076, 0013248) | ine_construction.parquet | ingested |
 | ine_cpi | ine | Consumer Price Index (deflator) | National | Monthly / annual | 1948–2026 (0014640 / 0014642, base 2025) | ine_cpi.parquet, ine_cpi_monthly.parquet | ingested |
 | eurostat_demography | eurostat | Demographic balance: population on 1 January, births, deaths, natural change, net migration plus statistical adjustment (demo_gind) | Country (PT) | Annual | 1960–2025 flows (latest year may be provisional) | eurostat_demography.parquet | ingested |
-| bp_mortgage | bportugal | Mortgage interest rates (APRC, agreed rate, stocks), new loan volumes | National | Monthly | Jan 2003–Aug 2026 (series 12533714, 12533730, 12519759, 12533719); fixed-rate median from Dec 2018 (12710738) | bp_mortgage.parquet | ingested (household debt series todo) |
+| bp_mortgage | bportugal | Mortgage interest rates (APRC, agreed rate, stocks), new loan volumes | National | Monthly | Jan 2003–Aug 2026 (series 12533714, 12533730, 12519759, 12533719); fixed-rate median from Dec 2018 (12710738) | bp_mortgage.parquet | ingested |
+| bp_household_debt | bportugal | Household housing-loan stock (EUR m, % of GDP), its transactions-based growth, household debt (EUR m, % of GDP, % of disposable income) | National | Monthly stocks, quarterly ratios | Dec 2007–Aug 2026 stocks, ratios to Jun 2026 (series 12458133, 12458135, 12457869, 12457924, 12457925, 12457926) | bp_household_debt.parquet | ingested |
 | eurostat_hpi | eurostat | HPI (prc_hpi_q) and HICP (prc_hicp_aind) for EU comparison | Country | Quarterly / annual | PT 2008-Q1–2026-Q2 (EU27 from 2005, IT from 2010) / PT 1996–2025 | eurostat_hpi.parquet, eurostat_hicp.parquet | ingested |
 | at_imi_rates | at | Municipal urban IMI rate per tax year (Portal das Finanças "Taxas do Município"), with a flag for parish-specific rates | Municipality | Annual | 2012–2025 (308 municipalities every year; portal offers 1989–2026) | at_imi_rates.parquet | ingested (raw HTML snapshot kept; parish-link and 2025 caveats in data_quality) |
 | at_imi_imt | at | IMI and IMT revenue | Municipality | Annual | no official source found | | candidate (unresolved) |
@@ -51,6 +52,7 @@ Full 308-municipality grid for municipal tables; suppressed cells are NaN, never
 | ine_hpi | period_start × category | hpi_index_b2025 (2025 = 100), national |
 | eurostat_macro | year (1995–2025) | gdp_growth_pct (real, % on the previous year), unemployment_pct (15 to 74, labour force survey), compensation_per_employee_eur (whole economy, nominal) |
 | bp_mortgage | date (month end) | mortgage_aprc_new_pct, mortgage_rate_new_lt1y_pct, mortgage_rate_stock_gt5y_pct, mortgage_new_lt1y_volume_eur_m, mortgage_rate_new_fixed_p50_pct |
+| bp_household_debt | date × period_start (quarter, quarter-end values, 2007Q4–2026Q2) | housing_loans_stock_eur_m, housing_loans_gdp_pct, housing_loans_growth_pct (annual rate of change, from 2008Q4), household_debt_stock_eur_m, household_debt_gdp_pct, household_debt_income_pct |
 | eurostat_hpi | geo × period_start | hpi_index_b2015 (PT, ES, IT, FR, DE, IE, EU27) |
 | eurostat_hicp | geo × year | hicp_index_b2015 (PT, EU27) |
 | bis_spp | period_start (quarter) | hpi_nominal_b2010, hpi_real_b2010 (2010 = 100) |

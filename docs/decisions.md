@@ -2,6 +2,12 @@
 
 Analytic and engineering choices, newest first. One short entry each: what, why, alternatives rejected.
 
+## 2026-10-25 — Household debt from BPstat, tested like the rate: prices lead credit
+- **What:** new dataset `bp_household_debt` (six BPstat series, domain 18: housing-loan stock in euros and % of GDP, its transactions-based growth, household debt in euros, % of GDP and % of disposable income), kept at quarter-end months. `p2_12` (`analysis/credit.py`) compares the real housing-loan stock with real prices by episode and runs the `p2_08` timing test with credit growth as the regressor (`macro.rate_timing(x_col=...)`), plus a placebo with next year's credit growth.
+- **Why the stock and its growth, not new lending:** the new-loan volume in `bp_mortgage` covers loans fixed up to a year only and falls when borrowers move to fixed rates; the stock covers every lender and the growth rate is transactions-based, so write-offs and loan sales do not count as repayment.
+- **Why a lead-lag test and not a regression of price on debt:** the stock and the price are both trending in opposite directions over 2013-2024, so any levels regression would find a spurious negative; the lagged changes with a placebo show the order (prices first).
+- **Rejected:** debt to GDP as a regressor (the denominator is also driven by the cycle); a VAR (74 quarters, two regimes); loans per unit of price as leverage (it ignores the housing stock and the share bought without a loan).
+
 ## 2026-10-25 — Rents: forecast the slow index and price-to-rent, keep rents out of the simulator
 - **What:** `p4_05` applies the `p4_01` methods to annual series (ETS without seasonal forms, `ANNUAL_METHODS`): the OECD real rent index and price-to-rent, rolling origin from 2007, method chosen per series.
 - **Why per series:** the pooled rule of `p4_01` would have picked ARIMA for both, though it is 26% worse than no change for rents; a model must beat the baseline on the series it is used for.

@@ -1,0 +1,5 @@
+episode,start,end,real_price_change_pct,nominal_price_change_pct,loans_real_change_pct,loans_nominal_change_pct,loans_per_price_change_pct,loans_gdp_change_pp,debt_income_start_pct,debt_income_end_pct
+credit still growing,2007Q4,2010Q1,-5.8,-5.0,6.3,7.2,12.9,4.1,110.1,111.3
+crisis and troika,2010Q1,2013Q2,-21.3,-14.4,-13.6,-6.1,9.8,-0.8,111.3,109.1
+"prices recover, credit shrinks",2013Q2,2024Q2,98.2,139.3,-27.2,-12.1,-63.3,-32.5,109.1,70.8
+credit revives,2024Q2,2026Q1,28.5,31.8,11.9,14.8,-12.9,1.0,70.8,72.4

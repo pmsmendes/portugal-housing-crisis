@@ -208,6 +208,22 @@ def schemas() -> dict[str, DataFrameSchema]:
             unique=["date"],
             strict=True,
         ),
+        "bp_household_debt": DataFrameSchema(
+            {
+                "date": Column("datetime64[ns]", coerce=True),
+                "period_start": Column("datetime64[ns]", coerce=True),
+                "year": _year(2007),
+                "quarter": Column(int, Check.in_range(1, 4), coerce=True),
+                "housing_loans_stock_eur_m": _num(50_000, 200_000, nullable=False),
+                "housing_loans_gdp_pct": _num(10, 100),
+                "housing_loans_growth_pct": _num(-15, 25),
+                "household_debt_stock_eur_m": _num(80_000, 300_000, nullable=False),
+                "household_debt_gdp_pct": _num(20, 120),
+                "household_debt_income_pct": _num(30, 160),
+            },
+            unique=["date"],
+            strict=True,
+        ),
         "eurostat_hpi": DataFrameSchema(
             {
                 "geo": _cat({"PT", "ES", "IT", "FR", "DE", "IE", "EU27_2020"}),
@@ -531,6 +547,15 @@ def check_bp(df: pd.DataFrame) -> list[str | None]:
     ]
 
 
+def check_bp_household_debt(df: pd.DataFrame) -> list[str | None]:
+    return [
+        _gaps_quarterly(df["date"]),
+        None
+        if (df["housing_loans_stock_eur_m"] < df["household_debt_stock_eur_m"]).all()
+        else "housing loans exceed total household debt",
+    ]
+
+
 def check_eurostat_hpi(df: pd.DataFrame) -> list[str | None]:
     pt = df[df["geo"] == "PT"]["period_start"]
     return [
@@ -616,6 +641,7 @@ CHECKS: dict[str, Callable[[pd.DataFrame], list[str | None]]] = {
     "ine_cpi_monthly": check_cpi_monthly,
     "ine_hpi": check_hpi,
     "bp_mortgage": check_bp,
+    "bp_household_debt": check_bp_household_debt,
     "eurostat_hpi": check_eurostat_hpi,
     "eurostat_demography": check_eurostat_demography,
     "eurostat_macro": check_eurostat_macro,
