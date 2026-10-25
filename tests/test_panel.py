@@ -183,3 +183,15 @@ def test_national_annual_long_is_rebased_real_and_marks_incomplete_years():
     bis = interim.read("bis_spp")
     assert a.index.max() == bis[bis["year"].map(bis.groupby("year").size()) == 4]["year"].max()
     assert a["price_to_income_b2015"].first_valid_index() == 1995
+
+
+def test_equal_coefficients_rejects_unequal_and_accepts_equal():
+    unequal = pn.fit(_panel(), pn.Spec("log_pti", ["x1", "x2"]), years=(2014, 2023))
+    assert pn.equal_coefficients(unequal, ["x1", "x2"])["p"] < 0.001  # 0.5 against -0.2
+    rng = np.random.default_rng(9)
+    panel = _panel()
+    panel["x3"] = rng.normal(size=len(panel))
+    panel["log_pti"] = 0.3 * panel["x2"] + 0.3 * panel["x3"] + rng.normal(0, 0.5, len(panel))
+    equal = pn.fit(panel, pn.Spec("log_pti", ["x2", "x3"]), years=(2014, 2023))
+    out = pn.equal_coefficients(equal, ["x2", "x3"])
+    assert out["df"] == 1 and out["p"] > 0.01

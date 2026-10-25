@@ -218,3 +218,14 @@ def vif(data: pd.DataFrame, xs: list[str], effects: str = "year") -> pd.Series:
 def residuals_by_year(res) -> pd.DataFrame:
     """Residuals of a fitted model as a (muni_code, year, residual) table, for spatial checks."""
     return res.resids.rename("residual").reset_index()
+
+
+def equal_coefficients(res, terms: list[str]) -> dict[str, float]:
+    """Wald test that the coefficients of ``terms`` are all equal: statistic, degrees of freedom and p-value."""
+    names = list(res.params.index)
+    restriction = np.zeros((len(terms) - 1, len(names)))
+    for row, term in enumerate(terms[1:]):
+        restriction[row, names.index(terms[0])] = 1
+        restriction[row, names.index(term)] = -1
+    test = res.wald_test(restriction, np.zeros(len(terms) - 1))
+    return {"statistic": float(test.stat), "df": len(terms) - 1, "p": float(test.pval)}

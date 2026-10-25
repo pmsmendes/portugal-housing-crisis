@@ -2,6 +2,12 @@
 
 Analytic and engineering choices, newest first. One short entry each: what, why, alternatives rejected.
 
+## 2026-10-25 — Nationality groups in the foreign-resident regression
+- **What:** `p2_14` splits the foreign-resident change of `p2_02` into six groups (`demography.NATIONALITY_GROUPS`: Brazil, Lusophone Africa, Eastern Europe, China, UK, all other) with the same controls and effects, and tests equality of the six coefficients (`panel.equal_coefficients`, Wald).
+- **Why these groups:** each is large enough to move a municipality's population in some places (the smallest, China and the UK, are 2.7% and 4.5% of the 2023 total) and each follows its own trend (Eastern Europe fell by a third while Brazil quadrupled); single countries would give 11 mostly empty terms.
+- **Reading:** the equality test is the claim (the groups differ with year effects, much less within a region); no group is called a cause of price rises.
+- **Rejected:** shares of each nationality in the population (levels do not vary enough within a municipality); regressing on all 11 codes; grouping by income or legal route (not observed).
+
 ## 2026-10-25 — Fundamentals as a constant-burden benchmark, read through changes in the gap
 - **What:** `p2_13` (`macro.financeable_price`, `price_change_parts`) sets implied price = average wage / payment per euro borrowed (30-year annuity at the agreed rate), scaled to equal the actual price on average 2003-2025, and splits each episode's price change into wages, the rate and the gap.
 - **Why:** a regression of price on wages and rates over 23 years and two regimes would hand back a coefficient with no way to tell "unexplained" from misspecified; the accounting split is exact and shows where the benchmark stops working (2021-2025), and the result holds under APRC, 20/40-year terms and other windows (gap +40 to +60).

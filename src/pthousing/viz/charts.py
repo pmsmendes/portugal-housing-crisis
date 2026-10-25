@@ -507,13 +507,19 @@ def r2_ladder(table: pd.DataFrame, outcome: str) -> Figure:
 
 
 def coef_ladder(
-    table: pd.DataFrame, labels: dict[str, str], main: str, compare: str, outcome: str
+    table: pd.DataFrame,
+    labels: dict[str, str],
+    main: str,
+    compare: str,
+    outcome: str,
+    lower_label: bool = True,
 ) -> Figure:
     """Effect of one within-standard-deviation of each driver on ``outcome`` (in %), across specifications.
 
     ``table`` is the concatenated output of ``panel.coef_table`` for log outcomes (``coef`` x 100 is then a
     percentage). One panel per driver, one row per specification; ``main`` is blue, ``compare`` orange and the
-    other specifications grey. The 95% interval is drawn around the point.
+    other specifications grey. The 95% interval is drawn around the point. ``lower_label`` lowercases the
+    driver's name in the title (turn it off for proper nouns).
     """
     terms = [t for t in labels if t in set(table["term"])]
     specs = list(dict.fromkeys(table["spec"]))
@@ -538,15 +544,18 @@ def coef_ladder(
         hi_all = (100 * d["sd_within"] * d["ci_high"]).max()
         pad = 0.12 * (max(hi_all, 0) - min(lo_all, 0))
         ax.set_xlim(min(lo_all, 0) - pad, max(hi_all, 0) + pad)
-        ax.xaxis.set_major_locator(mticker.MaxNLocator(4, integer=True))
+        narrow = max(hi_all, 0) - min(lo_all, 0) < 3
+        ax.xaxis.set_major_locator(mticker.MaxNLocator(3 if narrow else 4, integer=not narrow))
+        digits = 1 if narrow else 0
         ax.xaxis.set_major_formatter(
-            mticker.FuncFormatter(lambda v, _: "0" if abs(v) < 1e-9 else f"{v:+.0f}%")
+            mticker.FuncFormatter(lambda v, _, d=digits: "0" if abs(v) < 1e-9 else f"{v:+.{d}f}%")
         )
-    main_rows = table[table["spec"] == main]
+    main_rows = table[(table["spec"] == main) & table["term"].isin(terms)]
     top = main_rows.loc[main_rows["coef_per_sd"].abs().idxmax()]
     fig = style.finish(
         fig,
-        f"One standard deviation of the strongest driver ({labels[top['term']].split(' (')[0].lower()}) "
+        f"One standard deviation of the strongest driver "
+        f"({labels[top['term']].split(' (')[0].lower() if lower_label else labels[top['term']].split(' (')[0]}) "
         f"changes {outcome} by {100 * top['coef_per_sd']:+.1f}%",
         f"Per one within-municipality standard deviation of each driver, 95% intervals; "
         f"{main} (blue), {compare} (orange)",

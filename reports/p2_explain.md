@@ -38,7 +38,7 @@ available, so a credible answer to "what would change affordability?" needs a po
 
 **Contents:** spatial autocorrelation (`p2_01`), fixed-effects regressions with foreign residents
 (`p2_02`, RQ3.3, RQ5.1), spillover tests (`p2_03`, RQ4.4), segmentation (`p2_04`, RQ4.6), supply against demand
-(`p2_05`, RQ2.1 to RQ2.4, RQ3.4, RQ4.5), second homes (`p2_06`, RQ5.3, RQ5.4) the synthesis (`p2_07`, RQ3.6), mortgage rates (`p2_08`, RQ1.7, RQ9.2, RQ9.5), wages and the labour market (`p2_09`, RQ9.1, RQ1.4), big municipalities against their surroundings (`p2_10`, RQ4.3), age structure (`p2_11`, RQ3.5) mortgage credit and household debt (`p2_12`, RQ9.2, RQ9.3) and what wages and rates could finance (`p2_13`, RQ9.4).
+(`p2_05`, RQ2.1 to RQ2.4, RQ3.4, RQ4.5), second homes (`p2_06`, RQ5.3, RQ5.4) the synthesis (`p2_07`, RQ3.6), mortgage rates (`p2_08`, RQ1.7, RQ9.2, RQ9.5), wages and the labour market (`p2_09`, RQ9.1, RQ1.4), big municipalities against their surroundings (`p2_10`, RQ4.3), age structure (`p2_11`, RQ3.5) mortgage credit and household debt (`p2_12`, RQ9.2, RQ9.3) what wages and rates could finance (`p2_13`, RQ9.4) and foreign residents by nationality group (`p2_14`, RQ3.3).
 
 ## Key findings
 
@@ -298,6 +298,18 @@ National annual series, 2003 to 2025 (RQ9.4): the price a fixed share of the ave
 39. **Read the gap as everything else, not as expectations.** It holds credit rationing (the gap fell 45 points in the 2007-2013 crisis, when loans were hard to get), buyers richer than the average employee, cash, foreign and savings-funded purchases, supply, and expectations; it matches `p2_12` (credit stock flat to 2024) in suggesting that the latest rise was not financed by new loans. These data cannot tell the parts apart.
 
 Tables: `financeable_price.csv`, `price_change_parts.csv`, `financeable_price_variants.csv`.
+
+## Foreign residents by nationality group (`p2_14_nationality_and_prices`)
+
+![Nationality coefficients](figures/p2/nationality_coefficients_pti.png)
+
+The regression of `p2_02` with the change in foreign residents split into six groups (RQ3.3): Brazil, Lusophone Africa (Angola, Cabo Verde, Guinea-Bissau, São Tomé and Príncipe), Eastern Europe (Romania, Moldova, Ukraine), China, the United Kingdom and all other; log price-to-income, 2016 to 2023, municipality and year effects.
+
+40. **The groups grew very differently.** Residents with a title 2014 to 2023: Brazil 85,000 to 368,000 (35% of the 2023 total), Lusophone Africa 88,000 to 163,000, the United Kingdom 17,000 to 47,000, all other 102,000 to 387,000 (37%), China 21,000 to 28,000 and Eastern Europe *down* from 78,000 to 50,000.
+41. **Brazil and Lusophone Africa go with the rise in price-to-income; the others do not.** +7.9% per point of population added through Brazilians [+4.4, +11.3] and +10.5% through Lusophone Africans [+4.8, +16.3], about +1.6% per within-municipality standard deviation each, against +4.3% for all foreign residents together. Eastern Europe (+3.3% [−7.6, +14.2]), the United Kingdom (−1.3% [−3.8, +1.2]) and all other (+2.3% [−0.9, +5.4]) are indistinguishable from zero, China is negative (−15.8% [−30.1, −1.5], the group is small and concentrated). The six coefficients are not equal (chi-square 35.0, 5 degrees of freedom, p < 0.001).
+42. **Within a region the groups converge, so nationality is a marker of place.** With NUTS 3 × year effects Brazil falls to +4.8% [+1.7, +8.0], Lusophone Africa to +5.4% [+0.3, +10.5], Eastern Europe rises to +8.7% [+1.2, +16.2] and all other is +2.7% [+0.1, +5.4]: +0.6% to +0.8% per standard deviation for each, UK and China still at or below zero. The equality test weakens to p = 0.019. Stopping in 2022 or dropping Lisboa, Setúbal and Porto keeps the signs but widens the intervals (Lusophone Africa is no longer clearly positive without the three districts). These are the municipalities where particular groups settled (Brazilians and Africans in the metropolitan belts and the Algarve, British in the Algarve), not evidence that one nationality raises prices.
+
+Tables: `nationality_group_sizes.csv`, `nationality_regressions_pti.csv`, `nationality_equality_tests.csv`. Limits: titles, not the foreign-born; groups are fixed by size, not by income or legal route (work, study, investment); coefficients per point of population are not comparable with a group's typical size (compare per standard deviation); the same adjusted-association caveats as `p2_02`.
 
 ## Limitations
 

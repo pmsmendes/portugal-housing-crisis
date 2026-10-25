@@ -1,0 +1,5 @@
+spec,statistic,df,p
+Municipality + year effects,35.0105,5.0,0.0
+Municipality + region-year effects,13.5226,5.0,0.0189
+Through 2022,27.8011,5.0,0.0
+"Without Lisboa, Setúbal, Porto",15.3673,5.0,0.0089

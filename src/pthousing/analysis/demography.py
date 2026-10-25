@@ -241,3 +241,39 @@ def growth_regimes(balance: pd.DataFrame) -> pd.DataFrame:
     )
     out["share_of_municipalities_pct"] = 100 * out["municipalities_n"] / len(d)
     return out.sort_values("municipalities_n", ascending=False)
+
+
+# ---- nationality groups and the regression panel (RQ3.3) ------------------------------------------
+
+#: Nationality codes of the interim table grouped for the price regressions (the total is excluded).
+NATIONALITY_GROUPS = {
+    "brazil": ["br"],
+    "palop": ["cv", "gw", "st", "ao"],
+    "east_europe": ["ro", "md", "ua"],
+    "china": ["cn"],
+    "uk": ["gb"],
+    "other": ["other"],
+}
+
+
+def group_changes(
+    aima: pd.DataFrame, population: pd.Series, groups: dict[str, list[str]] | None = None
+) -> pd.DataFrame:
+    """Yearly change in each group's foreign residents, in % of last year's population.
+
+    ``aima`` is the ``aima_foreigners`` interim table, ``population`` resident population indexed by
+    (muni_code, year). Columns are ``fc_<group>_pct``; they add up to the total foreign-resident change
+    (``panel.build_frame``'s ``foreign_change_pct``) wherever every group has a count.
+    """
+    groups = groups or NATIONALITY_GROUPS
+    wide = aima[aima["nationality"] != "total"].pivot_table(
+        index=[MUNI_KEY, YEAR_KEY], columns="nationality", values="foreign_residents_n"
+    )
+    last = population.sort_index().groupby(level=MUNI_KEY).shift(1)
+    out = {}
+    for name, codes in groups.items():
+        series = wide[codes].sum(axis=1, min_count=len(codes))
+        out[f"fc_{name}_pct"] = (
+            100 * series.groupby(level=MUNI_KEY).diff() / last.reindex(series.index)
+        )
+    return pd.DataFrame(out)

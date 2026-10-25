@@ -204,3 +204,40 @@ def test_growth_regimes_classify_by_the_sign_of_each_component():
         "decline_both": 1,  # 0005
     }
     assert r["share_of_municipalities_pct"].sum() == pytest.approx(100.0)
+
+
+def _aima_two_munis():
+    rows = []
+    for muni, scale in (("0101", 1), ("0102", 2)):
+        for year, mult in ((2014, 1), (2015, 2)):
+            for nat, n in (("br", 10), ("cv", 4), ("ao", 6), ("other", 20)):
+                rows.append((muni, year, nat, n * mult * scale))
+    df = pd.DataFrame(rows, columns=["muni_code", "year", "nationality", "foreign_residents_n"])
+    total = df.groupby(["muni_code", "year"], as_index=False)["foreign_residents_n"].sum()
+    return pd.concat([df, total.assign(nationality="total")], ignore_index=True)
+
+
+def test_group_changes_in_percent_of_last_years_population_and_add_to_total():
+    aima = _aima_two_munis()
+    pop = pd.Series(
+        [1000.0, 1000.0, 2000.0, 2000.0],
+        index=pd.MultiIndex.from_tuples(
+            [("0101", 2014), ("0101", 2015), ("0102", 2014), ("0102", 2015)],
+            names=["muni_code", "year"],
+        ),
+    )
+    groups = {"brazil": ["br"], "palop": ["cv", "ao"], "other": ["other"]}
+    out = dem.group_changes(aima, pop, groups)
+    assert out.loc[("0101", 2015), "fc_brazil_pct"] == pytest.approx(100 * 10 / 1000)
+    assert out.loc[("0101", 2015), "fc_palop_pct"] == pytest.approx(100 * 10 / 1000)
+    assert out.loc[("0102", 2015), "fc_other_pct"] == pytest.approx(100 * 40 / 2000)
+    assert out.loc[("0101", 2014)].isna().all()
+    total = aima.query("nationality == 'total'").set_index(["muni_code", "year"])[
+        "foreign_residents_n"
+    ]
+    expected = (
+        100 * total.groupby(level="muni_code").diff() / pop.groupby(level="muni_code").shift(1)
+    )
+    pd.testing.assert_series_equal(
+        out.sum(axis=1, min_count=3).dropna(), expected.dropna(), check_names=False
+    )
