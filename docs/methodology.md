@@ -55,6 +55,27 @@ The comparison of these definitions across municipalities is in `reports/p1_evid
 - Columns: nominal `*_eur`, real `*_eur_real`; the factor is stored as `deflator_to_base_year`. Quarterly factors use the mean of the quarter's three monthly indices and the mean of the 12 months of the base year.
 - Index columns keep their own base (`_b2025`, `_b2015`); real indices are nominal × deflator (e.g. `hpi_total_real_b2025`).
 
+## Harmonising sources (M2)
+Sources differ in frequency, geography and definition. The rules, each applied at table-build time and tested:
+
+**Frequency** (never interpolate; convert by the rule that fits the quantity)
+- Prices: municipal prices are quarterly last-12-month medians; the annual value is the fourth quarter (the calendar-year median) (`build_panel._annual_prices`). The BIS quarterly index enters the long national series as an annual mean rebased to 2015.
+- Rates: monthly rates are averaged over the three months of a quarter or the twelve of a year (`macro.quarterly_frame`, `macro.annual_rates`, `build_panel`).
+- Deflator: a quarter's factor uses the mean of its three monthly CPI indices over the mean of the twelve months of the base year (`harmonize.quarterly_deflator`).
+- Stocks and ratios (loans, household debt): values at the quarter-end month (`interim.build_bp_household_debt`); a quarter missing its last month is dropped.
+- Annual-only series (wages, unemployment, GDP growth) are analysed annually (`macro.annual_frame`); they are not spread over quarters.
+
+**Geography**
+- One key, `muni_code` (INE DICOFRE), and CAOP 2024 boundaries; municipal tables keep the full 308 grid with suppressed cells NaN, never zero.
+- `data/external/muni_crosswalk.csv` carries NUTS II and III codes in the 2013 and 2024 vintages (read from INE `geocod` prefixes), so tables in either vintage join; municipalities created after 1995 (Vizela, Trofa, Odivelas) are masked before their creation year (`harmonize.mask_pre_creation`).
+- National series (BIS, OECD, Eurostat, BPstat) are joined to municipal panels by year or quarter, never allocated to municipalities, except the national mortgage rate that enters municipal burdens as one rate.
+
+**Definitions and vintages**
+- Where two methods or vintages overlap, they are spliced at the table build after a test of the overlap: municipal prices (2018 method to 3Q2019, 2022 method from 4Q2019, median overlap ratio 1.002) and income (2013 vintage 2015-2017, 2024 vintage from 2018, identical on the overlap).
+- Where nothing overlaps, they are not spliced: the BIS price index equals INE's exactly from 2009 but no overlap exists before it, so the 2009 seam is marked on charts and not re-chained (`docs/decisions.md`).
+- One deflator everywhere (INE CPI, base year in `config.py`); the OECD's own real series differs by up to 4% and is not used. One definition per rate indicator (APRC for new borrowing, the stock rate for the burden on existing borrowers).
+- Cross-source checks in `validate.cross_checks` compare what two sources both publish (Eurostat against INE house prices, CPI against HICP).
+
 ## Panels (`src/pthousing/data/build_panel.py`, files in `data/processed/`)
 | Panel | Grain | Content |
 |---|---|---|
