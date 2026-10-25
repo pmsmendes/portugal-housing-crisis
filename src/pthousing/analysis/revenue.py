@@ -15,7 +15,13 @@ reads files.
 import numpy as np
 import pandas as pd
 
-from pthousing.config import BENCHMARK_AREA_SQM, IMI_URBAN_MIN_PCT
+from pthousing.config import (
+    BENCHMARK_AREA_SQM,
+    IMI_TAXABLE_SHARE,
+    IMI_URBAN_MIN_PCT,
+    MUNI_KEY,
+    VACANT_IMI_MULTIPLE,
+)
 from pthousing.data.harmonize import annual_deflator
 
 BASE = 2015  # index base of the annual frame, as in ``macro.annual_frame``
@@ -166,3 +172,66 @@ def capped_cut(
             "average_cut_share": average / np.average(d["imi_urban_pct"], weights=d[weight]),
         }
     )
+
+
+def imi_per_dwelling(
+    panel: pd.DataFrame, year: int, taxable_share: float = IMI_TAXABLE_SHARE
+) -> pd.Series:
+    """Yearly IMI of a typical dwelling in each municipality, EUR: taxable share x price per m2 x mean area x urban rate.
+
+    The census mean area of the municipality's dwellings times the median transaction price per m2 of ``year`` gives a
+    market value; ``taxable_share`` converts it to the assessed value (VPT). A bottom-up figure for the average dwelling, not
+    the bill of any one home: old homes are assessed far below the market and some are exempt, which ``calibration``
+    corrects nationally. NaN where the price or a single urban rate is missing.
+    """
+    d = panel.loc[panel["year"] == year].set_index(MUNI_KEY)
+    value = taxable_share * d["price_sqm_eur"] * d["dwelling_area_sqm"]
+    return (value * d["imi_urban_pct"] / 100).rename("imi_per_dwelling_eur")
+
+
+def calibration(per_dwelling: pd.Series, dwellings: pd.Series, national_eur_m: float) -> float:
+    """Factor that scales the bottom-up IMI of all dwellings to the national-accounts revenue.
+
+    Municipalities without a per-dwelling figure are given the dwelling-weighted average of the others. The national
+    revenue covers all land and buildings (commercial and rustic too), so the factor attributes all of it to dwellings
+    and is an upper bound on the scale of residential IMI.
+    """
+    ok = per_dwelling.notna()
+    average = np.average(per_dwelling[ok], weights=dwellings[ok])
+    bottom_up = average * dwellings.sum()
+    return national_eur_m * 1e6 / bottom_up
+
+
+def vacant_surcharge(
+    per_dwelling: pd.Series,
+    excess_n: pd.Series,
+    legal_share: float,
+    scale: float = 1.0,
+    multiple: float = VACANT_IMI_MULTIPLE,
+) -> pd.Series:
+    """Extra IMI a year per municipality, EUR, if the rate on legally vacant homes is ``multiple`` times the normal one.
+
+    ``excess_n`` are vacant dwellings above the frictional level (``vacancy.excess``); ``legal_share`` is the share of
+    them a council could classify as vacant under the law (empty over a year, shown by consumption of water and power):
+    unobserved, so varied. Accounting only: owners who let, sell or repair in response pay less, and are what the
+    surcharge is for. Municipalities without a per-dwelling figure get the average of the others.
+    """
+    unit = per_dwelling.fillna(per_dwelling.mean())
+    return (excess_n * legal_share * (multiple - 1) * unit * scale).rename("surcharge_eur")
+
+
+def surcharge_bite(
+    per_dwelling: pd.Series,
+    scale: float,
+    panel: pd.DataFrame,
+    year: int,
+    multiple: float = VACANT_IMI_MULTIPLE,
+) -> pd.Series:
+    """The extra yearly IMI of a typical dwelling as a share of the yearly rent it could earn (new-lease median).
+
+    ``rent_sqm_eur`` x mean area x 12 months; NaN where rents are not published (small rental markets). A small share
+    means the surcharge costs the owner little against what letting would bring in, so it would not change much.
+    """
+    d = panel.loc[panel["year"] == year].set_index(MUNI_KEY)
+    rent = d["rent_sqm_eur"] * d["dwelling_area_sqm"] * 12
+    return ((multiple - 1) * per_dwelling * scale / rent).rename("surcharge_share_of_rent")

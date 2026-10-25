@@ -500,3 +500,17 @@ def test_vacancy_vs_shortfall_title_quotes_the_full_and_the_quarter_usable_cover
     )
     title = _title(charts.vacancy_vs_shortfall(groups, top, sens))
     assert "89%" in title and "41%" in title
+
+
+def test_vacant_surcharge_title_gives_the_revenue_range_and_the_median_bite():
+    table = pd.DataFrame(
+        {"all_eur_m": [55.0, 110.0, 221.0], "pressured_eur_m": [30.0, 60.0, 120.0]},
+        index=pd.Index([0.25, 0.5, 1.0]),
+    )
+    bite = pd.Series([0.03, 0.05, 0.07, np.nan])
+    title = _title(charts.vacant_surcharge(table, bite, 1677.0))
+    assert (
+        "55 to 221 EUR m" in title
+        and "3% to 13% of IMI" in title
+        and "5% of a year's rent" in title
+    )

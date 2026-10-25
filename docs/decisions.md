@@ -2,6 +2,12 @@
 
 Analytic and engineering choices, newest first. One short entry each: what, why, alternatives rejected.
 
+## 2026-10-25 — Vacant-home surcharge as bottom-up IMI scaled to the national total
+- **What:** `revenue.imi_per_dwelling` (taxable share x price per m2 x census area x urban rate), `calibration` (scale to national-accounts IMI, 2024), `vacant_surcharge` (excess vacant homes x classified share x (multiple - 1) x typical bill), `surcharge_bite` (extra tax over a year's rent). `VACANT_IMI_MULTIPLE = 3` in `config.py` (CIMI art. 112(3), the multiple used by councils in 2017).
+- **Why:** municipal IMI revenue and assessed values are not in the data (`data_quality`), so the typical bill is built from prices and rates and anchored to the one revenue total that exists. The classified share is varied (25%, 50%, 100%) because the census does not say which vacant homes meet the legal test.
+- **Reading:** accounting upper bound on revenue; bite is the more informative number. Total IMI includes commercial and rustic property, so residential IMI is overstated by the scale.
+- **Rejected:** assuming the legal share; modelling owners' response (no estimate for Portugal is cited in the project); the pressure-zone rule of Lei 56/2023 (not verified), replaced by a high price-to-income tercile cut.
+
 ## 2026-10-25 — Vacant dwellings: excess over a frictional level, matched locally
 - **What:** `analysis/vacancy.py`; excess vacancy = vacant dwellings above `FRICTIONAL_VACANCY_PCT` (5% of the stock, `config.py`; 3% and 8% as checks); the household shortfall of 2021-2023 (implied households minus completions, floored at zero) is matched with excess vacancy municipality by municipality; the usable share of the excess is varied (100%, 50%, 25%) and inverted (`usable_share_for`), never assumed.
 - **Why:** the census gives counts of vacant homes but no condition, ownership or availability, so the one defensible bound is what could house the shortage where it arises. Every market has some vacancy (turnover, sales, inheritance, works), and a surplus in one municipality cannot house households in another.

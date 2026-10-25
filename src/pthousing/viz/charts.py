@@ -2459,3 +2459,46 @@ def vacancy_vs_shortfall(groups: pd.DataFrame, top: pd.DataFrame, sens: pd.DataF
         head_in=1.3,
         foot_in=0.95,
     )
+
+
+def vacant_surcharge(table: pd.DataFrame, bite: pd.Series, national_imi_eur_m: float) -> Figure:
+    """Revenue of a surcharge on excess vacant homes by legal share (left), its size against rent (right).
+
+    ``table`` has one row per share of excess vacancy that can be classified as vacant (index) and the columns
+    ``all_eur_m`` (every municipality) and ``pressured_eur_m`` (high price-to-income tercile only); ``bite`` is
+    ``revenue.surcharge_bite`` per municipality, shown as a share of the yearly rent.
+    """
+    fig, (left, right) = plt.subplots(1, 2, figsize=(11, 4.6), gridspec_kw={"width_ratios": [5, 6]})
+    x = np.arange(len(table))
+    width = 0.38
+    left.bar(x - width / 2, table["all_eur_m"], width, color=ORANGE, zorder=3)
+    left.bar(x + width / 2, table["pressured_eur_m"], width, color=BLUE, zorder=3)
+    for offset, col in ((-width / 2, "all_eur_m"), (width / 2, "pressured_eur_m")):
+        for pos, value in zip(x + offset, table[col], strict=True):
+            left.annotate(f"{value:,.0f}", (pos, value), xytext=(0, 4), textcoords="offset points",
+                          ha="center", va="bottom", fontsize=8.5, color=INK)  # fmt: skip
+    left.set_xticks(x)
+    left.set_xticklabels([f"{s:.0%} of excess\nclassified vacant" for s in table.index])
+    left.set_ylim(0, table["all_eur_m"].max() * 1.2)
+    _legend(left, [Patch(facecolor=ORANGE, label="All municipalities"),
+                   Patch(facecolor=BLUE, label="Highest price-to-income third only")], loc="upper left")  # fmt: skip
+    _panel_title(left, "Extra IMI a year (EUR million)")
+
+    d = (100 * bite.dropna()).clip(upper=100)
+    right.hist(d, bins=np.arange(0, d.max() + 1, 1), color=BLUE, zorder=3)
+    right.set_ylim(0, right.get_ylim()[1] * 1.15)
+    right.axvline(d.median(), color=INK, lw=1.2, zorder=4)
+    right.annotate(f"median {d.median():.1f}%", (d.median(), right.get_ylim()[1]), xytext=(6, -12),
+                   textcoords="offset points", fontsize=9, color=INK)  # fmt: skip
+    right.xaxis.set_major_formatter(mticker.PercentFormatter(decimals=0))
+    _panel_title(right, f"Extra IMI as a share of a year's rent, {len(d)} municipalities")
+    low, high = table["all_eur_m"].iloc[[0, -1]]
+    return style.finish(
+        fig,
+        f"Tripling IMI on excess vacant homes raises {low:,.0f} to {high:,.0f} EUR m ({100 * low / national_imi_eur_m:.0f}% to {100 * high / national_imi_eur_m:.0f}% of IMI) "
+        f"and costs the owner {d.median():.0f}% of a year's rent",
+        "Excess vacant dwellings (above 5% of the stock, census 2021) x typical IMI of the municipality x 2 extra times the rate; calibrated to national IMI revenue, 2024",
+        "Source: INE (census, prices, rents), Autoridade Tributária (rates), Eurostat (IMI revenue), own calculations. Accounting only: no response by owners.",
+        head_in=1.3,
+        foot_in=0.9,
+    )

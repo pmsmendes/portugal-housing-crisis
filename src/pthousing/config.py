@@ -40,6 +40,9 @@ IMI_URBAN_MIN_PCT = (
 # Vacancy (analysis/vacancy.py): the share of dwellings that are vacant at any time because homes are being sold, let,
 # inherited or repaired; vacancy above it is "excess". An assumption, shown with sensitivity (3 and 8).
 FRICTIONAL_VACANCY_PCT = 5.0
+# Surcharge on vacant dwellings (analysis/revenue.py): CIMI art. 112(3) lets a council raise the urban IMI rate on
+# buildings vacant for over a year; the multiple applied in practice is three (the "IMI a triplicar" of 54 councils in 2017).
+VACANT_IMI_MULTIPLE = 3.0
 # Benchmark dwelling for the fixed-size variants of PTI / RTI (comparable across municipalities).
 BENCHMARK_AREA_SQM = 100
 

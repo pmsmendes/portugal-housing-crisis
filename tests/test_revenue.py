@@ -121,3 +121,44 @@ def test_capped_cut_never_goes_below_the_floor():
 
 def test_dwelling_sales_value_is_nan_without_sales():
     assert np.isnan(revenue.dwelling_sales_value(_panel().assign(sales_12m_n=np.nan), 2025))
+
+
+def _surcharge_panel():
+    return pd.DataFrame(
+        {
+            "muni_code": ["0101", "0102", "0101", "0102"],
+            "year": [2023, 2023, 2024, 2024],
+            "price_sqm_eur": [1000.0, 500.0, 1000.0, 500.0],
+            "dwelling_area_sqm": [100.0, 100.0, 100.0, 100.0],
+            "imi_urban_pct": [0.4, 0.3, 0.4, 0.3],
+            "rent_sqm_eur": [5.0, np.nan, 5.0, np.nan],
+        }
+    )
+
+
+def test_imi_per_dwelling_is_taxable_value_times_the_rate():
+    out = revenue.imi_per_dwelling(_surcharge_panel(), 2024, taxable_share=0.5)
+    assert out["0101"] == pytest.approx(0.5 * 1000 * 100 * 0.004)  # 200
+    assert out["0102"] == pytest.approx(0.5 * 500 * 100 * 0.003)  # 75
+
+
+def test_calibration_scales_the_bottom_up_total_to_the_national_revenue():
+    per = pd.Series({"0101": 200.0, "0102": 100.0})
+    dwellings = pd.Series({"0101": 10.0, "0102": 10.0})
+    scale = revenue.calibration(per, dwellings, 0.0003)  # 300 EUR national
+    assert scale == pytest.approx(0.1)  # bottom-up 3,000 EUR against 300 EUR
+
+
+def test_vacant_surcharge_is_extra_multiple_of_the_normal_bill_on_the_classified_homes():
+    per = pd.Series({"0101": 200.0, "0102": np.nan})
+    excess = pd.Series({"0101": 10.0, "0102": 10.0})
+    out = revenue.vacant_surcharge(per, excess, legal_share=0.5, scale=1.0, multiple=3.0)
+    assert out["0101"] == pytest.approx(10 * 0.5 * 2 * 200)
+    assert out["0102"] == pytest.approx(10 * 0.5 * 2 * 200)  # no figure: the average of the others
+
+
+def test_surcharge_bite_is_the_extra_tax_over_a_years_rent():
+    per = pd.Series({"0101": 200.0, "0102": 75.0})
+    out = revenue.surcharge_bite(per, 1.0, _surcharge_panel(), 2024, multiple=3.0)
+    assert out["0101"] == pytest.approx(2 * 200 / (5 * 100 * 12))
+    assert np.isnan(out["0102"])

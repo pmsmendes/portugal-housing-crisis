@@ -77,7 +77,7 @@ Reference questions by ID (e.g. `RQ2.3`) in notebooks, reports and commits.
 | RQ7.3 | Could more transactions or construction partly offset initial revenue losses from tax cuts? | wip | `p3_05`: recovering the full legal IMI headroom needs +8.9% on the base, 22 years of completions at 0.41% of the stock a year; a 1 pp IMT cut (18% of IMT) needs dwelling sales value to rise at least 21% (+34% in 2019-2024, mostly prices, in two rebounds). Behavioural response of transactions not estimated |
 | RQ7.4 | Who benefits most from IMI/IMT cuts, and how much passes through to lower housing costs vs higher prices? | wip | `p3_02`, `p3_03`, `reports/p3_policy.md`: capitalisation of municipal IMI cuts into prices is inconclusive (pre-trend rejected, interval contains zero and full capitalisation, power 12-21x the benchmark); IMT and the incidence by income group not covered |
 | RQ7.5 | How do targeted exemptions (first-time buyers, new build, renovation) compare with broad cuts? | — | |
-| RQ7.6 | What is the fiscal impact of alternative property-tax reforms, including vacant-property incentives? | — | |
+| RQ7.6 | What is the fiscal impact of alternative property-tax reforms, including vacant-property incentives? | partly | `p3_08`, `reports/p3_policy.md`: a tripled IMI on excess vacant homes (425,000, `p2_16`) raises 55 to 221 EUR m a year (3% to 13% of 2024 IMI) if a quarter to all can be classified vacant, 78% of it in the highest price-to-income third; the extra tax is 317 EUR a home, 5% of a year's rent, so it bites little; accounting only, no response by owners; other reforms (exemptions, RQ7.5) not covered |
 
 ## RQ8 — Public expenditure and fiscal sustainability (Phase 4)
 | ID | Question | Status | Where |

@@ -165,6 +165,17 @@ Three national indicators for Portugal, Spain, Italy, France, Germany and Irelan
 
 Not covered: the policies themselves (rent regulation, tenant protection, planning rules, public-housing stock), and transfer taxes (booked under different codes: Germany's is 0.00% of GDP in D214C).
 
+### A surcharge on vacant homes (`p3_08`, RQ7.6 partly)
+
+![Vacant-home surcharge](figures/p3/vacant_surcharge.png)
+
+CIMI art. 112(3) lets a council raise the urban IMI rate on buildings vacant for over a year; the multiple used in practice is three (54 councils for the 2017 tax, 8,239 owners, press reports; the rules after Lei 56/2023 are not checked). The excess vacant homes of `p2_16` (425,000 above 5% of the stock) are given an IMI of two extra times the typical bill of their municipality (price per m2 x census area x taxable share x urban rate, scaled to the national-accounts IMI of 2024, 1,677 EUR m; the scale is 0.73, equivalent to a taxable share of 44% instead of 60%).
+
+- **Revenue.** If a quarter, half or all of the excess can be classified as vacant: 55, 111 or 221 EUR m a year, 3.3%, 6.6% or 13.2% of IMI. The highest price-to-income third of municipalities holds 78% of it (43, 86, 171 EUR m). The money goes to councils (`p3_05`), and it is an upper bound: an owner who lets, sells or repairs pays nothing extra.
+- **Bite.** The extra tax of a typical home is 317 EUR a year (90th percentile 691), 5.1% of a year's new-lease rent (median of 206 municipalities with a published rent, 1.8% to 10.7%): a home that earns about twenty times the surcharge is not pushed to let by it, so the revenue is not the lever, and the number of homes returned cannot be read from these data.
+
+Not covered: the legal classification of vacant homes (the census counts homes with no usual resident, not homes without consumption of water and power), owners' response, the cost of identifying vacant homes, and other reforms (first-time buyer and new-build exemptions, RQ7.5). Limits: a bottom-up bill for the average home, calibrated to total IMI (which includes commercial and rustic property), so residential IMI is probably overstated; rents are of new leases.
+
 ## Limitations
 
 - **Selection into treatment.** Rates are chosen after price booms, and the pre-trend test rejects. The design cannot separate the effect of the cut from mean reversion after
