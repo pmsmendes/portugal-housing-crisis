@@ -338,6 +338,7 @@ def test_download_calls_each_chosen_source_and_rejects_unknown(monkeypatch):
     interim.download()
     expected = [("ine", code, None) for code in interim.INE_CODES]
     expected += [("ine", code, flt) for code, flt in interim.INE_FILTERED.items()]
+    expected += [("ine", code, flt) for code, flt in interim.INE_HOUSEHOLD_SIZE.items()]
     assert [c for c in calls if c[0] == "ine"] == expected
     assert {c[0] for c in calls} == set(interim.SOURCES)
     assert ("bis", "bis_spp") in calls and ("oecd", "oecd_house_prices") in calls
@@ -365,3 +366,32 @@ def test_at_imi_rates_renames_keeps_flags_and_sorts(monkeypatch):
     ]  # fmt: skip
     assert out["muni_code"].tolist() == ["0101", "0102"]
     assert out["parish_rates"].tolist() == [True, False]
+
+
+def test_households_size_merges_2011_sizes_into_four_or_more(monkeypatch):
+    rows_2011 = [
+        {"muni_code": "0101", "period_start": "2011-01-01", "dim_4": code, "value": v}
+        for code, v in (
+            ("T", 21.0),
+            ("01", 5.0),
+            ("02", 6.0),
+            ("03", 4.0),
+            ("04", 3.0),
+            ("09", 3.0),
+        )
+    ]
+    rows_2021 = [
+        {"muni_code": "0101", "period_start": "2021-01-01", "dim_5": code, "value": v}
+        for code, v in (("T", 20.0), ("1", 7.0), ("2", 6.0), ("3", 4.0), ("4", 3.0))
+    ]
+    _patch_municipal(monkeypatch, {"0006457": _ine(rows_2011), "0012856": _ine(rows_2021)})
+    out = interim.build_ine_households_size().set_index(["census_year", "size"])["households_n"]
+    assert out.loc[2011].to_dict() == {"1": 5.0, "2": 6.0, "3": 4.0, "4plus": 6.0}
+    assert out.loc[2021].to_dict() == {"1": 7.0, "2": 6.0, "3": 4.0, "4plus": 3.0}
+
+
+def test_census_stock_households_use_only_the_total_rows(monkeypatch):
+    totals = interim._only_totals(
+        pd.DataFrame({"dim_3": ["T", "T"], "dim_4": ["T", "01"], "value": [20.0, 5.0]})
+    )
+    assert totals["value"].tolist() == [20.0]

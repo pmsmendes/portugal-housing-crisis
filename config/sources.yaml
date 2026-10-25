@@ -100,6 +100,7 @@ ine:
       dwellings_2021: "0012502"      # filter Dim4=T, Dim5=T; dim_3 (T, 1 usual, 2 secondary, 3 + 4 vacant)
       households_2011: "0006457"     # filter Dim3=T, Dim4=T, Dim5=T
       households_2021: "0012856"     # filter Dim3=T, Dim4=T, Dim5=T
+      households_by_size: "0006457 (Dim3=T, Dim5=T; size in dim_4: 01 to 09 persons) and 0012856 (Dim3=T, Dim4=T; size in dim_5: 1, 2, 3, 4 or more)"   # verified 2026-10-25, 308 municipalities; stored beside the total-only files, builders pick the rows they need
       mean_useful_area_2011: "0006988"   # dwellings of usual residence, m2
       mean_useful_area_2021: "0012518"
       totals: 5.86 M (2011) and 5.97 M (2021) conventional dwellings, 4.04 M and 4.15 M households (match the census)

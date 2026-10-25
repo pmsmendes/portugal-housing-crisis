@@ -2,6 +2,13 @@
 
 Analytic and engineering choices, newest first. One short entry each: what, why, alternatives rejected.
 
+## 2026-10-25 — Household size by municipality and the bedroom pairing
+- **What:** `ine_households_size` (census 2011 and 2021, 1, 2, 3 and 4 or more persons) from the household tables already used for the totals, with the size dimension left open (`INE_HOUSEHOLD_SIZE`); the census-stock builder now takes only the total rows (`_only_totals`). `analysis/housing_mix.py` pairs bedrooms with persons (T0-T1 with 1 ... T4+ with 4+).
+- **Why:** RQ2.6 needs demand by type; household size is the one dimension the data give at municipal level. The pairing is the simplest transparent mapping and is labelled nominal everywhere.
+- **Reading:** a gap between the mixes is not a count of homes missing (a couple can live in a T3), and a negative association with prices is read as a regional pattern (cheap, ageing interior), not as a cause.
+- **Rejected:** a conversion table of persons per bedroom without a source; weighting municipalities (the gap is a median across municipalities, not a national average; the national table gives that).
+- **Lead:** single-person households are now observable by municipality, which `p2_11` (RQ3.5) listed as not observable.
+
 ## 2026-10-25 — Legal floor for the IMI rate and what it means for the simulator's cut
 - **What:** `config.IMI_URBAN_MIN_PCT` (0.30) and `revenue.imi_headroom` / `capped_cut` measure how far councils can cut inside the law; `p3_05` reports that headroom as 0.027 pp (8.2% of the bill) in 2025, 199 of 300 councils being on the floor. `revenue.dwelling_sales_value` is the one formula for the value of dwellings sold, now also used by the engine (same number).
 - **Why:** the 0.05 pp IMI package of the simulator is 15% of the bill. Data show every rate in 2012-2025 between 0.30% and 0.45%, so a uniform 0.05 pp cut is not available in full to 233 of the 300 councils.

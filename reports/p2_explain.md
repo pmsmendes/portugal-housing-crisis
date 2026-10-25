@@ -315,6 +315,18 @@ The regression of `p2_02` with the change in foreign residents split into six gr
 
 Tables: `nationality_group_sizes.csv`, `nationality_regressions_pti.csv`, `nationality_equality_tests.csv`. Limits: titles, not the foreign-born; groups are fixed by size, not by income or legal route (work, study, investment); coefficients per point of population are not comparable with a group's typical size (compare per standard deviation); the same adjusted-association caveats as `p2_02`.
 
+## New dwellings against households, by size (`p2_15_new_build_vs_households`)
+
+![New build and households](figures/p2/new_build_vs_households.png)
+
+Completed family dwellings by number of bedrooms against private households by number of persons (census 2011 and 2021), paired one to one (T0-T1 with 1 person ... T4+ with 4 or more; RQ2.6). The pairing is nominal and only flows are compared.
+
+43. **Households grew only at the small end; new building did not.** 2011-2021: one-person households +161,000 and two-person +105,000, three-person -71,000 and four or more -90,000. Of the 151,000 dwellings completed in those years 68% had three or more bedrooms and 32% up to two, against 58% of households with one or two persons (53% in 2011).
+44. **The mix is moving the other way now.** The share of completions with up to two bedrooms fell from 44% (1995) to 27% (2017) and is 45% in 2025 (T0-T1 alone 17%, from 9%).
+45. **The gap is widest where prices are lowest.** In 266 municipalities with at least 50 completions the median gap between the household mix and the completion mix is 33 pp (positive in 97%): urban 23 pp, intermediate 28, rural 38. It is negatively associated with 2024 price-to-income (Spearman -0.66) and with real price growth 2019-2024 (-0.39). New building is least matched to households in the cheap, ageing interior, where houses are built for families that are no longer there, so the mismatch is no sign of where affordability is worst.
+
+Tables: `households_and_completions_by_size.csv`, `completion_shares_by_bedrooms.csv`, `small_dwelling_gap_by_density.csv`, `small_dwelling_gap_association.csv`, `small_dwelling_gap_terciles.csv`. Limits: a nominal pairing, flows only (who lives in the existing T3s is not observed: the households that left large sizes may have freed them), 2011-2021 completions against two census dates, flats against houses not covered.
+
 ## Limitations
 
 - **A pattern, not a mechanism.** Spatial autocorrelation does not show that price changes spill over: shared

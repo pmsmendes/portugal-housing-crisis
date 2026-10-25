@@ -180,6 +180,39 @@ def build_ine_census() -> pd.DataFrame:
     return out[cols].sort_values(MUNI_KEY, ignore_index=True)
 
 
+def _only_totals(df: pd.DataFrame) -> pd.DataFrame:
+    """Rows whose extra dimensions (``dim_3`` to ``dim_5``, where present) are all the total ``T``."""
+    keep = pd.Series(True, index=df.index)
+    for col in ("dim_3", "dim_4", "dim_5"):
+        if col in df:
+            keep &= df[col] == "T"
+    return df[keep]
+
+
+HOUSEHOLD_SIZE_COLUMN = {
+    "0006457": "dim_4",
+    "0012856": "dim_5",
+}  # census 2011 / 2021: dimension of household size
+
+
+def build_ine_households_size() -> pd.DataFrame:
+    """Census 2011 and 2021: private households by number of persons, per municipality.
+
+    ``size`` is ``1``, ``2``, ``3`` or ``4plus`` (2021 stops at four or more, so 2011's 4 to 9 or more persons are
+    added up); ``households_n`` counts private households (2011: classic families, as in ``ine_census``).
+    """
+    frames = []
+    for code, column in HOUSEHOLD_SIZE_COLUMN.items():
+        df = _municipal(code)
+        df = df[df[column] != "T"].copy()
+        size = df[column].str.lstrip("0")
+        df["size"] = size.where(size.isin(["1", "2", "3"]), "4plus")
+        grouped = df.groupby([MUNI_KEY, "year", "size"])["value"].sum(min_count=1)
+        frames.append(grouped.rename("households_n").reset_index())
+    out = pd.concat(frames).rename(columns={"year": "census_year"})
+    return out.sort_values([MUNI_KEY, "census_year", "size"], ignore_index=True)
+
+
 def build_ine_census_stock() -> pd.DataFrame:
     """Census 2011 and 2021: dwellings by occupancy, private households and mean useful area.
 
@@ -208,7 +241,10 @@ def build_ine_census_stock() -> pd.DataFrame:
         parts.append(df.unstack("col"))
     dwellings = pd.concat(parts)
     households = pd.concat(
-        [_municipal(c).set_index([MUNI_KEY, "year"])["value"] for c in ("0006457", "0012856")]
+        [
+            _only_totals(_municipal(c)).set_index([MUNI_KEY, "year"])["value"]
+            for c in ("0006457", "0012856")
+        ]
     ).rename("households_n")
     area = pd.concat(
         [_municipal(c).set_index([MUNI_KEY, "year"])["value"] for c in ("0006988", "0012518")]
@@ -478,6 +514,10 @@ INE_FILTERED = {
     "0006457": {"Dim3": "T", "Dim4": "T", "Dim5": "T"},  # private households 2011
     "0012856": {"Dim3": "T", "Dim4": "T", "Dim5": "T"},  # private households 2021
 }
+INE_HOUSEHOLD_SIZE = {  # the same two tables with the size dimension left open
+    "0006457": {"Dim3": "T", "Dim5": "T"},
+    "0012856": {"Dim3": "T", "Dim4": "T"},
+}
 EUROSTAT_DATASETS = (
     "eurostat_hpi",
     "eurostat_hicp",
@@ -501,6 +541,8 @@ def download(sources: list[str] | None = None, refresh: bool = False) -> None:
         for code in INE_CODES:
             ine.fetch_indicator(code, refresh=refresh)
         for code, filters in INE_FILTERED.items():
+            ine.fetch_indicator(code, filters=filters, refresh=refresh)
+        for code, filters in INE_HOUSEHOLD_SIZE.items():
             ine.fetch_indicator(code, filters=filters, refresh=refresh)
     if "aima" in chosen:
         aima.fetch(refresh=refresh)
@@ -535,6 +577,7 @@ BUILDERS: dict[str, Callable[[], pd.DataFrame]] = {
     "ine_cpi_monthly": build_ine_cpi_monthly,
     "ine_hpi": build_ine_hpi,
     "ine_population_change": build_ine_population_change,
+    "ine_households_size": build_ine_households_size,
     "aima_foreigners": build_aima_foreigners,
     "bp_mortgage": build_bp_mortgage,
     "bp_household_debt": build_bp_household_debt,

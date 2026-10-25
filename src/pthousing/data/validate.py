@@ -135,6 +135,16 @@ def schemas() -> dict[str, DataFrameSchema]:
             unique=[MUNI_KEY, "census_year"],
             strict=True,
         ),
+        "ine_households_size": DataFrameSchema(
+            {
+                MUNI_KEY: muni,
+                "census_year": Column(int, Check.isin([2011, 2021]), coerce=True),
+                "size": _cat({"1", "2", "3", "4plus"}),
+                "households_n": _num(0, 1_000_000, nullable=False),
+            },
+            unique=[MUNI_KEY, "census_year", "size"],
+            strict=True,
+        ),
         "ine_population": DataFrameSchema(
             {
                 MUNI_KEY: muni,
@@ -460,6 +470,10 @@ def check_census_stock(df: pd.DataFrame) -> list[str | None]:
     ]
 
 
+def check_households_size(df: pd.DataFrame) -> list[str | None]:
+    return [_grid(df, ["census_year", "size"])]
+
+
 def check_population(df: pd.DataFrame) -> list[str | None]:
     key = [MUNI_KEY, "year"]
     tot = df[(df["sex"] == "total") & (df["age_group"] == "total")].set_index(key)["population_n"]
@@ -651,6 +665,7 @@ CHECKS: dict[str, Callable[[pd.DataFrame], list[str | None]]] = {
     "ine_bank_valuation_annual": check_valuation_annual,
     "ine_census": check_census,
     "ine_census_stock": check_census_stock,
+    "ine_households_size": check_households_size,
     "ine_population": check_population,
     "ine_population_change": check_population_change,
     "aima_foreigners": check_aima_foreigners,
@@ -740,6 +755,18 @@ def cross_checks(tables: dict[str, pd.DataFrame]) -> list[tuple[str, str | None]
             else f"max gap {gap.drop(2009, errors='ignore').max():.4f}, 2009: {seam:.4f}",
         )
     )
+
+    if "ine_households_size" in tables:
+        by_size = (
+            tables["ine_households_size"].groupby([MUNI_KEY, "census_year"])["households_n"].sum()
+        )
+        stock = tables["ine_census_stock"].set_index([MUNI_KEY, "census_year"])["households_n"]
+        out.append(
+            (
+                "households_by_size_sum_to_census_total",
+                _sum_equals(stock, by_size.reindex(stock.index)),
+            )
+        )
 
     pop = tables["ine_population"].query("sex == 'total' and age_group == 'total'")
     out.append(("population_covers_all_municipalities", _grid(pop, ["year"])))

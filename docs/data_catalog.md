@@ -18,6 +18,7 @@ Registry of every dataset. **Read this before opening any data file or source mo
 | ine_population_change | ine | Population change, natural increase (births minus deaths) and net migration, counts per year | Municipality | Annual | 2011–2023 (0008271 / 0008270 / 0008269, NUTS 2013) | ine_population_change.parquet | ingested |
 | ine_census | ine | Census: dwellings (primary/secondary/vacant), tenure, households, mean dwelling area | Municipality / parish | 1991, 2001, 2011, 2021 | 2011 and 2021 stock and area (0006304, 0012502, 0006457, 0012856, 0006988, 0012518); 2021 vacancy and tenure (0012517, 0012531); 2001 and 1991 todo | ine_census.parquet, ine_census_stock.parquet | ingested (2011 and 2021) |
 | ine_construction | ine | New family dwellings licensed and completed | Municipality | Annual (monthly licensed) | Licensed 1995–2025 (0000087, 0013235); completed 1995–2025 (0000076, 0013248) | ine_construction.parquet | ingested |
+| ine_households_size | ine | Private households by number of persons (1, 2, 3, 4 or more) | Municipality | 1 census each | 2011 (0006457, sizes 1 to 9 or more, merged into 4 or more) and 2021 (0012856) | ine_households_size.parquet | ingested |
 | ine_cpi | ine | Consumer Price Index (deflator) | National | Monthly / annual | 1948–2026 (0014640 / 0014642, base 2025) | ine_cpi.parquet, ine_cpi_monthly.parquet | ingested |
 | eurostat_demography | eurostat | Demographic balance: population on 1 January, births, deaths, natural change, net migration plus statistical adjustment (demo_gind) | Country (PT) | Annual | 1960–2025 flows (latest year may be provisional) | eurostat_demography.parquet | ingested |
 | bp_mortgage | bportugal | Mortgage interest rates (APRC, agreed rate, stocks), new loan volumes | National | Monthly | Jan 2003–Aug 2026 (series 12533714, 12533730, 12519759, 12533719); fixed-rate median from Dec 2018 (12710738) | bp_mortgage.parquet | ingested |
@@ -44,6 +45,7 @@ Full 308-municipality grid for municipal tables; suppressed cells are NaN, never
 | ine_construction | muni_code × year × size (total, br_0_1, br_2, br_3, br_4plus) | licensed_n, completed_n (1995–2025; NaN before Vizela / Trofa / Odivelas existed) |
 | ine_bank_valuation | muni_code × period_start (month) × type (total / flats / villas) | valuation_sqm_eur |
 | ine_bank_valuation_annual | muni_code × year × type | valuation_sqm_eur |
+| ine_households_size | muni_code × census_year (2011, 2021) × size (1, 2, 3, 4plus) | households_n (2011: classic families, as in ine_census) |
 | ine_census | muni_code (census_year 2021) | vacant_dwellings_pct, occupied_dwellings_n, owner_occupied_n, rented_n, other_tenure_n |
 | ine_population | muni_code × year × sex × age_group (totals included) | population_n |
 | ine_population_change | muni_code × year (2011–2023) | population_change_n, natural_increase_n, net_migration_n (change = natural + migration; counts of persons over the year) |

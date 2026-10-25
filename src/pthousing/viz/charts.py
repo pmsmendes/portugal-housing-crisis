@@ -1618,6 +1618,69 @@ def indicator_robustness(table: pd.DataFrame, trends: pd.DataFrame, base_label: 
     )
 
 
+def new_build_vs_households(
+    comparison: pd.DataFrame, small_share: pd.Series, small_households_pct: dict[int, float]
+) -> Figure:
+    """Net change in households and completions by size (left), the small-dwelling share of completions (right).
+
+    ``comparison`` is ``housing_mix.national_comparison`` (rows 1, 2, 3, 4plus: persons in the household, bedrooms of
+    the dwelling), ``small_share`` the yearly share of completions with up to two bedrooms and
+    ``small_households_pct`` the share of households with one or two persons in the census years.
+    """
+    fig, (left, right) = plt.subplots(1, 2, figsize=(11, 4.6), gridspec_kw={"width_ratios": [5, 6]})
+    x = np.arange(len(comparison))
+    width = 0.38
+    households = comparison["households_change_n"] / 1000
+    done = comparison["completed_n"] / 1000
+    left.axhline(0, color=GRID, lw=1, zorder=1)
+    left.bar(x - width / 2, households, width, color=BLUE, zorder=3)
+    left.bar(x + width / 2, done, width, color=ORANGE, zorder=3)
+    for pos, value in zip(x - width / 2, households, strict=True):
+        left.annotate(f"{value:+,.0f}k", (pos, value), xytext=(0, 4 if value >= 0 else -4), textcoords="offset points",
+                      ha="center", va="bottom" if value >= 0 else "top", fontsize=8.5, color=INK)  # fmt: skip
+    for pos, value in zip(x + width / 2, done, strict=True):
+        left.annotate(f"{value:,.0f}k", (pos, value), xytext=(0, 4), textcoords="offset points",
+                      ha="center", va="bottom", fontsize=8.5, color=INK)  # fmt: skip
+    left.set_xticks(x)
+    left.set_xticklabels(["1 person\nT0-T1", "2 persons\nT2", "3 persons\nT3", "4+ persons\nT4+"])
+    left.set_ylim(min(households.min() * 1.4, -20), max(households.max(), done.max()) * 1.55)
+    _legend(left, [Patch(facecolor=BLUE, label="Change in households, 2011-2021"),
+                   Patch(facecolor=ORANGE, label="Dwellings completed, 2011-2021")], loc="upper right")  # fmt: skip
+    _panel_title(left, "By household size and bedrooms (thousands)")
+
+    d = small_share.loc[1995:]
+    _line(right, d.index, d, ORANGE)
+    _end_dot(right, d.index[-1], d.iloc[-1], ORANGE)
+    _label(right, d.index[-1], d.iloc[-1], f"{d.iloc[-1]:.0f}%")
+    years = sorted(small_households_pct)
+    values = [small_households_pct[y] for y in years]
+    right.plot(
+        years, values, color=BLUE, lw=LINE_WIDTH, marker="o", ms=8, mec=SURFACE, mew=2, zorder=4
+    )
+    for year, value in zip(years, values, strict=True):
+        right.annotate(f"{value:.0f}%", (year, value), xytext=(0, 9), textcoords="offset points",
+                       ha="center", fontsize=9.5, color=INK, fontweight="bold")  # fmt: skip
+    right.set_xlim(1994, d.index.max() + 3.5)
+    right.set_xticks(range(1995, 2026, 5))
+    right.set_ylim(0, 75)
+    right.yaxis.set_major_formatter(mticker.PercentFormatter(decimals=0))
+    _legend(right, [Line2D([], [], color=ORANGE, lw=LINE_WIDTH, label="Completions with up to 2 bedrooms (T0-T2)"),
+                    Line2D([], [], color=BLUE, lw=LINE_WIDTH, marker="o", label="Households with 1 or 2 persons (census)")], loc="lower left")  # fmt: skip
+    _panel_title(right, "The small end of the mix")
+    grew = comparison.loc[comparison["households_change_n"] > 0, "households_change_n"].sum()
+    big = comparison.loc[["3", "4plus"], "completed_n"].sum() / comparison["completed_n"].sum()
+    shrank = -comparison.loc[comparison["households_change_n"] < 0, "households_change_n"].sum()
+    return style.finish(
+        fig,
+        f"Households of one or two persons grew by {grew / 1000:,.0f}k in 2011-2021, larger ones fell by {shrank / 1000:,.0f}k, "
+        f"yet {100 * big:.0f}% of the new dwellings had three or more bedrooms",
+        "National, census 2011 to 2021; dwellings paired with households by bedrooms and persons (T0-T1 with 1, T2 with 2, T3 with 3, T4+ with 4+)",
+        "Source: INE (census 2011 and 2021; licensing and completions of family dwellings), own calculations. A nominal pairing: a couple can live in a T3.",
+        head_in=1.3,
+        foot_in=0.6,
+    )
+
+
 def population_components(
     balance: pd.DataFrame, rates: dict[str, pd.DataFrame], first_year: int = 1961
 ) -> Figure:

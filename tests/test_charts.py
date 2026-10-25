@@ -420,3 +420,16 @@ def test_property_tax_revenue_title_gives_the_change_since_2015_for_each_series(
     )
     title = _title(charts.property_tax_revenue(frame))
     assert "+40%" in title and "+50%" in title and "-10%" in title
+
+
+def test_new_build_vs_households_title_names_growth_decline_and_big_dwelling_share():
+    comparison = pd.DataFrame(
+        {
+            "households_change_n": [160_000.0, 100_000.0, -70_000.0, -90_000.0],
+            "completed_n": [10_000.0, 20_000.0, 50_000.0, 20_000.0],
+        },
+        index=pd.Index(["1", "2", "3", "4plus"]),
+    )
+    small = pd.Series(30.0, index=pd.Index(range(1995, 2026), name="year"))
+    title = _title(charts.new_build_vs_households(comparison, small, {2011: 53.0, 2021: 58.0}))
+    assert "260k" in title and "160k" in title and "70%" in title
