@@ -66,7 +66,7 @@ Reference questions by ID (e.g. `RQ2.3`) in notebooks, reports and commits.
 | RQ6.2 | What are the effects of rent ceilings on rental supply, maintenance, new construction and conversion to other uses? | — | |
 | RQ6.3 | Who benefits from rent regulation, and who finds access harder as a result? | — | |
 | RQ6.4 | How effective are public housing, rent subsidies and first-home purchase support? | — | |
-| RQ6.5 | How do other European countries' housing policies compare, and which could transfer to Portugal? | — | |
+| RQ6.5 | How do other European countries' housing policies compare, and which could transfer to Portugal? | partly | `p3_07`, `reports/p3_policy.md`: how much countries tax and spend, not which instruments they use. 2015-2024 Portugal's prices +124% (peers +12% to +83%, median +48%), recurrent property tax 0.75% of GDP (France 2.44, Italy 1.18, Spain 1.07, Ireland 0.48, Germany 0.40), housing support 0.41% (France 1.19, Ireland 0.94, Germany 0.48, Spain 0.20). Rent regulation, tenant protection, planning and public-housing stock not covered; six countries support no inference |
 | RQ6.6 | Which policy combination improves affordability while minimising unintended consequences? | — | |
 
 ## RQ7 — Taxation and public revenue (Phases 3–4)

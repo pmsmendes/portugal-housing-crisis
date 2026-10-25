@@ -535,6 +535,26 @@ def build_eurostat_housing_spending() -> pd.DataFrame:
     return out[cols].sort_values(["geo", "year"], ignore_index=True)
 
 
+def build_eurostat_property_tax_peers() -> pd.DataFrame:
+    """Taxes on land and buildings (D29A) and on financial and capital transactions (D214C) by country and year, with GDP.
+
+    ``land_buildings_tax_eur_m`` is the recurrent property tax; ``transaction_tax_eur_m`` is comparable only where a
+    country books its transfer taxes there (Portugal does, Germany and Italy do not), so it is not used for comparisons.
+    """
+    raw = eurostat.read("eurostat_property_tax_peers")
+    taxes = raw.pivot_table(index=["geo", "year"], columns="na_item", values="value").rename(
+        columns={"D29A": "land_buildings_tax_eur_m", "D214C": "transaction_tax_eur_m"}
+    )
+    gdp = (
+        eurostat.read("eurostat_gdp_nominal")
+        .set_index(["geo", "year"])["value"]
+        .rename("gdp_eur_m")
+    )
+    out = taxes.join(gdp, how="left").rename_axis(columns=None).reset_index()
+    cols = ["geo", "year", "land_buildings_tax_eur_m", "transaction_tax_eur_m", "gdp_eur_m"]
+    return out[cols].sort_values(["geo", "year"], ignore_index=True)
+
+
 # Census tables that exceed INE's row limit as a whole: only the totals of the dimensions we do not split by.
 INE_FILTERED = {
     "0006304": {"Dim4": "T", "Dim5": "T"},  # conventional dwellings 2011 by occupancy status
@@ -557,6 +577,7 @@ EUROSTAT_DATASETS = (
     "eurostat_property_tax",
     "eurostat_gdp_nominal",
     "eurostat_housing_spending",
+    "eurostat_property_tax_peers",
 )
 SOURCES = ("ine", "aima", "at", "bportugal", "eurostat", "bis", "oecd", "rnal", "caop")
 
@@ -616,6 +637,7 @@ BUILDERS: dict[str, Callable[[], pd.DataFrame]] = {
     "eurostat_macro": build_eurostat_macro,
     "eurostat_property_tax": build_eurostat_property_tax,
     "eurostat_housing_spending": build_eurostat_housing_spending,
+    "eurostat_property_tax_peers": build_eurostat_property_tax_peers,
     "bis_spp": build_bis_spp,
     "oecd_house_prices": build_oecd_house_prices,
     "rnal_al": build_rnal_al,

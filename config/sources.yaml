@@ -216,6 +216,15 @@ eurostat:
       is the taxes on financial and capital transactions, which in Portugal is IMT (property transfer tax) plus stamp duty
       on those transactions. National accounts record taxes on an accrual basis, so a year can differ from cash collection:
       2024 is IMI 1,677 and D214C 1,675 EUR million against 1,630 (assessed) and 1,733 (cash IMT) in the simulator anchors. Standing in for the municipal series (at_imi_imt), which exists only as PDF reports.
+  eurostat_property_tax_peers:
+    dataset: gov_10a_taxag
+    params: {sector: S13, unit: MIO_EUR, na_item: [D29A, D214C]}   # same items as eurostat_property_tax, for Portugal and the peer set
+    geo: [PT, ES, IT, FR, DE, IE, EU27_2020]
+    format: json
+    notes: >
+      Verified 2026-10-25; annual, 1995-2024 (some countries 2025). D29A (taxes on land, buildings and other structures)
+      is comparable across the peers as the recurrent property tax. D214C is not: Germany books its transfer tax
+      elsewhere (D214C is 0.00% of GDP) and Italy's is near zero, so it is stored but not compared.
   eurostat_gdp_nominal:
     dataset: nama_10_gdp
     params: {na_item: B1GQ, unit: CP_MEUR}   # GDP at market prices, current prices, EUR million

@@ -313,6 +313,17 @@ def schemas() -> dict[str, DataFrameSchema]:
             unique=["year"],
             strict=True,
         ),
+        "eurostat_property_tax_peers": DataFrameSchema(
+            {
+                "geo": _cat({"PT", "ES", "IT", "FR", "DE", "IE", "EU27_2020"}),
+                "year": _year(1995),
+                "land_buildings_tax_eur_m": _num(100, 500_000, nullable=False),
+                "transaction_tax_eur_m": _num(0, 500_000),
+                "gdp_eur_m": _num(10_000, 30_000_000, nullable=False),
+            },
+            unique=["geo", "year"],
+            strict=True,
+        ),
         "eurostat_housing_spending": DataFrameSchema(
             {
                 "geo": _cat({"PT", "ES", "IT", "FR", "DE", "IE", "EU27_2020"}),
@@ -537,6 +548,15 @@ def check_eurostat_property_tax(df: pd.DataFrame) -> list[str | None]:
     return [gaps, None if jump < 0.6 else f"a property tax series jumps {jump:.0%} in a year"]
 
 
+def check_eurostat_property_tax_peers(df: pd.DataFrame) -> list[str | None]:
+    gaps = df.groupby("geo")["year"].apply(lambda y: bool(y.diff().dropna().eq(1).all()))
+    share = 100 * df["land_buildings_tax_eur_m"] / df["gdp_eur_m"]
+    return [
+        None if gaps.all() else f"years are not consecutive for {list(gaps[~gaps].index)}",
+        None if share.between(0.1, 4).all() else "recurrent property tax outside 0.1% to 4% of GDP",
+    ]
+
+
 def check_eurostat_housing_spending(df: pd.DataFrame) -> list[str | None]:
     gaps = df.groupby("geo")["year"].apply(lambda y: bool(y.diff().dropna().eq(1).all()))
     inside = df["housing_development_eur_m"].isna() | (
@@ -702,6 +722,7 @@ CHECKS: dict[str, Callable[[pd.DataFrame], list[str | None]]] = {
     "eurostat_macro": check_eurostat_macro,
     "eurostat_property_tax": check_eurostat_property_tax,
     "eurostat_housing_spending": check_eurostat_housing_spending,
+    "eurostat_property_tax_peers": check_eurostat_property_tax_peers,
     "bis_spp": check_bis_spp,
     "oecd_house_prices": check_oecd_house_prices,
     "rnal_al": check_rnal,

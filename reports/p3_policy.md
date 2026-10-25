@@ -152,6 +152,19 @@ General-government spending by function (COFOG): housing development (public hou
 
 Limits: spending, not tax expenditures; what counts as housing differs by country; programme-level cost-effectiveness (RQ8.2) is out of reach with these data.
 
+### Portugal against its peers (`p3_07`, RQ6.5 partly)
+
+![Peer policy mix](figures/p3/peer_policy_mix.png)
+
+Three national indicators for Portugal, Spain, Italy, France, Germany and Ireland: the change of the nominal house price index 2015 to 2024, the recurrent property tax (D29A) and housing support (`p3_06`), the last two as a share of GDP averaged over 2015-2024.
+
+- **Prices.** Portugal +124%, Ireland +83%, Spain +60%, Germany +48%, France +26%, Italy +12%: the largest rise of the six.
+- **Property tax.** Portugal 0.75% of GDP, fourth of six: France 2.44%, Italy 1.18%, Spain 1.07%, Ireland 0.48%, Germany 0.40%. Portugal's own share rose from 0.40% (2000) to 0.80% (2019) and fell to 0.58% in 2024 (`p3_04`), below Spain (0.89%), Italy (1.02%) and France (2.09%).
+- **Housing support.** Portugal 0.41%, fourth of five (Italy left out, 2022-2023 values distorted): France 1.19%, Ireland 0.94%, Germany 0.48%, Spain 0.20%.
+- **What this is.** The country with the largest price rise taxes property below the peer median and spends less than the peer median on housing support. Six countries and no control for incomes, rates or supply cannot say what causes what: Ireland combines low tax with high support, Spain low support with middling tax, France high tax and support with the smallest rise among the countries with a support value.
+
+Not covered: the policies themselves (rent regulation, tenant protection, planning rules, public-housing stock), and transfer taxes (booked under different codes: Germany's is 0.00% of GDP in D214C).
+
 ## Limitations
 
 - **Selection into treatment.** Rates are chosen after price booms, and the pre-trend test rejects. The design cannot separate the effect of the cut from mean reversion after

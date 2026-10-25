@@ -1830,6 +1830,69 @@ def rates_and_cycles(frame: pd.DataFrame, episodes: pd.DataFrame, profile: pd.Da
     )
 
 
+def peers_policy_mix(table: pd.DataFrame, names: dict[str, str], focus: str = "PT") -> Figure:
+    """Price change, recurrent property tax and housing support for Portugal and its peers, one dot plot each.
+
+    ``table`` is ``peers.policy_mix``; ``names`` maps the country codes drawn (and their order of drawing, which is
+    by price change) to labels. A missing value is written as n/a. ``focus`` is the country drawn in blue.
+    """
+    d = table.loc[list(names)].sort_values("price_change_pct")
+    panels = (
+        ("price_change_pct", "House prices, change 2015-2024", "{:.0f}%"),
+        ("property_tax_gdp_pct", "Recurrent property tax, % of GDP", "{:.2f}"),
+        ("housing_support_gdp_pct", "Housing support, % of GDP", "{:.2f}"),
+    )
+    fig, axes = plt.subplots(1, 3, figsize=(11, 4.0), sharey=True)
+    y = np.arange(len(d))
+    for ax, (col, title, fmt) in zip(axes, panels, strict=True):
+        for pos, (geo, value) in zip(y, d[col].items(), strict=True):
+            hit = geo == focus
+            if pd.isna(value):
+                ax.annotate(
+                    "n/a",
+                    (0, pos),
+                    xytext=(6, 0),
+                    textcoords="offset points",
+                    va="center",
+                    fontsize=9,
+                    color=MUTED,
+                )
+                continue
+            ax.plot([0, value], [pos, pos], color=BLUE if hit else GRID, lw=1.6, zorder=2)
+            ax.plot(
+                [value],
+                [pos],
+                "o",
+                ms=9 if hit else 7,
+                mfc=BLUE if hit else MUTED,
+                mec=SURFACE,
+                mew=1.5,
+                zorder=4,
+            )
+            ax.annotate(fmt.format(value), (value, pos), xytext=(8, 0), textcoords="offset points", va="center", fontsize=9,
+                        color=INK, fontweight="bold" if hit else "normal")  # fmt: skip
+        ax.set_xlim(0, d[col].max() * 1.3)
+        ax.set_ylim(-0.6, len(d) - 0.4)
+        _panel_title(ax, title)
+    axes[0].set_yticks(y)
+    axes[0].set_yticklabels([names[g] for g in d.index])
+
+    def rank(col: str) -> str:
+        values = d[col].dropna()
+        place = int(values.rank(ascending=False)[focus])
+        return f"{place}{('th', 'st', 'nd', 'rd')[place] if place < 4 else 'th'} of {len(values)}"
+
+    return style.finish(
+        fig,
+        f"Portugal ranks {rank('price_change_pct')} on price growth since 2015 ({d.loc[focus, 'price_change_pct']:.0f}%), "
+        f"{rank('property_tax_gdp_pct')} on property tax and {rank('housing_support_gdp_pct')} on housing support",
+        "National, mean of 2015 to 2024 for the shares of GDP; house prices nominal, annual mean index",
+        "Source: Eurostat (house price index, national accounts D29A, spending by function), own calculations. Italy has no housing-support value: its 2022-2023 spending is far above trend.",
+        head_in=1.3,
+        foot_in=0.6,
+    )
+
+
 def housing_spending(portugal: pd.DataFrame, shares: pd.DataFrame, peers: dict[str, str]) -> Figure:
     """Portugal's real housing spending by kind (left) and housing support as a share of GDP against peers (right).
 

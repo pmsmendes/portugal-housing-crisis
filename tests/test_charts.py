@@ -457,3 +457,18 @@ def test_housing_spending_title_gives_the_low_the_latest_and_the_two_peers():
     peers = {"DE": "Germany", "ES": "Spain", "FR": "France", "IE": "Ireland"}
     title = _title(charts.housing_spending(portugal, shares, peers))
     assert "0.35%" in title and "0.53%" in title and "France (1.0%)" in title
+
+
+def test_peers_policy_mix_title_ranks_portugal_on_each_indicator():
+    table = pd.DataFrame(
+        {
+            "price_change_pct": [124.0, 83.0, 60.0, 48.0, 26.0],
+            "property_tax_gdp_pct": [0.75, 0.48, 1.07, 0.40, 2.44],
+            "housing_support_gdp_pct": [0.41, 0.94, 0.20, 0.48, 1.19],
+        },
+        index=pd.Index(["PT", "IE", "ES", "DE", "FR"], name="geo"),
+    )
+    names = {"PT": "Portugal", "IE": "Ireland", "ES": "Spain", "DE": "Germany", "FR": "France"}
+    title = _title(charts.peers_policy_mix(table, names))
+    assert "1st of 5 on price growth" in title and "3rd of 5 on property tax" in title
+    assert "4th of 5 on housing support" in title

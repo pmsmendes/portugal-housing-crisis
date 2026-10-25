@@ -339,6 +339,7 @@ def test_download_calls_each_chosen_source_and_rejects_unknown(monkeypatch):
         ("eurostat", "eurostat_property_tax"),
         ("eurostat", "eurostat_gdp_nominal"),
         ("eurostat", "eurostat_housing_spending"),
+        ("eurostat", "eurostat_property_tax_peers"),
         ("rnal",),
     ]
     calls.clear()
@@ -402,3 +403,28 @@ def test_census_stock_households_use_only_the_total_rows(monkeypatch):
         pd.DataFrame({"dim_3": ["T", "T"], "dim_4": ["T", "01"], "value": [20.0, 5.0]})
     )
     assert totals["value"].tolist() == [20.0]
+
+
+def test_eurostat_property_tax_peers_one_row_per_country_and_year(monkeypatch):
+    taxes = pd.DataFrame(
+        [
+            {"geo": g, "year": 2020, "na_item": item, "value": v}
+            for g in ("PT", "DE")
+            for item, v in (("D29A", 1_500.0), ("D214C", 0.0 if g == "DE" else 900.0))
+        ]
+    )
+    gdp = pd.DataFrame(
+        {"geo": ["PT", "DE"], "year": [2020, 2020], "value": [200_000.0, 3_000_000.0]}
+    )
+    monkeypatch.setattr(
+        interim.eurostat, "read", lambda d: taxes if d == "eurostat_property_tax_peers" else gdp
+    )
+    out = interim.build_eurostat_property_tax_peers().set_index("geo")
+    assert out.loc["PT", "transaction_tax_eur_m"] == 900.0
+    assert out.loc["DE", "gdp_eur_m"] == 3_000_000.0
+    assert list(out.columns) == [
+        "year",
+        "land_buildings_tax_eur_m",
+        "transaction_tax_eur_m",
+        "gdp_eur_m",
+    ]

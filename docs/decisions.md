@@ -2,6 +2,12 @@
 
 Analytic and engineering choices, newest first. One short entry each: what, why, alternatives rejected.
 
+## 2026-10-25 — Peer comparison of taxes, spending and prices
+- **What:** `eurostat_property_tax_peers` (D29A and D214C, generic column names) beside the Portugal-only IMI/IMT table; `analysis/peers.py` joins price change, mean recurrent property tax and mean housing support over 2015-2024.
+- **Why separate tables:** the existing table names its columns after the Portuguese taxes (IMI, IMT), which would mislead for other countries; a generic peer table keeps both honest.
+- **Reading:** only D29A is compared (D214C is 0.00% of GDP for Germany). Italy has no housing-support value (2022-2023 spending far above trend). A comparison of six countries on three indicators, not a test.
+- **Rejected:** transfer-tax comparison; EU27 in the chart (an aggregate, and its spending jumps in 2022-2023 like Italy's); regressing price change on taxes and spending (n = 5 or 6).
+
 ## 2026-10-25 — Housing spending from COFOG, with a peer set
 - **What:** `eurostat_housing_spending` takes GF0601 (housing development), GF1006 (housing in social protection) and GF06 from Eurostat's government expenditure by function for Portugal and the peer set of the other series; `analysis/spending.py` defines "housing support" as GF0601 plus GF1006, as a share of nominal GDP and in constant euros. GDP for the peers comes from the same `eurostat_gdp_nominal` dataset, whose geo list now includes them.
 - **Why:** it is the one national, comparable, long series of what governments spend on housing, and it also gives the peers for RQ6.5.
