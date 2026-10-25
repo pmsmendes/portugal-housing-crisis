@@ -21,8 +21,9 @@ policies have worked, and what alternative interventions could achieve — and c
 - That rise was not borrowed: real housing credit fell 27% from 2013 to 2024 while real prices rose 98%, and credit growth follows price growth rather than leading it.
 - Building collapsed from 93,000 dwellings a year (1995-2004) to 16,000 (2015-2025); since 2021 implied new households far exceed completions.
 - Foreign residents go with rising price-to-income within municipalities, mainly Brazilians and Lusophone Africans, and the pattern is largely a marker of where they settled.
+- Between the 2011 and 2021 censuses households grew only at one and two persons (+266,000) while larger ones fell by 161,000, yet 68% of the dwellings completed had three or more bedrooms; the mismatch is widest in cheap rural municipalities, not where prices are highest.
 
-**Policy (phase 3)** — cuts in the municipal property-tax rate (IMI): the effect on prices cannot be told from zero or from full capitalisation, and the design fails its pre-trend test, so the result is inconclusive, not causal.
+**Policy (phase 3)** — cuts in the municipal property-tax rate (IMI): the effect on prices cannot be told from zero or from full capitalisation, and the design fails its pre-trend test, so the result is inconclusive, not causal. The money at stake is municipal: IMT revenue (property transfer tax) is up 377% in real terms since 2013 while IMI revenue (annual property tax) is down 12% since 2019 against prices up 86%, and 199 of 300 councils already sit at the 0.30% legal floor, so only about 8% of the IMI bill can be cut without a change of the law.
 
 **Forecasts and scenarios (phase 4)** — exponential smoothing beats naive baselines on rolling-origin validation; random-fold validation overstates skill. In the simulator, 5,000 to 10,000 extra homes a year lower the 2035 price-to-income ratio by only 1% to 3%.
 

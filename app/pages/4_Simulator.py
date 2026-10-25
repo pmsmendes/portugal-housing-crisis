@@ -92,7 +92,16 @@ with st.sidebar:
     construction = st.slider("Extra completions a year", 0, 30_000, 0, 1_000)
     renovation = st.slider("Vacant homes renovated a year", 0, 30_000, 0, 1_000)
     public = st.slider("Public homes built a year", 0, 15_000, 0, 500)
-    imi = st.slider("Change in the average IMI rate (pp)", -0.15, 0.15, 0.0, 0.01)
+    imi = st.slider(
+        "Change in the average IMI rate (pp)",
+        -0.15,
+        0.15,
+        0.0,
+        0.01,
+        help="The urban rate cannot go below 0.30% and most councils are already there: "
+        "without a change of the law the average rate can fall by about 0.03 pp (reports/p3_policy.md, p3_05). "
+        "Larger cuts assume a lower floor.",
+    )
     imt = st.slider("Change in the average IMT rate on homes (pp of price)", -2.0, 2.0, 0.0, 0.25)
     cap = st.radio(
         "Do tax changes show up in prices?",
