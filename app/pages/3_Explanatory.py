@@ -72,8 +72,8 @@ cols[2].metric(
 )
 cols[2].caption(f"Change in price-to-income {START} to {END}")
 
-tab_where, tab_drivers, tab_reg, tab_policy = st.tabs(
-    ["Where", "Drivers", "Regressions", "A policy test"]
+tab_where, tab_drivers, tab_reg, tab_macro, tab_policy = st.tabs(
+    ["Where", "Drivers", "Regressions", "Wages, rates and credit", "A policy test"]
 )
 
 # ---- where ---------------------------------------------------------------------------------------
@@ -269,6 +269,101 @@ with tab_reg:
         )
         .round(3),
         hide_index=True,
+    )
+
+# ---- wages, rates and credit ---------------------------------------------------------------------
+with tab_macro:
+    st.markdown(
+        "**Nationally, wages and falling rates explain the 2013-2021 rise in prices, but not 2021-2025, and "
+        "credit did not drive the recovery.** The gap below is everything wages and mortgage rates do not account "
+        "for (credit rationing, richer, cash or foreign buyers, supply, expectations): it is not a measure of a bubble."
+    )
+    fp = table("p2", "financeable_price")
+    parts = table("p2", "price_change_parts")
+    left, right = st.columns([3, 2])
+    fig = go.Figure(
+        [
+            go.Scatter(
+                x=fp["year"],
+                y=fp["implied_price_b2015"],
+                name="Price a constant payment-to-wage burden finances",
+                line=dict(color=style.MUTED, width=2),
+            ),
+            go.Scatter(
+                x=fp["year"],
+                y=fp["price_b2015"],
+                name="House price index",
+                line=dict(color=style.BLUE, width=3),
+            ),
+        ]
+    )
+    fig.update_layout(legend=dict(orientation="h", y=-0.2))
+    left.plotly_chart(
+        _style(fig, "Actual price against what wages and rates finance (nominal, 2015 = 100)"),
+        width="stretch",
+    )
+    fig = go.Figure(
+        [
+            go.Bar(name="Wages", x=parts["span"], y=parts["wages_pct"], marker_color=style.BLUE),
+            go.Bar(
+                name="Mortgage rate", x=parts["span"], y=parts["rate_pct"], marker_color=style.MUTED
+            ),
+            go.Bar(
+                name="Not accounted for",
+                x=parts["span"],
+                y=parts["gap_pct"],
+                marker_color=style.ORANGE,
+            ),
+            go.Scatter(
+                name="Price change",
+                x=parts["span"],
+                y=parts["price_change_pct"],
+                mode="markers",
+                marker=dict(size=11, color=style.INK, line=dict(width=2, color="white")),
+            ),
+        ]
+    )
+    fig.update_layout(barmode="relative", legend=dict(orientation="h", y=-0.2))
+    right.plotly_chart(_style(fig, "What moved the price (log points)"), width="stretch")
+    left.caption(
+        "Implied price = average wage / payment per euro borrowed (30-year loan, agreed rate), scaled to equal the price on "
+        "average 2003-2025: read changes in the gap, not its level (`p2_13`)."
+    )
+    right.caption(
+        "Parts add up to the price change. Source: BIS, INE, Banco de Portugal, Eurostat; own calculations."
+    )
+
+    cq = table("p2", "credit_quarterly")
+    cq["period_start"] = pd.to_datetime(cq["period_start"])
+    fig = go.Figure(
+        [
+            go.Scatter(
+                x=cq["period_start"],
+                y=cq["hpi_real_b2010"],
+                name="Real house price index",
+                line=dict(color=style.BLUE, width=3),
+            ),
+            go.Scatter(
+                x=cq["period_start"],
+                y=cq["housing_loans_real_b2010"],
+                name="Real housing-loan stock",
+                line=dict(color=style.ORANGE, width=3),
+            ),
+            go.Scatter(
+                x=cq["period_start"],
+                y=cq["loans_per_price_b2010"],
+                name="Loans per unit of price",
+                line=dict(color=style.MUTED, width=2),
+            ),
+        ]
+    )
+    fig.update_layout(legend=dict(orientation="h", y=-0.2))
+    st.plotly_chart(
+        _style(fig, "Real prices against real housing credit (2010 = 100)"), width="stretch"
+    )
+    st.caption(
+        "Credit follows price growth rather than leading it, and credit shrank while prices recovered: the stock does not say who "
+        "bought or how strict lenders were (`p2_12`). Source: BIS, INE, Banco de Portugal; own calculations."
     )
 
 # ---- policy test ---------------------------------------------------------------------------------

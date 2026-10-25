@@ -57,6 +57,7 @@ windows = {
 }
 epis = credit.episodes(frame, windows)
 style.save_table(epis.round(1).reset_index(names="episode"), "p2", "credit_episodes")
+style.save_table(frame.round(2).reset_index(), "p2", "credit_quarterly")
 epis.round(1)
 
 # %% [markdown]
