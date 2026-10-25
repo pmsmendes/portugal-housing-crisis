@@ -38,7 +38,7 @@ available, so a credible answer to "what would change affordability?" needs a po
 
 **Contents:** spatial autocorrelation (`p2_01`), fixed-effects regressions with foreign residents
 (`p2_02`, RQ3.3, RQ5.1), spillover tests (`p2_03`, RQ4.4), segmentation (`p2_04`, RQ4.6), supply against demand
-(`p2_05`, RQ2.1 to RQ2.4, RQ3.4, RQ4.5), second homes (`p2_06`, RQ5.3, RQ5.4) the synthesis (`p2_07`, RQ3.6), mortgage rates (`p2_08`, RQ1.7, RQ9.2, RQ9.5), wages and the labour market (`p2_09`, RQ9.1, RQ1.4), big municipalities against their surroundings (`p2_10`, RQ4.3), age structure (`p2_11`, RQ3.5) and mortgage credit and household debt (`p2_12`, RQ9.2, RQ9.3).
+(`p2_05`, RQ2.1 to RQ2.4, RQ3.4, RQ4.5), second homes (`p2_06`, RQ5.3, RQ5.4) the synthesis (`p2_07`, RQ3.6), mortgage rates (`p2_08`, RQ1.7, RQ9.2, RQ9.5), wages and the labour market (`p2_09`, RQ9.1, RQ1.4), big municipalities against their surroundings (`p2_10`, RQ4.3), age structure (`p2_11`, RQ3.5) mortgage credit and household debt (`p2_12`, RQ9.2, RQ9.3) and what wages and rates could finance (`p2_13`, RQ9.4).
 
 ## Key findings
 
@@ -287,6 +287,18 @@ National quarterly series, 2007 Q4 to 2026 Q1: the stock of household loans for 
 
 Tables: `credit_episodes.csv`, `credit_lag_profile.csv`, `credit_timing.csv`.
 
+## What wages and mortgage rates could finance (`p2_13_wages_rates_and_prices`)
+
+![Prices against what wages and rates finance](figures/p2/financeable_prices.png)
+
+National annual series, 2003 to 2025 (RQ9.4): the price a fixed share of the average wage could service on a 30-year loan at the agreed rate, against the actual price. The gap is what wages and rates do not account for, not a measure of speculation.
+
+37. **Wages and falling rates explain the recovery.** From 2013 to 2021 prices rose 60 log points: wages +18, the rate +35 (the payment per euro borrowed fell by a third), and +6 not accounted for. The payment-to-wage ratio of buying at the index price barely moved (103 to 109, 2015 = 100).
+38. **Since the rate shock they do not.** From 2021 to 2025 prices rose another 45 log points while the rate went from 0.7% to 3.1% (−33 on what can be financed) and wages added +27: +50 is left over, and the payment-to-wage ratio rose from 109 to 180 (2007: 161). The rise of the gap is +40 to +60 under APRC, 20- and 40-year loans and other benchmark windows.
+39. **Read the gap as everything else, not as expectations.** It holds credit rationing (the gap fell 45 points in the 2007-2013 crisis, when loans were hard to get), buyers richer than the average employee, cash, foreign and savings-funded purchases, supply, and expectations; it matches `p2_12` (credit stock flat to 2024) in suggesting that the latest rise was not financed by new loans. These data cannot tell the parts apart.
+
+Tables: `financeable_price.csv`, `price_change_parts.csv`, `financeable_price_variants.csv`.
+
 ## Limitations
 
 - **A pattern, not a mechanism.** Spatial autocorrelation does not show that price changes spill over: shared
@@ -323,6 +335,7 @@ Tables: `credit_episodes.csv`, `credit_lag_profile.csv`, `credit_timing.csv`.
   effect, only that this series cannot tell. Credit supply is not tested: the loan volume we hold covers loans fixed
   for up to one year (the share of fixed-rate loans grew after 2018), not total lending.
 - **Credit and household debt.** One national series of stocks (not new lending), two credit regimes in 18 years and overlapping annual changes; the stock changes with write-offs and sales of loans (the growth rate we use is transactions-based), covers all lenders and counts loans, not who bought. Loans per unit of price assumes a constant housing stock and share bought with a loan, so it is a gauge, not leverage. Lending standards are not observed.
+- **Wages and rates as fundamentals.** The benchmark assumes a constant payment-to-wage burden, one national average wage (not buyers' incomes, which rose faster if buyers are older, richer or foreign), the floating-rate series (fixed-rate loans reset slowly) and a fixed loan share and term; its level depends on the benchmark window, so only changes in the gap are read. Annual, nominal, 23 years, two regimes: a description of a gap, not a test of a bubble.
 - **Centres.** The 100,000-resident rule is a size cut-off, not a functional urban area: it counts suburbs such as Sintra
   and Amadora as centres and Coimbra or Viseu alongside Lisboa. Distance in border steps ignores how far a step is
   (Alentejo municipalities are large) and commuting. The gradient is a description of 302 municipalities with prices in

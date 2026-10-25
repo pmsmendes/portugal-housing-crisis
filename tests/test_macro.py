@@ -133,3 +133,44 @@ def test_fundamentals_drops_years_and_adds_own_lag():
     fewer = macro.fundamentals(d, ["wage_growth_real_pct"], drop_years=(2000, 2001))
     assert fewer["n"].iloc[0] == base["n"].iloc[0] - 2
     assert "price_growth_lag" in macro.fundamentals(d, ["wage_growth_real_pct"], own_lag=True).index
+
+
+def _rates(years, value):
+    return pd.Series(value, index=pd.Index(years, name="year"), name="mortgage_rate_new_lt1y_pct")
+
+
+def test_annual_rates_averages_months_by_year():
+    m = pd.DataFrame({"year": [2020, 2020, 2021], "mortgage_rate_new_lt1y_pct": [1.0, 3.0, 5.0]})
+    assert macro.annual_rates(m).to_dict() == {2020: 2.0, 2021: 5.0}
+
+
+def test_financeable_price_is_scaled_to_the_price_on_average_and_tracks_wages():
+    long, macro_tbl = _annual(n=30)
+    d = macro.annual_frame(long, macro_tbl)
+    d["hpi_nominal_b2015"] = d["compensation_per_employee_eur"] * 0.01  # price moves with wages
+    f = macro.financeable_price(d, _rates(d.index, 3.0), base=(1995, 2024))
+    assert f["gap_pct"].abs().max() == pytest.approx(0, abs=1e-9)  # constant rate, price ~ wage
+    assert f.loc[2015, "payment_to_wage_b2015"] == pytest.approx(100)
+
+
+def test_higher_rate_lowers_the_implied_price_and_opens_a_gap():
+    long, macro_tbl = _annual(n=30)
+    d = macro.annual_frame(long, macro_tbl)
+    d["hpi_nominal_b2015"] = d["compensation_per_employee_eur"] * 0.01
+    rate = _rates(d.index, 2.0)
+    rate.loc[2010:] = 6.0
+    f = macro.financeable_price(d, rate)
+    assert f.loc[2012, "implied_price_b2015"] < f.loc[2005, "implied_price_b2015"]
+    assert f.loc[2012, "gap_pct"] > f.loc[2005, "gap_pct"]
+
+
+def test_price_change_parts_add_up_to_the_price_change():
+    long, macro_tbl = _annual(n=30)
+    d = macro.annual_frame(long, macro_tbl)
+    rate = _rates(d.index, np.linspace(5, 2, len(d)))
+    f = macro.financeable_price(d, rate)
+    parts = macro.price_change_parts(f, 2000, 2012)
+    assert parts["wages_pct"] + parts["rate_pct"] + parts["gap_pct"] == pytest.approx(
+        parts["price_change_pct"]
+    )
+    assert parts["rate_pct"] > 0  # falling rate raises what can be financed

@@ -2,6 +2,11 @@
 
 Analytic and engineering choices, newest first. One short entry each: what, why, alternatives rejected.
 
+## 2026-10-25 — Fundamentals as a constant-burden benchmark, read through changes in the gap
+- **What:** `p2_13` (`macro.financeable_price`, `price_change_parts`) sets implied price = average wage / payment per euro borrowed (30-year annuity at the agreed rate), scaled to equal the actual price on average 2003-2025, and splits each episode's price change into wages, the rate and the gap.
+- **Why:** a regression of price on wages and rates over 23 years and two regimes would hand back a coefficient with no way to tell "unexplained" from misspecified; the accounting split is exact and shows where the benchmark stops working (2021-2025), and the result holds under APRC, 20/40-year terms and other windows (gap +40 to +60).
+- **Rejected:** a cointegration or error-correction model (n = 23); reading the gap as a bubble or as expectations (it also holds rationing, rich or cash buyers, supply); a real-terms version (nominal wage and payment are what a buyer faces, the deflator cancels).
+
 ## 2026-10-25 — Household debt from BPstat, tested like the rate: prices lead credit
 - **What:** new dataset `bp_household_debt` (six BPstat series, domain 18: housing-loan stock in euros and % of GDP, its transactions-based growth, household debt in euros, % of GDP and % of disposable income), kept at quarter-end months. `p2_12` (`analysis/credit.py`) compares the real housing-loan stock with real prices by episode and runs the `p2_08` timing test with credit growth as the regressor (`macro.rate_timing(x_col=...)`), plus a placebo with next year's credit growth.
 - **Why the stock and its growth, not new lending:** the new-loan volume in `bp_mortgage` covers loans fixed up to a year only and falls when borrowers move to fixed rates; the stock covers every lender and the growth rate is transactions-based, so write-offs and loan sales do not count as repayment.

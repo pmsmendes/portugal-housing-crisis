@@ -1876,6 +1876,62 @@ def credit_and_prices(frame: pd.DataFrame, profile: pd.DataFrame) -> Figure:
     )
 
 
+def financeable_prices(frame: pd.DataFrame, parts: pd.DataFrame) -> Figure:
+    """Actual price against the price wages and the mortgage rate could finance (left), and what moved the price (right).
+
+    ``frame`` is ``macro.financeable_price`` (2015 = 100 scale, nominal), ``parts`` a table indexed by episode
+    with ``span`` (label like ``"2021-2025"``) and the log-point change of the price (``price_change_pct``) split
+    into ``wages_pct``, ``rate_pct`` and ``gap_pct`` (``macro.price_change_parts``). Bars are stacked by sign; the
+    dot is the total.
+    """
+    fig, (left, right) = plt.subplots(1, 2, figsize=(11, 4.6), gridspec_kw={"width_ratios": [6, 5]})
+    years = frame.index
+    actual, implied = frame["price_b2015"], frame["implied_price_b2015"]
+    _line(left, years, implied, MUTED, width=1.6, z=2)
+    _line(left, years, actual, BLUE, z=4)
+    for series, color in ((actual, BLUE), (implied, MUTED)):
+        _end_dot(left, years[-1], series.iloc[-1], color)
+        _label(left, years[-1], series.iloc[-1], f"{series.iloc[-1]:.0f}")
+    _legend(left, [Line2D([], [], color=BLUE, lw=LINE_WIDTH, label="House price index"),
+                   Line2D([], [], color=MUTED, lw=1.6, label="Price a constant payment-to-wage burden finances")], loc="upper left")  # fmt: skip
+    left.set_xlim(years[0] - 0.5, years[-1] + 3)
+    left.set_xticks(range(years[0] + (-years[0] % 5), years[-1] + 1, 5))
+    left.set_ylim(bottom=0)
+    _panel_title(left, "Nominal, 2015 = 100")
+
+    colors = {"wages_pct": BLUE, "rate_pct": MUTED, "gap_pct": ORANGE}
+    names = {"wages_pct": "Wages", "rate_pct": "Mortgage rate", "gap_pct": "Not accounted for"}
+    x = np.arange(len(parts))
+    pos, neg = np.zeros(len(parts)), np.zeros(len(parts))
+    for col, color in colors.items():
+        v = parts[col].to_numpy(dtype=float)
+        base = np.where(v >= 0, pos, neg)
+        right.bar(x, v, bottom=base, width=0.62, color=color, zorder=3)
+        pos, neg = pos + np.clip(v, 0, None), neg + np.clip(v, None, 0)
+    right.plot(
+        x, parts["price_change_pct"].astype(float), "o", ms=8, mfc=INK, mec=SURFACE, mew=2, zorder=6
+    )
+    right.axhline(0, color=INK_2, lw=1, zorder=2)
+    labels = [f"{i}\n{s}" for i, s in zip(parts.index, parts["span"], strict=True)]
+    right.set_xticks(x, labels, fontsize=8)
+    right.set_ylabel("Log points", fontsize=9, color=INK_2)
+    _legend(right, [Patch(color=c, label=names[k]) for k, c in colors.items()] +
+            [Line2D([], [], marker="o", ls="", color=INK, label="Price change")], loc="upper left")  # fmt: skip
+    _panel_title(right, "What moved the price")
+
+    last = parts.iloc[-1]
+    return style.finish(
+        fig,
+        f"Since {last['span'][:4]} prices rose {last['price_change_pct']:.0f} log points: wages {last['wages_pct']:+.0f}, "
+        f"the rate {last['rate_pct']:+.0f}, and {last['gap_pct']:+.0f} that neither accounts for",
+        "Annual, national, nominal; the burden is a fixed share of the average wage on a 30-year loan at the agreed rate for new housing loans",
+        "Source: BIS, INE, Banco de Portugal, Eurostat (compensation per employee), own calculations. The implied price is scaled to equal the actual "
+        "on average 2003 to 2025, so the gap's changes, not its level, carry the information.",
+        head_in=1.3,
+        foot_in=0.6,
+    )
+
+
 # ---- kinds of home and kinds of price -------------------------------------------------------------
 
 

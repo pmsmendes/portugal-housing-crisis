@@ -1,4 +1,4 @@
-"""Mortgage rates, wages, unemployment and the house-price cycle (RQ1.7, RQ1.4, RQ9.1, RQ9.2, RQ9.5).
+"""Mortgage rates, wages, unemployment and the house-price cycle (RQ1.7, RQ1.4, RQ9.1, RQ9.2, RQ9.4, RQ9.5).
 
 National quarterly series only (2003 to 2026): the BIS real and nominal house price index (INE's from 2009),
 the agreed rate on new housing loans (Banco de Portugal) and the payment it implies on a 100,000 euro loan.
@@ -15,6 +15,7 @@ import numpy as np
 import pandas as pd
 import statsmodels.api as sm
 
+from pthousing.config import MORTGAGE_TERM_YEARS
 from pthousing.features.affordability import mortgage_payment_monthly
 
 #: The rate whose payment the rest of the project uses (``mortgage_payment_100k_eur``).
@@ -211,3 +212,71 @@ def fundamentals(
         }
     )
     return out.drop(index="const").rename_axis("term")
+
+
+# ---- what wages and rates could finance (annual) --------------------------------------------------
+
+
+def annual_rates(mortgage: pd.DataFrame, column: str = RATE_COLUMN) -> pd.Series:
+    """Calendar-year mean of a monthly ``bp_mortgage`` rate column, indexed by year."""
+    return mortgage.groupby("year")[column].mean().rename(column)
+
+
+def financeable_price(
+    annual: pd.DataFrame,
+    rates: pd.Series,
+    base: tuple[int, int] = (2003, 2025),
+    term_years: int = MORTGAGE_TERM_YEARS,
+) -> pd.DataFrame:
+    """The nominal price a constant payment-to-wage burden could finance, against the actual price.
+
+    A buyer who spends a fixed share of the average wage on a loan of a fixed share of the price can pay
+    ``wage / payment_per_euro_borrowed``: the implied price rises with wages and falls with the rate. Both are
+    nominal. ``annual`` is ``annual_frame`` (nominal price index, compensation per employee), ``rates`` yearly
+    rates in per cent. The level of the burden is not observed, so the implied price is scaled to equal the actual
+    price on average over ``base`` (years, inclusive): the gap (log points) is relative to that average, and its
+    changes, not its level, carry the information. Returns the actual and implied price (2015 = 100 scale), the
+    gap, the payment per 100,000 euros and the payment-to-wage ratio of buying at the index price (2015 = 100).
+    """
+    d = (
+        annual[["hpi_nominal_b2015", "compensation_per_employee_eur"]]
+        .join(rates, how="inner")
+        .dropna()
+    )
+    payment = pd.Series(
+        mortgage_payment_monthly(100_000, d[rates.name], term_years), index=d.index, name="payment"
+    )
+    log_implied = np.log(d["compensation_per_employee_eur"]) - np.log(payment)
+    window = (d.index >= base[0]) & (d.index <= base[1])
+    shift = (np.log(d["hpi_nominal_b2015"]) - log_implied)[window].mean()
+    out = pd.DataFrame(
+        {
+            "price_b2015": d["hpi_nominal_b2015"],
+            "implied_price_b2015": np.exp(log_implied + shift),
+            "rate_pct": d[rates.name],
+            "payment_100k_eur": payment,
+            "wage_eur": d["compensation_per_employee_eur"],
+        }
+    )
+    out["gap_pct"] = 100 * (np.log(out["price_b2015"]) - np.log(out["implied_price_b2015"]))
+    burden = out["price_b2015"] * out["payment_100k_eur"] / out["wage_eur"]
+    out["payment_to_wage_b2015"] = 100 * burden / burden.loc[BASE]
+    return out
+
+
+def price_change_parts(frame: pd.DataFrame, start: int, end: int) -> dict[str, float]:
+    """Log-point change of the nominal price from ``start`` to ``end``, split into wages, the rate and the gap.
+
+    ``price = wage / payment x exp(gap)``, so the change is wage growth, minus the change in the payment per
+    euro borrowed (the rate; positive when it falls) and the change in the gap (what the two do not account for).
+    """
+    a, b = frame.loc[start], frame.loc[end]
+    wages = 100 * np.log(b["wage_eur"] / a["wage_eur"])
+    rate = -100 * np.log(b["payment_100k_eur"] / a["payment_100k_eur"])
+    gap = b["gap_pct"] - a["gap_pct"]
+    return {
+        "price_change_pct": 100 * np.log(b["price_b2015"] / a["price_b2015"]),
+        "wages_pct": wages,
+        "rate_pct": rate,
+        "gap_pct": gap,
+    }
