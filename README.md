@@ -4,18 +4,29 @@ An evidence-based look at why housing affordability in Portugal has deteriorated
 decades, what role supply, demographics, tourism and regional dynamics play, whether specific housing
 policies have worked, and what alternative interventions could achieve — and cost.
 
-> **Status:** phase 1 (evidence) is complete: data pipeline, municipal panels, affordability indicators, maps and trend
-> charts — see the [phase 1 report](reports/p1_evidence.md). Phase 2 is done (spatial autocorrelation, fixed-effects regressions, spillover tests, segmentation, supply against demand, second homes, synthesis); phases 3 and 4 are done too (see the reports below). The dashboard has five pages: landing, geographic map, trends, explanatory and simulator.
+> **Status:** all four phases are done: evidence ([report](reports/p1_evidence.md)), explanation ([report](reports/p2_explain.md)), one policy test ([report](reports/p3_policy.md)) and forecasts with a scenario simulator ([report](reports/p4_forecast.md)). The dashboard has five pages: landing, geographic map, trends, explanatory and simulator. Research questions and their status: [docs/research_questions.md](docs/research_questions.md).
 
 ![Price-to-income by municipality, 2024](reports/figures/p1/pti_map_2024.png)
 
-## What phase 1 found
+## What it found
+**Evidence (phase 1)**
 - Real house prices have more than doubled since 2013; Portugal's nominal index rose 3.0 times against 1.7 for the EU27.
 - The median municipality needs 9.5 years of income to buy a home (8.0 in 2016); the 90th percentile needs 18 (12 in 2016).
-- The mortgage rate explains most of the recent jump: the median payment burden went from 28% to 45% of income, and would be 33% had rates stayed at their 2016 level.
+- The mortgage rate explains most of the recent jump in the burden: the median payment burden went from 28% to 45% of income, and would be 33% had rates stayed at their 2016 level.
 - Pressure is concentrated in the Lisboa area and the Algarve; interior districts stayed near 5 years of income.
 
-These are descriptive results with stated limits (short municipal history, one national mortgage rate, assumed loan terms); see the [full report](reports/p1_evidence.md).
+**Explanation (phase 2)**
+- Geography accounts for most of where affordability worsened: district, coast and density explain 53% of the variation in the 2016-2024 change of price-to-income across mainland municipalities; demand, supply, tourism and second homes add under two points.
+- Since 2013 real prices rose 129% against 27% for real wages; wages and falling rates account for the 2013-2021 rise, but not 2021-2025, when about 50 log points of the price rise are left over.
+- That rise was not borrowed: real housing credit fell 27% from 2013 to 2024 while real prices rose 98%, and credit growth follows price growth rather than leading it.
+- Building collapsed from 93,000 dwellings a year (1995-2004) to 16,000 (2015-2025); since 2021 implied new households far exceed completions.
+- Foreign residents go with rising price-to-income within municipalities, mainly Brazilians and Lusophone Africans, and the pattern is largely a marker of where they settled.
+
+**Policy (phase 3)** — cuts in the municipal property-tax rate (IMI): the effect on prices cannot be told from zero or from full capitalisation, and the design fails its pre-trend test, so the result is inconclusive, not causal.
+
+**Forecasts and scenarios (phase 4)** — exponential smoothing beats naive baselines on rolling-origin validation; random-fold validation overstates skill. In the simulator, 5,000 to 10,000 extra homes a year lower the 2035 price-to-income ratio by only 1% to 3%.
+
+All results are associations or conditional scenarios with stated limits (short municipal history, one national mortgage rate, assumed loan terms); each report has a limitations section.
 
 ## Questions
 1. **Evidence** — How have prices, rents and affordability evolved nationally and by municipality, in real terms?
