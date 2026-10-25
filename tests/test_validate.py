@@ -143,6 +143,24 @@ def _macro(**override):
     return df.assign(**override)
 
 
+def test_eurostat_property_tax_checks_consecutive_years_and_jumps():
+    years = np.arange(2018, 2024)
+    df = pd.DataFrame(
+        {
+            "year": years,
+            "imi_revenue_eur_m": 1_500.0,
+            "imt_revenue_eur_m": 1_000.0 * 1.05 ** (years - 2018),
+            "gdp_eur_m": 200_000.0,
+        }
+    )
+    assert _failures("eurostat_property_tax", df) == []
+    assert any(
+        "consecutive" in r["detail"] for r in _failures("eurostat_property_tax", df.drop(index=2))
+    )
+    jumpy = df.assign(imt_revenue_eur_m=[1_000.0, 1_000.0, 2_500.0, 2_500.0, 2_500.0, 2_500.0])
+    assert any("jumps" in r["detail"] for r in _failures("eurostat_property_tax", jumpy))
+
+
 def test_eurostat_macro_checks_consecutive_years_and_wage_jumps():
     assert _failures("eurostat_macro", _macro()) == []
     gap = _macro().drop(index=2)

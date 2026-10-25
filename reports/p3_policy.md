@@ -119,6 +119,18 @@ permanent 0.01 pp cut is **0.19%** (range 0.10% to 0.33%: assessed value 50% to 
 **For phase 4:** the IMI lever uses the share of a cut capitalised into prices as an assumption between 0 (no capitalisation) and 1 (full: 0.19% of the price per
 0.01 pp, range 0.10% to 0.33%), run at both ends; there is no estimate to cite for the middle. Under the project rule on behavioural parameters, the simulator must say so.
 
+## Context: how much revenue is at stake (`p3_04`, RQ7.1)
+
+National general-government revenue, accrual basis (Eurostat; no municipal series exists), in constant 2024 euros. Figure `reports/figures/p3/property_tax_revenue.png`.
+
+- **IMT (with stamp duty) follows the market.** Real revenue fell 67% from 2007 to 2013, rose 377% from 2013 to 2025 and in 2025 is 2,051 EUR m, 0.68% of GDP (0.55% in 2007).
+- **IMI has not followed prices.** Real revenue rose 23% in 2013-2019 and fell 12% in 2019-2025 while nominal prices rose 86%; from 0.86% of GDP in 2015 it is 0.59% in 2025.
+- **Rate and base.** Over 2013-2025 IMI revenue rose 29 log points: the weighted average rate fell 12 (0.370% to 0.327%) and the implied base rose 41, against 104 for the nominal house price. The base lags the market by 63 log points, 52 of them since 2019.
+  The base also carries reassessments, exemptions and the additional IMI, so the lag is an upper-level reading, not an assessment ratio.
+- **Scale for a cut.** A 0.01 pp cut of the average rate costs about 55 EUR m a year (linear, 2025). The 2024 anchors of the simulator are within 3% of these series.
+
+Revenue is the cost side of a rate cut; the capitalisation result above is the benefit side, and it is inconclusive.
+
 ## Limitations
 
 - **Selection into treatment.** Rates are chosen after price booms, and the pre-trend test rejects. The design cannot separate the effect of the cut from mean reversion after

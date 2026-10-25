@@ -72,7 +72,7 @@ Reference questions by ID (e.g. `RQ2.3`) in notebooks, reports and commits.
 ## RQ7 — Taxation and public revenue (Phases 3–4)
 | ID | Question | Status | Where |
 |---|---|---|---|
-| RQ7.1 | How have IMI and IMT revenues evolved? | — | |
+| RQ7.1 | How have IMI and IMT revenues evolved? | wip | `p3_04`, `reports/p3_policy.md`: national only (accrual, 1995-2025). IMT real -67% 2007-2013 then +377% 2013-2025 (0.68% of GDP in 2025); IMI real +23% 2013-2019, -12% 2019-2025 while nominal prices rose 86%, 0.86% of GDP in 2015 to 0.59%. Municipal revenue not available (PDF only) |
 | RQ7.2 | How would IMI/IMT rate cuts affect central and municipal revenues under different scenarios? | — | |
 | RQ7.3 | Could more transactions or construction partly offset initial revenue losses from tax cuts? | — | |
 | RQ7.4 | Who benefits most from IMI/IMT cuts, and how much passes through to lower housing costs vs higher prices? | wip | `p3_02`, `p3_03`, `reports/p3_policy.md`: capitalisation of municipal IMI cuts into prices is inconclusive (pre-trend rejected, interval contains zero and full capitalisation, power 12-21x the benchmark); IMT and the incidence by income group not covered |

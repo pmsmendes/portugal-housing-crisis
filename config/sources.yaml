@@ -204,6 +204,23 @@ eurostat:
     geo: [PT]
     format: json
     notes: Verified 2026-10-24; annual, whole economy.
+  eurostat_property_tax:
+    dataset: gov_10a_taxag
+    params: {sector: S13, unit: MIO_EUR, na_item: [D29A, D214C]}   # general government; D29A taxes on land, buildings and other structures; D214C taxes on financial and capital transactions
+    geo: [PT]
+    format: json
+    notes: >
+      Verified 2026-10-25; annual, national, 1995-2025 (the PC_GDP unit is rounded to one decimal, too coarse: shares of GDP
+      are computed from eurostat_gdp_nominal). D29A is, in practice, IMI (the municipal property tax); D214C
+      is the taxes on financial and capital transactions, which in Portugal is IMT (property transfer tax) plus stamp duty
+      on those transactions. National accounts record taxes on an accrual basis, so a year can differ from cash collection:
+      2024 is IMI 1,677 and D214C 1,675 EUR million against 1,630 (assessed) and 1,733 (cash IMT) in the simulator anchors. Standing in for the municipal series (at_imi_imt), which exists only as PDF reports.
+  eurostat_gdp_nominal:
+    dataset: nama_10_gdp
+    params: {na_item: B1GQ, unit: CP_MEUR}   # GDP at market prices, current prices, EUR million
+    geo: [PT]
+    format: json
+    notes: Verified 2026-10-25; annual, national. Denominator for the property tax shares of GDP.
 
 at:
   # IMI rates: Portal das Financas "Consultar Taxas do Municipio" (public, read-only HTML, one page per year and district).

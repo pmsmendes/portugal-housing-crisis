@@ -1767,6 +1767,52 @@ def rates_and_cycles(frame: pd.DataFrame, episodes: pd.DataFrame, profile: pd.Da
     )
 
 
+def property_tax_revenue(frame: pd.DataFrame) -> Figure:
+    """Real IMI and IMT revenue (left) and both against the real house price index, 2015 = 100 (right).
+
+    ``frame`` is ``revenue.annual_frame``. Left: million euros of the base year. Right: the same two series as
+    indices with the real house price index, so the gap between what homes are worth and what they yield shows.
+    """
+    d = frame.loc[1995:]
+    imi, imt = d["imi_real_eur_m"], d["imt_real_eur_m"]
+    price, imi_idx, imt_idx = d["hpi_real_b2015"], d["imi_real_b2015"], d["imt_real_b2015"]
+    fig, (left, right) = plt.subplots(1, 2, figsize=(11, 4.6))
+    for ax, series_list in (
+        (left, ((imt, BLUE), (imi, ORANGE))),
+        (right, ((price, MUTED), (imt_idx, BLUE), (imi_idx, ORANGE))),
+    ):
+        for series, color in series_list:
+            _line(
+                ax,
+                series.index,
+                series,
+                color,
+                width=1.4 if color == MUTED else LINE_WIDTH,
+                z=2 if color == MUTED else 4,
+            )
+            _end_dot(ax, series.index[-1], series.iloc[-1], color)
+            _label(ax, series.index[-1], series.iloc[-1], f"{series.iloc[-1]:,.0f}")
+        ax.set_xlim(1994, d.index.max() + 4.5)
+        ax.set_xticks(range(1995, 2026, 5))
+    left.set_ylim(0, None)
+    _legend(left, [Line2D([], [], color=BLUE, lw=LINE_WIDTH, label="IMT (with stamp duty)"),
+                   Line2D([], [], color=ORANGE, lw=LINE_WIDTH, label="IMI")], loc="upper left")  # fmt: skip
+    _legend(right, [Line2D([], [], color=MUTED, lw=1.4, label="Real house price index"),
+                    Line2D([], [], color=BLUE, lw=LINE_WIDTH, label="IMT revenue"),
+                    Line2D([], [], color=ORANGE, lw=LINE_WIDTH, label="IMI revenue")], loc="upper left")  # fmt: skip
+    _panel_title(left, "Revenue (million euros, constant prices)")
+    _panel_title(right, "Revenue and house prices (2015 = 100, real)")
+    since = lambda s: f"{100 * (s.iloc[-1] / s.loc[2015] - 1):+.0f}%"  # noqa: E731
+    return style.finish(
+        fig,
+        f"Since 2015 real house prices are {since(price)}, IMT revenue {since(imt_idx)} and IMI revenue {since(imi_idx)}",
+        "Annual, national, general government, 1995 to 2025; constant euros of the base year (consumer price index)",
+        "Source: Eurostat (national accounts D29A and D214C, accrual basis), INE, BIS, OECD, own calculations.",
+        head_in=1.3,
+        foot_in=0.6,
+    )
+
+
 def wages_and_prices(annual: pd.DataFrame) -> Figure:
     """Real house prices against real wages (left) and two price-to-earnings ratios (right), 1995 onward.
 

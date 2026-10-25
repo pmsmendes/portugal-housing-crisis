@@ -2,6 +2,12 @@
 
 Analytic and engineering choices, newest first. One short entry each: what, why, alternatives rejected.
 
+## 2026-10-25 — National IMI and IMT revenue from the national accounts
+- **What:** `eurostat_property_tax` takes D29A and D214C of general government from Eurostat (`gov_10a_taxag`) with nominal GDP; `analysis/revenue.py` and `p3_04` read them against house prices and the weighted average municipal IMI rate (fixed 2021 dwelling weights, so only rate changes move it).
+- **Why:** no municipal revenue is machine-readable. The national accounts are a different measure from the simulator's anchors (accrual, not assessed or cash) but agree within 3% for 2024, which supports using the anchors for scale.
+- **Reading:** the IMI base is revenue over the average rate, so it also carries reassessments, exemptions and AIMI; the gap to the nominal price is how far assessed values lag the market, not a measured assessment ratio. IMT is a product of price and sales, which are not separated.
+- **Rejected:** the PC_GDP unit (rounded to one decimal); replacing the simulator anchors (they are what a 2024 cut would apply to); reading the 2025 value as final.
+
 ## 2026-10-25 — Nationality groups in the foreign-resident regression
 - **What:** `p2_14` splits the foreign-resident change of `p2_02` into six groups (`demography.NATIONALITY_GROUPS`: Brazil, Lusophone Africa, Eastern Europe, China, UK, all other) with the same controls and effects, and tests equality of the six coefficients (`panel.equal_coefficients`, Wald).
 - **Why these groups:** each is large enough to move a municipality's population in some places (the smallest, China and the UK, are 2.7% and 4.5% of the 2023 total) and each follows its own trend (Eastern Europe fell by a third while Brazil quadrupled); single countries would give 11 mostly empty terms.

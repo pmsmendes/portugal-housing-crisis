@@ -404,3 +404,19 @@ def test_population_components_title_names_the_final_run_of_natural_decline():
     }
     fig = charts.population_components(balance, rates, first_year=1990)
     assert "Since 2005 deaths outnumber births" in _title(fig)
+
+
+def test_property_tax_revenue_title_gives_the_change_since_2015_for_each_series():
+    years = np.arange(1995, 2026)
+    frame = pd.DataFrame(
+        {
+            "imi_real_eur_m": 1_000.0,
+            "imt_real_eur_m": 500.0 + 10 * (years - 1995),
+            "imi_real_b2015": np.where(years >= 2015, 100 - (years - 2015), 100.0),
+            "imt_real_b2015": 100 + 5.0 * (years - 2015),
+            "hpi_real_b2015": 100 + 4.0 * (years - 2015),
+        },
+        index=pd.Index(years, name="year"),
+    )
+    title = _title(charts.property_tax_revenue(frame))
+    assert "+40%" in title and "+50%" in title and "-10%" in title

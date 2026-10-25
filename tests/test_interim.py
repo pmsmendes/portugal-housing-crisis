@@ -229,6 +229,24 @@ def test_eurostat_macro_divides_compensation_by_employees(monkeypatch):
     ]
 
 
+def test_eurostat_property_tax_names_the_taxes_and_adds_gdp(monkeypatch):
+    taxes = pd.DataFrame(
+        [
+            {"year": y, "na_item": item, "value": v + y - 2020}
+            for y in (2020, 2021)
+            for item, v in (("D29A", 1_500.0), ("D214C", 1_000.0))
+        ]
+    )
+    gdp = pd.DataFrame({"year": [2020, 2021], "value": [200_000.0, 210_000.0]})
+    monkeypatch.setattr(
+        interim.eurostat, "read", lambda d: taxes if d == "eurostat_property_tax" else gdp
+    )
+    out = interim.build_eurostat_property_tax().set_index("year")
+    assert out.loc[2021, "imi_revenue_eur_m"] == 1_501.0
+    assert out.loc[2020, "gdp_eur_m"] == 200_000.0
+    assert list(out.columns) == ["imi_revenue_eur_m", "imt_revenue_eur_m", "gdp_eur_m"]
+
+
 def test_aima_foreigners_labels_nationalities_and_keeps_the_total(monkeypatch):
     rows = [
         {"muni_code": "0101", "period_start": "2023-01-01", "dim_3": code, "value": v}
@@ -312,6 +330,8 @@ def test_download_calls_each_chosen_source_and_rejects_unknown(monkeypatch):
         ("eurostat", "eurostat_unemployment"),
         ("eurostat", "eurostat_compensation"),
         ("eurostat", "eurostat_employees"),
+        ("eurostat", "eurostat_property_tax"),
+        ("eurostat", "eurostat_gdp_nominal"),
         ("rnal",),
     ]
     calls.clear()

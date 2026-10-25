@@ -293,6 +293,16 @@ def schemas() -> dict[str, DataFrameSchema]:
             unique=["year"],
             strict=True,
         ),
+        "eurostat_property_tax": DataFrameSchema(
+            {
+                "year": _year(1995),
+                "imi_revenue_eur_m": _num(100, 5_000, nullable=False),
+                "imt_revenue_eur_m": _num(100, 5_000, nullable=False),
+                "gdp_eur_m": _num(50_000, 400_000, nullable=False),
+            },
+            unique=["year"],
+            strict=True,
+        ),
         "rnal_al": DataFrameSchema(
             {
                 "rnal_n": Column(int, Check.ge(1), coerce=True),
@@ -494,6 +504,13 @@ def check_eurostat_macro(df: pd.DataFrame) -> list[str | None]:
     return [gaps, None if jump < 0.25 else f"compensation per employee jumps {jump:.0%} in a year"]
 
 
+def check_eurostat_property_tax(df: pd.DataFrame) -> list[str | None]:
+    years = df["year"]
+    gaps = None if years.diff().dropna().eq(1).all() else "years are not consecutive"
+    jump = df[["imi_revenue_eur_m", "imt_revenue_eur_m"]].pct_change().abs().max().max()
+    return [gaps, None if jump < 0.6 else f"a property tax series jumps {jump:.0%} in a year"]
+
+
 def check_aima_foreigners(df: pd.DataFrame) -> list[str | None]:
     key = [MUNI_KEY, "year"]
     tot = df[df["nationality"] == "total"].set_index(key)["foreign_residents_n"]
@@ -645,6 +662,7 @@ CHECKS: dict[str, Callable[[pd.DataFrame], list[str | None]]] = {
     "eurostat_hpi": check_eurostat_hpi,
     "eurostat_demography": check_eurostat_demography,
     "eurostat_macro": check_eurostat_macro,
+    "eurostat_property_tax": check_eurostat_property_tax,
     "bis_spp": check_bis_spp,
     "oecd_house_prices": check_oecd_house_prices,
     "rnal_al": check_rnal,

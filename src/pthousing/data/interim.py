@@ -455,6 +455,22 @@ def build_eurostat_macro() -> pd.DataFrame:
     return out.rename_axis("year").reset_index().sort_values("year", ignore_index=True)
 
 
+def build_eurostat_property_tax() -> pd.DataFrame:
+    """General-government revenue from property taxes and nominal GDP, one row per year.
+
+    ``imi_revenue_eur_m`` and ``imt_revenue_eur_m`` are national-accounts D29A (taxes on land, buildings and other
+    structures, in practice IMI) and D214C (taxes on financial and capital transactions: IMT plus stamp duty on them,
+    accrual basis), current prices; ``gdp_eur_m`` is nominal GDP, the denominator for shares of GDP.
+    """
+    raw = eurostat.read("eurostat_property_tax")
+    taxes = raw.pivot(index="year", columns="na_item", values="value").rename(
+        columns={"D29A": "imi_revenue_eur_m", "D214C": "imt_revenue_eur_m"}
+    )
+    gdp = eurostat.read("eurostat_gdp_nominal").set_index("year")["value"].rename("gdp_eur_m")
+    out = taxes.join(gdp, how="left").rename_axis(columns=None)
+    return out[["imi_revenue_eur_m", "imt_revenue_eur_m", "gdp_eur_m"]].reset_index()
+
+
 # Census tables that exceed INE's row limit as a whole: only the totals of the dimensions we do not split by.
 INE_FILTERED = {
     "0006304": {"Dim4": "T", "Dim5": "T"},  # conventional dwellings 2011 by occupancy status
@@ -470,6 +486,8 @@ EUROSTAT_DATASETS = (
     "eurostat_unemployment",
     "eurostat_compensation",
     "eurostat_employees",
+    "eurostat_property_tax",
+    "eurostat_gdp_nominal",
 )
 SOURCES = ("ine", "aima", "at", "bportugal", "eurostat", "bis", "oecd", "rnal", "caop")
 
@@ -524,6 +542,7 @@ BUILDERS: dict[str, Callable[[], pd.DataFrame]] = {
     "eurostat_hicp": build_eurostat_hicp,
     "eurostat_demography": build_eurostat_demography,
     "eurostat_macro": build_eurostat_macro,
+    "eurostat_property_tax": build_eurostat_property_tax,
     "bis_spp": build_bis_spp,
     "oecd_house_prices": build_oecd_house_prices,
     "rnal_al": build_rnal_al,
