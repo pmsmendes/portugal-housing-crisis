@@ -433,3 +433,27 @@ def test_new_build_vs_households_title_names_growth_decline_and_big_dwelling_sha
     small = pd.Series(30.0, index=pd.Index(range(1995, 2026), name="year"))
     title = _title(charts.new_build_vs_households(comparison, small, {2011: 53.0, 2021: 58.0}))
     assert "260k" in title and "160k" in title and "70%" in title
+
+
+def test_housing_spending_title_gives_the_low_the_latest_and_the_two_peers():
+    years = np.arange(1995, 2025)
+    portugal = pd.DataFrame(
+        {
+            "housing_development_real_eur_m": 300.0,
+            "housing_benefits_real_eur_m": 400.0,
+        },
+        index=pd.Index(years, name="year"),
+    )
+    shares = pd.DataFrame(
+        {
+            "PT": np.where(years >= 2015, 0.35 + 0.02 * (years - 2015), 0.5),
+            "DE": 0.5,
+            "ES": 0.2,
+            "FR": 1.0,
+            "IE": 1.1,
+        },
+        index=pd.Index(years, name="year"),
+    )
+    peers = {"DE": "Germany", "ES": "Spain", "FR": "France", "IE": "Ireland"}
+    title = _title(charts.housing_spending(portugal, shares, peers))
+    assert "0.35%" in title and "0.53%" in title and "France (1.0%)" in title

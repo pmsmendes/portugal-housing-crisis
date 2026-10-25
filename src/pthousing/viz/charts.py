@@ -1830,6 +1830,58 @@ def rates_and_cycles(frame: pd.DataFrame, episodes: pd.DataFrame, profile: pd.Da
     )
 
 
+def housing_spending(portugal: pd.DataFrame, shares: pd.DataFrame, peers: dict[str, str]) -> Figure:
+    """Portugal's real housing spending by kind (left) and housing support as a share of GDP against peers (right).
+
+    ``portugal`` is ``spending.portugal_frame`` (real columns in constant euros), ``shares`` is
+    ``spending.support_shares`` and ``peers`` maps the geo codes drawn to their names.
+    """
+    d = portugal.loc[1995:]
+    fig, (left, right) = plt.subplots(1, 2, figsize=(11, 4.6))
+    dev, ben = d["housing_development_real_eur_m"], d["housing_benefits_real_eur_m"]
+    left.stackplot(
+        d.index, dev.fillna(0), ben.fillna(0), colors=[BLUE, ORANGE], alpha=0.9, zorder=3
+    )
+    left.set_ylim(0, (dev.fillna(0) + ben.fillna(0)).max() * 1.3)
+    left.set_xlim(1994, d.index.max() + 1)
+    left.set_xticks(range(1995, 2026, 5))
+    left.yaxis.set_major_formatter(mticker.FuncFormatter(lambda v, _: f"{v:,.0f}"))
+    _legend(left, [Patch(facecolor=BLUE, label="Housing development (incl. public housing)"),
+                   Patch(facecolor=ORANGE, label="Housing allowances and rent subsidies")], loc="upper left")  # fmt: skip
+    _panel_title(left, "Portugal, million euros of the base year")
+    s = shares.loc[1995:]
+    pt = s["PT"].dropna()
+    for geo, name in peers.items():
+        line = s[geo].dropna()
+        _line(right, line.index, line, MUTED, width=1.4, z=2)
+        _label(
+            right,
+            line.index[-1],
+            line.iloc[-1],
+            name,
+            weight="normal",
+            va="bottom" if geo == "DE" else "center",
+        )
+    _line(right, pt.index, pt, BLUE)
+    _end_dot(right, pt.index[-1], pt.iloc[-1], BLUE)
+    _label(right, pt.index[-1], pt.iloc[-1], f"Portugal {pt.iloc[-1]:.2f}%", va="top")
+    right.set_xlim(1994, pt.index.max() + 9)
+    right.set_xticks(range(1995, 2026, 5))
+    right.set_ylim(0, None)
+    right.yaxis.set_major_formatter(mticker.PercentFormatter(decimals=1))
+    _panel_title(right, "Housing development plus allowances, % of GDP")
+    low = pt.loc[2010:].idxmin()
+    return style.finish(
+        fig,
+        f"Housing support rose from {pt.loc[low]:.2f}% of GDP in {low} to {pt.iloc[-1]:.2f}% in {pt.index[-1]}, "
+        f"still below France ({s['FR'].iloc[-1]:.1f}%) and Ireland ({s['IE'].iloc[-1]:.1f}%)",
+        "General government, annual, 1995 to 2024; spending by function (COFOG): housing development plus housing in social protection",
+        "Source: Eurostat (government expenditure by function, national accounts), INE, own calculations. Tax expenditures are not included. Italy and the EU27 are left out: their 2022-2023 values are far above trend.",
+        head_in=1.3,
+        foot_in=0.6,
+    )
+
+
 def property_tax_revenue(frame: pd.DataFrame) -> Figure:
     """Real IMI and IMT revenue (left) and both against the real house price index, 2015 = 100 (right).
 

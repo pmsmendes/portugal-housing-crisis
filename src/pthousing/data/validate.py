@@ -313,6 +313,18 @@ def schemas() -> dict[str, DataFrameSchema]:
             unique=["year"],
             strict=True,
         ),
+        "eurostat_housing_spending": DataFrameSchema(
+            {
+                "geo": _cat({"PT", "ES", "IT", "FR", "DE", "IE", "EU27_2020"}),
+                "year": _year(1995),
+                "housing_development_eur_m": _num(0, 200_000),
+                "housing_benefits_eur_m": _num(0, 200_000),
+                "housing_amenities_eur_m": _num(0, 300_000, nullable=False),
+                "gdp_eur_m": _num(10_000, 30_000_000, nullable=False),
+            },
+            unique=["geo", "year"],
+            strict=True,
+        ),
         "rnal_al": DataFrameSchema(
             {
                 "rnal_n": Column(int, Check.ge(1), coerce=True),
@@ -525,6 +537,17 @@ def check_eurostat_property_tax(df: pd.DataFrame) -> list[str | None]:
     return [gaps, None if jump < 0.6 else f"a property tax series jumps {jump:.0%} in a year"]
 
 
+def check_eurostat_housing_spending(df: pd.DataFrame) -> list[str | None]:
+    gaps = df.groupby("geo")["year"].apply(lambda y: bool(y.diff().dropna().eq(1).all()))
+    inside = df["housing_development_eur_m"].isna() | (
+        df["housing_development_eur_m"] <= df["housing_amenities_eur_m"] + 1e-6
+    )
+    return [
+        None if gaps.all() else f"years are not consecutive for {list(gaps[~gaps].index)}",
+        None if inside.all() else "housing development exceeds housing and community amenities",
+    ]
+
+
 def check_aima_foreigners(df: pd.DataFrame) -> list[str | None]:
     key = [MUNI_KEY, "year"]
     tot = df[df["nationality"] == "total"].set_index(key)["foreign_residents_n"]
@@ -678,6 +701,7 @@ CHECKS: dict[str, Callable[[pd.DataFrame], list[str | None]]] = {
     "eurostat_demography": check_eurostat_demography,
     "eurostat_macro": check_eurostat_macro,
     "eurostat_property_tax": check_eurostat_property_tax,
+    "eurostat_housing_spending": check_eurostat_housing_spending,
     "bis_spp": check_bis_spp,
     "oecd_house_prices": check_oecd_house_prices,
     "rnal_al": check_rnal,

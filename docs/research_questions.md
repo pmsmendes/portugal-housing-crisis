@@ -82,7 +82,7 @@ Reference questions by ID (e.g. `RQ2.3`) in notebooks, reports and commits.
 ## RQ8 — Public expenditure and fiscal sustainability (Phase 4)
 | ID | Question | Status | Where |
 |---|---|---|---|
-| RQ8.1 | How much does government spend on housing programmes, rental support, subsidies, tax incentives and public housing? | — | |
+| RQ8.1 | How much does government spend on housing programmes, rental support, subsidies, tax incentives and public housing? | partly | `p3_06`, `reports/p3_policy.md`: housing development (public housing included) plus housing allowances and rent subsidies was 1,615 EUR m in 2024, 0.55% of GDP (0.32% in 2016, 0.91% at the 2001 peak); real housing development +198% and allowances +81% from 2015 to 2024, allowances +56% in 2023 alone. Tax expenditures and programme-level costs not covered |
 | RQ8.2 | How cost-effective are existing programmes (households supported, units delivered)? | — | |
 | RQ8.3 | Which expenditure could be reduced or made more efficient without harming vulnerable households or essential services? | — | |
 | RQ8.4 | Which mix of spending, tax policy and investment improves affordability within fiscal constraints? | — | |

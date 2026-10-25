@@ -219,9 +219,20 @@ eurostat:
   eurostat_gdp_nominal:
     dataset: nama_10_gdp
     params: {na_item: B1GQ, unit: CP_MEUR}   # GDP at market prices, current prices, EUR million
-    geo: [PT]
+    geo: [PT, ES, IT, FR, DE, IE, EU27_2020]
     format: json
-    notes: Verified 2026-10-25; annual, national. Denominator for the property tax shares of GDP.
+    notes: Verified 2026-10-25; annual. Denominator for the property tax and housing spending shares of GDP (PT and the peer set).
+  eurostat_housing_spending:
+    dataset: gov_10a_exp
+    params: {sector: S13, unit: MIO_EUR, na_item: TE, cofog99: [GF06, GF0601, GF1006]}   # general government total expenditure by function (COFOG)
+    geo: [PT, ES, IT, FR, DE, IE, EU27_2020]
+    format: json
+    notes: >
+      Verified 2026-10-25; annual, 1995-2024 for Portugal (2025 not yet published). GF0601 is housing development (including
+      public housing), GF1006 is housing in social protection (housing allowances and rent subsidies), GF06 is housing and
+      community amenities (also holds water supply, street lighting and community development, so it is not housing
+      spending). Tax expenditures (IRS deductions, IMT/IMI exemptions) are not expenditure in COFOG and are not here. The
+      PC_GDP unit is rounded to one decimal, so shares come from eurostat_gdp_nominal. The EU27 aggregate starts in 2010.
 
 at:
   # IMI rates: Portal das Financas "Consultar Taxas do Municipio" (public, read-only HTML, one page per year and district).

@@ -502,9 +502,37 @@ def build_eurostat_property_tax() -> pd.DataFrame:
     taxes = raw.pivot(index="year", columns="na_item", values="value").rename(
         columns={"D29A": "imi_revenue_eur_m", "D214C": "imt_revenue_eur_m"}
     )
-    gdp = eurostat.read("eurostat_gdp_nominal").set_index("year")["value"].rename("gdp_eur_m")
+    gdp = eurostat.read("eurostat_gdp_nominal")
+    gdp = gdp[gdp["geo"] == "PT"].set_index("year")["value"].rename("gdp_eur_m")
     out = taxes.join(gdp, how="left").rename_axis(columns=None)
     return out[["imi_revenue_eur_m", "imt_revenue_eur_m", "gdp_eur_m"]].reset_index()
+
+
+def build_eurostat_housing_spending() -> pd.DataFrame:
+    """General-government spending on housing by country and year, with nominal GDP.
+
+    ``housing_development_eur_m`` is COFOG GF0601 (housing development, public housing included),
+    ``housing_benefits_eur_m`` GF1006 (housing allowances and rent subsidies in social protection) and
+    ``housing_amenities_eur_m`` GF06 (housing and community amenities, a wider group that also holds water and street
+    lighting); ``gdp_eur_m`` is nominal GDP. Tax expenditures are not part of COFOG.
+    """
+    raw = eurostat.read("eurostat_housing_spending")
+    names = {
+        "GF0601": "housing_development_eur_m",
+        "GF1006": "housing_benefits_eur_m",
+        "GF06": "housing_amenities_eur_m",
+    }
+    spending = raw.pivot_table(index=["geo", "year"], columns="cofog99", values="value").rename(
+        columns=names
+    )
+    gdp = (
+        eurostat.read("eurostat_gdp_nominal")
+        .set_index(["geo", "year"])["value"]
+        .rename("gdp_eur_m")
+    )
+    out = spending.join(gdp, how="left").rename_axis(columns=None).reset_index()
+    cols = ["geo", "year", *names.values(), "gdp_eur_m"]
+    return out[cols].sort_values(["geo", "year"], ignore_index=True)
 
 
 # Census tables that exceed INE's row limit as a whole: only the totals of the dimensions we do not split by.
@@ -528,6 +556,7 @@ EUROSTAT_DATASETS = (
     "eurostat_employees",
     "eurostat_property_tax",
     "eurostat_gdp_nominal",
+    "eurostat_housing_spending",
 )
 SOURCES = ("ine", "aima", "at", "bportugal", "eurostat", "bis", "oecd", "rnal", "caop")
 
@@ -586,6 +615,7 @@ BUILDERS: dict[str, Callable[[], pd.DataFrame]] = {
     "eurostat_demography": build_eurostat_demography,
     "eurostat_macro": build_eurostat_macro,
     "eurostat_property_tax": build_eurostat_property_tax,
+    "eurostat_housing_spending": build_eurostat_housing_spending,
     "bis_spp": build_bis_spp,
     "oecd_house_prices": build_oecd_house_prices,
     "rnal_al": build_rnal_al,

@@ -237,7 +237,13 @@ def test_eurostat_property_tax_names_the_taxes_and_adds_gdp(monkeypatch):
             for item, v in (("D29A", 1_500.0), ("D214C", 1_000.0))
         ]
     )
-    gdp = pd.DataFrame({"year": [2020, 2021], "value": [200_000.0, 210_000.0]})
+    gdp = pd.DataFrame(
+        {
+            "geo": ["PT", "PT", "ES"],
+            "year": [2020, 2021, 2020],
+            "value": [200_000.0, 210_000.0, 9.0],
+        }
+    )
     monkeypatch.setattr(
         interim.eurostat, "read", lambda d: taxes if d == "eurostat_property_tax" else gdp
     )
@@ -332,6 +338,7 @@ def test_download_calls_each_chosen_source_and_rejects_unknown(monkeypatch):
         ("eurostat", "eurostat_employees"),
         ("eurostat", "eurostat_property_tax"),
         ("eurostat", "eurostat_gdp_nominal"),
+        ("eurostat", "eurostat_housing_spending"),
         ("rnal",),
     ]
     calls.clear()

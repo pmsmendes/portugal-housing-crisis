@@ -139,6 +139,19 @@ National general-government revenue, accrual basis (Eurostat; no municipal serie
 
 Revenue is the cost side of a rate cut; the capitalisation result above is the benefit side, and it is inconclusive.
 
+### What the State spends on housing (`p3_06`, RQ8.1)
+
+![Housing spending](figures/p3/housing_spending.png)
+
+General-government spending by function (COFOG): housing development (public housing included) plus housing allowances and rent subsidies. Tax expenditures are not in it.
+
+- **Level.** 1,615 EUR m in 2024 (667 housing development, 948 allowances), **0.55% of GDP**. The share was 0.91% in 2001 and fell to 0.32% in 2016, so the recent rise is a recovery to the 1995 level (0.53%).
+- **Since 2015.** Real housing development +198% (224 to 667 EUR m of the base year), real allowances +81%. Allowances rose 56% in nominal terms from 2022 to 2023 (548 to 853 EUR m), possibly the 2023 rent and mortgage-interest support measures, not checked against the measures themselves.
+- **Peers.** 2015-2024 mean as a share of GDP: Portugal 0.41%, Germany 0.48%, Spain 0.20%, France 1.19%, Ireland 0.94%. In 2024 Portugal is at 0.55% against 0.57% (Germany), 0.21% (Spain), 1.01% (France), 1.13% (Ireland). Italy and the EU27 aggregate are left out: their 2022-2023 values are far above trend, probably renovation tax credits booked as expenditure.
+- **Scale.** Housing support equals 27% to 36% of IMI plus IMT revenue in 2013-2022 and 44% to 48% in 2023-2024 (`p3_04`). The two are for scale only: the property taxes go to councils, the spending is mostly central.
+
+Limits: spending, not tax expenditures; what counts as housing differs by country; programme-level cost-effectiveness (RQ8.2) is out of reach with these data.
+
 ## Limitations
 
 - **Selection into treatment.** Rates are chosen after price booms, and the pre-trend test rejects. The design cannot separate the effect of the cut from mean reversion after

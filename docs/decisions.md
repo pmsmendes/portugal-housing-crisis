@@ -2,6 +2,12 @@
 
 Analytic and engineering choices, newest first. One short entry each: what, why, alternatives rejected.
 
+## 2026-10-25 — Housing spending from COFOG, with a peer set
+- **What:** `eurostat_housing_spending` takes GF0601 (housing development), GF1006 (housing in social protection) and GF06 from Eurostat's government expenditure by function for Portugal and the peer set of the other series; `analysis/spending.py` defines "housing support" as GF0601 plus GF1006, as a share of nominal GDP and in constant euros. GDP for the peers comes from the same `eurostat_gdp_nominal` dataset, whose geo list now includes them.
+- **Why:** it is the one national, comparable, long series of what governments spend on housing, and it also gives the peers for RQ6.5.
+- **Reading:** spending only. Tax expenditures are far larger for some of these policies and are not in it. Italy and the EU27 are left out of the comparison because of 2022-2023 values that look like renovation tax credits booked as spending.
+- **Rejected:** GF06 as housing spending (it holds water and street lighting); the PC_GDP unit (one decimal).
+
 ## 2026-10-25 — Household size by municipality and the bedroom pairing
 - **What:** `ine_households_size` (census 2011 and 2021, 1, 2, 3 and 4 or more persons) from the household tables already used for the totals, with the size dimension left open (`INE_HOUSEHOLD_SIZE`); the census-stock builder now takes only the total rows (`_only_totals`). `analysis/housing_mix.py` pairs bedrooms with persons (T0-T1 with 1 ... T4+ with 4+).
 - **Why:** RQ2.6 needs demand by type; household size is the one dimension the data give at municipal level. The pairing is the simplest transparent mapping and is labelled nominal everywhere.
