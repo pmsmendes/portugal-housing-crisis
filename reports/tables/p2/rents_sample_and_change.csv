@@ -1,0 +1,9 @@
+measure,value
+municipalities_n,191.0
+mainland_n,180.0
+population_share_2021_pct,93.754
+median_rent_change_pct,23.951
+median_price_change_pct,23.956
+median_price_over_rent_change_pct,0.178
+municipalities_with_rising_rent_pct,95.812
+rank_correlation_rent_price_change,0.341

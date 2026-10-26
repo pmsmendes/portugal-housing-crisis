@@ -2,6 +2,11 @@
 
 Analytic and engineering choices, newest first. One short entry each: what, why, alternatives rejected.
 
+## 2026-10-26 — Rents of new leases as an outcome (p2_24)
+- **What:** `analysis/rents.py`, `notebooks/p2_explain/p2_24`, `charts.rents_and_prices`. Outcome: log change of the real rent per m2 of new leases 2020-2024 for the municipalities with a rent in both years; drivers: foreign-resident change (2020-2023, the register ends in 2023), population change, completions 2021-2024 per 1,000 dwellings, registered short-term rentals per 1,000 dwellings, plus the starting rent; mainland, same-district comparisons, HC3 errors (`supply.associations`); the same specifications on the real price change in the same places for comparison. Reading rule (sign kept and p < 0.05 in the joint model with and without coast and density) fixed before running.
+- **Why:** RQ3.3 and RQ5.1 asked about rents and p2_02 and p2_14 only covered price-to-income; four rent years are enough for one cross-section.
+- **Rejected:** a panel with municipality effects (four years, 3 to 5 observations each, rents missing in many years); a pooled specification across 2020-2024 changes (overlapping windows); a causal reading of short-term rentals (registry of today's survivors, no variation in time).
+
 ## 2026-10-26 — Census count against completions, and a rolled dwelling stock (p2_23)
 - **What:** `analysis/stock_reconciliation.py`, `notebooks/p2_explain/p2_23`, `charts.stock_reconciliation`. Net change of the census count 2011-2021 against completions of 2012-2021 (the window of `supply.balance`), by municipality and by group with the counts summed before the ratios; the stock rolled from the 2021 count along national completions at the observed national retention (net addition over completions) and at a retention of one.
 - **Why:** RQ2.4 had only the two census years; completions are annual and show how far they translate into the count, and where they do not (coastal cities).

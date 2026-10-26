@@ -2859,6 +2859,61 @@ def stock_reconciliation(groups: pd.DataFrame, path: pd.DataFrame, retention: fl
     )
 
 
+def rents_and_prices(by_class: pd.DataFrame, coefs: pd.DataFrame, median_rent_pct: float) -> Figure:
+    """Real rent and price growth by kind of place (left); what goes with each, per standard deviation of the driver (right).
+
+    ``by_class`` (index = label, drawing order top first): ``rent_pct`` and ``price_pct``, the median change over the window.
+    ``coefs`` (index = driver label, top first): ``rent``, ``rent_low``, ``rent_high``, ``price``, ``price_low``, ``price_high``,
+    the change in % of the outcome for one standard deviation of the driver, with its 95% interval.
+    ``median_rent_pct``: the median municipality's rent change, for the title.
+    """
+    fig, (left, right) = plt.subplots(
+        1, 2, figsize=(11.5, 4.8), gridspec_kw={"width_ratios": [1, 1.1]}
+    )
+    s = by_class.iloc[::-1]
+    y = np.arange(len(s))
+    left.barh(y + 0.19, s["price_pct"], 0.36, color=BLUE, zorder=3)
+    left.barh(y - 0.19, s["rent_pct"], 0.36, color=ORANGE, zorder=3)
+    for i, (price, rent) in enumerate(zip(s["price_pct"], s["rent_pct"], strict=True)):
+        for off, value in ((0.19, price), (-0.19, rent)):
+            left.annotate(f"{value:.0f}%", (value, i + off), xytext=(4, 0), textcoords="offset points",
+                          ha="left", va="center", fontsize=8.5, color=INK_2)  # fmt: skip
+    left.set_yticks(y, s.index, color=INK_2, fontsize=9.5)
+    left.set_xlim(0, s[["price_pct", "rent_pct"]].to_numpy().max() * 1.2)
+    left.xaxis.set_major_formatter(mticker.PercentFormatter(decimals=0))
+    left.grid(axis="x")
+    left.grid(axis="y", visible=False)
+    left.legend(handles=[Patch(facecolor=BLUE, label="Price per m2 (transactions)"),
+                         Patch(facecolor=ORANGE, label="Rent per m2 (new leases)")],
+                loc="upper center", bbox_to_anchor=(0.45, -0.1), ncol=2, fontsize=9, frameon=False,
+                labelcolor=INK_2)  # fmt: skip
+    _panel_title(left, "Median change 2020-2024, real")
+    c = coefs.iloc[::-1]
+    yy = np.arange(len(c))
+    right.axvline(0, color=GRID, lw=1, zorder=1)
+    for off, key, color in ((0.17, "price", BLUE), (-0.17, "rent", ORANGE)):
+        right.hlines(yy + off, c[f"{key}_low"], c[f"{key}_high"], color=color, lw=2, zorder=3)
+        right.plot(c[key], yy + off, "o", ms=7, mfc=color, mec=SURFACE, mew=1.5, zorder=4)
+    right.set_yticks(yy, c.index, color=INK_2, fontsize=9.5)
+    right.set_ylim(-0.7, len(c) - 0.3)
+    right.xaxis.set_major_formatter(mticker.PercentFormatter(decimals=0))
+    right.grid(axis="x")
+    right.grid(axis="y", visible=False)
+    _legend(right, [Line2D([], [], marker="o", ls="", ms=7, color=BLUE, label="Price"),
+                    Line2D([], [], marker="o", ls="", ms=7, color=ORANGE, label="Rent")], loc="lower right")  # fmt: skip
+    _panel_title(right, "Change in the outcome per standard deviation of the driver")
+    fig = style.finish(
+        fig,
+        f"Real rents of new leases rose {median_rent_pct:.0f}% in the median municipality in four years, and what goes with it is thin",
+        "Median change of rent and price per m2 by coast and density class (left); adjusted associations, same district, with 95% intervals (right)",
+        "Source: INE (rents of new leases, transaction prices, AIMA, census, completions), RNAL; own calculations. Classes: own proxies (data/external/muni_typology.csv).",
+        head_in=1.25,
+        foot_in=0.9,
+    )
+    fig.subplots_adjust(left=0.13, right=0.97, wspace=0.55)
+    return fig
+
+
 def exemptions(score: pd.DataFrame) -> Figure:
     """Yearly revenue forgone by each option (left) and the extra homes a year needed to break even in 2035 (right).
 

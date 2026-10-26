@@ -1,0 +1,7 @@
+segment,municipalities_n,rent_pct,price_pct
+coast / rural,17,34.4,29.9
+inland / intermediate,39,25.1,18.5
+coast / intermediate,38,25.0,32.0
+inland / urban,15,24.1,28.1
+coast / urban,20,23.9,35.2
+inland / rural,62,21.3,7.7

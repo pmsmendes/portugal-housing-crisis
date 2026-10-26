@@ -2,7 +2,7 @@
 
 Why did affordability deteriorate, and where? This phase moves from description to association; nothing here is a
 causal claim. Figures: `reports/figures/p2/`, tables: `reports/tables/p2/`, notebooks: `notebooks/p2_explain/`
-(`p2_01` to `p2_23`). Methods: [methodology](../docs/methodology.md), choices:
+(`p2_01` to `p2_24`). Methods: [methodology](../docs/methodology.md), choices:
 [decisions](../docs/decisions.md).
 
 ## Summary
@@ -428,6 +428,19 @@ The census counts dwellings only in 2011 and 2021; completions of new family dwe
 
 Tables: `dwelling_stock_national.csv`, `dwelling_stock_by_class.csv`, `dwelling_stock_largest_gaps.csv`, `dwelling_stock_by_population_change.csv`, `dwelling_stock_path.csv`. Limits: the gap cannot be split into its causes; calendar-year completions against March censuses; retention measured in a low-building decade and applied to the boom is an extrapolation, so the two paths are a range, not a bound; composition is not rolled.
 
+## Rents of new leases, 2020-2024 (`p2_24_rents_of_new_leases`)
+
+![Rents of new leases](figures/p2/rents_of_new_leases.png)
+
+Earlier sections explain price-to-income; INE's median rent per m2 of new leases, published where enough leases were signed, allows one cross-section of rent changes for 191 municipalities (180 on the mainland, 94% of residents). The log change of the real rent 2020-2024 is set against the foreign-resident change, population change, completions and registered short-term rentals, within district (RQ3.3, RQ5.1).
+
+73. **Rents rose as much as prices in the median municipality.** Real rent +24.0%, real price +24.0% in the same places; rents rose in 96% of municipalities and prices outpaced rents in 96 of 191 (rank correlation of the two changes 0.34).
+74. **Rents rose more evenly than prices.** By coast and density class the median rent rose from 21% (inland rural) to 34% (coast rural), the price from 8% to 35% (coast urban: price 35%, rent 24%).
+75. **Foreign residents and short-term rentals go with rents.** +1.6% on the rent per point of foreign residents (p = 0.026 within district, 0.023 with coast and density) and +1.0% per 10 registered short-term rentals per 1,000 dwellings (p = 0.018, 0.025). Population change and completions add nothing once these are in; rents rose less where they started higher (catching up).
+76. **Short-term rentals go with rents, not prices.** The same specification on the price change gives +0.2% per 10 short-term rentals per 1,000 dwellings (p = 0.71) and +1.8% per point of foreign residents (p = 0.076); R2 is 0.41 for rents, so most of the variation is left.
+
+Tables: `rents_sample_and_change.csv`, `rents_by_class.csv`, `rents_associations.csv`, `rents_associations_prices.csv`, `rents_coefficients_per_sd.csv`. Limits: only municipalities where a rent is published; four years; the median of new leases mixes the kind of home let; the registry is today's survivors, mainland only; foreign residents end in 2023; associations, not effects.
+
 ## Limitations
 
 - **A pattern, not a mechanism.** Spatial autocorrelation does not show that price changes spill over: shared
@@ -473,10 +486,11 @@ Tables: `dwelling_stock_national.csv`, `dwelling_stock_by_class.csv`, `dwelling_
   or the mix of jobs fixed and is not the income of buyers (who are older, richer and more often foreign than the
   average employee); Newey-West errors with two lags are approximate at this length. Rents are the OECD index of all leases, which lags what new tenants pay.
 - **Dwelling stock.** The reconciliation of the census count with completions is an accounting residual, not an estimate of demolitions or conversions; the path before 2011 extrapolates a retention measured in 2012-2021, and the censuses fall in March while completions are calendar years.
+- **Rents.** Rents of new leases exist for 191 municipalities and four years, selected by where enough leases were signed; the foreign-resident and short-term-rental associations are cross-sectional adjusted associations that cannot separate demand from where foreign residents settle or where rentals were registered.
 - **Missing municipalities.** 12 municipalities have no price-to-income for 2016 or 2024 and are left out (hatched on
   the map); their neighbours' weights are re-standardised without them.
 
 ## Questions answered
 
 RQ4.3 (large municipalities rose most, less further out; Lisboa itself less than its suburbs), RQ4.4 (little evidence of spillovers beyond the regional pattern), RQ4.6 (coastal and urban, not tourism as such), RQ2.1 to
-RQ3.5 (ageing, the 25-44 pool and the one-person share add nothing beyond the foreign-resident change; internal migration not observable), RQ3.4 (households grew by smaller households, 79% of the added), RQ2.3 and RQ4.5 (supply against households) and RQ5.4 (second homes separated) are answered; RQ3.6 is answered as far as these data allow (demand differences cannot be told from the regional pattern); RQ2.4 (nine in ten completions show up in the census count, a quarter in coastal cities; stock path 1995-2025), RQ2.5, RQ2.7, RQ2.8, RQ3.3, RQ5.1, RQ5.2, RQ5.3, RQ1.7, RQ9.1, RQ9.2 and RQ9.5 are partly answered; RQ1.4 is answered (income and wages) (see [research_questions](../docs/research_questions.md)).
+RQ3.5 (ageing, the 25-44 pool and the one-person share add nothing beyond the foreign-resident change; internal migration not observable), RQ3.4 (households grew by smaller households, 79% of the added), RQ2.3 and RQ4.5 (supply against households) and RQ5.4 (second homes separated) are answered; RQ3.6 is answered as far as these data allow (demand differences cannot be told from the regional pattern); RQ3.3 and RQ5.1 now cover rents (foreign residents and short-term rentals go with the rent rise of 2020-2024, not population change or completions), RQ2.4 (nine in ten completions show up in the census count, a quarter in coastal cities; stock path 1995-2025), RQ2.5, RQ2.7, RQ2.8, RQ3.3, RQ5.1, RQ5.2, RQ5.3, RQ1.7, RQ9.1, RQ9.2 and RQ9.5 are partly answered; RQ1.4 is answered (income and wages) (see [research_questions](../docs/research_questions.md)).
