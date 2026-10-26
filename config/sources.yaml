@@ -104,7 +104,7 @@ ine:
       mean_useful_area_2011: "0006988"   # dwellings of usual residence, m2
       mean_useful_area_2021: "0012518"
       totals: 5.86 M (2011) and 5.97 M (2021) conventional dwellings, 4.04 M and 4.15 M households (match the census)
-    other_censuses: 2001 and 1991 codes still to be checked (the 2001 families indicator 0001349 is regions only).
+    other_censuses: 2001 and 1991 codes still to be checked (the 2001 families indicator 0001349 is regions only). Checked 2026-10-26 for 2001 households by size per municipality: web searches found only a national table and a 2011 table by residence in 2001, no municipal indicator id; a scan of the metadata endpoint over ids 0000700 to 0001400 was cut short when the API stopped answering (timeouts), so the range is not covered.
   ine_construction:
     # Municipal (308 x 5 dwelling typologies verified for licensed dwellings).
     licensed_dwellings: "0013235"    # new family dwellings licensed, annual 2002 - 2025, NUTS 2024
