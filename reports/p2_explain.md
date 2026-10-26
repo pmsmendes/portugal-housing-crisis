@@ -2,7 +2,7 @@
 
 Why did affordability deteriorate, and where? This phase moves from description to association; nothing here is a
 causal claim. Figures: `reports/figures/p2/`, tables: `reports/tables/p2/`, notebooks: `notebooks/p2_explain/`
-(`p2_01` to `p2_21`). Methods: [methodology](../docs/methodology.md), choices:
+(`p2_01` to `p2_22`). Methods: [methodology](../docs/methodology.md), choices:
 [decisions](../docs/decisions.md).
 
 ## Summary
@@ -400,6 +400,18 @@ A synthesis of earlier tables with one reading rule (M3): each driver is followe
 65. **No relationship has a credible causal identification.** The IMI event study rejects its pre-trend (p = 0.024) and its effect is not distinguishable from zero; the mortgage-rate timing test does not reject its placebo (p = 0.67) but finds no effect; credit growth rejects its placebo (p = 0.003: credit follows prices). Identifying a policy effect would need a sharp rule change with a comparison group, transaction data by buyer and a window long enough to test pre-trends.
 
 Tables: `evidence_ladder.csv`, `evidence_ladder_rungs.csv`, `evidence_design_checks.csv`. Limits: the specifications of each ladder differ in sample and controls, so rungs are not all nested; 18 drivers is what was tested, not what matters; no correction for the number of tests.
+
+## Lending conditions: maturity, loan-to-value and the deposit (`p2_22_lending_conditions`)
+
+![Lending conditions](figures/p2/lending_conditions.png)
+
+The Banco de Portugal publishes the terms of new housing loans only in a yearly report (PDF); the figures of the March 2025 edition, covering 2024, are transcribed in `data/external/lending_standards.csv` (a few points, not a series). On top of them, accounting: the loan a fixed payment carries by term and rate, and the cash needed on the day of purchase and the payment burden by loan-to-value.
+
+66. **Standards did not loosen into the price rise (RQ9.3).** The mean term of new loans fell from 33.4 years (July 2018) to 31.0 (December 2024; peak 33.7 in January 2021); high-risk loans (DSTI above 60% and/or LTV above 90%) fell from about 32% of new loans to 3% by 2020 and stayed there; in 2024 the mean LTV was 69%, 64% of loans were at 80% or less and 96% of the stock. The effective DSTI went from 23.2% to 26.2% with rates.
+67. **A longer term cannot account for the price rise.** The longest term allowed (40 years) carries a loan 17% larger than 30 years at the 2013 mean rate, 29% at the 2021 rate (0.7%) and 13% at the 2024 rate (4.4%), against real prices +100% in 2013-2024; the rate rise of 2021-2024 alone cut what a payment carries by 39%.
+68. **The guarantee removes the deposit, not the payment (RQ6.4, partly).** Cash on the day of purchase for the median municipality's home is 2.5 years of income at an 80% loan, 1.5 at the legal 90% and 0.6 with the State guarantee for borrowers up to 35 (13% of municipalities need more than a year, against 94% at 80%); but the payment on a 100% loan is 57% of gross income at 30 years and 50% at 40, with half of municipalities above the 50% DSTI cap (a gross-income proxy, so the real test is stricter). Borrowers up to 35 went from 27% to 47% of new loans after the August 2024 IMT and stamp-duty exemption.
+
+Tables: `lending_standards.csv`, `lending_maturity_capacity.csv`, `lending_cash_needed.csv`, `lending_burden.csv`. Limits: one report, points not a series; only granted loans are seen; no estimate of the guarantee's uptake or its effect on prices (2025 figures in the press differ between sources and are not used); capacity and cash are accounting at the national mean rate, not household behaviour.
 
 ## Limitations
 

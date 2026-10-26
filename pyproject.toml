@@ -30,6 +30,7 @@ dev = [
     "jupyterlab",
     "jupytext",
     "ipykernel",
+    "pypdf>=6.21.2",
 ]
 
 [build-system]

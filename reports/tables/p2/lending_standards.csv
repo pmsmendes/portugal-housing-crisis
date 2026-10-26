@@ -1,0 +1,33 @@
+indicator,period,value,unit,source,note
+ltv_weighted_mean_new,2024,69.0,pct,"BdP 2025 report, section 2.4, p. 9","new loans for own permanent home, 9 institutions, 96% of the market; down in 2023, stable in 2024"
+ltv_weighted_mean_new,2024-08,72.0,pct,"BdP 2025 report, section 2.4, p. 9",monthly peak after the IMT and stamp-duty exemption for borrowers up to 35
+ltv_share_at_most_80,2024,64.0,pct,"BdP 2025 report, section 2.4, p. 10",share of new loans; above earlier years
+ltv_share_above_90,2024,,pct,"BdP 2025 report, section 2.4, p. 10","described as residual, in line with the last five years; no figure in the text"
+ltv_stock_share_at_most_80,2024-12,96.0,pct,"BdP 2025 report, section 2.4, p. 10",stock of housing loans
+dsti_effective_mean_housing,2018-Q3,23.2,pct,"BdP 2025 report, section 2.5, p. 12","new housing loans, without the rate and income shocks of the Recommendation"
+dsti_effective_mean_housing,2023,26.4,pct,"BdP 2025 report, section 2.5, p. 12",
+dsti_effective_mean_housing,2024,26.2,pct,"BdP 2025 report, section 2.5, p. 12",the summary of the same report gives 26.1% for new credit to households
+dsti_share_at_most_50,2023,91.0,pct,"BdP 2025 report, section 2.5, p. 11","new housing and consumer loans, with the shocks of the Recommendation"
+dsti_share_at_most_50,2024,92.0,pct,"BdP 2025 report, Table 2.1 and section 2.5",new housing and consumer loans
+dsti_share_50_to_60,2024,5.0,pct,"BdP 2025 report, Table 2.1",limit 10% of the amount lent
+dsti_share_above_60,2024,3.0,pct,"BdP 2025 report, Table 2.1",limit 5% of the amount lent
+risk_share_high,2018-Q3,32.0,pct,"BdP 2025 report, section 2.6, p. 14",new housing loans with DSTI above 60% and/or LTV above 90%; approximate
+risk_share_high,2020,3.0,pct,"BdP 2025 report, section 2.6, p. 14",approximate; stable since
+risk_share_high,2024,3.0,pct,"BdP 2025 report, section 2.6, p. 14",approximate
+risk_share_low,2018-Q3,43.0,pct,"BdP 2025 report, section 2.6, p. 14",DSTI up to 50% and LTV up to 80%
+risk_share_low,2024,58.0,pct,"BdP 2025 report, section 2.6, p. 14",approximate
+maturity_weighted_mean,2018-07,33.4,years,"BdP 2025 report, section 2.7, p. 17",derived: 31 years in December 2024 is 2.4 below July 2018
+maturity_weighted_mean,2021-01,33.7,years,"BdP 2025 report, section 2.7, p. 17",maximum of the series
+maturity_weighted_mean,2024-07,29.7,years,"BdP 2025 report, section 2.7, p. 17",minimum of 2024
+maturity_weighted_mean,2024-12,31.0,years,"BdP 2025 report, section 2.7, p. 17",Recommendation: at most 30 on average in each quarter
+maturity_share_at_most_30,2020,35.0,pct,"BdP 2025 report, section 2.7, p. 18",new housing loans
+maturity_share_at_most_30,2024,44.0,pct,"BdP 2025 report, section 2.7, p. 18",approximate
+maturity_share_30_to_40,2024-Q4,55.0,pct,"BdP 2025 report, section 2.7, p. 18",
+maturity_mean_eu_low,2024,20.0,years,"BdP 2025 report, section 2.7, p. 17",range for the EU countries with data (first half of 2024)
+maturity_mean_eu_high,2024,27.0,years,"BdP 2025 report, section 2.7, p. 17",
+share_borrowers_up_to_35,2024-07,27.0,pct,"BdP 2025 report, section 2.5, p. 13",share of new loans for the own permanent home
+share_borrowers_up_to_35,2024-08,47.0,pct,"BdP 2025 report, section 2.5, p. 13",after the IMT and stamp-duty exemption in force from August 2024
+limit_ltv_own_home,2018-07,90.0,pct,"BdP 2025 report, Table 2.1",maximum LTV for the own permanent home (80% other purposes)
+limit_dsti,2020-04,50.0,pct,"BdP 2025 report, Table 2.1",with exceptions up to 60% for 10% of the amount lent and above 60% for 5%
+limit_maturity_mean,2022-04,30.0,years,"BdP 2025 report, Table 2.1","average of new contracts per quarter; maximum 40, 37 and 35 years by age of the borrower (up to 30, 31-35, over 35)"
+state_guarantee_share_of_price,2024-Q4,15.0,pct,"BdP 2025 report, section 2.4, p. 11","State guarantee up to 15% of the price for borrowers up to 35, financing up to 100% of the value"

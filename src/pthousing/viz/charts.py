@@ -3061,3 +3061,68 @@ def rent_update_gap(path: pd.DataFrame, by_third: pd.DataFrame) -> Figure:
         "Median rent per m2 of new leases against the same rent raised by the legal coefficients (left); gap in the median municipality by third of price-to-income, 2024 (right)",
         "Source: INE (rents of new leases, CPI, census 2021), AT (price-to-income inputs), update coefficients of INE (Diario da Republica); own calculations.",
     )
+
+
+def lending_conditions(maturity: pd.DataFrame, cash: pd.DataFrame, price_rise_pct: float) -> Figure:
+    """What a longer term buys (left) and the cash needed on the day of purchase by loan-to-value (right).
+
+    ``maturity``: ``year``, ``rate_pct``, ``term``, ``capacity_gain_pct`` (loan carried by the same payment against the first term;
+    the zero rows of that term are drawn as nothing). ``cash`` (index = loan-to-value label, lowest first): ``median_years`` of
+    income in the median municipality and ``share_above_one_pct`` of municipalities needing more than a year. ``price_rise_pct``
+    is the rise of real prices the bars are set against.
+    """
+    fig, (left, right) = plt.subplots(
+        1, 2, figsize=(11, 4.6), gridspec_kw={"width_ratios": [1.2, 1]}
+    )
+    terms = [
+        t
+        for t in maturity["term"].unique()
+        if maturity.loc[maturity["term"] == t, "capacity_gain_pct"].max() > 0
+    ]
+    years = list(maturity["year"].unique())
+    colors = [MUTED, BLUE, ORANGE]
+    x = np.arange(len(years))
+    width = 0.8 / len(terms)
+    for i, term in enumerate(terms):
+        g = maturity[maturity["term"] == term].set_index("year").loc[years]
+        pos = x + (i - (len(terms) - 1) / 2) * width
+        left.bar(
+            pos,
+            g["capacity_gain_pct"],
+            width * 0.9,
+            color=colors[i % len(colors)],
+            zorder=3,
+            label=term,
+        )
+        for p, v in zip(pos, g["capacity_gain_pct"], strict=True):
+            left.annotate(f"{v:.0f}%", (p, v), xytext=(0, 3), textcoords="offset points", ha="center", fontsize=8.5, color=INK)  # fmt: skip
+    rates = maturity.drop_duplicates("year").set_index("year")["rate_pct"]
+    left.set_xticks(x, [f"{y}\nrate {rates[y]:.1f}%" for y in years], color=INK_2, fontsize=9.5)
+    left.yaxis.set_major_formatter(mticker.PercentFormatter(decimals=0))
+    left.set_ylim(0, maturity["capacity_gain_pct"].max() * 1.2)
+    left.grid(axis="y")
+    left.grid(axis="x", visible=False)
+    _legend(
+        left,
+        [Patch(facecolor=colors[i % len(colors)], label=t) for i, t in enumerate(terms)],
+        loc="upper left",
+    )
+    _panel_title(left, "Larger loan the same payment carries, against a 30-year term")
+    y = np.arange(len(cash))[::-1]
+    right.grid(axis="x")
+    right.grid(axis="y", visible=False)
+    right.barh(y, cash["median_years"], 0.5, color=ORANGE, zorder=3)
+    for yi, med, share in zip(y, cash["median_years"], cash["share_above_one_pct"], strict=True):
+        right.annotate(f"{med:.1f} years  ({share:.0f}% of places need over 1)", (med, yi), xytext=(5, 0), textcoords="offset points", va="center", fontsize=9, color=INK)  # fmt: skip
+    right.set_yticks(y, list(cash.index), color=INK_2, fontsize=9.5)
+    right.set_xlim(0, cash["median_years"].max() * 2.1)
+    _panel_title(right, "Cash on the day of purchase, years of income")
+    top = maturity["capacity_gain_pct"].max()
+    fig = style.finish(
+        fig,
+        f"The longest allowed term adds at most {top:.0f}% to what a payment carries; real prices rose {price_rise_pct:.0f}%",
+        "Left: loan carried by the same payment at the mean mortgage rate of each year. Right: deposit plus 6% buying costs for the median home of the median municipality, 2024",
+        "Source: Banco de Portugal (mortgage rates; macroprudential monitoring report, March 2025), INE, BIS; own calculations. Loan-to-value of 100% is the State guarantee case (borrowers up to 35).",
+    )
+    fig.subplots_adjust(wspace=0.45)
+    return fig

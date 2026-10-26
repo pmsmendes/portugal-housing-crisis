@@ -1,0 +1,10 @@
+year,rate_pct,term,term_years,payment_per_100k_eur,capacity_gain_pct
+2013,3.26,30 years,30.0,435.76,0.0
+2013,3.26,"33.7 years (mean term, Jan 2021)",33.7,407.8,6.85
+2013,3.26,40 years (longest allowed),40.0,373.13,16.78
+2021,0.66,30 years,30.0,306.11,0.0
+2021,0.66,"33.7 years (mean term, Jan 2021)",33.7,275.72,11.02
+2021,0.66,40 years (longest allowed),40.0,236.95,29.19
+2024,4.36,30 years,30.0,498.65,0.0
+2024,4.36,"33.7 years (mean term, Jan 2021)",33.7,472.54,5.52
+2024,4.36,40 years (longest allowed),40.0,440.87,13.11

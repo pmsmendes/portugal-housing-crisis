@@ -623,3 +623,20 @@ def test_rent_update_gap_title_gives_the_gap_and_the_years():
     )
     title = _title(charts.rent_update_gap(path, by_third))
     assert "28% more" in title and "2024" in title and "2020" in title
+
+
+def test_lending_conditions_title_gives_the_largest_gain_and_the_price_rise():
+    maturity = pd.DataFrame(
+        {
+            "year": [2013, 2013, 2021, 2021],
+            "rate_pct": [3.3, 3.3, 0.7, 0.7],
+            "term": ["30 years", "40 years", "30 years", "40 years"],
+            "capacity_gain_pct": [0.0, 17.0, 0.0, 29.0],
+        }
+    )
+    cash = pd.DataFrame(
+        {"median_years": [2.5, 0.6], "share_above_one_pct": [94.0, 13.0]},
+        index=["80%", "100% (guarantee)"],
+    )
+    title = _title(charts.lending_conditions(maturity, cash, 100.0))
+    assert "at most 29%" in title and "rose 100%" in title
