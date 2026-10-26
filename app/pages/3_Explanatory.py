@@ -509,7 +509,7 @@ with tab_policy:
     st.subheader("What is at stake: the money")
     st.markdown(
         "IMI and IMT are **municipal** revenue, so a cut costs councils, not the central budget. These are national "
-        "figures (`p3_04`, `p3_05`); by council, IMI and IMT are about a sixth of the median council's receipts and 30% in cities (2021-2023, `p3_12`)."
+        "figures (`p3_04`, `p3_05`); the receipts of each council, 2021-2023, are further down (`p3_12`)."
     )
     revenue = table("p3", "property_tax_series").set_index("year")
     spend = table("p3", "housing_spending_series").set_index("year")
@@ -610,6 +610,114 @@ with tab_policy:
     right.caption(
         "Prices: nominal change 2015 to 2024. Tax: recurrent property tax; support: housing development plus allowances, both as the mean share of GDP 2015-2024. Italy has no housing-support value (2022-2023 spending far above trend). "
         "Six countries and three indicators: a comparison, not a test (`p3_07`)."
+    )
+
+    st.subheader("By council: who collects the money")
+    muni_nat = table("p3", "municipal_tax_national").set_index("year")
+    by_place = table("p3", "municipal_tax_by_place")
+    room_tab = table("p3", "municipal_floor_room").set_index("rate")
+    room_by = table("p3", "municipal_floor_room_by_place")
+    windfall = table("p3", "municipal_imt_windfall").set_index("measure")["value"]
+    last_year = int(muni_nat.index[-1])
+    first_year = int(muni_nat.index[0])
+    st.markdown(
+        f"Receipts of the 307 municipal councils (DGAL via INE, {first_year}-{last_year}): IMI plus IMT were "
+        f"**{muni_nat.loc[last_year, 'imi_imt_share_pct']:.0f}%** of all current receipts in {last_year} "
+        f"({muni_nat.loc[first_year, 'imi_imt_share_pct']:.0f}% in {first_year}), and {muni_nat.loc[last_year, 'median_council_share_pct']:.0f}% "
+        "for the median council. The cost of a cut falls on the council that collects, and councils differ a lot."
+    )
+    order = [
+        ("density_class", "urban", "Urban"),
+        ("density_class", "intermediate", "Intermediate"),
+        ("density_class", "rural", "Rural"),
+        ("coast_class", "coast", "Coast"),
+        ("coast_class", "inland", "Inland"),
+        ("tourist", "tourist", "Tourist"),
+        ("tourist", "other", "Other places"),
+    ]
+    rows = [
+        (label, by_place[(by_place["dimension"] == dim) & (by_place["class"] == cls)].iloc[0])
+        for dim, cls, label in order
+    ]
+    left, right = st.columns(2)
+    fig = go.Figure()
+    for col, name, color in (
+        ("imi_share_pct", "IMI", style.BLUE),
+        ("imt_share_pct", "IMT", style.ORANGE),
+    ):
+        fig.add_bar(
+            y=[f"{label} ({int(r['councils_n'])})" for label, r in rows],
+            x=[r[col] for _, r in rows],
+            name=name,
+            orientation="h",
+            marker_color=color,
+            text=[f"{r[col]:.0f}%" for _, r in rows],
+            textposition="inside",
+        )
+    fig.update_layout(barmode="stack", legend=dict(orientation="h", y=-0.2))
+    fig.update_yaxes(autorange="reversed")
+    fig.update_xaxes(title=f"Median share, {last_year} (%)")
+    left.plotly_chart(_style(fig, "IMI and IMT in a council's receipts", 380), width="stretch")
+    left.caption(
+        "Median across the councils of each class (number in brackets); urban and coastal councils and tourist ones, "
+        "where IMT is 22% of receipts, depend most (`p3_12`). Classes are proxies (density, coast, registered short-term rentals)."
+    )
+    rb = room_by[room_by["dimension"].isin(["density_class", "coast_class"])]
+    labels_room = {
+        "urban": "Urban",
+        "intermediate": "Intermediate",
+        "rural": "Rural",
+        "coast": "Coast",
+        "estuary": "Estuary",
+        "inland": "Inland",
+    }
+    fig = go.Figure(
+        go.Bar(
+            y=[
+                f"{labels_room[c]} ({int(n)} over 1%)"
+                for c, n in zip(rb["class"], rb["over_one_pct_n"], strict=True)
+            ],
+            x=rb["share_of_room_pct"],
+            orientation="h",
+            marker_color=style.BLUE,
+            text=[f"{x:.0f}%" for x in rb["share_of_room_pct"]],
+            textposition="outside",
+        )
+    )
+    fig.update_yaxes(autorange="reversed")
+    fig.update_xaxes(title="Share of the cost (%)", range=[0, 80])
+    right.plotly_chart(_style(fig, "Who would pay a cut to the floor", 380), width="stretch")
+    year_before = room_tab.loc["rate of the year before"]
+    right.caption(
+        "In brackets: councils for which the cost passes 1% of their current receipts. "
+        f"Cutting every urban IMI rate to 0.30% costs {room_tab['room_eur_m'].min():.0f} to {room_tab['room_eur_m'].max():.0f} million euros "
+        f"a year ({room_tab['room_share_of_imi_pct'].min():.1f}% to {room_tab['room_share_of_imi_pct'].max():.1f}% of IMI); "
+        f"{int(year_before['at_floor_n'])} of {int(year_before['councils_n'])} councils are at the floor already. "
+        f"For {int(year_before['over_one_pct_of_current_n'])} councils the cost passes 1% of their current receipts (up to "
+        f"{year_before['max_share_of_current_pct']:.0f}%), and they are spread out, many of them inland. Accounting, base held fixed (`p3_12`)."
+    )
+    a, b, c = st.columns(3)
+    a.metric(
+        f"IMT, {first_year} to {last_year}",
+        f"+{windfall['change_eur_m']:.0f} million euros",
+        f"+{windfall['change_pct']:.0f}%",
+        delta_color="off",
+    )
+    b.metric(
+        "That rise against the room to cut IMI",
+        f"{windfall['rise_over_floor_room_total']:.1f} times",
+        f"more than a council's own room in {windfall['councils_where_rise_exceeds_room_pct']:.0f}% of councils",
+        delta_color="off",
+    )
+    c.metric(
+        "Councils whose IMT rose",
+        f"{windfall['councils_with_a_rise_pct']:.0f}%",
+        f"median council {windfall['median_council_change_pct']:+.0f}%",
+        delta_color="off",
+    )
+    st.caption(
+        "IMT rose with prices and sales, not as a response to any cut; three years of receipts (basis not stated), no trend. "
+        "Municipal IMI is 90% of the national tax on land and buildings (the rest is the State's AIMI) and IMT 102% of the national IMT (`p3_12`)."
     )
 
     path = table("p3", "rent_update_path").set_index("year")

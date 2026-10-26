@@ -120,6 +120,24 @@ summary = pd.DataFrame(
 style.save_table(summary.round(2).reset_index(names="rate"), "p3", "municipal_floor_room")
 print(summary.round(1).T.to_string())
 print(room.sort_values("room_eur", ascending=False).head(8).join(names).round(1).to_string())
+r = room.join(typ[["coast_class", "density_class"]])
+by_room = pd.concat(
+    {
+        c: r.groupby(c).agg(
+            councils_n=("room_eur", "size"),
+            room_eur_m=("room_eur", lambda x: x.sum() / 1e6),
+            over_one_pct_n=("room_share_of_current_pct", lambda x: int((x > 1).sum())),
+        )
+        for c in ("density_class", "coast_class")
+    }
+)
+by_room["share_of_room_pct"] = 100 * by_room["room_eur_m"] / room["room_eur"].sum() * 1e6
+style.save_table(
+    by_room.round(2).reset_index(names=["dimension", "class"]),
+    "p3",
+    "municipal_floor_room_by_place",
+)
+print(by_room.round(1).to_string())
 
 # %% [markdown]
 # ## Step 3 — The IMT windfall of 2021-2023

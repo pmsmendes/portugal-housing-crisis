@@ -1,0 +1,7 @@
+dimension,class,councils_n,room_eur_m,over_one_pct_n,share_of_room_pct
+density_class,intermediate,81,56.33,37,40.59
+density_class,rural,184,17.49,39,12.6
+density_class,urban,32,64.98,21,46.82
+coast_class,coast,83,85.09,34,61.3
+coast_class,estuary,9,10.41,7,7.5
+coast_class,inland,205,43.31,56,31.2
