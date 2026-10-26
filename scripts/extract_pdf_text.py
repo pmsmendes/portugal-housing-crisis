@@ -24,4 +24,5 @@ if __name__ == "__main__":
     if len(sys.argv) == 3:
         Path(sys.argv[2]).write_text(text, encoding="utf-8")
     else:
+        sys.stdout.reconfigure(encoding="utf-8")
         print(text)
