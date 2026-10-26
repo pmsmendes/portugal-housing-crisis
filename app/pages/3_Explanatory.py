@@ -367,6 +367,71 @@ with tab_macro:
         "bought or how strict lenders were (`p2_12`). Source: BIS, INE, Banco de Portugal; own calculations."
     )
 
+    st.subheader("Lending terms: what a longer loan and a guarantee change")
+    mat = table("p2", "lending_maturity_capacity")
+    cash = table("p2", "lending_cash_needed").set_index("ltv")
+    burden = table("p2", "lending_burden")
+    left, right = st.columns([3, 2])
+    fig = go.Figure()
+    for term, color in zip(
+        [
+            t
+            for t in mat["term"].unique()
+            if mat.loc[mat["term"] == t, "capacity_gain_pct"].max() > 0
+        ],
+        (style.MUTED, style.BLUE),
+        strict=False,
+    ):
+        g = mat[mat["term"] == term]
+        fig.add_bar(
+            x=[f"{int(y)} (rate {r:.1f}%)" for y, r in zip(g["year"], g["rate_pct"], strict=True)],
+            y=g["capacity_gain_pct"],
+            name=term,
+            marker_color=color,
+            text=[f"{v:.0f}%" for v in g["capacity_gain_pct"]],
+            textposition="outside",
+        )
+    fig.update_yaxes(title="Larger loan, same payment, vs 30 years (%)", rangemode="tozero")
+    fig.update_layout(barmode="group", legend=dict(orientation="h", y=-0.25))
+    left.plotly_chart(_style(fig, "What a longer term buys", 360), width="stretch")
+    top = mat["capacity_gain_pct"].max()
+    head = table("p2", "lending_headline").iloc[0]
+    std = table("p2", "lending_standards")
+
+    def _std(indicator: str, period: str) -> float:
+        return float(
+            std[(std["indicator"] == indicator) & (std["period"].astype(str) == period)][
+                "value"
+            ].iloc[0]
+        )
+
+    left.caption(
+        f"At most {top:.0f}% more loan for the same payment, against real prices up {head['real_price_rise_pct']:.0f}% in 2013-2024; "
+        f"the rate rise of 2021-2024 alone cut what a payment carries by {head['rate_rise_capacity_cut_pct']:.0f}%. Standards "
+        f"tightened over the period: the mean term of new loans went from {_std('maturity_weighted_mean', '2018-07'):.1f} years (2018) "
+        f"to {_std('maturity_weighted_mean', '2024-12'):.1f} (2024) and high-risk loans from about {_std('risk_share_high', '2018-Q3'):.0f}% "
+        f"to {_std('risk_share_high', '2024'):.0f}% (Banco de Portugal, March 2025; `p2_22`)."
+    )
+    fig = go.Figure(
+        go.Bar(
+            x=cash["median_years"],
+            y=list(cash.index),
+            orientation="h",
+            marker_color=style.ORANGE,
+            text=[f"{v:.1f} years" for v in cash["median_years"]],
+            textposition="outside",
+        )
+    )
+    fig.update_xaxes(title="Years of income", range=[0, cash["median_years"].max() * 1.35])
+    fig.update_yaxes(type="category", autorange="reversed")
+    right.plotly_chart(_style(fig, "Cash on the day of purchase, 2024", 360), width="stretch")
+    full = burden[(burden["ltv"].str.startswith("100")) & (burden["term"] == "30 years")].iloc[0]
+    right.caption(
+        f"Median municipality, deposit plus 6% costs, by loan-to-value; the State guarantee (borrowers up to 35) allows 100%. "
+        f"The payment then is {full['median_burden_pct']:.0f}% of gross income at 30 years, above the 50% debt-service cap "
+        f"in {full['share_above_limit_pct']:.0f}% of municipalities (a gross-income proxy). Points from one report, not a series (`p2_22`)."
+    )
+
 # ---- policy test ---------------------------------------------------------------------------------
 with tab_policy:
     st.markdown(

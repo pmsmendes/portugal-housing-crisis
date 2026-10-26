@@ -78,6 +78,13 @@ rate_effect = 100 * (
 print(
     f"the rate rise 2021 to 2024 alone cut what a payment carries by {rate_effect:.0f}% at a 30-year term"
 )
+style.save_table(
+    pd.DataFrame(
+        {"real_price_rise_pct": [price_rise], "rate_rise_capacity_cut_pct": [rate_effect]}
+    ).round(1),
+    "p2",
+    "lending_headline",
+)
 
 # %% [markdown]
 # ## Step 3 — The deposit and the payment, by loan-to-value
