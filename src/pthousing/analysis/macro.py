@@ -232,6 +232,7 @@ def financeable_price(
     rates: pd.Series,
     base: tuple[int, int] = (2003, 2025),
     term_years: int = MORTGAGE_TERM_YEARS,
+    terms: pd.Series | None = None,
 ) -> pd.DataFrame:
     """The nominal price a constant payment-to-wage burden could finance, against the actual price.
 
@@ -242,14 +243,28 @@ def financeable_price(
     price on average over ``base`` (years, inclusive): the gap (log points) is relative to that average, and its
     changes, not its level, carry the information. Returns the actual and implied price (2015 = 100 scale), the
     gap, the payment per 100,000 euros and the payment-to-wage ratio of buying at the index price (2015 = 100).
+
+    ``terms`` (year -> mean term of new loans, years) replaces the fixed ``term_years`` by the observed term: the first
+    observed value is held back to the earlier years and the last forward, so only the changes within the observed
+    years move the benchmark (a longer term raises what the same payment carries).
     """
     d = (
         annual[["hpi_nominal_b2015", "compensation_per_employee_eur"]]
         .join(rates, how="inner")
         .dropna()
     )
+    term = term_years
+    if terms is not None:
+        term = (
+            terms.reindex(d.index.union(terms.index))
+            .sort_index()
+            .bfill()
+            .ffill()
+            .loc[d.index]
+            .to_numpy()
+        )
     payment = pd.Series(
-        mortgage_payment_monthly(100_000, d[rates.name], term_years), index=d.index, name="payment"
+        mortgage_payment_monthly(100_000, d[rates.name], term), index=d.index, name="payment"
     )
     log_implied = np.log(d["compensation_per_employee_eur"]) - np.log(payment)
     window = (d.index >= base[0]) & (d.index <= base[1])

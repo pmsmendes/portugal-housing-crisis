@@ -28,7 +28,7 @@
 # %%
 import pandas as pd
 
-from pthousing.analysis import macro
+from pthousing.analysis import lending, macro
 from pthousing.config import PROCESSED
 from pthousing.data import interim
 from pthousing.viz import charts, style
@@ -75,16 +75,20 @@ parts
 # ## Step 2 — Does the reading survive other choices?
 # The rate (the agreed rate on floating loans, APRC including charges), the loan term (30 years, 20 and 40) and the window on
 # which the benchmark is set equal to the price (2003-2025, the recovery years 2013-2019, the pre-crisis years 2003-2007).
-# The gap's rise 2021 to 2025 is the number to watch.
+# The gap's rise 2021 to 2025 is the number to watch. One more variant lets the loan term follow the observed mean term of new housing
+# loans (Banco de Portugal, `p2_22`: 33.2 years in 2021 to 31.9 in 2025; held at the 2018 value of 33.1 before 2018, so only the changes
+# after 2018 count): the terms of lending are then in the benchmark, not in the gap.
 
 # %%
 rate_aprc = macro.annual_rates(mortgage, "mortgage_aprc_new_pct")
 rate_main = macro.annual_rates(mortgage)
+terms = lending.standards_by_year(lending.read_series())["maturity_weighted_mean"]
 variants = {
     "main: agreed rate, 30 years, base 2003-2025": dict(rates=rate_main),
     "APRC": dict(rates=rate_aprc),
     "20-year loan": dict(rates=rate_main, term_years=20),
     "40-year loan": dict(rates=rate_main, term_years=40),
+    "observed mean term of new loans": dict(rates=rate_main, terms=terms),
     "base 2013-2019": dict(rates=rate_main, base=(2013, 2019)),
     "base 2003-2007": dict(rates=rate_main, base=(2003, 2007)),
 }

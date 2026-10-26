@@ -182,3 +182,21 @@ def test_price_change_parts_add_up_to_the_price_change():
         parts["price_change_pct"]
     )
     assert parts["rate_pct"] > 0  # falling rate raises what can be financed
+
+
+def test_observed_terms_raise_the_implied_price_where_the_term_is_longer_and_leave_earlier_years_alone():
+    long, macro_tbl = _annual(n=30)
+    d = macro.annual_frame(long, macro_tbl)
+    d["hpi_nominal_b2015"] = d["compensation_per_employee_eur"] * 0.01
+    rate = _rates(d.index, 3.0)
+    last = int(d.index.max())
+    terms = pd.Series({last - 4: 30.0, last - 2: 35.0, last: 35.0})
+    fixed = macro.financeable_price(d, rate, term_years=30)
+    obs = macro.financeable_price(d, rate, terms=terms)
+    gap_change = obs["gap_pct"] - fixed["gap_pct"]
+    early = gap_change.loc[: last - 4]
+    assert early.std() == pytest.approx(0, abs=1e-9)  # held at the first term: a level shift only
+    assert (
+        gap_change.loc[last] < early.iloc[0]
+    )  # a longer term finances a larger price, so the gap falls
+    assert obs["payment_100k_eur"].loc[last] < obs["payment_100k_eur"].loc[last - 4]
