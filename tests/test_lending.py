@@ -50,3 +50,33 @@ def test_burden_table_rises_with_the_loan_to_value_and_falls_with_the_term():
     assert get("100", "30")["median_burden_pct"] > get("80", "30")["median_burden_pct"]
     assert get("80", "40")["median_burden_pct"] < get("80", "30")["median_burden_pct"]
     assert get("100", "30")["share_above_limit_pct"] >= get("80", "30")["share_above_limit_pct"]
+
+
+def test_rate_effect_is_the_cut_in_the_loan_a_payment_carries():
+    assert lending.rate_effect_pct(2.0, 2.0, 30) == pytest.approx(0.0)
+    cut = lending.rate_effect_pct(1.0, 4.0, 30)
+    assert 0 < cut < 100
+    # a loan carried at 1% shrinks by the ratio of the two payments per euro
+    low = float(lending.mortgage_payment_monthly(1.0, 1.0, 30))
+    high = float(lending.mortgage_payment_monthly(1.0, 4.0, 30))
+    assert cut == pytest.approx(100 * (1 - low / high))
+
+
+def test_cash_summary_gives_median_and_share_above_a_year():
+    dep = pd.DataFrame({"80%": [0.5, 1.5, 2.5], "100%": [0.1, 0.2, 1.1]})
+    out = lending.cash_summary(dep)
+    assert out.loc["80%", "median_years"] == pytest.approx(1.5)
+    assert out.loc["80%", "share_above_one_pct"] == pytest.approx(200 / 3)
+    assert out.loc["100%", "share_above_one_pct"] == pytest.approx(100 / 3)
+
+
+def test_lookup_figures_are_plausible_and_each_cites_a_source():
+    t = lending.read()
+    assert t["source"].str.contains("BdP 2025 report").all()
+    pct = t[(t["unit"] == "pct") & t["value"].notna()]
+    assert pct["value"].between(0, 100).all()
+    assert t.loc[t["unit"] == "years", "value"].between(15, 45).all()
+    # the July 2018 mean term is derived from December 2024 (31.0) plus the 2.4 years the report gives
+    assert lending.value(t, "maturity_weighted_mean", "2018-07") == pytest.approx(
+        lending.value(t, "maturity_weighted_mean", "2024-12") + 2.4
+    )

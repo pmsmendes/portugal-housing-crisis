@@ -28,7 +28,8 @@
 #
 # **Reading rule, fixed before looking:** terms and LTV "explain" the rise of prices if the largest loan gain allowed by the longest
 # legal term is of the same order as the real price rise since 2013; "access" is eased by the guarantee if it brings the median
-# municipality's cash need below one year of income.
+# municipality's cash need below one year of income. The report has nothing before the Recommendation of July 2018, so what it says about
+# standards covers 2018-2024 only; the 2013-2018 part of the price rise (a third of the 2013-2024 rise) is not observed.
 
 # %%
 import pandas as pd
@@ -70,17 +71,27 @@ TERMS = {"30 years": 30, "33.7 years (mean term, Jan 2021)": 33.7, "40 years (lo
 maturity = lending.maturity_table(rates.loc[[2013, 2021, 2024]], TERMS, base="30 years")
 style.save_table(maturity.round(2), "p2", "lending_maturity_capacity")
 print(maturity.round(1).to_string(index=False))
-rate_effect = 100 * (
-    1
-    - float(lending.mortgage_payment_monthly(100_000, rates[2021], 30))
-    / float(lending.mortgage_payment_monthly(100_000, rates[2024], 30))
-)
+rate_effect = lending.rate_effect_pct(rates[2021], rates[2024], 30)
 print(
     f"the rate rise 2021 to 2024 alone cut what a payment carries by {rate_effect:.0f}% at a 30-year term"
 )
+term_2018 = lending.value(table, "maturity_weighted_mean", "2018-07")
+term_2024 = lending.value(table, "maturity_weighted_mean", "2024-12")
+term_effect = lending.capacity_gain_pct(rates[2024], term_2018, term_2024)
+price_rise_1824 = 100 * (long.loc[2024, "hpi_real_b2015"] / long.loc[2018, "hpi_real_b2015"] - 1)
+print(
+    f"the fall of the mean term from {term_2018:.1f} to {term_2024:.1f} years changed what a payment carries by {term_effect:.1f}% at the 2024 rate; "
+    f"real prices {price_rise_1824:.0f}% 2018-2024"
+)
 style.save_table(
     pd.DataFrame(
-        {"real_price_rise_pct": [price_rise], "rate_rise_capacity_cut_pct": [rate_effect]}
+        {
+            "real_price_rise_pct": [price_rise],
+            "real_price_rise_2018_2024_pct": [price_rise_1824],
+            "rate_rise_capacity_cut_pct": [rate_effect],
+            "term_change_capacity_pct": [term_effect],
+            "buying_costs_pct": [BUYING_COSTS_PCT],
+        }
     ).round(1),
     "p2",
     "lending_headline",
@@ -96,13 +107,7 @@ style.save_table(
 # %%
 LTVS = {"80%": 0.8, "90% (limit)": 0.9, "100% (guarantee)": 1.0}
 deposit = lending.deposit_years(d["pti_years"].dropna(), LTVS, BUYING_COSTS_PCT)
-cash = pd.DataFrame(
-    {
-        "median_years": deposit.median(),
-        "share_above_one_pct": 100 * (deposit > 1).mean(),
-        "municipalities_n": deposit.notna().sum(),
-    }
-)
+cash = lending.cash_summary(deposit)
 style.save_table(cash.round(2).rename_axis("ltv").reset_index(), "p2", "lending_cash_needed")
 print(cash.round(2).to_string())
 burden = lending.burden_table(d, rates[YEAR], LTVS, {"30 years": 30, "40 years": 40}, limit_pct=50)
@@ -110,30 +115,34 @@ style.save_table(burden.round(2), "p2", "lending_burden")
 print(burden.round(1).to_string(index=False))
 
 # %%
-fig = charts.lending_conditions(maturity, cash, price_rise)
+fig = charts.lending_conditions(maturity, cash, price_rise, BUYING_COSTS_PCT)
 style.save_fig(fig, "p2", "lending_conditions")
 fig
 
 # %% [markdown]
 # ## Findings
 #
-# 1. **Lending standards did not loosen into the price rise (RQ9.3).** Since the Recommendation (July 2018) the mean term of new housing
-#    loans fell from 33.4 to 31.0 years (peak 33.7 in January 2021, 29.7 in July 2024; EU countries with data 20 to 27), the share of new
-#    loans to high-risk borrowers (DSTI above 60% and/or LTV above 90%) from about 32% to 3% by 2020 and stayed there, and in 2024 the mean
-#    LTV was 69% with 64% of loans at 80% or less and 96% of the stock at 80% or less. The effective DSTI rose from 23.2% to 26.2% as rates
-#    rose. Credit became more prudent, not looser, while real prices rose 100% (2013-2024).
-# 2. **A longer term cannot account for the price rise.** At the mean rate of the year the longest term allowed (40 years) carries a loan
-#    17% larger than 30 years at the 2013 rate (3.3%), 29% at the 2021 rate (0.7%) and 13% at the 2024 rate (4.4%); the 2021 mean term of 33.7
-#    years carries 7%, 11% and 6% more. Against that, the rise in the rate from 0.7% to 4.4% cut what a payment carries by 39% at a fixed 30
-#    years. By the reading rule (a gain of the order of the price rise), terms and LTV do not explain it: the largest gain is under a third
-#    of it.
+# 1. **Standards were tighter in 2024 than in 2018, while prices rose 49% (RQ9.3).** Since the Recommendation (July 2018) the mean term of
+#    new housing loans fell from 33.4 to 31.0 years (peak 33.7 in January 2021, 29.7 in July 2024; EU countries with data 20 to 27), the
+#    share of new loans to high-risk borrowers (DSTI above 60% and/or LTV above 90%) from about 32% to 3% by 2020 and stayed there, and in
+#    2024 the mean LTV was 69% with 64% of loans at 80% or less and 96% of the stock at 80% or less. The effective DSTI rose from 23.2% to
+#    26.2% as rates rose. The report has nothing before July 2018, so it cannot say whether standards fed the 34% rise of real prices in
+#    2013-2018 (a third of the 2013-2024 rise of 100%).
+# 2. **A longer term cannot account for the price rise.** At the mean rate of the year the longest term allowed (40 years, for borrowers up
+#    to 30) carries a loan 17% larger than 30 years at the 2013 rate (3.3%), 29% at the 2021 rate (0.7%) and 13% at the 2024 rate (4.4%); the
+#    2021 mean term of 33.7 years carries 7%, 11% and 6% more. That is a ceiling that was not reached: the actual mean term fell from 33.4 to
+#    31.0 years between 2018 and 2024, which by itself cut what a payment carries by 3.4% at the 2024 rate. The rise in the rate from 0.7% to
+#    4.4% cut it by 39% at a fixed 30 years. By the reading rule (a gain of the order of the 2013-2024 price rise), terms and LTV do not
+#    explain it: the largest gain is under a third of it. Against the 49% of 2018-2024 the ceiling (13% to 29%) is less negligible, but the
+#    realised term moved the other way.
 # 3. **The deposit is the barrier that the guarantee removes; the payment is the one it leaves (RQ6.4, partly).** In the median
 #    municipality cash on the day of purchase (deposit plus 6% costs) is 2.5 years of income at an 80% loan, 1.5 at the legal maximum
 #    of 90% and 0.6 with the State guarantee for borrowers up to 35 (up to 15% of the price, loans up to 100% of it); 94%, 74% and 13% of
 #    municipalities need more than a year. But the payment on a 100% loan is 57% of gross income in the median municipality at 30 years
-#    (45% at 80%) and 50% at 40 years, with half of municipalities above the 50% DSTI cap (a rough proxy: the cap is on net income with a
-#    rate shock, so the real test is stricter). Access eased by the guarantee by the reading rule (cash below one year), but it is bounded by
-#    the payment.
+#    (45% at 80%) and 50% at 40 years, with 57% and 50% of municipalities above 50% of gross income. The 40-year term is allowed only for
+#    borrowers up to 30 (37 years up to 35), and the DSTI cap is on net income with a rate shock, so this is a rough proxy that probably
+#    understates the test banks apply. Access eased by the guarantee by the reading rule (cash below one year), but it is bounded by the
+#    payment.
 # 4. **Young borrowers came into the market.** The share of new loans to borrowers up to 35 went from 27% (July 2024) to 47% (August 2024)
 #    after the IMT and stamp-duty exemption of August 2024, with higher effective DSTI (lower incomes) and longer terms; the guarantee
 #    started in the fourth quarter of 2024 and its uptake in 2025 is not in the report used.

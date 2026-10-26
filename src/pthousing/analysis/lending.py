@@ -40,6 +40,13 @@ def capacity_gain_pct(rate_pct: float, from_years: float, to_years: float) -> fl
     return 100 * (shorter / longer - 1)
 
 
+def rate_effect_pct(rate_from_pct: float, rate_to_pct: float, term_years: float) -> float:
+    """Cut (%) of the loan a fixed monthly payment carries when the rate goes from ``rate_from_pct`` to ``rate_to_pct``."""
+    before = float(mortgage_payment_monthly(100_000, rate_from_pct, term_years))
+    after = float(mortgage_payment_monthly(100_000, rate_to_pct, term_years))
+    return 100 * (1 - before / after)
+
+
 def maturity_table(rates: pd.Series, terms: dict[str, float], base: str) -> pd.DataFrame:
     """Payment per 100,000 EUR and the capacity gain over the ``base`` term, for each year of ``rates`` and each term.
 
@@ -105,3 +112,14 @@ def burden_table(
                 }
             )
     return pd.DataFrame(rows)
+
+
+def cash_summary(deposit: pd.DataFrame) -> pd.DataFrame:
+    """Median cash needed (years of income) and the share of municipalities needing more than a year, by loan-to-value (rows)."""
+    return pd.DataFrame(
+        {
+            "median_years": deposit.median(),
+            "share_above_one_pct": 100 * (deposit > 1).mean(),
+            "municipalities_n": deposit.notna().sum(),
+        }
+    )

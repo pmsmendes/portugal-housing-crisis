@@ -638,5 +638,5 @@ def test_lending_conditions_title_gives_the_largest_gain_and_the_price_rise():
         {"median_years": [2.5, 0.6], "share_above_one_pct": [94.0, 13.0]},
         index=["80%", "100% (guarantee)"],
     )
-    title = _title(charts.lending_conditions(maturity, cash, 100.0))
-    assert "at most 29%" in title and "rose 100%" in title
+    title = _title(charts.lending_conditions(maturity, cash, 100.0, 6.0))
+    assert "at most 29%" in title and "rose 100% in 2013-2024" in title

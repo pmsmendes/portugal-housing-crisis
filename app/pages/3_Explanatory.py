@@ -406,11 +406,13 @@ with tab_macro:
         )
 
     left.caption(
-        f"At most {top:.0f}% more loan for the same payment, against real prices up {head['real_price_rise_pct']:.0f}% in 2013-2024; "
-        f"the rate rise of 2021-2024 alone cut what a payment carries by {head['rate_rise_capacity_cut_pct']:.0f}%. Standards "
-        f"tightened over the period: the mean term of new loans went from {_std('maturity_weighted_mean', '2018-07'):.1f} years (2018) "
-        f"to {_std('maturity_weighted_mean', '2024-12'):.1f} (2024) and high-risk loans from about {_std('risk_share_high', '2018-Q3'):.0f}% "
-        f"to {_std('risk_share_high', '2024'):.0f}% (Banco de Portugal, March 2025; `p2_22`)."
+        f"At most {top:.0f}% more loan for the same payment (40 years, allowed to borrowers up to 30), against real prices up "
+        f"{head['real_price_rise_pct']:.0f}% in 2013-2024 and {head['real_price_rise_2018_2024_pct']:.0f}% in 2018-2024. That ceiling was "
+        f"not reached: the mean term of new loans fell from {_std('maturity_weighted_mean', '2018-07'):.1f} to "
+        f"{_std('maturity_weighted_mean', '2024-12'):.1f} years (a {head['term_change_capacity_pct']:.1f}% change in what a payment "
+        f"carries), and high-risk loans from about {_std('risk_share_high', '2018-Q3'):.0f}% to {_std('risk_share_high', '2024'):.0f}%. "
+        f"The rate rise of 2021-2024 alone cut what a payment carries by {head['rate_rise_capacity_cut_pct']:.0f}%. Nothing before "
+        "2018 (Banco de Portugal, March 2025; `p2_22`)."
     )
     fig = go.Figure(
         go.Bar(
@@ -427,9 +429,9 @@ with tab_macro:
     right.plotly_chart(_style(fig, "Cash on the day of purchase, 2024", 360), width="stretch")
     full = burden[(burden["ltv"].str.startswith("100")) & (burden["term"] == "30 years")].iloc[0]
     right.caption(
-        f"Median municipality, deposit plus 6% costs, by loan-to-value; the State guarantee (borrowers up to 35) allows 100%. "
-        f"The payment then is {full['median_burden_pct']:.0f}% of gross income at 30 years, above the 50% debt-service cap "
-        f"in {full['share_above_limit_pct']:.0f}% of municipalities (a gross-income proxy). Points from one report, not a series (`p2_22`)."
+        f"Median municipality, deposit plus {head['buying_costs_pct']:.0f}% costs, by loan-to-value; the State guarantee (borrowers up to 35) allows 100%. "
+        f"The payment then is {full['median_burden_pct']:.0f}% of gross income at 30 years, above 50% of gross income "
+        f"in {full['share_above_limit_pct']:.0f}% of municipalities (a rough proxy for the debt-service cap, which is on net income). Points from one report, not a series (`p2_22`)."
     )
 
 # ---- policy test ---------------------------------------------------------------------------------

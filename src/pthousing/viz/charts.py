@@ -3063,13 +3063,20 @@ def rent_update_gap(path: pd.DataFrame, by_third: pd.DataFrame) -> Figure:
     )
 
 
-def lending_conditions(maturity: pd.DataFrame, cash: pd.DataFrame, price_rise_pct: float) -> Figure:
+def lending_conditions(
+    maturity: pd.DataFrame,
+    cash: pd.DataFrame,
+    price_rise_pct: float,
+    buying_costs_pct: float,
+    price_span: str = "2013-2024",
+) -> Figure:
     """What a longer term buys (left) and the cash needed on the day of purchase by loan-to-value (right).
 
     ``maturity``: ``year``, ``rate_pct``, ``term``, ``capacity_gain_pct`` (loan carried by the same payment against the first term;
     the zero rows of that term are drawn as nothing). ``cash`` (index = loan-to-value label, lowest first): ``median_years`` of
     income in the median municipality and ``share_above_one_pct`` of municipalities needing more than a year. ``price_rise_pct``
-    is the rise of real prices the bars are set against.
+    is the rise of real prices over ``price_span`` the bars are set against; ``buying_costs_pct`` is the cost assumption
+    behind the cash needed.
     """
     fig, (left, right) = plt.subplots(
         1, 2, figsize=(11, 4.6), gridspec_kw={"width_ratios": [1.2, 1]}
@@ -3120,8 +3127,8 @@ def lending_conditions(maturity: pd.DataFrame, cash: pd.DataFrame, price_rise_pc
     top = maturity["capacity_gain_pct"].max()
     fig = style.finish(
         fig,
-        f"The longest allowed term adds at most {top:.0f}% to what a payment carries; real prices rose {price_rise_pct:.0f}%",
-        "Left: loan carried by the same payment at the mean mortgage rate of each year. Right: deposit plus 6% buying costs for the median home of the median municipality, 2024",
+        f"The longest allowed term adds at most {top:.0f}% to what a payment carries; real prices rose {price_rise_pct:.0f}% in {price_span}",
+        f"Left: loan carried by the same payment at the mean mortgage rate of each year. Right: deposit plus {buying_costs_pct:.0f}% buying costs for the median home of the median municipality, 2024",
         "Source: Banco de Portugal (mortgage rates; macroprudential monitoring report, March 2025), INE, BIS; own calculations. Loan-to-value of 100% is the State guarantee case (borrowers up to 35).",
     )
     fig.subplots_adjust(wspace=0.45)
