@@ -8,6 +8,24 @@ policies have worked, and what alternative interventions could achieve — and c
 
 ![Price-to-income by municipality, 2024](reports/figures/p1/pti_map_2024.png)
 
+## In short
+- **Prices left incomes behind.** Since 2013 real house prices rose 129% against 27% for real wages; the median municipality now needs 9.5 years of income to buy a home (8.0 in 2016), and 18 at the 90th percentile.
+- **Where matters most.** District, coast and density explain 53% of where affordability worsened; demand, supply, tourism and second homes add under two points.
+- **Not borrowed, not explained by wages and rates after 2021.** Wages and falling mortgage rates account for the 2013-2021 rise, not 2021-2025 (about 50 log points left over), and real housing credit fell while prices rose.
+- **Building collapsed.** From 93,000 dwellings a year (1995-2004) to 16,000 (2015-2025); in the simulator only supply levers lower price-to-income, and none comes close to cancelling the baseline rise.
+- **The one policy test is inconclusive.** Municipal property-tax rate cuts cannot be told from zero or from full capitalisation, and the design fails its pre-trend test; nothing here is claimed as causal.
+
+## Key figures
+![House prices and rents after inflation, price-to-income since 1995](reports/figures/p1/long_run_prices.png)
+
+![Geography explains 53% of where price-to-income rose](reports/figures/p2/synthesis_r2_ladder.png)
+
+![What wages and mortgage rates can finance against the actual price](reports/figures/p2/financeable_prices.png)
+
+![Dwellings completed against the census count, and the dwelling stock's yearly growth](reports/figures/p2/dwelling_stock.png)
+
+![Policy packages in the simulator, effect on price-to-income in 2035](reports/figures/p4/policy_effects.png)
+
 ## What it found
 **Evidence (phase 1)**
 - Real house prices have more than doubled since 2013; Portugal's nominal index rose 3.0 times against 1.7 for the EU27.
@@ -29,6 +47,8 @@ policies have worked, and what alternative interventions could achieve — and c
 - Foreign buyers paid 69% more per m2 than domestic buyers at the end of 2019 and 35% at the end of 2025, mostly because they buy in dearer places (25% to 18% inside a municipality); where they buy often, domestic buyers' prices are higher but did not rise more within the same district. No investment flow is available, only prices.
 - Renovation is small and in the wrong places: licences for works on existing family-housing buildings are about 3,800 a year (8,400 in 2002) against 16,300 for new buildings, and they are most common in rural municipalities (34% of completed works against 16% in urban ones) and unrelated to where homes are short; at today's pace, renovating a quarter of the excess vacant homes would take 48 years at one home per building (16 at three).
 - Most of the new households are smaller households: 2011-2021 households grew 2.6% on a population that grew 0.4%, and 79% of the 105,000 added come from the fall in persons per household (2.61 to 2.55), one-person households rising from 21% to 25%; in the interior households grew while 239 of 308 municipalities lost residents, and the one-person share does not go with where prices rose.
+- Only nine in ten dwellings completed show up in the census count: 2011-2021 the count rose 111,137 against 124,572 completions, but in the 20 coastal urban municipalities 26,821 were completed and the count grew by 6,748 (Lisboa and Porto counted fewer dwellings in 2021 than in 2011), while the Algarve coast counts more than it completed. Rolled along completions, the stock was about 6.06 million in 2025 and its yearly growth fell from 2% around 2001 to 0.1% in 2015 and 0.4% in 2025.
+- Rents of new leases rose as much as prices in the median municipality of the 191 that publish a rent (real +24% in 2020-2024, both), but more evenly across kinds of place; foreign residents (+1.6% on the rent per point) and registered short-term rentals (+1.0% per 10 per 1,000 dwellings) go with where rents rose, population change and completions do not, and short-term rentals go with rents but not prices.
 
 **Policy (phase 3)**
 - Cuts in the municipal property-tax rate (IMI): the effect on prices cannot be told from zero or from full capitalisation, and the design fails its pre-trend test, so the result is inconclusive, not causal.
@@ -58,7 +78,7 @@ All results are associations or conditional scenarios with stated limits (short 
 | 3. Evaluate a policy | Difference-in-differences / event study, pre-trend and placebo tests | [report](reports/p3_policy.md) |
 | 4. Forecast and simulate | Naïve/ETS/ARIMA with rolling-origin validation, scenario simulator, regional outlook | [report](reports/p4_forecast.md) |
 
-Interactive dashboards (Streamlit, `uv run streamlit run app/Home.py`): a **geographic** explorer (municipality map of any indicator, level or change between two years, with rankings), **trends** (national price index and rates, a municipality against all others, group medians), **explanatory** (what accounts for where affordability worsened, the policy test, and the money at stake in property taxes and housing spending) and the forecast & policy **simulator**. They read only the committed processed data and report tables.
+Interactive dashboards (Streamlit, `uv run streamlit run app/Home.py`): a **geographic** explorer (municipality map of any indicator, level or change between two years, with rankings), **trends** (national price index and rates, a municipality against all others, group medians), **explanatory** (what accounts for where affordability worsened, including the dwelling stock against completions and rents of new leases; wages, rates and credit; the policy test; and the money at stake in property taxes and housing spending) and the forecast & policy **simulator**. They read only the committed processed data and report tables.
 
 ## Data
 Public Portuguese and European sources (INE, Banco de Portugal, Eurostat, BIS, OECD, Autoridade Tributária, Turismo de Portugal RNAL, DGT CAOP, AIMA). Full registry: [docs/data_catalog.md](docs/data_catalog.md).
