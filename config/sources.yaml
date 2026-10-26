@@ -145,6 +145,16 @@ ine:
       price is one with enough foreign purchases (the total count of sales is `ine_median_price_sqm.sales_12m_n`).
       Banco de Portugal's real-estate direct investment (about 3.9 bn euros in 2025, press reports) was not located in BPstat's
       datasets (domains 161, 162 and 189 hold no activity split): unresolved.
+  ine_building_works:
+    # Municipal (308 x 3 project types x 3 purposes verified 2026-10-26). Counts of BUILDINGS, not dwellings.
+    licensed_buildings: "0013234"    # licensed buildings by type of project and purpose, annual 2002 - 2025, NUTS 2024
+    completed_buildings: "0013247"   # completed buildings by type of project and purpose, annual 2011 - 2025, NUTS 2024
+    format: json
+    notes: >
+      dim_3: T total of building works, 1 new constructions, 2 enlargements, changes and reconstructions (the rehabilitation
+      of existing buildings and extensions, with no split between them); dim_4: T total, 1 family housing, 2 others. The unit is
+      the building, so a reconstruction of a block counts as one and says nothing about the dwellings it holds or adds; works
+      that need no licence (exempt or notified to the council) are not in it. Licensed 2002-2025, completed 2011-2025 only.
 
 bportugal:
   # API base https://bpstat.bportugal.pt/data/v1 (301 -> trailing slash; send a User-Agent, urllib's default gets 403).

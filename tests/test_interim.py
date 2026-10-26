@@ -463,3 +463,21 @@ def test_ine_price_by_buyer_keeps_published_municipal_cells_only(monkeypatch):
     monkeypatch.setattr(interim, "_municipal", lambda code: _ine(rows))
     out = interim.build_ine_price_by_buyer()
     assert out["buyer"].tolist() == ["foreign"]
+
+
+def test_ine_building_works_names_projects_and_purposes_and_keeps_completed_from_2011(monkeypatch):
+    lic = [
+        {"muni_code": "0101", "dim_3": p, "dim_4": q, "year": 2010, "value": v}
+        for p, q, v in (("1", "1", 5.0), ("2", "1", 2.0), ("T", "1", 7.0))
+    ]
+    comp = [
+        {"muni_code": "0101", "dim_3": "1", "dim_4": "1", "year": 2011, "value": 4.0},
+    ]
+    frames = {"0013234": pd.DataFrame(lic), "0013247": pd.DataFrame(comp)}
+    monkeypatch.setattr(interim, "_municipal", lambda code: frames[code].copy())
+    out = interim.build_ine_building_works()
+    first = out[(out["year"] == 2010) & (out["project"] == "alteration")].iloc[0]
+    assert first["purpose"] == "family_housing" and first["licensed_buildings_n"] == 2.0
+    assert np.isnan(first["completed_buildings_n"])
+    late = out[out["year"] == 2011].iloc[0]
+    assert late["completed_buildings_n"] == 4.0 and np.isnan(late["licensed_buildings_n"])

@@ -2,6 +2,12 @@
 
 Analytic and engineering choices, newest first. One short entry each: what, why, alternatives rejected.
 
+## 2026-10-26 — Renovation from INE building works, read as pace and place
+- **What:** `ine_building_works` (INE 0013234 licensed and 0013247 completed buildings by type of project and purpose, municipal) feeds `analysis/renovation.py`: family-housing buildings, new against works on existing buildings (national, by kind of place), completed works per 1,000 dwellings and as a share of all completed buildings over 2012-2021, Spearman associations with vacancy and the `p2_05` shortfall, and years to bring back the excess vacant homes of `p2_16` at the observed pace under 1, 3 and 10 vacant homes per building and a usable share of 25%, 50% and 100%.
+- **Why:** it is the only municipal source on works on existing buildings. The share of completed works does not depend on how many dwellings a building holds, so it is the main measure; the per-1,000 rates are secondary. Homes per building is varied, not assumed, because it is not in the data.
+- **Reading:** the scale of renovation against the vacant stock and where the work is done, not the homes it brought back.
+- **Rejected:** counting renovated buildings as dwellings; the ratio indicator 0013239 (reconstructions per 100 new, redundant); treating the simulator's 10,000 units a year as observed.
+
 ## 2026-10-26 — Foreign buyers from INE prices by buyer residence: premium, presence and an adjusted association
 - **What:** `ine_price_by_buyer` (INE 0012246, last-12-month medians by tax residence of the buyer, 4Q2019 onward, national and municipal) feeds `analysis/foreign_buyers.py`: the national and within-municipality premium over domestic buyers; a *foreign market* is a municipality with a foreign-buyer price in at least four of the seven yearly (4th-quarter) snapshots; the outcome is domestic buyers' price growth 2019-2025 or the 2025 level, regressed on the flag with district effects, the log of 2019 sales and the coast, density and tourist classes, errors clustered by district.
 - **Why:** it is the only regional data on foreign buyers that is machine-readable. Domestic buyers' prices are the outcome so foreign prices do not enter it; sales are held fixed because a foreign price is published only with enough transactions; four years of seven is a middle value, with one, two and seven reported as sensitivity.

@@ -2,7 +2,7 @@
 
 Why did affordability deteriorate, and where? This phase moves from description to association; nothing here is a
 causal claim. Figures: `reports/figures/p2/`, tables: `reports/tables/p2/`, notebooks: `notebooks/p2_explain/`
-(`p2_01` to `p2_18`). Methods: [methodology](../docs/methodology.md), choices:
+(`p2_01` to `p2_19`). Methods: [methodology](../docs/methodology.md), choices:
 [decisions](../docs/decisions.md).
 
 ## Summary
@@ -38,7 +38,7 @@ available, so a credible answer to "what would change affordability?" needs a po
 
 **Contents:** spatial autocorrelation (`p2_01`), fixed-effects regressions with foreign residents
 (`p2_02`, RQ3.3, RQ5.1), spillover tests (`p2_03`, RQ4.4), segmentation (`p2_04`, RQ4.6), supply against demand
-(`p2_05`, RQ2.1 to RQ2.4, RQ3.4, RQ4.5), second homes (`p2_06`, RQ5.3, RQ5.4) the synthesis (`p2_07`, RQ3.6), mortgage rates (`p2_08`, RQ1.7, RQ9.2, RQ9.5), wages and the labour market (`p2_09`, RQ9.1, RQ1.4), big municipalities against their surroundings (`p2_10`, RQ4.3), age structure (`p2_11`, RQ3.5) mortgage credit and household debt (`p2_12`, RQ9.2, RQ9.3) what wages and rates could finance (`p2_13`, RQ9.4) and foreign residents by nationality group (`p2_14`, RQ3.3) vacant dwellings against the shortfall (`p2_16`, RQ2.5) construction costs against prices and licensing (`p2_17`, RQ2.7) and foreign buyers (`p2_18`, RQ5.2).
+(`p2_05`, RQ2.1 to RQ2.4, RQ3.4, RQ4.5), second homes (`p2_06`, RQ5.3, RQ5.4) the synthesis (`p2_07`, RQ3.6), mortgage rates (`p2_08`, RQ1.7, RQ9.2, RQ9.5), wages and the labour market (`p2_09`, RQ9.1, RQ1.4), big municipalities against their surroundings (`p2_10`, RQ4.3), age structure (`p2_11`, RQ3.5) mortgage credit and household debt (`p2_12`, RQ9.2, RQ9.3) what wages and rates could finance (`p2_13`, RQ9.4) and foreign residents by nationality group (`p2_14`, RQ3.3) vacant dwellings against the shortfall (`p2_16`, RQ2.5) construction costs against prices and licensing (`p2_17`, RQ2.7) foreign buyers (`p2_18`, RQ5.2) and renovation of existing buildings (`p2_19`, RQ2.8).
 
 ## Key findings
 
@@ -364,6 +364,18 @@ INE's median sale price per m2 by the buyer's tax residence (national territory,
 
 Tables: `foreign_buyer_premium.csv`, `foreign_markets_by_year.csv`, `foreign_markets_by_typology.csv`, `foreign_markets_price_growth.csv`, `foreign_markets_price_level.csv`, `foreign_markets_sensitivity.csv`. Limits: prices without counts, seven years, 255 to 278 municipalities (20 district clusters), cells blank where sales are few (so presence favours big markets, the reason sales are controlled), no purchase value or number of homes, an association between where foreign buyers are active and where domestic buyers' prices are higher or rose more, not an effect of their buying (who buys where is not random).
 
+## Renovation of existing buildings (`p2_19_renovation`)
+
+![Renovation works](figures/p2/renovation_works.png)
+
+INE counts buildings licensed (2002-2025) and completed (2011-2025) by type of project, by municipality: new constructions and "enlargements, changes and reconstructions", which is every work on an existing building (RQ2.8). The unit is the building, not the dwelling, and works that need no licence are not counted, so the series give the pace and the place of the work, not the homes it returned to use.
+
+56. **Works on existing buildings have been flat while new building swung.** Licences for family-housing buildings: works on existing buildings 8,413 (2002), 3,112 (2014) and 3,774 (2025), new constructions 41,439, 5,348 and 16,279. Renovation's share of licences rose from 17% to a peak of 37% (2013), when new building collapsed, and is 19% in 2025; of completed buildings it is 16% (23% in 2011). Completions of such works averaged 2,232 buildings a year in 2015-2024 (3,467 licensed).
+57. **It happens in the country, not where homes are short.** Works on existing buildings are 16% of completed family-housing buildings in urban municipalities, 21% in intermediate and 34% in rural ones (median; 2.3, 4.6 and 6.4 buildings per 1,000 dwellings over 2012-2021). Across municipalities they are unrelated to the vacancy rate (Spearman +0.05) and negatively related to the shortfall per 1,000 dwellings (-0.37, `p2_05`), and they go with a rising vacancy rate (+0.23). A city's blocks hold many dwellings each, so the per-dwelling rates understate cities; the share of works, which does not use the stock, tells the same story.
+58. **At today's pace renovation touches the vacant stock slowly.** The 425,000 excess vacant homes of `p2_16` against 2,232 buildings a year: if each building returned one vacant home, a quarter of the excess (the usable share assumed in `p2_16`) would take 48 years and all of it 190; three homes a building 16 and 63 years; ten homes a building 5 and 19. These are upper bounds on the contribution (some homes were occupied, some are not let or sold afterwards). The simulator's renovation lever (10,000 units a year, an assumption, `config/scenarios.yaml`) is 4.5 times the number of buildings with such works completed a year now and more than twice the 2011 peak of 4,552.
+
+Tables: `renovation_national.csv`, `renovation_changes.csv`, `renovation_by_density.csv`, `renovation_by_coast.csv`, `renovation_association.csv`, `renovation_share_association.csv`, `renovation_years_to_clear.csv`. Limits: buildings not dwellings (a renovated block counts once), no licence-free works, extensions are in the same group as rehabilitation, no link between a work and a vacant home, no cost or quality, completions from 2011 only, an association across 308 municipalities.
+
 ## Limitations
 
 - **A pattern, not a mechanism.** Spatial autocorrelation does not show that price changes spill over: shared
@@ -414,4 +426,4 @@ Tables: `foreign_buyer_premium.csv`, `foreign_markets_by_year.csv`, `foreign_mar
 ## Questions answered
 
 RQ4.3 (large municipalities rose most, less further out; Lisboa itself less than its suburbs), RQ4.4 (little evidence of spillovers beyond the regional pattern), RQ4.6 (coastal and urban, not tourism as such), RQ2.1 to
-RQ3.5 (ageing and the 25-44 pool add nothing beyond the foreign-resident change; internal migration and single-person households not observable), RQ2.3 and RQ4.5 (supply against households) and RQ5.4 (second homes separated) are answered; RQ3.6 is answered as far as these data allow (demand differences cannot be told from the regional pattern); RQ2.5, RQ2.7, RQ3.3, RQ5.1, RQ5.2, RQ5.3, RQ1.7, RQ9.1, RQ9.2 and RQ9.5 are partly answered; RQ1.4 is answered (income and wages) (see [research_questions](../docs/research_questions.md)).
+RQ3.5 (ageing and the 25-44 pool add nothing beyond the foreign-resident change; internal migration and single-person households not observable), RQ2.3 and RQ4.5 (supply against households) and RQ5.4 (second homes separated) are answered; RQ3.6 is answered as far as these data allow (demand differences cannot be told from the regional pattern); RQ2.5, RQ2.7, RQ2.8, RQ3.3, RQ5.1, RQ5.2, RQ5.3, RQ1.7, RQ9.1, RQ9.2 and RQ9.5 are partly answered; RQ1.4 is answered (income and wages) (see [research_questions](../docs/research_questions.md)).

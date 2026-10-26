@@ -28,6 +28,8 @@ OECD_COLUMNS = {
 SIZE = {"T": "total", "1": "br_0_1", "2": "br_2", "3": "br_3", "4": "br_4plus"}
 PRICE_CATEGORY = {"H1": "total", "H11": "new", "H12": "existing"}
 COST_FACTOR = {"T": "total", "1": "materials", "2": "labour"}
+PROJECT = {"T": "total", "1": "new", "2": "alteration"}
+PURPOSE = {"T": "total", "1": "family_housing", "2": "other"}
 BUYER = {"T": "total", "1": "domestic", "2": "foreign", "21": "eu", "22": "other_foreign"}
 VALUATION_TYPE = {"T": "total", "1": "flats", "2": "villas"}
 SEX = {"T": "total", "1": "m", "2": "f"}
@@ -88,6 +90,25 @@ def build_ine_median_price_sqm() -> pd.DataFrame:
     out = _quarter(out)
     cols = [MUNI_KEY, "period_start", "year", "quarter", "category", "method"]
     return out[[*cols, "price_sqm_eur", "sales_12m_n"]].sort_values(cols, ignore_index=True)
+
+
+def build_ine_building_works() -> pd.DataFrame:
+    """Buildings licensed (2002-2025) and completed (2011-2025) by municipality, year, type of project and purpose.
+
+    ``project`` is new (new constructions), alteration (enlargements, changes and reconstructions: works on existing
+    buildings, extensions included) or total; ``purpose`` is family_housing, other or total. Counts of buildings, not
+    dwellings; works that need no licence are not counted. NUTS 2024 geography.
+    """
+    parts = []
+    for code, column in (("0013234", "licensed_buildings_n"), ("0013247", "completed_buildings_n")):
+        df = _municipal(code)
+        df = df.assign(project=df["dim_3"].map(PROJECT), purpose=df["dim_4"].map(PURPOSE))
+        parts.append(
+            df.rename(columns={"value": column})[[MUNI_KEY, "year", "project", "purpose", column]]
+        )
+    keys = [MUNI_KEY, "year", "project", "purpose"]
+    out = parts[0].merge(parts[1], on=keys, how="outer", validate="one_to_one")
+    return out.sort_values(keys, ignore_index=True)
 
 
 def build_ine_price_by_buyer() -> pd.DataFrame:
@@ -502,6 +523,7 @@ INE_CODES = (
     "0008269", "0008270", "0008271",  # net migration, natural increase, population change
     "0011748",  # construction cost index of new housing, monthly
     "0012246",  # median price per m2 (12 months) by tax residence of the buyer
+    "0013234", "0013247",  # buildings licensed, completed by type of project and purpose
 )  # fmt: skip
 
 
@@ -666,6 +688,7 @@ BUILDERS: dict[str, Callable[[], pd.DataFrame]] = {
     "ine_hpi": build_ine_hpi,
     "ine_construction_costs": build_ine_construction_costs,
     "ine_price_by_buyer": build_ine_price_by_buyer,
+    "ine_building_works": build_ine_building_works,
     "ine_price_by_buyer_national": build_ine_price_by_buyer_national,
     "ine_population_change": build_ine_population_change,
     "ine_households_size": build_ine_households_size,

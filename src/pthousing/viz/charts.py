@@ -2058,6 +2058,55 @@ def foreign_buyers(premium: pd.DataFrame, markets: pd.DataFrame) -> Figure:
     )
 
 
+def renovation_works(national: pd.DataFrame, shares: pd.DataFrame) -> Figure:
+    """Licensed family-housing buildings, new against works on existing buildings (left), and the works' share by place (right).
+
+    ``national`` is ``renovation.national`` (``licensed_new_n``, ``licensed_alteration_n``). ``shares`` has one row per kind of
+    place (index) with the median ``alteration_share_completed_pct`` of its municipalities. Left: thousands of buildings.
+    """
+    d = national
+    fig, (left, right) = plt.subplots(1, 2, figsize=(11, 4.6))
+    for col, color in (("licensed_new_n", BLUE), ("licensed_alteration_n", ORANGE)):
+        line = d[col] / 1000
+        _line(left, line.index, line, color)
+        _end_dot(left, line.index[-1], line.iloc[-1], color)
+    left.set_ylim(0, None)
+    left.set_xlim(d.index.min() - 1, d.index.max() + 1.5)
+    left.set_xticks(range(2005, 2026, 5))
+    _legend(left, [Line2D([], [], color=BLUE, lw=LINE_WIDTH, label="New constructions"),
+                   Line2D([], [], color=ORANGE, lw=LINE_WIDTH, label="Works on existing buildings")], loc="upper right")  # fmt: skip
+    _panel_title(left, "Family-housing buildings licensed (thousands)")
+    bars = shares["alteration_share_completed_pct"]
+    right.bar(range(len(bars)), bars, color=ORANGE, width=0.55, zorder=3)
+    right.set_xticks(range(len(bars)), [str(i).capitalize() for i in bars.index])
+    for i, v in enumerate(bars):
+        right.text(
+            i,
+            v + 0.8,
+            f"{v:.0f}%",
+            ha="center",
+            va="bottom",
+            fontsize=10,
+            color=INK,
+            fontweight="bold",
+        )
+    right.set_ylim(0, bars.max() * 1.25)
+    right.yaxis.set_major_formatter(mticker.PercentFormatter(decimals=0))
+    _panel_title(
+        right, "Works on existing buildings, % of completed (median by kind of place, 2012-2021)"
+    )
+    first, last = d["licensed_alteration_n"].iloc[0], d["licensed_alteration_n"].iloc[-1]
+    return style.finish(
+        fig,
+        f"Licences for works on existing family-housing buildings fell from {first:,.0f} in {d.index[0]} to {last:,.0f} in {d.index[-1]}, "
+        f"{100 * last / d['licensed_total_n'].iloc[-1]:.0f}% of the total",
+        f"Buildings (not dwellings) licensed per year, national, {d.index[0]} to {d.index[-1]}; works on existing buildings are enlargements, changes and reconstructions",
+        "Source: INE (projects of building constructions and demolitions; completed works), own calculations. Works that need no licence are not counted.",
+        head_in=1.3,
+        foot_in=0.6,
+    )
+
+
 def property_tax_revenue(frame: pd.DataFrame) -> Figure:
     """Real IMI and IMT revenue (left) and both against the real house price index, 2015 = 100 (right).
 

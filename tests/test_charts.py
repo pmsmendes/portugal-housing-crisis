@@ -585,3 +585,21 @@ def test_foreign_buyers_title_gives_the_premium_at_both_ends():
     )
     title = _title(charts.foreign_buyers(premium, markets))
     assert "70% more" in title and "4Q2019" in title and "35% more" in title and "2Q2026" in title
+
+
+def test_renovation_works_title_gives_first_and_last_licences_and_the_share():
+    years = np.arange(2002, 2026)
+    national = pd.DataFrame(
+        {
+            "licensed_new_n": np.linspace(40_000, 16_000, len(years)),
+            "licensed_alteration_n": np.linspace(8_000, 4_000, len(years)),
+            "licensed_total_n": np.linspace(48_000, 20_000, len(years)),
+        },
+        index=pd.Index(years, name="year"),
+    )
+    shares = pd.DataFrame(
+        {"alteration_share_completed_pct": [16.0, 21.0, 34.0]},
+        index=["urban", "intermediate", "rural"],
+    )
+    title = _title(charts.renovation_works(national, shares))
+    assert "8,000 in 2002" in title and "4,000 in 2025" in title and "20% of the total" in title

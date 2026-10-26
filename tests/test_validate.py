@@ -655,3 +655,29 @@ def test_price_by_buyer_national_check_flags_a_missing_quarter_and_a_foreign_dis
         price_sqm_eur=lambda d: d["price_sqm_eur"].where(d["buyer"] == "domestic", 1500.0)
     )
     assert validate.check_price_by_buyer_national(cheap)[1] is not None
+
+
+def _works(bad=False):
+    rows = []
+    for project, n in (("new", 5.0), ("alteration", 2.0), ("total", 7.0 if not bad else 8.0)):
+        for purpose, m in (("family_housing", 0.5), ("other", 0.5), ("total", 1.0)):
+            rows.append((CODES[0], 2015, project, purpose, n * m * 2, n * m * 2))
+    df = pd.DataFrame(
+        rows,
+        columns=[
+            "muni_code",
+            "year",
+            "project",
+            "purpose",
+            "licensed_buildings_n",
+            "completed_buildings_n",
+        ],
+    )
+    return df
+
+
+def test_building_works_check_accepts_consistent_totals_and_flags_a_broken_one():
+    ok = _works()
+    validate.schemas()["ine_building_works"].validate(ok)
+    assert validate.check_building_works(ok) == [None, None, None, None]
+    assert validate.check_building_works(_works(bad=True))[0] is not None

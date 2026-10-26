@@ -214,6 +214,18 @@ def schemas() -> dict[str, DataFrameSchema]:
             unique=["period_start", "factor"],
             strict=True,
         ),
+        "ine_building_works": DataFrameSchema(
+            {
+                MUNI_KEY: muni,
+                "year": _year(2002),
+                "project": _cat({"total", "new", "alteration"}),
+                "purpose": _cat({"total", "family_housing", "other"}),
+                "licensed_buildings_n": _num(0, 5_000),
+                "completed_buildings_n": _num(0, 5_000),
+            },
+            unique=[MUNI_KEY, "year", "project", "purpose"],
+            strict=True,
+        ),
         "ine_price_by_buyer": DataFrameSchema(
             {
                 MUNI_KEY: muni,
@@ -652,6 +664,35 @@ def check_construction_costs(df: pd.DataFrame) -> list[str | None]:
     ]
 
 
+def check_building_works(df: pd.DataFrame) -> list[str | None]:
+    """Total = new + alteration and total purpose = family housing + other, for licensed and completed buildings."""
+    keys = [MUNI_KEY, "year"]
+    msgs = []
+    for column in ("licensed_buildings_n", "completed_buildings_n"):
+        d = df.dropna(subset=[column])
+        by_project = d[d["purpose"] == "total"].pivot_table(
+            index=keys, columns="project", values=column
+        )
+        by_purpose = d[d["project"] == "total"].pivot_table(
+            index=keys, columns="purpose", values=column
+        )
+        bad_project = ((by_project["new"] + by_project["alteration"]) != by_project["total"]).sum()
+        bad_purpose = (
+            (by_purpose["family_housing"] + by_purpose["other"]) != by_purpose["total"]
+        ).sum()
+        msgs.append(
+            None
+            if bad_project == 0
+            else f"{column}: {bad_project} cells where new plus alteration differs from the total"
+        )
+        msgs.append(
+            None
+            if bad_purpose == 0
+            else f"{column}: {bad_purpose} cells where family housing plus other differs from the total"
+        )
+    return msgs
+
+
 def check_price_by_buyer(df: pd.DataFrame) -> list[str | None]:
     """The foreign median is the weighted blend of EU and other countries, so it lies between the two."""
     wide = df.pivot_table(index=[MUNI_KEY, "period_start"], columns="buyer", values="price_sqm_eur")
@@ -791,6 +832,7 @@ CHECKS: dict[str, Callable[[pd.DataFrame], list[str | None]]] = {
     "ine_hpi": check_hpi,
     "ine_construction_costs": check_construction_costs,
     "ine_price_by_buyer": check_price_by_buyer,
+    "ine_building_works": check_building_works,
     "ine_price_by_buyer_national": check_price_by_buyer_national,
     "bp_mortgage": check_bp,
     "bp_household_debt": check_bp_household_debt,
