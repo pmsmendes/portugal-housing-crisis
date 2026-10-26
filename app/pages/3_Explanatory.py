@@ -410,9 +410,9 @@ with tab_macro:
         f"{head['real_price_rise_pct']:.0f}% in 2013-2024 and {head['real_price_rise_2018_2024_pct']:.0f}% in 2018-2024. That ceiling was "
         f"not reached: the mean term of new loans fell from {_std('maturity_weighted_mean', '2018-07'):.1f} to "
         f"{_std('maturity_weighted_mean', '2024-12'):.1f} years (a {head['term_change_capacity_pct']:.1f}% change in what a payment "
-        f"carries), and high-risk loans from about {_std('risk_share_high', '2018-Q3'):.0f}% to {_std('risk_share_high', '2024'):.0f}%. "
-        f"The rate rise of 2021-2024 alone cut what a payment carries by {head['rate_rise_capacity_cut_pct']:.0f}%. Nothing before "
-        "2018 (Banco de Portugal, March 2025; `p2_22`)."
+        f"carries), and high-risk loans from about {_std('risk_share_high', '2018-Q3'):.0f}% to {_std('risk_share_high', '2024'):.0f}% "
+        f"(then back up in 2025, below). The rate rise of 2021-2024 alone cut what a payment carries by "
+        f"{head['rate_rise_capacity_cut_pct']:.0f}%. Nothing before 2018 (Banco de Portugal, March 2025; `p2_22`)."
     )
     fig = go.Figure(
         go.Bar(
@@ -431,7 +431,30 @@ with tab_macro:
     right.caption(
         f"Median municipality, deposit plus {head['buying_costs_pct']:.0f}% costs, by loan-to-value; the State guarantee (borrowers up to 35) allows 100%. "
         f"The payment then is {full['median_burden_pct']:.0f}% of gross income at 30 years, above 50% of gross income "
-        f"in {full['share_above_limit_pct']:.0f}% of municipalities (a rough proxy for the debt-service cap, which is on net income). Points from one report, not a series (`p2_22`)."
+        f"in {full['share_above_limit_pct']:.0f}% of municipalities (a rough proxy for the debt-service cap, which is on net income) (`p2_22`)."
+    )
+    terms = table("p2", "lending_series").set_index("year")
+    gar = table("p2", "lending_guarantee_2025").iloc[0]
+    fig = go.Figure()
+    for col, name, color in (
+        ("ltv_above_90_pct", "Loans above 90% of the value", style.ORANGE),
+        ("risk_share_high", "High-risk loans", style.BLUE),
+    ):
+        fig.add_scatter(
+            x=terms.index, y=terms[col], mode="lines+markers", name=name, line=dict(color=color)
+        )
+    fig.update_xaxes(dtick=1)
+    fig.update_yaxes(title="% of new housing loans", rangemode="tozero")
+    fig.update_layout(legend=dict(orientation="h", y=-0.25))
+    st.plotly_chart(_style(fig, "Terms of new housing loans, 2018-2025", 340), width="stretch")
+    st.caption(
+        f"Standards tightened from 2018 (third quarter only) to 2024 and loosened in 2025: loans above 90% of the value "
+        f"{terms.loc[2024, 'ltv_above_90_pct']:.1f}% to {terms.loc[2025, 'ltv_above_90_pct']:.0f}%, high-risk loans "
+        f"{terms.loc[2024, 'risk_share_high']:.0f}% to {terms.loc[2025, 'risk_share_high']:.0f}%, as the State guarantee "
+        f"({gar['guarantee_share_contracts_pct']:.0f}% of new contracts in 2025, mean LTV {gar['ltv_mean_guarantee_pct']:.0f}%, mean term "
+        f"{gar['maturity_mean_guarantee_years']:.0f} years) came in; without it the high-risk share was {gar['risk_high_no_guarantee_pct']:.1f}%. "
+        f"Real prices rose {gar['real_price_rise_2024_2025_pct']:.0f}% in 2025: coincident in time, not a test "
+        "(Banco de Portugal, March 2026; `p2_22`)."
     )
 
 # ---- policy test ---------------------------------------------------------------------------------

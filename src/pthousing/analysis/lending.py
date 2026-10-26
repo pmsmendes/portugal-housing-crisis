@@ -18,11 +18,28 @@ from pthousing.features.affordability import mortgage_burden_pct, mortgage_payme
 from pthousing.features.rent_vs_buy import upfront_cash_years
 
 PATH = EXTERNAL / "lending_standards.csv"
+SERIES_PATH = EXTERNAL / "lending_series.csv"
 
 
 def read() -> pd.DataFrame:
     """Transcribed figures of the Banco de Portugal reports: ``indicator``, ``period`` (text), ``value``, ``unit``, ``source``, ``note``."""
     return pd.read_csv(PATH, dtype={"period": str})
+
+
+def read_series() -> pd.DataFrame:
+    """Chart data of the March 2026 report (``sources/bp_lending_standards.py``): ``indicator``, ``period`` (text), ``value``, ``unit``, ``sheet``."""
+    return pd.read_csv(SERIES_PATH, dtype={"period": str})
+
+
+def yearly(series: pd.DataFrame, indicators: list[str]) -> pd.DataFrame:
+    """Year (rows) by indicator (columns) from ``read_series``; the period ``2018-Q3`` counts for 2018, quarters and months are averaged.
+
+    The first year (2018) is the third quarter only, not a full year. Indicators with no value in a year are NaN.
+    """
+    sel = series[series["indicator"].isin(indicators)].copy()
+    sel["year"] = sel["period"].str[:4].astype(int)
+    wide = sel.groupby(["year", "indicator"])["value"].mean().unstack("indicator")
+    return wide.reindex(columns=indicators)
 
 
 def value(table: pd.DataFrame, indicator: str, period: str) -> float:
@@ -123,3 +140,26 @@ def cash_summary(deposit: pd.DataFrame) -> pd.DataFrame:
             "municipalities_n": deposit.notna().sum(),
         }
     )
+
+
+STANDARDS_COLUMNS = [
+    "ltv_above_90_pct",
+    "ltv_weighted_mean",
+    "dsti_actual_mean",
+    "risk_share_high",
+    "risk_share_low",
+    "share_borrowers_up_to_35",
+    "maturity_weighted_mean",
+]
+
+
+def standards_by_year(series: pd.DataFrame) -> pd.DataFrame:
+    """Terms of new housing loans by year from ``read_series``: ``ltv_above_90_pct`` (loans above 90% of the value), mean LTV,
+    mean actual DSTI, shares of high- and low-risk loans, share of borrowers up to 35 and mean maturity (columns of ``STANDARDS_COLUMNS``).
+
+    2018 is the third quarter only. The 90% LTV ceiling of the Recommendation (loans above it are exceptions) is the reference.
+    """
+    bands = ["ltv_share_90_to_100", "ltv_share_above_100"]
+    wide = yearly(series, [*bands, *STANDARDS_COLUMNS[1:]])
+    wide["ltv_above_90_pct"] = wide[bands].sum(axis=1, min_count=2)
+    return wide[STANDARDS_COLUMNS]

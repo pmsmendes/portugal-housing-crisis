@@ -104,7 +104,7 @@ ine:
       mean_useful_area_2011: "0006988"   # dwellings of usual residence, m2
       mean_useful_area_2021: "0012518"
       totals: 5.86 M (2011) and 5.97 M (2021) conventional dwellings, 4.04 M and 4.15 M households (match the census)
-    other_censuses: 2001 and 1991 codes still to be checked (the 2001 families indicator 0001349 is regions only). Checked 2026-10-26 for 2001 households by size per municipality: web searches found only a national table and a 2011 table by residence in 2001, no municipal indicator id; a scan of the metadata endpoint over ids 0000700 to 0001400 was cut short when the API stopped answering (timeouts), so the range is not covered.
+    other_censuses: "2001 and 1991 codes still to be checked (the 2001 families indicator 0001349 is regions only). Checked 2026-10-26 for 2001 households by size per municipality: web searches found only a national table and a 2011 table by residence in 2001, no municipal indicator id; a scan of the metadata endpoint over ids 0000700 to 0001400 was cut short when the API stopped answering (timeouts), so the range is not covered."
   ine_construction:
     # Municipal (308 x 5 dwelling typologies verified for licensed dwellings).
     licensed_dwellings: "0013235"    # new family dwellings licensed, annual 2002 - 2025, NUTS 2024
@@ -172,6 +172,18 @@ bportugal:
       Domains 21 (interest rates), 186 (loans for house purchase), 39 (housing prices). All five series verified and fetched
       (284 months, Jan 2003-Aug 2026; the fixed-rate median 93 months from Dec 2018). Dataset and domain are looked up from the
       series id at fetch time. Definitions differ (APRC vs agreed rate vs stock rate), see data_quality.md. Household debt: bp_household_debt below.
+  bp_lending_standards:
+    # Not BPstat: files of the publication page "Macroprudential measures in Portugal - progress report - March 2026"
+    # (https://www.bportugal.pt/en/publicacao/macroprudential-measures-portugal-progress-report-march-2026, found 2026-10-26).
+    files:
+      report_march_2026_en.pdf: https://www.bportugal.pt/sites/default/files/documents/2026-07/Macroprudential-measures-in-Portugal-Progress-report-March-2026.pdf
+      chart_data_march_2026.xlsx: https://www.bportugal.pt/sites/default/files/documents/2026-07/Acompanhamento_medidas_macroprudenciais_2026.xlsx
+    format: xlsx
+    notes: >
+      The workbook (10 MB, 28 sheets) holds the data of every chart: new housing loans by LTV, DSTI, risk profile and maturity,
+      yearly 2018 Q3 and 2019-2025 (maturity quarterly, the guarantee monthly in 2025), read by sources/bp_lending_standards.py into
+      data/external/lending_series.csv. The PDF is AES-encrypted (pypdf needs the `cryptography` package to read it), not used.
+      The site refuses the default python user agent for pages (HTTP 403 to WebFetch); the files download with a browser-like one.
   bp_household_debt:
     base_url: https://bpstat.bportugal.pt/data/v1
     series:

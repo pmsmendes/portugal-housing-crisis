@@ -1,0 +1,169 @@
+indicator,period,value,unit,sheet
+ltv_share_at_most_80,2018-Q3,55.13,pct,G3.1
+ltv_share_80_to_90,2018-Q3,24.35,pct,G3.1
+ltv_share_90_to_100,2018-Q3,18.24,pct,G3.1
+ltv_share_above_100,2018-Q3,2.27,pct,G3.1
+ltv_share_at_most_80,2019,48.07,pct,G3.1
+ltv_share_80_to_90,2019,48.94,pct,G3.1
+ltv_share_90_to_100,2019,2.85,pct,G3.1
+ltv_share_above_100,2019,0.15,pct,G3.1
+ltv_share_at_most_80,2020,49.09,pct,G3.1
+ltv_share_80_to_90,2020,49.57,pct,G3.1
+ltv_share_90_to_100,2020,1.26,pct,G3.1
+ltv_share_above_100,2020,0.08,pct,G3.1
+ltv_share_at_most_80,2021,48.92,pct,G3.1
+ltv_share_80_to_90,2021,50.45,pct,G3.1
+ltv_share_90_to_100,2021,0.59,pct,G3.1
+ltv_share_above_100,2021,0.03,pct,G3.1
+ltv_share_at_most_80,2022,53.54,pct,G3.1
+ltv_share_80_to_90,2022,46.19,pct,G3.1
+ltv_share_90_to_100,2022,0.25,pct,G3.1
+ltv_share_above_100,2022,0.02,pct,G3.1
+ltv_share_at_most_80,2023,67.79,pct,G3.1
+ltv_share_80_to_90,2023,32.05,pct,G3.1
+ltv_share_90_to_100,2023,0.15,pct,G3.1
+ltv_share_above_100,2023,0.01,pct,G3.1
+ltv_share_at_most_80,2024,63.52,pct,G3.1
+ltv_share_80_to_90,2024,36.34,pct,G3.1
+ltv_share_90_to_100,2024,0.12,pct,G3.1
+ltv_share_above_100,2024,0.01,pct,G3.1
+ltv_share_at_most_80,2025,52.7425,pct,G3.1
+ltv_share_80_to_90,2025,27.84,pct,G3.1
+ltv_share_90_to_100,2025,19.4,pct,G3.1
+ltv_share_above_100,2025,0.02,pct,G3.1
+ltv_weighted_mean,2018-Q3,77.87,pct,G3.3
+ltv_weighted_mean,2019,76.15,pct,G3.3
+ltv_weighted_mean,2020,76.33,pct,G3.3
+ltv_weighted_mean,2021,76.63,pct,G3.3
+ltv_weighted_mean,2022,75.22,pct,G3.3
+ltv_weighted_mean,2023,68.52,pct,G3.3
+ltv_weighted_mean,2024,69.92,pct,G3.3
+ltv_weighted_mean,2025,75.4,pct,G3.3
+ltv_weighted_mean_guarantee,2025,99.17,pct,G3.3
+dsti_actual_mean,2018-Q3,25.28,pct,G3.6
+dsti_actual_mean,2019,24.64,pct,G3.6
+dsti_actual_mean,2020,24.59,pct,G3.6
+dsti_actual_mean,2021,24.05,pct,G3.6
+dsti_actual_mean,2022,25.46,pct,G3.6
+dsti_actual_mean,2023,29.3,pct,G3.6
+dsti_actual_mean,2024,29.73,pct,G3.6
+dsti_actual_mean,2025,29.58,pct,G3.6
+dsti_actual_mean_guarantee,2025,33.67,pct,G3.6
+risk_share_low,2018-Q3,42.87,pct,G3.9
+risk_share_intermediate,2018-Q3,25.55,pct,G3.9
+risk_share_high,2018-Q3,31.57,pct,G3.9
+risk_share_low,2019,43.37,pct,G3.9
+risk_share_intermediate,2019,50.53,pct,G3.9
+risk_share_high,2019,6.1,pct,G3.9
+risk_share_low,2020,45.86,pct,G3.9
+risk_share_intermediate,2020,50.76,pct,G3.9
+risk_share_high,2020,3.38,pct,G3.9
+risk_share_low,2021,45.78,pct,G3.9
+risk_share_intermediate,2021,51.21,pct,G3.9
+risk_share_high,2021,3.02,pct,G3.9
+risk_share_low,2022,48.61,pct,G3.9
+risk_share_intermediate,2022,48.29,pct,G3.9
+risk_share_high,2022,3.1,pct,G3.9
+risk_share_low,2023,61.05,pct,G3.9
+risk_share_intermediate,2023,36.04,pct,G3.9
+risk_share_high,2023,2.91,pct,G3.9
+risk_share_low,2024,58.11,pct,G3.9
+risk_share_intermediate,2024,38.94,pct,G3.9
+risk_share_high,2024,2.94,pct,G3.9
+risk_share_low,2025,48.92,pct,G3.9
+risk_share_intermediate,2025,29.71,pct,G3.9
+risk_share_high,2025,21.37,pct,G3.9
+maturity_share_at_most_10,2020,0.73,pct,G3.10
+maturity_share_10_to_20,2020,7.0,pct,G3.10
+maturity_share_20_to_30,2020,28.0,pct,G3.10
+maturity_share_30_to_40,2020,64.0,pct,G3.10
+maturity_share_at_most_10,2021,1.06,pct,G3.10
+maturity_share_10_to_20,2021,7.0,pct,G3.10
+maturity_share_20_to_30,2021,27.0,pct,G3.10
+maturity_share_30_to_40,2021,65.0,pct,G3.10
+maturity_share_at_most_10,2022,0.88,pct,G3.10
+maturity_share_10_to_20,2022,7.0,pct,G3.10
+maturity_share_20_to_30,2022,32.0,pct,G3.10
+maturity_share_30_to_40,2022,60.0,pct,G3.10
+maturity_share_at_most_10,2023,0.98,pct,G3.10
+maturity_share_10_to_20,2023,8.0,pct,G3.10
+maturity_share_20_to_30,2023,42.0,pct,G3.10
+maturity_share_30_to_40,2023,49.0,pct,G3.10
+maturity_share_at_most_10,2024,1.02,pct,G3.10
+maturity_share_10_to_20,2024,9.0,pct,G3.10
+maturity_share_20_to_30,2024,37.0,pct,G3.10
+maturity_share_30_to_40,2024,54.0,pct,G3.10
+maturity_share_at_most_10,2025,0.98,pct,G3.10
+maturity_share_10_to_20,2025,8.0,pct,G3.10
+maturity_share_20_to_30,2025,32.0,pct,G3.10
+maturity_share_30_to_40,2025,60.0,pct,G3.10
+maturity_weighted_mean,2018-Q3,33.12,years,G3.11
+maturity_weighted_mean,2019-Q1,32.93,years,G3.11
+maturity_weighted_mean,2019-Q2,33.08,years,G3.11
+maturity_weighted_mean,2019-Q3,33.06,years,G3.11
+maturity_weighted_mean,2019-Q4,32.7,years,G3.11
+maturity_weighted_mean,2020-Q1,32.96,years,G3.11
+maturity_weighted_mean,2020-Q2,33.29,years,G3.11
+maturity_weighted_mean,2020-Q3,33.32,years,G3.11
+maturity_weighted_mean,2020-Q4,33.39,years,G3.11
+maturity_weighted_mean,2021-Q1,33.63,years,G3.11
+maturity_weighted_mean,2021-Q2,33.26,years,G3.11
+maturity_weighted_mean,2021-Q3,33.15,years,G3.11
+maturity_weighted_mean,2021-Q4,32.78,years,G3.11
+maturity_weighted_mean,2022-Q1,32.7,years,G3.11
+maturity_weighted_mean,2022-Q2,32.1,years,G3.11
+maturity_weighted_mean,2022-Q3,31.7,years,G3.11
+maturity_weighted_mean,2022-Q4,31.22,years,G3.11
+maturity_weighted_mean,2023-Q1,30.68,years,G3.11
+maturity_weighted_mean,2023-Q2,30.66,years,G3.11
+maturity_weighted_mean,2023-Q3,30.41,years,G3.11
+maturity_weighted_mean,2023-Q4,30.49,years,G3.11
+maturity_weighted_mean,2024-Q1,30.8,years,G3.11
+maturity_weighted_mean,2024-Q2,30.49,years,G3.11
+maturity_weighted_mean,2024-Q3,30.87,years,G3.11
+maturity_weighted_mean,2024-Q4,31.09,years,G3.11
+maturity_weighted_mean,2025-Q1,31.7,years,G3.11
+maturity_weighted_mean_guarantee,2025-Q1,37.91,years,G3.11
+maturity_weighted_mean,2025-Q2,31.95,years,G3.11
+maturity_weighted_mean_guarantee,2025-Q2,37.73,years,G3.11
+maturity_weighted_mean,2025-Q3,31.96,years,G3.11
+maturity_weighted_mean_guarantee,2025-Q3,37.85,years,G3.11
+maturity_weighted_mean,2025-Q4,31.96,years,G3.11
+maturity_weighted_mean_guarantee,2025-Q4,37.86,years,G3.11
+guarantee_share_contracts,2025-01,2.51,pct,G C2.2
+guarantee_share_amount,2025-01,3.58,pct,G C2.2
+guarantee_share_contracts,2025-02,9.62,pct,G C2.2
+guarantee_share_amount,2025-02,12.99,pct,G C2.2
+guarantee_share_contracts,2025-03,14.73,pct,G C2.2
+guarantee_share_amount,2025-03,19.14,pct,G C2.2
+guarantee_share_contracts,2025-04,16.18,pct,G C2.2
+guarantee_share_amount,2025-04,21.1,pct,G C2.2
+guarantee_share_contracts,2025-05,16.71,pct,G C2.2
+guarantee_share_amount,2025-05,21.93,pct,G C2.2
+guarantee_share_contracts,2025-06,17.09,pct,G C2.2
+guarantee_share_amount,2025-06,22.07,pct,G C2.2
+guarantee_share_contracts,2025-07,15.98,pct,G C2.2
+guarantee_share_amount,2025-07,20.38,pct,G C2.2
+guarantee_share_contracts,2025-08,17.36,pct,G C2.2
+guarantee_share_amount,2025-08,22.87,pct,G C2.2
+guarantee_share_contracts,2025-09,16.76,pct,G C2.2
+guarantee_share_amount,2025-09,21.84,pct,G C2.2
+guarantee_share_contracts,2025-10,17.4,pct,G C2.2
+guarantee_share_amount,2025-10,22.78,pct,G C2.2
+guarantee_share_contracts,2025-11,17.57,pct,G C2.2
+guarantee_share_amount,2025-11,23.18,pct,G C2.2
+guarantee_share_contracts,2025-12,16.61,pct,G C2.2
+guarantee_share_amount,2025-12,21.72,pct,G C2.2
+guarantee_share_contracts,2025,15.04,pct,G C2.2
+guarantee_share_amount,2025,19.84,pct,G C2.2
+share_borrowers_up_to_35,2018-Q3,42.72,pct,G C2.3
+share_borrowers_up_to_35,2019,40.04,pct,G C2.3
+share_borrowers_up_to_35,2020,41.04,pct,G C2.3
+share_borrowers_up_to_35,2021,40.55,pct,G C2.3
+share_borrowers_up_to_35,2022,40.92,pct,G C2.3
+share_borrowers_up_to_35,2023,37.19,pct,G C2.3
+share_borrowers_up_to_35,2024,40.25,pct,G C2.3
+share_borrowers_up_to_35,2025,54.05,pct,G C2.3
+risk_share_low_no_guarantee,2025,60.98,pct,G3.9
+risk_share_intermediate_no_guarantee,2025,36.44,pct,G3.9
+risk_share_high_no_guarantee,2025,2.58,pct,G3.9

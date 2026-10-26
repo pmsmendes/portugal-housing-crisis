@@ -80,3 +80,29 @@ def test_lookup_figures_are_plausible_and_each_cites_a_source():
     assert lending.value(t, "maturity_weighted_mean", "2018-07") == pytest.approx(
         lending.value(t, "maturity_weighted_mean", "2024-12") + 2.4
     )
+
+
+def test_series_table_is_unique_and_yearly_averages_quarters():
+    s = lending.read_series()
+    assert not s.duplicated(["indicator", "period"]).any()
+    ltv = [
+        "ltv_share_at_most_80",
+        "ltv_share_80_to_90",
+        "ltv_share_90_to_100",
+        "ltv_share_above_100",
+    ]
+    shares = lending.yearly(s, ltv)
+    assert shares.index.min() == 2018 and shares.index.max() == 2025
+    assert (shares.sum(axis=1) - 100).abs().max() < 0.1  # the four bands cover every loan
+    term = lending.yearly(s, ["maturity_weighted_mean"])["maturity_weighted_mean"]
+    quarters = s[(s["indicator"] == "maturity_weighted_mean") & s["period"].str.startswith("2025")]
+    assert term[2025] == pytest.approx(quarters["value"].mean())
+
+
+def test_standards_by_year_sums_the_bands_above_90_and_covers_2018_to_2025():
+    s = lending.read_series()
+    t = lending.standards_by_year(s)
+    assert list(t.columns) == lending.STANDARDS_COLUMNS
+    assert t.index.min() == 2018 and t.index.max() == 2025
+    assert t["ltv_above_90_pct"].notna().all()
+    assert t.loc[2025, "ltv_above_90_pct"] > 10 > t.loc[2024, "ltv_above_90_pct"]

@@ -2,6 +2,12 @@
 
 Analytic and engineering choices, newest first. One short entry each: what, why, alternatives rejected.
 
+## 2026-10-26 — Lending series from the report's chart workbook
+- **What:** `data/sources/bp_lending_standards.py` reads the chart data (xlsx) of the Banco de Portugal macroprudential report of March 2026 with the standard library into `data/external/lending_series.csv` (yearly 2018 Q3-2025, maturity quarterly); `analysis/lending.standards_by_year`, `charts.lending_standards`, a step added to `p2_22`. The files are in `data/raw/bp_lending_standards/` (gitignored), listed in `config/sources.yaml`.
+- **Why:** the earlier search for BPstat series found none, and the hand transcription gave points only; the workbook published beside the report gives the series, and shows the 2025 loosening (State guarantee) that reverses "tighter in 2024 than in 2018".
+- **Kept:** `lending_standards.csv` (March 2025 edition, by hand) for the limits, the EU range and the July 2018 term; its DSTI (26.2% for 2024) is not the 2026 edition's (29.7%, a different definition), so the DSTI is read within the new series only.
+- **Rejected:** reading the PDF (AES-encrypted, pypdf would need the `cryptography` package; not needed once the workbook exists); adding `openpyxl` for one workbook (standard-library zip and XML is enough and the CSV is committed); a link between the 2025 loosening and the price rise (coincident in time, one year, no design).
+
 ## 2026-10-26 — RQ6.2 and RQ8.2 dropped for lack of data
 - **What:** both questions marked `skip` in `docs/research_questions.md`. RQ6.2 (effects of rent ceilings on supply, maintenance, construction, conversion) and RQ8.2 (cost-effectiveness of existing housing programmes).
 - **Why:** RQ6.2 has no treatment to study (Portugal caps the yearly update of existing leases, not the rent of new ones, `p3_11`), no series on rental supply, maintenance or conversion, and no comparison group; the 2023 ceiling is one national date. RQ8.2 needs units delivered and money spent by programme; the search for IHRU and Portal da Habitacao files found none, and INE's social-housing survey stopped after 2016.

@@ -3133,3 +3133,54 @@ def lending_conditions(
     )
     fig.subplots_adjust(wspace=0.45)
     return fig
+
+
+def lending_standards(standards: pd.DataFrame, maturity: pd.DataFrame) -> Figure:
+    """Terms of new housing loans 2018-2025: loans above 90% of the value and high-risk loans (left), mean maturity by quarter (right).
+
+    ``standards`` (index = year): ``ltv_above_90_pct`` and ``risk_share_high`` (percent of new loans). ``maturity``
+    (index = quarter label such as ``2019-Q1``): ``maturity_weighted_mean`` and, from 2025, ``maturity_weighted_mean_guarantee``
+    (years); the 30-year reference of the Recommendation is drawn as a line.
+    """
+    fig, (left, right) = plt.subplots(1, 2, figsize=(11, 4.6), gridspec_kw={"width_ratios": [1, 1]})
+    years = standards.index.to_numpy()
+    for col, color, name, dy in (
+        ("ltv_above_90_pct", ORANGE, "Loans above 90% of the value", -16),
+        ("risk_share_high", BLUE, "High-risk loans", 16),
+    ):
+        _line(left, years, standards[col], color)
+        _end_dot(left, years[-1], standards[col].iloc[-1], color)
+        left.annotate(
+            f"{name}\n{standards[col].iloc[-1]:.0f}% in {years[-1]}",
+            (years[-1], standards[col].iloc[-1]),
+            xytext=(10, dy), textcoords="offset points", va="center", ha="left",
+            fontsize=9.5, color=INK, fontweight="bold", annotation_clip=False,
+        )  # fmt: skip
+    left.set_xlim(years[0] - 0.2, years[-1] + 3.2)
+    left.set_xticks(years, [f"{y}*" if y == years[0] else str(y) for y in years], color=INK_2, fontsize=9)  # fmt: skip
+    left.yaxis.set_major_formatter(mticker.PercentFormatter(decimals=0))
+    left.set_ylim(0, max(standards["ltv_above_90_pct"].max(), standards["risk_share_high"].max()) * 1.2)  # fmt: skip
+    _panel_title(left, "Share of new housing loans")
+    q = np.arange(len(maturity))
+    _line(right, q, maturity["maturity_weighted_mean"], BLUE)
+    guarantee = maturity["maturity_weighted_mean_guarantee"]
+    has = guarantee.notna().to_numpy()
+    _line(right, q[has], guarantee[has], ORANGE)
+    right.axhline(30, color=MUTED, lw=1.2, ls="--", zorder=2)
+    right.annotate("Recommendation: 30 years on average", (0, 30), xytext=(0, -13), textcoords="offset points", fontsize=8.5, color=INK_2)  # fmt: skip
+    _label(right, q[-1], maturity["maturity_weighted_mean"].iloc[-1], f"All loans\n{maturity['maturity_weighted_mean'].iloc[-1]:.1f} years", dx=6)  # fmt: skip
+    _label(right, q[-1], guarantee[has].iloc[-1], f"With State guarantee\n{guarantee[has].iloc[-1]:.1f} years", dx=6)  # fmt: skip
+    ticks = [i for i, p in enumerate(maturity.index) if p.endswith("Q1")]
+    right.set_xticks(ticks, [maturity.index[i][:4] for i in ticks], color=INK_2, fontsize=9)
+    right.set_xlim(0, len(maturity) + 7)
+    right.set_ylim(28, 39)
+    _panel_title(right, "Mean maturity of new housing loans, years")
+    gain = standards["ltv_above_90_pct"].iloc[-1]
+    fig = style.finish(
+        fig,
+        f"Standards loosened in {years[-1]}: loans above 90% of the value went from {standards['ltv_above_90_pct'].iloc[-2]:.1f}% to {gain:.0f}%",
+        "Share of new housing loans above 90% of the value and with high risk (DSTI above 60% and/or LTV above 90%) by year (left); weighted mean maturity by quarter (right). The series start in the third quarter of 2018 (*)",
+        "Source: Banco de Portugal, macroprudential progress report and chart data, March 2026; own calculations. The State guarantee (borrowers up to 35) started in the last quarter of 2024.",
+    )
+    fig.subplots_adjust(wspace=0.35)
+    return fig
