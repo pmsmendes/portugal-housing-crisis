@@ -1,0 +1,7 @@
+segment,dwellings_start_n,dwellings_end_n,added_n,completions_n,municipalities_n,losing_n,gap_n,gap_per_1000,completions_per_1000,added_per_1000,retention
+coast / urban,1675582,1682330,6748,26821.0,20,4,-20073.0,-11.98,16.01,4.03,0.25
+inland / rural,1256696,1272218,15522,19779.0,155,48,-4257.0,-3.39,15.74,12.35,0.78
+coast / rural,310888,317761,6873,7115.0,34,4,-242.0,-0.78,22.89,22.11,0.97
+inland / urban,698543,719345,20802,19944.0,15,1,858.0,1.23,28.55,29.78,1.04
+inland / intermediate,823128,848035,24907,22845.0,42,8,2062.0,2.51,27.75,30.26,1.09
+coast / intermediate,1094703,1130988,36285,28068.0,42,1,8217.0,7.51,25.64,33.15,1.29

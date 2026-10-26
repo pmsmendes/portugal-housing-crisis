@@ -2,6 +2,11 @@
 
 Analytic and engineering choices, newest first. One short entry each: what, why, alternatives rejected.
 
+## 2026-10-26 — Census count against completions, and a rolled dwelling stock (p2_23)
+- **What:** `analysis/stock_reconciliation.py`, `notebooks/p2_explain/p2_23`, `charts.stock_reconciliation`. Net change of the census count 2011-2021 against completions of 2012-2021 (the window of `supply.balance`), by municipality and by group with the counts summed before the ratios; the stock rolled from the 2021 count along national completions at the observed national retention (net addition over completions) and at a retention of one.
+- **Why:** RQ2.4 had only the two census years; completions are annual and show how far they translate into the count, and where they do not (coastal cities).
+- **Rejected:** a municipal retention ratio as an outcome (small denominators); explaining the gap with regressions (it is a residual of several unobserved processes, nothing identifies them); rolling the composition (usual, secondary, vacant) forward, which no data supports; using the 2001 census (not ingested, ine.pt unreachable at the last retry).
+
 ## 2026-10-26 — Municipal IMI and IMT receipts from INE (p3_12)
 - **What:** `ine_municipal_revenue` (INE 0013908, DGAL receipts by economic classification, 2021-2023, euros), `analysis/municipal_revenue.py`, `notebooks/p3_policy/p3_12`. The cost of an IMI cut to the floor is `IMI * (rate - 0.30) / rate` per council with the rate of the tax year before the year of receipts (IMI is paid the year after); IMT windfall is the change 2021-2023; the bottom-up IMI of `p3_08` is checked by rank correlation with the actual IMI per dwelling.
 - **Why:** the earlier search found municipal revenue only as PDFs; the INE indicator gives IMI and IMT as separate lines for 307 councils, which turns the national estimates (`p3_05`, `p3_08`, `p3_10`) into municipal ones and checks the model behind the surcharge.

@@ -2810,6 +2810,55 @@ def household_size_change(
     return fig
 
 
+def stock_reconciliation(groups: pd.DataFrame, path: pd.DataFrame, retention: float) -> Figure:
+    """Dwellings completed against the net change of the census count by kind of place (left); the stock's yearly growth (right).
+
+    ``groups`` (index = label, drawing order top first): ``completions_per_1000`` and ``added_per_1000``, per 1,000
+    dwellings of the first census. ``path`` (index = year): ``growth_pct`` at the observed retention and
+    ``growth_upper_pct`` at a retention of 1. ``retention``: the national net addition over completions, 2011-2021.
+    """
+    fig, (left, right) = plt.subplots(
+        1, 2, figsize=(11.5, 4.8), gridspec_kw={"width_ratios": [1.1, 1]}
+    )
+    s = groups.iloc[::-1]
+    y = np.arange(len(s))
+    left.axvline(0, color=GRID, lw=1, zorder=1)
+    left.barh(y + 0.19, s["completions_per_1000"], 0.36, color=BLUE, zorder=3)
+    left.barh(y - 0.19, s["added_per_1000"], 0.36, color=ORANGE, zorder=3)
+    for i, (done, added) in enumerate(
+        zip(s["completions_per_1000"], s["added_per_1000"], strict=True)
+    ):
+        for off, value in ((0.19, done), (-0.19, added)):
+            left.annotate(f"{value:.0f}", (value, i + off), xytext=(4, 0), textcoords="offset points",
+                          ha="left", va="center", fontsize=8.5, color=INK_2)  # fmt: skip
+    left.set_yticks(y, s.index, color=INK_2, fontsize=9.5)
+    left.set_xlim(0, s[["completions_per_1000", "added_per_1000"]].to_numpy().max() * 1.2)
+    left.grid(axis="x")
+    left.grid(axis="y", visible=False)
+    _legend(left, [Patch(facecolor=BLUE, label="Dwellings completed 2012-2021"),
+                   Patch(facecolor=ORANGE, label="Net change of the census count")], loc="lower right")  # fmt: skip
+    _panel_title(left, "Per 1,000 dwellings of 2011")
+    last = path.index[-1]
+    _line(right, path.index, path["growth_upper_pct"], MUTED, width=1.0, z=2)
+    right.lines[-1].set_linestyle((0, (4, 3)))
+    _line(right, path.index, path["growth_pct"], BLUE, z=3)
+    _end_dot(right, last, path.loc[last, "growth_pct"], BLUE)
+    _label(right, last, path.loc[last, "growth_pct"], f"{path.loc[last, 'growth_pct']:.2f}%")
+    right.set_xticks([y for y in path.index if y % 5 == 0])
+    right.set_xlim(path.index[0] - 0.5, last + 2.2)
+    right.set_ylim(0, path[["growth_pct", "growth_upper_pct"]].to_numpy().max() * 1.4)
+    right.yaxis.set_major_formatter(mticker.PercentFormatter(decimals=1))
+    _legend(right, [Line2D([], [], color=BLUE, lw=LINE_WIDTH, label=f"Each completion adds {retention:.2f} dwellings (2012-2021)"),
+                    Line2D([], [], color=MUTED, lw=1.0, ls=(0, (4, 3)), label="Each completion adds one dwelling")], loc="upper right")  # fmt: skip
+    _panel_title(right, "Yearly growth of the dwelling stock")
+    return style.finish(
+        fig,
+        f"Only {100 * retention:.0f}% of the dwellings completed in 2012-2021 show up in the census count, and in coastal cities far fewer",
+        "Dwellings completed against the net change of the census count, by coast and density class (left); the stock rolled along completions, 1996-2025 (right)",
+        "Source: INE (censuses 2011 and 2021, completions of new family dwellings); own calculations. Classes: own proxies (data/external/muni_typology.csv).",
+    )
+
+
 def exemptions(score: pd.DataFrame) -> Figure:
     """Yearly revenue forgone by each option (left) and the extra homes a year needed to break even in 2035 (right).
 

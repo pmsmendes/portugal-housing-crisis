@@ -2,7 +2,7 @@
 
 Why did affordability deteriorate, and where? This phase moves from description to association; nothing here is a
 causal claim. Figures: `reports/figures/p2/`, tables: `reports/tables/p2/`, notebooks: `notebooks/p2_explain/`
-(`p2_01` to `p2_22`). Methods: [methodology](../docs/methodology.md), choices:
+(`p2_01` to `p2_23`). Methods: [methodology](../docs/methodology.md), choices:
 [decisions](../docs/decisions.md).
 
 ## Summary
@@ -415,6 +415,19 @@ The Banco de Portugal publishes the terms of new housing loans in a yearly monit
 
 Tables: `lending_standards.csv`, `lending_series.csv`, `lending_guarantee_2025.csv`, `lending_maturity_capacity.csv`, `lending_cash_needed.csv`, `lending_burden.csv`. Limits: one report's chart data, the first year a quarter; the DSTI of the 2026 edition (29.7% for 2024) differs from the 2025 edition's (26.2%), so it is read within the series; only granted loans are seen; no estimate of the guarantee's uptake or its effect on prices; capacity and cash are accounting at the national mean rate, not household behaviour.
 
+## The dwelling stock: how much of what was built shows up in the count (`p2_23_dwelling_stock`)
+
+![Dwelling stock](figures/p2/dwelling_stock.png)
+
+The census counts dwellings only in 2011 and 2021; completions of new family dwellings are annual. Between the censuses the net change of the count is set against the completions of 2012-2021, and the stock is rolled along completions to give a yearly path (RQ2.4). The gap is an accounting residual: demolitions, merged and split dwellings, conversions, works on existing buildings and census definitions all sit in it.
+
+69. **Nine in ten completions show up in the count.** 5,859,540 dwellings in 2011, 5,970,677 in 2021 (+111,137) against 124,572 completed: a gap of -13,435, retention 0.89. 66 municipalities counted fewer dwellings in 2021 than in 2011, all with completions.
+70. **The national total hides offsetting local gaps.** In the 20 coastal urban municipalities 26,821 were completed and the count grew by 6,748 (retention 0.25); in the other 288, 97,751 were completed and the count grew by 104,389. Lisboa and Porto lost 7,109 on the count against 5,783 completed. In coast / intermediate the count exceeds completions by 8,217 (Albufeira, Portimao, Lagoa, Odemira 1,000 to 1,700 each).
+71. **The gap is not clearly tied to demand.** Median gap per 1,000 dwellings: -3.6, -3.4 and 0.0 in the thirds of municipalities by population change 2011-2021, rank correlation 0.09.
+72. **The stock between censuses.** Rolled from 2021: 4.60 to 4.75 million in 1995, 5.17 to 5.26 million in 2001, 6.06 to 6.07 million in 2025 (+85,000 to +95,000 since 2021). Yearly growth peaked at 2.0% to 2.3% in 2001, bottomed at 0.11% to 0.12% in 2015 and was 0.40% to 0.45% in 2025.
+
+Tables: `dwelling_stock_national.csv`, `dwelling_stock_by_class.csv`, `dwelling_stock_largest_gaps.csv`, `dwelling_stock_by_population_change.csv`, `dwelling_stock_path.csv`. Limits: the gap cannot be split into its causes; calendar-year completions against March censuses; retention measured in a low-building decade and applied to the boom is an extrapolation, so the two paths are a range, not a bound; composition is not rolled.
+
 ## Limitations
 
 - **A pattern, not a mechanism.** Spatial autocorrelation does not show that price changes spill over: shared
@@ -459,10 +472,11 @@ Tables: `lending_standards.csv`, `lending_series.csv`, `lending_guarantee_2025.c
 - **Wages and the labour market.** Thirty yearly observations, one economy; compensation per employee does not hold hours
   or the mix of jobs fixed and is not the income of buyers (who are older, richer and more often foreign than the
   average employee); Newey-West errors with two lags are approximate at this length. Rents are the OECD index of all leases, which lags what new tenants pay.
+- **Dwelling stock.** The reconciliation of the census count with completions is an accounting residual, not an estimate of demolitions or conversions; the path before 2011 extrapolates a retention measured in 2012-2021, and the censuses fall in March while completions are calendar years.
 - **Missing municipalities.** 12 municipalities have no price-to-income for 2016 or 2024 and are left out (hatched on
   the map); their neighbours' weights are re-standardised without them.
 
 ## Questions answered
 
 RQ4.3 (large municipalities rose most, less further out; Lisboa itself less than its suburbs), RQ4.4 (little evidence of spillovers beyond the regional pattern), RQ4.6 (coastal and urban, not tourism as such), RQ2.1 to
-RQ3.5 (ageing, the 25-44 pool and the one-person share add nothing beyond the foreign-resident change; internal migration not observable), RQ3.4 (households grew by smaller households, 79% of the added), RQ2.3 and RQ4.5 (supply against households) and RQ5.4 (second homes separated) are answered; RQ3.6 is answered as far as these data allow (demand differences cannot be told from the regional pattern); RQ2.5, RQ2.7, RQ2.8, RQ3.3, RQ5.1, RQ5.2, RQ5.3, RQ1.7, RQ9.1, RQ9.2 and RQ9.5 are partly answered; RQ1.4 is answered (income and wages) (see [research_questions](../docs/research_questions.md)).
+RQ3.5 (ageing, the 25-44 pool and the one-person share add nothing beyond the foreign-resident change; internal migration not observable), RQ3.4 (households grew by smaller households, 79% of the added), RQ2.3 and RQ4.5 (supply against households) and RQ5.4 (second homes separated) are answered; RQ3.6 is answered as far as these data allow (demand differences cannot be told from the regional pattern); RQ2.4 (nine in ten completions show up in the census count, a quarter in coastal cities; stock path 1995-2025), RQ2.5, RQ2.7, RQ2.8, RQ3.3, RQ5.1, RQ5.2, RQ5.3, RQ1.7, RQ9.1, RQ9.2 and RQ9.5 are partly answered; RQ1.4 is answered (income and wages) (see [research_questions](../docs/research_questions.md)).
