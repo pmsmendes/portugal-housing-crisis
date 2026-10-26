@@ -2,6 +2,11 @@
 
 Analytic and engineering choices, newest first. One short entry each: what, why, alternatives rejected.
 
+## 2026-10-26 — RQ6.2 and RQ8.2 dropped for lack of data
+- **What:** both questions marked `skip` in `docs/research_questions.md`. RQ6.2 (effects of rent ceilings on supply, maintenance, construction, conversion) and RQ8.2 (cost-effectiveness of existing housing programmes).
+- **Why:** RQ6.2 has no treatment to study (Portugal caps the yearly update of existing leases, not the rent of new ones, `p3_11`), no series on rental supply, maintenance or conversion, and no comparison group; the 2023 ceiling is one national date. RQ8.2 needs units delivered and money spent by programme; the search for IHRU and Portal da Habitacao files found none, and INE's social-housing survey stopped after 2016.
+- **Rejected:** answering from press figures (not reproducible, sources disagree, see the PRR unit costs in `data_quality.md`); a proxy from COFOG spending (does not measure units delivered). The other questions that touch these topics (RQ6.1, RQ6.3, RQ6.4, RQ8.1, RQ8.3) keep their partial answers.
+
 ## 2026-10-26 — Lending terms from a PDF report, as points and accounting
 - **What:** `data/external/lending_standards.csv` (32 figures of the Banco de Portugal macroprudential report of March 2025, with section and page), `analysis/lending.py`, `notebooks/p2_explain/p2_22`, `pypdf` as a dev dependency. The report is read, not modelled: the terms (LTV, DSTI, maturity) are shown as published, and two accounting exercises are added: the loan a fixed payment carries by term and rate, and the cash needed and payment burden by LTV.
 - **Why:** BPstat has no series for LTV or maturity (domain 186 holds rates and amounts only) and the reports publish them as charts with a few figures in the text. A transcription of the text figures is honest about being points, and the accounting links them to the project's own indicators (`pti_years`, burden) without inventing a series.

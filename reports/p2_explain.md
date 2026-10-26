@@ -287,7 +287,7 @@ National quarterly series, 2007 Q4 to 2026 Q1: the stock of household loans for 
     The test of price growth on credit growth a year before gives −0.3 points per pp [−1.1, +0.5]; once last year's price growth is in, −0.6 [−1.2, +0.1], and next year's credit growth (a placebo that should do nothing) is as large and opposite
     (+0.8, p = 0.003, against −0.9). The negative sign is the regime (credit shrank in 2011-2019 while prices recovered), not an effect of credit on prices.
 36. **What this does and does not say.** Prices rose with little new borrowing, so the rise was not a borrowed bubble of the 2000s kind; it does not say who bought, with what (savings, inheritance, foreign or cash buyers, loans from outside the
-    stock counted here) or how strict lenders were. Lending standards (loan-to-value, maturity, income multiples) and new lending in total are not available (the volume we hold covers loans fixed up to a year), so RQ9.3 stays partly open.
+    stock counted here) or how strict lenders were. Lending standards are only a few points for 2018-2024 (see the lending conditions section, `p2_22`) and new lending in total is not available (the volume we hold covers loans fixed up to a year), so RQ9.3 stays partly open.
 
 Tables: `credit_episodes.csv`, `credit_lag_profile.csv`, `credit_timing.csv`.
 
@@ -448,7 +448,7 @@ Tables: `lending_standards.csv`, `lending_maturity_capacity.csv`, `lending_cash_
   the real price through the deflator; the nominal check is weaker, −0.8 [−1.9, +0.4]). A null does not mean no
   effect, only that this series cannot tell. Credit supply is not tested: the loan volume we hold covers loans fixed
   for up to one year (the share of fixed-rate loans grew after 2018), not total lending.
-- **Credit and household debt.** One national series of stocks (not new lending), two credit regimes in 18 years and overlapping annual changes; the stock changes with write-offs and sales of loans (the growth rate we use is transactions-based), covers all lenders and counts loans, not who bought. Loans per unit of price assumes a constant housing stock and share bought with a loan, so it is a gauge, not leverage. Lending standards are not observed.
+- **Credit and household debt.** One national series of stocks (not new lending), two credit regimes in 18 years and overlapping annual changes; the stock changes with write-offs and sales of loans (the growth rate we use is transactions-based), covers all lenders and counts loans, not who bought. Loans per unit of price assumes a constant housing stock and share bought with a loan, so it is a gauge, not leverage. Lending standards are observed only as a few points for 2018-2024 (`p2_22`), not as a series.
 - **Wages and rates as fundamentals.** The benchmark assumes a constant payment-to-wage burden, one national average wage (not buyers' incomes, which rose faster if buyers are older, richer or foreign), the floating-rate series (fixed-rate loans reset slowly) and a fixed loan share and term; its level depends on the benchmark window, so only changes in the gap are read. Annual, nominal, 23 years, two regimes: a description of a gap, not a test of a bubble.
 - **Centres.** The 100,000-resident rule is a size cut-off, not a functional urban area: it counts suburbs such as Sintra
   and Amadora as centres and Coimbra or Viseu alongside Lisboa. Distance in border steps ignores how far a step is
