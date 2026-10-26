@@ -2,6 +2,13 @@
 
 Analytic and engineering choices, newest first. One short entry each: what, why, alternatives rejected.
 
+## 2026-10-26 — Targeted exemptions as average-rate equivalents with a break-even in homes
+- **What:** `simulation/exemptions.py`, `config/scenarios.yaml` block `exemptions`, `notebooks/p3_policy/p3_09`. Each exemption (youth IMT, new-home IMT, renovation IMI) is sized in euros a year and enters the simulator as the average IMT or IMI cut that costs the same; the result is the 2035 price-to-income at no, half and full capitalisation and the extra homes a year that cancel the rise.
+- **Why:** the simulator has one national price, so it cannot say where an exemption lands; what separates targeted from broad is incidence and a possible supply response, and no estimate of the response exists. A break-even states what it would have to be, without inventing it.
+- **Behavioural illustration:** the `p2_17` association (completions follow the price, 3.0) applied to the price rise builders get, labelled an upper-bound illustration, not an estimate.
+- **Facts typed in:** youth exemption cost 145.6 EUR m and 60,000 buyers in 2025 from press reports of the Conta Geral do Estado (status `project`, not checked against it); shares of completions sold, dwellings per renovated building and years of exemption are assumptions with ranges.
+- **Rejected:** a causal evaluation of the youth exemption (everyone eligible is treated from the same date, no transaction data by buyer age, as in the phase 3 choice); a separate simulator lever per exemption (would add parameters with no estimate behind them).
+
 ## 2026-10-26 — Renovation from INE building works, read as pace and place
 - **What:** `ine_building_works` (INE 0013234 licensed and 0013247 completed buildings by type of project and purpose, municipal) feeds `analysis/renovation.py`: family-housing buildings, new against works on existing buildings (national, by kind of place), completed works per 1,000 dwellings and as a share of all completed buildings over 2012-2021, Spearman associations with vacancy and the `p2_05` shortfall, and years to bring back the excess vacant homes of `p2_16` at the observed pace under 1, 3 and 10 vacant homes per building and a usable share of 25%, 50% and 100%.
 - **Why:** it is the only municipal source on works on existing buildings. The share of completed works does not depend on how many dwellings a building holds, so it is the main measure; the per-1,000 rates are secondary. Homes per building is varied, not assumed, because it is not in the data.

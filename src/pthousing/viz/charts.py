@@ -2808,3 +2808,65 @@ def household_size_change(
     )
     fig.subplots_adjust(left=0.1, right=0.97, wspace=0.3)
     return fig
+
+
+def exemptions(score: pd.DataFrame) -> Figure:
+    """Yearly revenue forgone by each option (left) and the extra homes a year needed to break even in 2035 (right).
+
+    ``score`` (index = option label) has ``cost_eur_m``, ``share_of_tax_pct``, ``tax``, ``break_even_homes_n`` and, where an
+    illustration of a supply response exists, ``association_extra_homes_low_n``, ``association_extra_homes_n`` and
+    ``association_extra_homes_high_n`` (NaN otherwise). Drawn in the order of ``score``, top first.
+    """
+    fig, (left, right) = plt.subplots(
+        1, 2, figsize=(11.5, 4.6), gridspec_kw={"width_ratios": [1, 1]}
+    )
+    s = score.iloc[::-1]
+    y = np.arange(len(s))
+    left.barh(y, s["cost_eur_m"], 0.55, color=BLUE, zorder=3)
+    for i, (cost, share, tax) in enumerate(
+        zip(s["cost_eur_m"], s["share_of_tax_pct"], s["tax"], strict=True)
+    ):
+        left.annotate(f"{cost:,.0f} ({share:.1f}% of {tax})", (cost, i), xytext=(5, 0), textcoords="offset points",
+                      va="center", fontsize=9, color=INK_2)  # fmt: skip
+    left.set_yticks(y, s.index, color=INK_2, fontsize=9.5)
+    left.set_xlim(0, s["cost_eur_m"].max() * 1.6)
+    left.grid(axis="x")
+    left.grid(axis="y", visible=False)
+    _panel_title(left, "Revenue forgone a year (EUR million)")
+    right.barh(y, s["break_even_homes_n"], 0.55, color=GRID, zorder=2)
+    for i, row in enumerate(s.itertuples()):
+        right.annotate(f"{row.break_even_homes_n:,.0f}", (0, i + 0.3), xytext=(4, 0), textcoords="offset points",
+                       ha="left", va="bottom", fontsize=9, color=INK)  # fmt: skip
+        if not np.isnan(row.association_extra_homes_n):
+            right.plot([row.association_extra_homes_low_n, row.association_extra_homes_high_n], [i, i], color=ORANGE, lw=3, zorder=4,
+                       solid_capstyle="round")  # fmt: skip
+            right.plot(
+                [row.association_extra_homes_n],
+                [i],
+                "o",
+                ms=9,
+                mfc=ORANGE,
+                mec=SURFACE,
+                mew=2,
+                zorder=5,
+            )
+    right.set_yticks(y, [""] * len(s))
+    right.set_xlim(
+        0, max(s["break_even_homes_n"].max(), s["association_extra_homes_high_n"].max()) * 1.15
+    )
+    right.xaxis.set_major_formatter(mticker.StrMethodFormatter("{x:,.0f}"))
+    right.grid(axis="x")
+    right.grid(axis="y", visible=False)
+    _legend(right, [Patch(facecolor=GRID, label="Extra homes a year needed to break even"),
+                    Line2D([], [], marker="o", ls="-", lw=3, ms=8, color=ORANGE, mec=SURFACE, label="Supply response, illustration (p2_17)")], loc="lower right")  # fmt: skip
+    _panel_title(right, "Extra homes a year (full capitalisation)")
+    fig = style.finish(
+        fig,
+        "Only an exemption aimed at new homes comes near paying for itself in affordability",
+        "Cost of each option (left); extra homes a year that cancel its rise of the 2035 price-to-income, against an illustrative supply response (right)",
+        "Source: simulator (baseline, mid values), INE, press reports of the 2025 state accounts; own calculations. The supply response applies the p2_17 association (not causal).",
+        head_in=1.25,
+        foot_in=0.6,
+    )
+    fig.subplots_adjust(left=0.2, right=0.97, wspace=0.12)
+    return fig

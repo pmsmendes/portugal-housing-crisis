@@ -1,0 +1,10 @@
+option,case,homes_reached_n,cost_eur_m,share_of_tax_pct
+New homes exempt from IMT,sold share 0.6 (low),16380.6,210.25,12.13
+New homes exempt from IMT,sold share 0.8 (mid),21840.8,280.34,16.18
+New homes exempt from IMT,sold share 1.0 (high),27301.0,350.42,20.22
+Renovated homes exempt from IMI,"1 homes a building, 3 years",2232.4,1.83,0.11
+Renovated homes exempt from IMI,"1 homes a building, 8 years",2232.4,4.88,0.3
+Renovated homes exempt from IMI,"3 homes a building, 3 years",6697.2,5.49,0.34
+Renovated homes exempt from IMI,"3 homes a building, 8 years",6697.2,14.63,0.9
+Renovated homes exempt from IMI,"10 homes a building, 3 years",22324.0,18.28,1.12
+Renovated homes exempt from IMI,"10 homes a building, 8 years",22324.0,48.76,2.99

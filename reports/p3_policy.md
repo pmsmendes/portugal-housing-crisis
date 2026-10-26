@@ -176,6 +176,19 @@ CIMI art. 112(3) lets a council raise the urban IMI rate on buildings vacant for
 
 Not covered: the legal classification of vacant homes (the census counts homes with no usual resident, not homes without consumption of water and power), owners' response, the cost of identifying vacant homes, and other reforms (first-time buyer and new-build exemptions, RQ7.5). Limits: a bottom-up bill for the average home, calibrated to total IMI (which includes commercial and rustic property), so residential IMI is probably overstated; rents are of new leases.
 
+### Targeted exemptions against broad cuts (`p3_09`, RQ7.5)
+
+![Targeted exemptions](figures/p3/targeted_exemptions.png)
+
+Three exemptions sized from the data and press reports of the 2025 state accounts: the IMT and stamp-duty exemption for young first-time buyers, an IMT exemption on new homes and an IMI exemption for renovated homes, each against the broad cut of one point of the price. The simulator's price channel is an average rate, so an exemption enters as the average cut that costs the same revenue; what is solved for is the extra homes it would have to cause to break even.
+
+- **Cost a year.** Broad cut 294 EUR m (17% of IMT, 1,942 EUR a sale); youth exemption 146 EUR m (8.4% of IMT) for 60,000 buyers, 36% of sales, 2,427 EUR each (1.2% of a typical price, 6.2% of the deposit); new homes 280 EUR m (16% of IMT; 210 to 350 over the share sold) for about 21,800 homes at 12,835 EUR; renovation 5.5 EUR m (0.3% of IMI) for 6,700 homes.
+- **Price channel.** Fully capitalised, each option raises the 2035 price-to-income (a 4.6-year rise in the baseline) by 0.15, 0.075, 0.145 and 0.003 years; nothing if not capitalised. Per euro it is the same for a broad cut and an exemption, by construction. Fully capitalised, none of a youth buyer's 2,427 EUR stays with the buyer.
+- **Break-even.** About 70,000 EUR forgone per extra home cancels the rise, against 33,333 EUR per extra home for a direct construction subsidy at mid values: 4,183 extra homes a year for the broad cut, 2,074 youth, 3,985 new homes (18% of the homes exempted), 85 renovation.
+- **Supply illustration.** The `p2_17` association (3.0 log points of completions per log point of price) gives 4,880 extra homes a year for the new-home exemption (3,338 to 6,424), 1.2 times its break-even, at 57,000 EUR per extra home; 0.2 times for the broad cut and the youth exemption (355,000 EUR per extra home). It is an upper-bound illustration, not an estimate.
+
+Not covered: take-up and eligibility rules, price ceilings, exemptions on rented homes, any estimate of buyers', builders' or owners' response, the VAT on works. The cost of the youth exemption and its buyers are press reports, not checked against the Conta Geral do Estado.
+
 ## Limitations
 
 - **Selection into treatment.** Rates are chosen after price booms, and the pre-trend test rejects. The design cannot separate the effect of the cut from mean reversion after

@@ -5,7 +5,7 @@ import yaml
 
 from pthousing.features import affordability as aff
 from pthousing.simulation import engine as E
-from pthousing.simulation import fiscal, funding, scenarios, supply
+from pthousing.simulation import exemptions, fiscal, funding, scenarios, supply
 
 A = scenarios.load()
 
@@ -279,3 +279,59 @@ def test_offset_requirement_scales_the_package_to_cancel_the_rise():
     assert out.loc["construction", "yearly_cost_gdp_pct"] == pytest.approx(100 * 4000 / 300_000)
     assert out.loc["construction", "yearly_cost_vs_housing_spending"] == pytest.approx(4000 / 1500)
     assert out.loc["construction", "homes_a_year_n"] == pytest.approx(90_000 * 20 / 10)
+
+
+# ---- targeted exemptions -------------------------------------------------------------------------
+
+
+def test_exemption_block_loads_with_ranges_and_sources():
+    ex = exemptions.load()
+    assert ex["new_build"]["sold_share_of_completions"].mid == pytest.approx(0.8)
+    assert ex["first_time_buyers"]["buyers_per_year"] > 0
+    assert all(n["status"] and n["source"] for n in ex["notes"].values())
+
+
+def test_exemption_accounting_converts_between_cost_and_equivalent_cut():
+    assert exemptions.average_imt_rate_pct(50.0, 1000.0) == pytest.approx(5.0)
+    assert exemptions.equivalent_imt_cut_pp(10.0, 1000.0) == pytest.approx(1.0)
+    # the IMI conversion inverts fiscal.imi_revenue_loss
+    cut = exemptions.equivalent_imi_cut_pp(163.0, 1630.0, 0.32)
+    assert fiscal.imi_revenue_loss(-cut, 0.32, 1630.0) == pytest.approx(163.0)
+
+
+def test_new_build_and_renovation_exemption_costs():
+    out = exemptions.new_build_exemption(1000, 0.8, 200_000, 10.0, 5.0)
+    assert out["homes_n"] == pytest.approx(800)
+    assert out["per_home_eur"] == pytest.approx(200_000 * 1.1 * 0.05)
+    assert out["cost_eur"] == pytest.approx(800 * 11_000)
+    ren = exemptions.renovation_exemption(100, 3, 3, 250.0)
+    assert ren["homes_n"] == pytest.approx(300)
+    assert ren["per_home_eur"] == pytest.approx(750)
+    assert ren["cost_eur"] == pytest.approx(300 * 3 * 250)
+
+
+def test_tax_price_effect_is_zero_without_capitalisation_and_grows_with_it(anc):
+    none = exemptions.tax_price_effect(A, anc, "baseline", imt_cut_pp=1.0, capitalisation=0.0)
+    half = exemptions.tax_price_effect(A, anc, "baseline", imt_cut_pp=1.0, capitalisation=0.5)
+    full = exemptions.tax_price_effect(A, anc, "baseline", imt_cut_pp=1.0, capitalisation=1.0)
+    assert none == pytest.approx(0.0)
+    assert 0 < half < full
+
+
+def test_break_even_homes_cancels_the_rise_and_scales_with_the_cut(anc):
+    homes = exemptions.break_even_homes(A, anc, "baseline", imt_cut_pp=1.0)
+    assert homes > 0
+    double = exemptions.break_even_homes(A, anc, "baseline", imt_cut_pp=2.0)
+    assert double == pytest.approx(2 * homes, rel=0.05)
+    assert (
+        exemptions.break_even_homes(A, anc, "baseline", imt_cut_pp=1.0, capitalisation=0.0) == 0.0
+    )
+    # the homes found do cancel the rise
+    p = E.central(A, construction_boost__additionality=1.0, imt_reform__capitalisation_share=1.0)
+    policy = E.Policy(imt_rate_change_pp=-1.0, construction_boost_units=homes)
+    assert exemptions.pti_change(A, anc, "baseline", policy, p) == pytest.approx(0.0, abs=1e-6)
+
+
+def test_extra_homes_from_price_scales_with_the_coefficient_and_the_rise():
+    assert exemptions.extra_homes_from_price(3.0, 5.0, 20_000) == pytest.approx(3000)
+    assert exemptions.extra_homes_from_price(3.0, 0.0, 20_000) == 0.0

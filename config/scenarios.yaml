@@ -144,3 +144,28 @@ packages:
   imi_cut: {imi_rate_change_pp: -0.05}   # 15% of the bill; the legal floor (0.30%) leaves 0.027 pp of room today (reports/p3_policy.md, p3_05)
   imt_cut: {imt_rate_change_pp: -1.0}
   supply_mix: {construction_boost_units: 5000, vacant_renovation_units: 5000, public_housing_units: 2500}
+
+# Targeted tax exemptions compared with broad cuts (simulation/exemptions.py, notebooks/p3_policy/p3_09). The simulator's own
+# levers (above) are national average rates; these entries size the part of the market an exemption reaches.
+exemptions:
+  first_time_buyers:     # the IMT and stamp-duty exemption for buyers up to 35 of a first permanent home, in force since 2024
+    buyers_per_year: 60000          # young buyers who bought without IMT or stamp duty in 2025
+    cost_eur: 145600000             # cost of the exemption in 2025 (IMT and stamp duty, compensated to municipalities)
+    status: project
+    source: >-
+      Press reports of the Conta Geral do Estado 2025 (ECO 2026-05-18, idealista): 145.6 million EUR in 2025 and more than
+      60,000 young buyers in 2025 (about 100,000 since the start); not checked against the Conta Geral do Estado itself.
+      An earlier ministry estimate was 50 million EUR for 2025, so the cost came in far above the plan.
+  new_build:             # an IMT exemption on the first sale of a new dwelling
+    sold_share_of_completions: {low: 0.6, mid: 0.8, high: 1.0}   # completed family dwellings that are sold (not self-built or kept)
+    status: assumption
+    source: >-
+      No count of first sales of new dwellings exists in the data (the INE price table by new and existing has no sales
+      counts). Completions are the base; the share sold is an assumption, 1.0 is the upper bound.
+  renovation:            # an IMI exemption for renovated dwellings, for a number of years after the works
+    dwellings_per_building: {low: 1, mid: 3, high: 10}           # as in p2_19: homes returned to use per renovated building
+    exemption_years: 3
+    status: assumption
+    source: >-
+      Buildings with works completed are counted (p2_19), dwellings are not. The length of the exemption is an assumption
+      (three years, the order of magnitude of rehabilitation exemptions in Portuguese law; not checked against the statute).

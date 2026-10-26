@@ -1,0 +1,5 @@
+option,tax,homes_reached_n,per_home_eur,cost_eur_m,share_of_tax_pct,equivalent_cut_pp,homes_per_eur_m
+"Broad IMT cut, 1 pp of the price",IMT,151593.0,1942.05,294.4,16.99,1.0,514.92
+"First-time buyers (IMT Jovem, as in force)",IMT,60000.0,2426.67,145.6,8.4,0.49,412.09
+New homes exempt from IMT,IMT,21840.8,12835.43,280.34,16.18,0.95,77.91
+Renovated homes exempt from IMI,IMI,6697.2,819.0,5.49,0.34,0.0,1221.0

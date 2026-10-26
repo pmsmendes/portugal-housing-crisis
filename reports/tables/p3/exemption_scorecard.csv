@@ -1,0 +1,5 @@
+option,tax,homes_reached_n,per_home_eur,cost_eur_m,share_of_tax_pct,equivalent_cut_pp,homes_per_eur_m,pti_change_cap0,pti_change_cap50,pti_change_cap100,break_even_homes_n,break_even_pct_of_homes_reached,forgone_per_extra_home_eur,direct_subsidy_per_extra_home_eur,homes_to_match_direct_pct,association_extra_homes_n,association_extra_homes_low_n,association_extra_homes_high_n,association_over_break_even,forgone_per_extra_home_association_eur,price_rise_builders_pct
+"Broad IMT cut, 1 pp of the price",IMT,151593.0,1942.045,294.4,16.99,1.0,514.921,0.0,0.076,0.152,4183.47,2.76,70372.309,33333.333,5.826,829.131,567.042,1091.494,0.198,355070.952,1.0
+"First-time buyers (IMT Jovem, as in force)",IMT,60000.0,2426.667,145.6,8.403,0.495,412.088,0.0,0.038,0.075,2074.199,3.457,70195.787,33333.333,7.28,410.059,280.439,539.814,0.198,355070.952,0.495
+New homes exempt from IMT,IMT,21840.8,12835.429,280.336,16.178,0.952,77.909,0.0,0.073,0.145,3984.557,18.244,70355.637,33333.333,38.506,4880.151,3337.529,6424.381,1.225,57444.125,5.886
+Renovated homes exempt from IMI,IMI,6697.2,819.003,5.485,0.337,0.001,1220.997,0.0,0.002,0.003,85.035,1.27,64503.178,33333.333,2.457,,,,,,
