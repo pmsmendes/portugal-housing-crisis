@@ -27,6 +27,7 @@ OECD_COLUMNS = {
 
 SIZE = {"T": "total", "1": "br_0_1", "2": "br_2", "3": "br_3", "4": "br_4plus"}
 PRICE_CATEGORY = {"H1": "total", "H11": "new", "H12": "existing"}
+COST_FACTOR = {"T": "total", "1": "materials", "2": "labour"}
 VALUATION_TYPE = {"T": "total", "1": "flats", "2": "villas"}
 SEX = {"T": "total", "1": "m", "2": "f"}
 NATIONALITY_SPECIAL = {"T": "total", "TOP": "other"}  # the other codes are ISO 3166 alpha-2
@@ -334,6 +335,16 @@ def build_ine_hpi() -> pd.DataFrame:
     return df[[*cols, "hpi_index_b2025"]].sort_values(cols, ignore_index=True)
 
 
+def build_ine_construction_costs() -> pd.DataFrame:
+    """Cost index of building new housing (2021 = 100), monthly, national, total / materials / labour."""
+    df = ine.read_indicator("0011748")
+    df = df[(df["geocod"] == "PT") & df["dim_3"].isin(COST_FACTOR)]
+    df = df.assign(factor=df["dim_3"].map(COST_FACTOR), month=df["period_start"].dt.month)
+    df = df.rename(columns={"value": "construction_cost_b2021"})
+    cols = ["period_start", "year", "month", "factor"]
+    return df[[*cols, "construction_cost_b2021"]].sort_values(cols, ignore_index=True)
+
+
 # ---- other sources -------------------------------------------------------------------------------
 
 
@@ -464,6 +475,7 @@ INE_CODES = (
     "0006988", "0012518",  # census 2011 / 2021: mean useful area of dwellings of usual residence
     "0008273", "0014642", "0014640", "0014765",  # population, CPI annual / monthly, HPI
     "0008269", "0008270", "0008271",  # net migration, natural increase, population change
+    "0011748",  # construction cost index of new housing, monthly
 )  # fmt: skip
 
 
@@ -626,6 +638,7 @@ BUILDERS: dict[str, Callable[[], pd.DataFrame]] = {
     "ine_cpi": build_ine_cpi,
     "ine_cpi_monthly": build_ine_cpi_monthly,
     "ine_hpi": build_ine_hpi,
+    "ine_construction_costs": build_ine_construction_costs,
     "ine_population_change": build_ine_population_change,
     "ine_households_size": build_ine_households_size,
     "aima_foreigners": build_aima_foreigners,

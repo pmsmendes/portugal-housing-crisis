@@ -125,6 +125,13 @@ ine:
     notes: >
       Headline all-items = geocod PT, dim_3 T (1948-2025, 2025=100; 2024=97.717). Other dim_3 values are special aggregates.
       Re-referencing to BASE_YEAR=2024 is done in harmonize.py.
+  ine_construction_costs:
+    indicator_id: "0011748"          # new housing construction cost index (base 2021), monthly, Jan 2000 - Aug 2026, national
+    format: json
+    notes: >
+      Verified 2026-10-26: dim_3 T total, 1 materials, 2 manpower (labour); national only. Fetch one period at a time like
+      the other monthly series. Input costs of building new family housing, not what builders charge and not land.
+      Eurostat's sts_copi_q/a carries the same total (Portugal reports identical cost and producer-price indices) but stops in 2023.
 
 bportugal:
   # API base https://bpstat.bportugal.pt/data/v1 (301 -> trailing slash; send a User-Agent, urllib's default gets 403).

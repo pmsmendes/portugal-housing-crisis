@@ -1,0 +1,19 @@
+term,coef,ci_low,ci_high,p_value,r2,n,outcome,lag_years,sample
+dlog_price,3.791,2.843,4.739,0.0,0.709,24,licensed_n,1,all years
+dlog_cost,-1.237,-3.547,1.073,0.294,0.709,24,licensed_n,1,all years
+dlog_price,3.154,2.029,4.28,0.0,0.689,20,licensed_n,1,without 2008-2011
+dlog_cost,0.024,-3.257,3.305,0.989,0.689,20,licensed_n,1,without 2008-2011
+dlog_price,3.908,2.87,4.947,0.0,0.71,21,licensed_n,1,without 2021-2023
+dlog_cost,-0.444,-3.731,2.844,0.791,0.71,21,licensed_n,1,without 2021-2023
+dlog_price,3.037,2.077,3.998,0.0,0.66,24,completed_n,1,all years
+dlog_cost,0.158,-3.019,3.334,0.923,0.66,24,completed_n,1,all years
+dlog_price,3.682,2.675,4.689,0.0,0.734,20,completed_n,1,without 2008-2011
+dlog_cost,-1.954,-4.721,0.812,0.166,0.734,20,completed_n,1,without 2008-2011
+dlog_price,3.078,2.214,3.942,0.0,0.64,21,completed_n,1,without 2021-2023
+dlog_cost,0.776,-3.546,5.098,0.725,0.64,21,completed_n,1,without 2021-2023
+dlog_price,3.085,2.391,3.779,0.0,0.754,23,completed_n,2,all years
+dlog_cost,1.234,-1.37,3.837,0.353,0.754,23,completed_n,2,all years
+dlog_price,3.228,2.195,4.262,0.0,0.755,19,completed_n,2,without 2008-2011
+dlog_cost,0.53,-3.219,4.279,0.782,0.755,19,completed_n,2,without 2008-2011
+dlog_price,3.471,2.959,3.982,0.0,0.798,20,completed_n,2,without 2021-2023
+dlog_cost,2.468,0.166,4.77,0.036,0.798,20,completed_n,2,without 2021-2023

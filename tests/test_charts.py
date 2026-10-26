@@ -549,3 +549,20 @@ def test_offset_cost_title_gives_the_rise_the_cheapest_cost_and_the_spending_mul
         charts.offset_cost(offset, {"construction": "Building", "supply_mix": "Mix"}, 1.6, 4.58)
     )
     assert "4.6-year" in title and "5.4 bn" in title and "3 times" in title
+
+
+def test_construction_costs_title_gives_the_change_in_prices_and_in_costs_since_2013():
+    years = np.arange(2000, 2026)
+    frame = pd.DataFrame(
+        {
+            "cost_total_b2015": 100 * 1.03 ** (years - 2015),
+            "cost_materials_b2015": 100 * 1.02 ** (years - 2015),
+            "cost_labour_b2015": 100 * 1.04 ** (years - 2015),
+            "hpi_nominal_b2015": 100 * 1.08 ** (years - 2015),
+            "licensed_n": 20_000.0,
+            "completed_n": 15_000.0,
+        },
+        index=pd.Index(years, name="year"),
+    )
+    title = _title(charts.construction_costs(frame))
+    assert f"+{100 * (1.08**12 - 1):.0f}%" in title and f"+{100 * (1.03**12 - 1):.0f}%" in title

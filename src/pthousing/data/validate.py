@@ -203,6 +203,17 @@ def schemas() -> dict[str, DataFrameSchema]:
             unique=["period_start", "category"],
             strict=True,
         ),
+        "ine_construction_costs": DataFrameSchema(
+            {
+                "period_start": Column("datetime64[ns]", coerce=True),
+                "year": _year(2000),
+                "month": Column(int, Check.in_range(1, 12), coerce=True),
+                "factor": _cat({"total", "materials", "labour"}),
+                "construction_cost_b2021": _num(10, 400, nullable=False),
+            },
+            unique=["period_start", "factor"],
+            strict=True,
+        ),
         "bp_mortgage": DataFrameSchema(
             {
                 "date": Column("datetime64[ns]", coerce=True),
@@ -603,6 +614,21 @@ def check_hpi(df: pd.DataFrame) -> list[str | None]:
     ]
 
 
+def check_construction_costs(df: pd.DataFrame) -> list[str | None]:
+    wide = df.pivot(index="period_start", columns="factor", values="construction_cost_b2021")
+    base = wide[wide.index.year == 2021].mean()
+    lo, hi = wide[["materials", "labour"]].min(axis=1), wide[["materials", "labour"]].max(axis=1)
+    inside = ((wide["total"] >= lo - 0.5) & (wide["total"] <= hi + 0.5)).all()
+    gaps = wide.index.to_series().diff().dropna().le(pd.Timedelta(days=31)).all()
+    return [
+        None
+        if (base - 100).abs().max() < 0.5
+        else "construction cost index does not average 100 in 2021",
+        None if inside else "total cost index lies outside materials and labour",
+        None if gaps else "monthly construction cost series has gaps",
+    ]
+
+
 def _gaps_quarterly(s: pd.Series) -> str | None:
     return (
         None
@@ -715,6 +741,7 @@ CHECKS: dict[str, Callable[[pd.DataFrame], list[str | None]]] = {
     "ine_cpi": check_cpi,
     "ine_cpi_monthly": check_cpi_monthly,
     "ine_hpi": check_hpi,
+    "ine_construction_costs": check_construction_costs,
     "bp_mortgage": check_bp,
     "bp_household_debt": check_bp_household_debt,
     "eurostat_hpi": check_eurostat_hpi,

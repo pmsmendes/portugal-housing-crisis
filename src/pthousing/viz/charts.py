@@ -1945,6 +1945,58 @@ def housing_spending(portugal: pd.DataFrame, shares: pd.DataFrame, peers: dict[s
     )
 
 
+def construction_costs(frame: pd.DataFrame) -> Figure:
+    """Nominal house prices against the cost of building (left) and licensed and completed dwellings (right).
+
+    ``frame`` is ``construction.annual_frame`` (indices 2015 = 100; ``licensed_n`` and ``completed_n`` in dwellings).
+    Left: nominal house price index, the total cost index and its materials and labour parts. Right: new family
+    dwellings licensed and completed, in thousands.
+    """
+    d = frame
+    fig, (left, right) = plt.subplots(1, 2, figsize=(11, 4.6))
+    parts = [
+        (d["cost_materials_b2015"], MUTED, 1.4, 2),
+        (d["cost_labour_b2015"], MUTED, 1.4, 2),
+        (d["cost_total_b2015"], ORANGE, LINE_WIDTH, 4),
+        (d["hpi_nominal_b2015"], BLUE, LINE_WIDTH, 4),
+    ]
+    for series, color, width, z in parts:
+        _line(left, series.index, series, color, width=width, z=z)
+    for series, text in (
+        (d["cost_labour_b2015"], "Labour"),
+        (d["cost_materials_b2015"], "Materials"),
+    ):
+        _label(left, series.index[-1], series.iloc[-1], text, weight="normal")
+    _end_dot(left, d.index[-1], d["cost_total_b2015"].iloc[-1], ORANGE)
+    _end_dot(left, d.index[-1], d["hpi_nominal_b2015"].iloc[-1], BLUE)
+    left.axhline(100, color=GRID, lw=1, zorder=1)
+    left.set_xlim(d.index.min() - 1, d.index.max() + 3.5)
+    left.set_xticks(range(2000, 2026, 5))
+    _legend(left, [Line2D([], [], color=BLUE, lw=LINE_WIDTH, label="House price index"),
+                   Line2D([], [], color=ORANGE, lw=LINE_WIDTH, label="Cost of building (total)")], loc="upper left")  # fmt: skip
+    _panel_title(left, "Nominal prices and building costs (2015 = 100)")
+    for col, color in (("licensed_n", BLUE), ("completed_n", ORANGE)):
+        series = d[col].dropna() / 1000
+        _line(right, series.index, series, color)
+        _end_dot(right, series.index[-1], series.iloc[-1], color)
+    right.set_xlim(d.index.min() - 1, d.index.max() + 1.5)
+    right.set_xticks(range(2000, 2026, 5))
+    right.set_ylim(0, None)
+    _legend(right, [Line2D([], [], color=BLUE, lw=LINE_WIDTH, label="Licensed"),
+                    Line2D([], [], color=ORANGE, lw=LINE_WIDTH, label="Completed")], loc="upper right")  # fmt: skip
+    _panel_title(right, "New family dwellings (thousands)")
+    since = lambda c: f"{100 * (d[c].iloc[-1] / d.loc[2013, c] - 1):+.0f}%"  # noqa: E731
+    return style.finish(
+        fig,
+        f"Since 2013 house prices are {since('hpi_nominal_b2015')} and building costs {since('cost_total_b2015')}, "
+        f"and building tracked prices, not costs",
+        f"Annual, national, 2000 to {d.index.max()}; nominal indices, 2015 = 100; new family housing",
+        "Source: INE (new housing construction cost index, licensed and completed dwellings), BIS, OECD, own calculations. The cost index is input cost: land, margin and financing are not in it.",
+        head_in=1.3,
+        foot_in=0.6,
+    )
+
+
 def property_tax_revenue(frame: pd.DataFrame) -> Figure:
     """Real IMI and IMT revenue (left) and both against the real house price index, 2015 = 100 (right).
 

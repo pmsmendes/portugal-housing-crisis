@@ -581,3 +581,36 @@ def test_oecd_table_checks_catch_a_wrong_base_and_a_late_start():
     assert any(r["check"].startswith("consistency") for r in _failures("oecd_house_prices", wrong))
     late = _oecd().assign(price_to_income_b2015=lambda d: np.where(d["year"] < 2000, np.nan, 100.0))
     assert any(r["check"].startswith("consistency") for r in _failures("oecd_house_prices", late))
+
+
+def _costs(total_gap=False):
+    months = pd.date_range("2020-01-01", "2022-12-01", freq="MS")
+    base = np.where(months.year == 2021, 100.0, 90.0)
+    rows = []
+    for factor, shift in (("total", 0.0), ("materials", -2.0), ("labour", 2.0)):
+        rows.append(
+            pd.DataFrame(
+                {
+                    "period_start": months,
+                    "year": months.year,
+                    "month": months.month,
+                    "factor": factor,
+                    "construction_cost_b2021": base + np.where(months.year == 2021, 0.0, shift),
+                }
+            )
+        )
+    df = pd.concat(rows, ignore_index=True)
+    return df[df["period_start"] != "2020-04-01"] if total_gap else df
+
+
+def test_construction_costs_schema_and_checks_accept_a_clean_table():
+    df = _costs()
+    validate.schemas()["ine_construction_costs"].validate(df)
+    assert validate.check_construction_costs(df) == [None, None, None]
+
+
+def test_construction_costs_check_flags_a_missing_month_and_a_wrong_base():
+    gap = validate.check_construction_costs(_costs(total_gap=True))
+    assert gap[2] is not None
+    shifted = _costs().assign(construction_cost_b2021=lambda d: d["construction_cost_b2021"] + 5)
+    assert validate.check_construction_costs(shifted)[0] is not None

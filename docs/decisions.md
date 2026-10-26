@@ -2,6 +2,12 @@
 
 Analytic and engineering choices, newest first. One short entry each: what, why, alternatives rejected.
 
+## 2026-10-26 — Construction costs from INE, annual, with a price-to-cost ratio
+- **What:** `ine_construction_costs` (INE 0011748, monthly 2000-2026, total / materials / labour, base 2021) feeds `analysis/construction.py`: yearly averages of complete years, rebased to 2015, deflated with the CPI like the price index; the price index change is split exactly into the cost change and the change in the price-to-cost ratio; licensing and completions are regressed on last year's real price and real cost changes (Newey-West, with the crisis and the cost surge left out as checks).
+- **Why:** it is the one national series of building costs and it separates labour from materials; Eurostat's version is the same total but stops in 2023, and the Eurostat building-permit series for Portugal has only the total from 2005 (nothing beyond `ine_construction`).
+- **Reading:** association over 24 yearly changes and two cycles, not a supply elasticity; the ratio is an index of everything but input cost, not a margin.
+- **Rejected:** Eurostat `sts_copi_a`/`sts_copi_q` (shorter), `sts_cobp_a` permits, a regression in levels (shared trends).
+
 ## 2026-10-25 — Policy scorecard and a linear offset requirement
 - **What:** `p4_07` assembles the simulator's package results (`policy_effects_baseline.csv`), the scenario spread and the surcharge (`p3_08`) in one table, and `funding.offset_requirement` scales each supply package until its fall in 2035 price-to-income equals the baseline rise, giving the yearly cost, share of GDP, multiple of housing spending and gross units a year (against the 2002 peak of completions).
 - **Why:** RQ6.6 asks for a combination, and the honest answer is that no option in the project comes near the drift; the extrapolation puts a number on the gap, with the capacity to build as the check.

@@ -428,3 +428,15 @@ def test_eurostat_property_tax_peers_one_row_per_country_and_year(monkeypatch):
         "transaction_tax_eur_m",
         "gdp_eur_m",
     ]
+
+
+def test_ine_construction_costs_names_the_factors_and_keeps_the_national_rows(monkeypatch):
+    rows = [
+        {"geocod": g, "dim_3": f, "period_start": "2020-03-01", "value": v}
+        for g, f, v in [("PT", "T", 100.0), ("PT", "1", 90.0), ("PT", "2", 110.0), ("PT", "9", 5.0)]
+    ] + [{"geocod": "1234567", "dim_3": "T", "period_start": "2020-03-01", "value": 1.0}]
+    monkeypatch.setattr(interim.ine, "read_indicator", lambda code: _ine(rows))
+    out = interim.build_ine_construction_costs().set_index("factor")
+    assert sorted(out.index) == ["labour", "materials", "total"]
+    assert out.loc["labour", "construction_cost_b2021"] == 110.0
+    assert (out["month"] == 3).all()

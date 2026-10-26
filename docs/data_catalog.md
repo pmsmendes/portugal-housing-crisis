@@ -19,6 +19,7 @@ Registry of every dataset. **Read this before opening any data file or source mo
 | ine_census | ine | Census: dwellings (primary/secondary/vacant), tenure, households, mean dwelling area | Municipality / parish | 1991, 2001, 2011, 2021 | 2011 and 2021 stock and area (0006304, 0012502, 0006457, 0012856, 0006988, 0012518); 2021 vacancy and tenure (0012517, 0012531); 2001 and 1991 todo | ine_census.parquet, ine_census_stock.parquet | ingested (2011 and 2021) |
 | ine_construction | ine | New family dwellings licensed and completed | Municipality | Annual (monthly licensed) | Licensed 1995–2025 (0000087, 0013235); completed 1995–2025 (0000076, 0013248) | ine_construction.parquet | ingested |
 | ine_households_size | ine | Private households by number of persons (1, 2, 3, 4 or more) | Municipality | 1 census each | 2011 (0006457, sizes 1 to 9 or more, merged into 4 or more) and 2021 (0012856) | ine_households_size.parquet | ingested |
+| ine_construction_costs | ine | Cost index of new housing construction (base 2021), total / materials / labour | Country (PT) | Monthly | Jan 2000 - Aug 2026 (0011748) | ine_construction_costs.parquet | ingested (national; input cost only) |
 | ine_cpi | ine | Consumer Price Index (deflator) | National | Monthly / annual | 1948–2026 (0014640 / 0014642, base 2025) | ine_cpi.parquet, ine_cpi_monthly.parquet | ingested |
 | eurostat_demography | eurostat | Demographic balance: population on 1 January, births, deaths, natural change, net migration plus statistical adjustment (demo_gind) | Country (PT) | Annual | 1960–2025 flows (latest year may be provisional) | eurostat_demography.parquet | ingested |
 | bp_mortgage | bportugal | Mortgage interest rates (APRC, agreed rate, stocks), new loan volumes | National | Monthly | Jan 2003–Aug 2026 (series 12533714, 12533730, 12519759, 12533719); fixed-rate median from Dec 2018 (12710738) | bp_mortgage.parquet | ingested |
@@ -53,6 +54,7 @@ Full 308-municipality grid for municipal tables; suppressed cells are NaN, never
 | ine_population_change | muni_code × year (2011–2023) | population_change_n, natural_increase_n, net_migration_n (change = natural + migration; counts of persons over the year) |
 | eurostat_demography | year (1960–2025) | population_jan_n, population_change_n, natural_change_n, net_migration_n (plus statistical adjustment), births_n, deaths_n, revision_n (what the 1 January levels add beyond the flows: 2020 and 2021 only) |
 | aima_foreigners | muni_code × year (2014–2023) × nationality (br, cn, cv, gb, gw, md, ro, st, ua, ao, other, total) | foreign_residents_n (total = sum of the others) |
+| ine_construction_costs | period_start × factor (total, materials, labour) | construction_cost_b2021 (2021 = 100) |
 | ine_cpi / ine_cpi_monthly | year / period_start | cpi_index_b2025 (2025 = 100) |
 | ine_hpi | period_start × category | hpi_index_b2025 (2025 = 100), national |
 | eurostat_macro | year (1995–2025) | gdp_growth_pct (real, % on the previous year), unemployment_pct (15 to 74, labour force survey), compensation_per_employee_eur (whole economy, nominal) |

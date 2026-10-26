@@ -2,7 +2,7 @@
 
 Why did affordability deteriorate, and where? This phase moves from description to association; nothing here is a
 causal claim. Figures: `reports/figures/p2/`, tables: `reports/tables/p2/`, notebooks: `notebooks/p2_explain/`
-(`p2_01` to `p2_11`). Methods: [methodology](../docs/methodology.md), choices:
+(`p2_01` to `p2_17`). Methods: [methodology](../docs/methodology.md), choices:
 [decisions](../docs/decisions.md).
 
 ## Summary
@@ -38,7 +38,7 @@ available, so a credible answer to "what would change affordability?" needs a po
 
 **Contents:** spatial autocorrelation (`p2_01`), fixed-effects regressions with foreign residents
 (`p2_02`, RQ3.3, RQ5.1), spillover tests (`p2_03`, RQ4.4), segmentation (`p2_04`, RQ4.6), supply against demand
-(`p2_05`, RQ2.1 to RQ2.4, RQ3.4, RQ4.5), second homes (`p2_06`, RQ5.3, RQ5.4) the synthesis (`p2_07`, RQ3.6), mortgage rates (`p2_08`, RQ1.7, RQ9.2, RQ9.5), wages and the labour market (`p2_09`, RQ9.1, RQ1.4), big municipalities against their surroundings (`p2_10`, RQ4.3), age structure (`p2_11`, RQ3.5) mortgage credit and household debt (`p2_12`, RQ9.2, RQ9.3) what wages and rates could finance (`p2_13`, RQ9.4) and foreign residents by nationality group (`p2_14`, RQ3.3) and vacant dwellings against the shortfall (`p2_16`, RQ2.5).
+(`p2_05`, RQ2.1 to RQ2.4, RQ3.4, RQ4.5), second homes (`p2_06`, RQ5.3, RQ5.4) the synthesis (`p2_07`, RQ3.6), mortgage rates (`p2_08`, RQ1.7, RQ9.2, RQ9.5), wages and the labour market (`p2_09`, RQ9.1, RQ1.4), big municipalities against their surroundings (`p2_10`, RQ4.3), age structure (`p2_11`, RQ3.5) mortgage credit and household debt (`p2_12`, RQ9.2, RQ9.3) what wages and rates could finance (`p2_13`, RQ9.4) and foreign residents by nationality group (`p2_14`, RQ3.3) vacant dwellings against the shortfall (`p2_16`, RQ2.5) and construction costs against prices and licensing (`p2_17`, RQ2.7).
 
 ## Key findings
 
@@ -340,6 +340,18 @@ Census vacant dwellings (2011, 2021) against the household shortfall of `p2_05` 
 
 Tables: `vacancy_by_density.csv`, `vacancy_by_price_pressure.csv`, `vacancy_largest_shortfalls.csv`, `vacancy_sensitivity.csv`, `vacancy_usable_share_needed.csv`. Limits: census dates ten years apart, the shortfall is the `p2_05` proxy (implied households, no demolitions), a frictional level that is assumed, and a count of dwellings, not of homes anyone could move into.
 
+## What it costs to build (`p2_17_construction_costs`)
+
+![Construction costs](figures/p2/construction_costs.png)
+
+INE's cost index of new housing (monthly, materials and labour; 2000 to 2025 as complete years) against the nominal house price index and the new family dwellings licensed and completed (RQ2.7). The index is input cost only: land, margin, financing and licensing time are not in it, so the ratio of the price index to the cost index is "everything in the price except the cost of building", not a margin in euros.
+
+50. **Building got dearer, but far less than houses.** 2013-2025: nominal house prices +183%, the cost of building +50% (materials +38%, labour +66%), wages +58%; in real terms prices +129% and costs +21%. The cost index accounts for 39% of the log rise in price (30% in 2013-2021, 50% since 2021, when costs jumped 25% in four years); the price-to-cost ratio is up 89% since 2013.
+51. **Labour is dearer than materials, but only as much as wages.** Labour cost rose 66% against materials 38% since 2013, and the labour index over compensation per employee is flat (97 in 2013, 102 in 2025, 2015 = 100): building labour followed wages in general.
+52. **Licensing follows prices, not costs.** A 1 log-point rise in the real price goes with 3.8 log points more licensed dwellings the next year (interval 2.8 to 4.7); the coefficient on the real cost is -1.2 (-3.6 to 1.1). Without the crisis years 2008-2011 it is 3.2 (2.0 to 4.3) for prices and 0.0 for costs; without 2021-2023, 3.9 and -0.4. Licensing averaged 87,800 dwellings a year in 2000-2007, 28,700 in 2007-2013, 17,100 in 2013-2021 and 34,700 since 2021, when costs rose fastest and licensing recovered.
+
+Tables: `construction_episodes.csv`, `construction_supply_response.csv`, `construction_labour_vs_wages.csv`. Limits: an input-cost index only (no land price, margin or financing; the level of the cost per m2 is not in the data), national, annual and 24 yearly changes over two cycles (the intervals are wide and the cost and price changes are correlated), association not a supply elasticity. Land availability, planning rules and licensing times are not in the project, so RQ2.7 is only partly answered.
+
 ## Limitations
 
 - **A pattern, not a mechanism.** Spatial autocorrelation does not show that price changes spill over: shared
@@ -390,4 +402,4 @@ Tables: `vacancy_by_density.csv`, `vacancy_by_price_pressure.csv`, `vacancy_larg
 ## Questions answered
 
 RQ4.3 (large municipalities rose most, less further out; Lisboa itself less than its suburbs), RQ4.4 (little evidence of spillovers beyond the regional pattern), RQ4.6 (coastal and urban, not tourism as such), RQ2.1 to
-RQ3.5 (ageing and the 25-44 pool add nothing beyond the foreign-resident change; internal migration and single-person households not observable), RQ2.3 and RQ4.5 (supply against households) and RQ5.4 (second homes separated) are answered; RQ3.6 is answered as far as these data allow (demand differences cannot be told from the regional pattern); RQ2.5, RQ3.3, RQ5.1, RQ5.3, RQ1.7, RQ9.1, RQ9.2 and RQ9.5 are partly answered; RQ1.4 is answered (income and wages) (see [research_questions](../docs/research_questions.md)).
+RQ3.5 (ageing and the 25-44 pool add nothing beyond the foreign-resident change; internal migration and single-person households not observable), RQ2.3 and RQ4.5 (supply against households) and RQ5.4 (second homes separated) are answered; RQ3.6 is answered as far as these data allow (demand differences cannot be told from the regional pattern); RQ2.5, RQ2.7, RQ3.3, RQ5.1, RQ5.3, RQ1.7, RQ9.1, RQ9.2 and RQ9.5 are partly answered; RQ1.4 is answered (income and wages) (see [research_questions](../docs/research_questions.md)).
