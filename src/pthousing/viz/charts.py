@@ -3014,3 +3014,50 @@ def evidence_ladder(rungs: pd.DataFrame, ladder: pd.DataFrame) -> Figure:
     )
     fig.subplots_adjust(left=0.27, right=0.9)
     return fig
+
+
+def rent_update_gap(path: pd.DataFrame, by_third: pd.DataFrame) -> Figure:
+    """Rents of sitting tenants against new leases: yearly indices (left) and the gap by third of price-to-income (right).
+
+    ``path`` (index = year, base year = 100): ``legal_rent_index`` (highest rent of a lease signed in the base year),
+    ``formula_rent_index`` (without the 2023 ceiling), ``new_lease_rent_index``, ``cpi_index``, ``new_over_legal_pct``.
+    ``by_third`` (index = third, least affordable last): ``median_gap_pct`` and ``rented_share_pct``.
+    """
+    fig, (left, right) = plt.subplots(
+        1, 2, figsize=(11, 4.6), gridspec_kw={"width_ratios": [1.15, 1]}
+    )
+    last = path.index[-1]
+    _line(left, path.index, path["cpi_index"], MUTED, width=1.0, z=2)
+    _line(left, path.index, path["formula_rent_index"], BLUE, width=1.0, z=3)
+    left.lines[-1].set_linestyle((0, (4, 3)))
+    _line(left, path.index, path["legal_rent_index"], BLUE, z=4)
+    _line(left, path.index, path["new_lease_rent_index"], ORANGE, z=5)
+    for column, color in (("new_lease_rent_index", ORANGE), ("legal_rent_index", BLUE)):
+        _end_dot(left, last, path.loc[last, column], color)
+        _label(left, last, path.loc[last, column], f"{path.loc[last, column]:.0f}")
+    _years(left, path.index)
+    left.set_xlim(path.index[0] - 0.2, last + 0.9)
+    _legend(left, [Line2D([], [], color=ORANGE, lw=LINE_WIDTH, label="Median rent of new leases"),
+                   Line2D([], [], color=BLUE, lw=LINE_WIDTH, label="Highest rent of a lease signed at the start"),
+                   Line2D([], [], color=BLUE, lw=1.0, ls=(0, (4, 3)), label="Same, without the 2% ceiling of 2023"),
+                   Line2D([], [], color=MUTED, lw=1.0, label="Consumer prices")], loc="upper left")  # fmt: skip
+    _panel_title(left, f"Index, {path.index[0]} = 100")
+    g = by_third.reset_index()
+    labels = [str(v) for v in g.iloc[:, 0]]
+    y = np.arange(len(g))[::-1]
+    right.grid(axis="x")
+    right.grid(axis="y", visible=False)
+    right.barh(y, g["median_gap_pct"], 0.5, color=ORANGE, zorder=3)
+    for yi, gap, share in zip(y, g["median_gap_pct"], g["rented_share_pct"], strict=True):
+        right.annotate(f"{gap:.0f}%  ({share:.0f}% of homes let)", (gap, yi), xytext=(5, 0), textcoords="offset points", va="center", fontsize=9, color=INK)  # fmt: skip
+    right.set_yticks(y, labels, color=INK_2, fontsize=9.5)
+    right.set_xlim(0, g["median_gap_pct"].max() * 1.6)
+    right.xaxis.set_major_formatter(mticker.PercentFormatter(decimals=0))
+    _panel_title(right, "Median municipality: new lease above the updated old rent")
+    gap = path.loc[last, "new_over_legal_pct"]
+    return style.finish(
+        fig,
+        f"A new tenant in {last} pays {gap:.0f}% more than one who signed in {path.index[0]} at the median and had every rise allowed",
+        "Median rent per m2 of new leases against the same rent raised by the legal coefficients (left); gap in the median municipality by third of price-to-income, 2024 (right)",
+        "Source: INE (rents of new leases, CPI, census 2021), AT (price-to-income inputs), update coefficients of INE (Diario da Republica); own calculations.",
+    )

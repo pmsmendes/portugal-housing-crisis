@@ -1,0 +1,12 @@
+year,legal_coefficient,formula_coefficient,note
+2016,1.0016,1.0016,"INE coefficient under the NRAU formula (CPI without housing, 12 months to August)"
+2017,1.0054,1.0054,
+2018,1.0112,1.0112,
+2019,1.0115,1.0115,
+2020,1.0051,1.0051,
+2021,0.9997,0.9997,negative formula value: a rent cannot fall (the update is optional)
+2022,1.0043,1.0043,
+2023,1.0200,1.0543,extraordinary ceiling of 2% (Lei 19/2022) in place of the formula; landlords compensated through IRS and IRC
+2024,1.0694,1.0694,Aviso 20980-A/2023; no ceiling
+2025,1.0216,1.0216,
+2026,1.0224,1.0224,Aviso 23174/2025/2

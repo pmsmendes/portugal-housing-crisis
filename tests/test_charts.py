@@ -603,3 +603,23 @@ def test_renovation_works_title_gives_first_and_last_licences_and_the_share():
     )
     title = _title(charts.renovation_works(national, shares))
     assert "8,000 in 2002" in title and "4,000 in 2025" in title and "20% of the total" in title
+
+
+def test_rent_update_gap_title_gives_the_gap_and_the_years():
+    years = range(2020, 2025)
+    path = pd.DataFrame(
+        {
+            "legal_rent_index": [100, 100, 100.4, 102.4, 109.5],
+            "formula_rent_index": [100, 100, 100.4, 105.9, 113.2],
+            "new_lease_rent_index": [100, 104, 114, 126, 140],
+            "cpi_index": [100, 101, 109, 114, 117],
+        },
+        index=pd.Index(years, name="year"),
+    )
+    path["new_over_legal_pct"] = 100 * (path["new_lease_rent_index"] / path["legal_rent_index"] - 1)
+    by_third = pd.DataFrame(
+        {"median_gap_pct": [20.0, 25.0, 30.0], "rented_share_pct": [10.0, 15.0, 25.0]},
+        index=["most affordable", "middle", "least affordable"],
+    )
+    title = _title(charts.rent_update_gap(path, by_third))
+    assert "28% more" in title and "2024" in title and "2020" in title

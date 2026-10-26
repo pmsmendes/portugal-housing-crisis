@@ -201,6 +201,18 @@ Accounting incidence of the simulator's IMI cut (0.05 pp, limited by the legal f
 
 Not covered: households by income or age, the same bill for every use and owner, the response of landlords, the pass-through to tenants, IMT exemptions by buyer (see `p3_09`).
 
+### Rent update: sitting tenants and new tenants (`p3_11`, RQ6.1, RQ6.3)
+
+![Rent update gap](figures/p3/rent_update_gap.png)
+
+Portugal does not cap the rent of a new lease; it caps the yearly rise of an existing one by the coefficient INE publishes (consumer prices without housing), and in 2023 by an extraordinary ceiling of 2% in place of 5.43% (landlords compensated through IRS and IRC). The measure is what a lease signed at the 2020 median rent can reach under the coefficients against the median rent of new leases, with no behaviour.
+
+- **Nationally.** A sitting tenant's rent could rise 9.5% by 2024 (13.2% without the 2023 ceiling) against consumer prices +16.7%, a fall of 6.1% in real terms; the median rent of new leases rose 39.7%, so a new tenant paid 28% more.
+- **By municipality.** In the median of 191 municipalities a new lease in 2024 is 32% above the updated 2020 rent (middle half 26% to 38%, 98% positive). The gap is no smaller where more homes are let (rank correlation -0.04) and slightly larger where housing is dearer (0.24 with price-to-income; 29% in the most affordable third, 34% and 33% in the others). Read as a dual market, by the rule fixed in advance.
+- **Reach.** 12 new leases a year per 100 let homes (median municipality), so about 88% of let homes keep a rent bounded by the coefficient. The 2023 ceiling saved a typical lease about 18 EUR a month (3.4% of the rent), at most 200 EUR m a year if every one of the 923,000 let homes had been updated at the ceiling.
+
+Not covered: any effect of the rule (the gap would open also if market rents outran prices, and there is no comparison group), rental supply, maintenance, new building and conversion (RQ6.2), leases under older regimes, like-for-like new rents (medians of about 190 municipalities with a rental market; size and quality change), the cost to the state of the landlord compensation. The coefficient table is transcribed from published notices and compilations and should be checked against the Diario da Republica.
+
 ## Limitations
 
 - **Selection into treatment.** Rates are chosen after price booms, and the pre-trend test rejects. The design cannot separate the effect of the cut from mean reversion after
