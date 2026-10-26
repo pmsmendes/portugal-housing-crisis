@@ -82,7 +82,7 @@ Full 308-municipality grid for municipal tables; suppressed cells are NaN, never
 |---|---|---|---|
 | muni_crosswalk.csv | 308 CAOP 2024 municipalities: name, district, territory, NUTS II/III codes in the 2013 and 2024 vintages (codes from INE `geocod` prefixes) | harmonize.write_crosswalk() | built; code changes before 2013 not covered |
 | muni_typology.csv | 308 municipalities: coast / estuary / inland (CAOP shoreline segments), urban / intermediate / rural (2021 residents per km²: ≥ 500, 100 to 500, < 100; a proxy, not the INE TIPAU), tourist / other / unknown (≥ 25 registered short-term rentals per 1,000 dwellings; mainland only), second-home share 2021 | typology.build() (run by scripts/run_pipeline.py) | built |
-| rent_update_coefficients.csv | Yearly legal coefficient for raising an existing lease 2016-2026 and the NRAU formula value (they differ only in 2023: 1.0200 against 1.0543) | transcribed from INE notices (Diario da Republica) as compiled by CGD and APCMC; to be checked against the notices | built by hand |
+| rent_update_coefficients.csv | Yearly legal coefficient for raising an existing lease 2016-2026 and the NRAU formula value (they differ only in 2023: 1.0200 against 1.0543) | transcribed from INE notices (Diario da Republica; aviso numbers in the file) as compiled by CGD, APCMC and law-firm notes: the values agree across at least two compilations, but the notices themselves were not opened | built by hand |
 
 ## Processed panels (`data/processed/`)
 | File | Grain | Built by | Status |
