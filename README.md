@@ -17,6 +17,7 @@ policies have worked, and what alternative interventions could achieve — and c
 
 **Explanation (phase 2)**
 - Geography accounts for most of where affordability worsened: district, coast and density explain 53% of the variation in the 2016-2024 change of price-to-income across mainland municipalities; demand, supply, tourism and second homes add under two points.
+- Of 18 associations with the rise in price-to-income followed through added controls, only four hold at every step (foreign residents, completions, Brazilian and Lusophone African residents, all in the panel and all halved or more by region-year effects), and none rests on a design that passes its own test: the IMI event study fails its pre-trend test and credit growth follows prices; the project reports adjusted associations and bounds, not causal effects.
 - Since 2013 real prices rose 129% against 27% for real wages; wages and falling rates account for the 2013-2021 rise, but not 2021-2025, when about 50 log points of the price rise are left over.
 - That rise was not borrowed: real housing credit fell 27% from 2013 to 2024 while real prices rose 98%, and credit growth follows price growth rather than leading it.
 - Building collapsed from 93,000 dwellings a year (1995-2004) to 16,000 (2015-2025); since 2021 implied new households far exceed completions.

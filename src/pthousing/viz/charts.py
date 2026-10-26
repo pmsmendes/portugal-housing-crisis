@@ -2963,3 +2963,54 @@ def tax_cut_incidence(by_use: pd.DataFrame, by_third: pd.DataFrame) -> Figure:
     )
     fig.subplots_adjust(left=0.2, right=0.97, wspace=0.42)
     return fig
+
+
+def evidence_ladder(rungs: pd.DataFrame, ladder: pd.DataFrame) -> Figure:
+    """Each driver's standardised association with the change of price-to-income through added controls, and how it ends.
+
+    ``rungs``: ``driver``, ``spec``, ``coef_per_sd`` (log points of price-to-income per standard deviation of the driver) and
+    ``p`` per rung, rungs in the order of controls. ``ladder``: ``driver`` and ``class`` (``evidence.classify``). A filled dot is
+    below p = 0.05; the light dot is the first rung (fewest controls), the dark one the last. Drivers are grouped by class.
+    """
+    order = ["holds", "fades", "emerges", "mixed", "flips", "never"]
+    ladder = ladder[ladder["class"].isin(order)].copy()
+    ladder["rank"] = ladder["class"].map({c: i for i, c in enumerate(order)})
+    ladder = ladder.sort_values(["rank", "driver"], kind="stable").reset_index(drop=True)
+    fig, ax = plt.subplots(figsize=(10.5, 6.6))
+    ax.grid(axis="x")
+    ax.grid(axis="y", visible=False)
+    ax.axvline(0, color=INK_2, lw=1, zorder=1)
+    colour = {"holds": BLUE, "fades": ORANGE}
+    y = len(ladder) - 1
+    for i, row in ladder.iterrows():
+        r = rungs[rungs["driver"] == row["driver"]].dropna(subset=["p"])
+        pos = y - i
+        c = colour.get(row["class"], MUTED)
+        x = 100 * r["coef_per_sd"].to_numpy()
+        ax.plot(x, [pos] * len(x), color=c, lw=2, alpha=0.5, zorder=2)
+        for k, (xv, pv) in enumerate(zip(x, r["p"], strict=True)):
+            last = k == len(x) - 1
+            ax.plot([xv], [pos], "o", ms=9, mfc=c if pv < 0.05 else SURFACE, mec=c, mew=1.8 if pv >= 0.05 else 2,
+                    alpha=1.0 if last else 0.55, zorder=4)  # fmt: skip
+        ax.annotate(
+            row["class"],
+            (1.02, pos),
+            xycoords=("axes fraction", "data"),
+            va="center",
+            fontsize=9,
+            color=c,
+        )
+    ax.set_yticks(y - ladder.index, ladder["driver"], color=INK_2, fontsize=9.5)
+    ax.set_ylim(-0.7, len(ladder) - 0.3)
+    ax.set_xlabel("Change in price-to-income per standard deviation of the driver (%)", color=INK_2)
+    holds = int((ladder["class"] == "holds").sum())
+    fig = style.finish(
+        fig,
+        f"Only {holds} of {len(ladder)} associations hold through every added control, and none rests on a design that passes its own test",
+        "Association with the change of price-to-income, first to last specification (filled: p < 0.05; first rung faint, last strong)",
+        "Source: own calculations from the result tables of p2_02, p2_06, p2_07, p2_11, p2_14 and p2_20; design checks in p3_02, p2_08, p2_12.",
+        head_in=0.95,
+        foot_in=0.6,
+    )
+    fig.subplots_adjust(left=0.27, right=0.9)
+    return fig

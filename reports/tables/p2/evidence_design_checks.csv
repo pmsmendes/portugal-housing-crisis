@@ -1,0 +1,4 @@
+design,test,p_assumption,effect,effect_distinguishable_from_zero,assumption,credible_causal
+"IMI rate cut, stacked event study (p3_02)",pre-trend two years before the cut,0.024,"-0.24% one year after, interval -1.83 to +1.35 (per 0.01 pp)",False,assumption rejected,False
+"Mortgage-rate change and price growth, quarterly (p2_08)",next year's rate change as a placebo,0.668,"+0.20% per pp, interval -1.39 to +1.80",False,assumption not rejected,False
+"Credit growth and price growth, quarterly (p2_12)",next year's credit growth as a placebo,0.003,"-0.93% per pp, interval -1.54 to -0.32",True,assumption rejected,False

@@ -2,7 +2,7 @@
 
 Why did affordability deteriorate, and where? This phase moves from description to association; nothing here is a
 causal claim. Figures: `reports/figures/p2/`, tables: `reports/tables/p2/`, notebooks: `notebooks/p2_explain/`
-(`p2_01` to `p2_20`). Methods: [methodology](../docs/methodology.md), choices:
+(`p2_01` to `p2_21`). Methods: [methodology](../docs/methodology.md), choices:
 [decisions](../docs/decisions.md).
 
 ## Summary
@@ -38,7 +38,7 @@ available, so a credible answer to "what would change affordability?" needs a po
 
 **Contents:** spatial autocorrelation (`p2_01`), fixed-effects regressions with foreign residents
 (`p2_02`, RQ3.3, RQ5.1), spillover tests (`p2_03`, RQ4.4), segmentation (`p2_04`, RQ4.6), supply against demand
-(`p2_05`, RQ2.1 to RQ2.4, RQ3.4, RQ4.5), second homes (`p2_06`, RQ5.3, RQ5.4) the synthesis (`p2_07`, RQ3.6), mortgage rates (`p2_08`, RQ1.7, RQ9.2, RQ9.5), wages and the labour market (`p2_09`, RQ9.1, RQ1.4), big municipalities against their surroundings (`p2_10`, RQ4.3), age structure (`p2_11`, RQ3.5) mortgage credit and household debt (`p2_12`, RQ9.2, RQ9.3) what wages and rates could finance (`p2_13`, RQ9.4) and foreign residents by nationality group (`p2_14`, RQ3.3) vacant dwellings against the shortfall (`p2_16`, RQ2.5) construction costs against prices and licensing (`p2_17`, RQ2.7) foreign buyers (`p2_18`, RQ5.2) renovation of existing buildings (`p2_19`, RQ2.8) and household size (`p2_20`, RQ3.4, RQ3.5).
+(`p2_05`, RQ2.1 to RQ2.4, RQ3.4, RQ4.5), second homes (`p2_06`, RQ5.3, RQ5.4) the synthesis (`p2_07`, RQ3.6), mortgage rates (`p2_08`, RQ1.7, RQ9.2, RQ9.5), wages and the labour market (`p2_09`, RQ9.1, RQ1.4), big municipalities against their surroundings (`p2_10`, RQ4.3), age structure (`p2_11`, RQ3.5) mortgage credit and household debt (`p2_12`, RQ9.2, RQ9.3) what wages and rates could finance (`p2_13`, RQ9.4) and foreign residents by nationality group (`p2_14`, RQ3.3) vacant dwellings against the shortfall (`p2_16`, RQ2.5) construction costs against prices and licensing (`p2_17`, RQ2.7) foreign buyers (`p2_18`, RQ5.2) renovation of existing buildings (`p2_19`, RQ2.8) household size (`p2_20`, RQ3.4, RQ3.5) and the evidence ladder (`p2_21`, M3).
 
 ## Key findings
 
@@ -388,6 +388,18 @@ The two censuses give households by number of persons (`ine_households_size`) an
 62. **The one-person share is partly ageing.** Its change was 3.4 points in the third of municipalities that aged least and 4.4 in the third that aged most (correlation with the 65+ change 0.38).
 
 Tables: `household_size_national.csv`, `households_by_size_national.csv`, `household_size_by_class.csv`, `household_size_associations.csv`, `household_size_by_ageing_third.csv`. Limits: two census years; persons per household includes residents of collective homes; a one-person household is not a measure of choice or unmet demand; household change 2011-2021 and price window 2016-2024 differ; 271 mainland municipalities, one cross-section.
+
+## Which associations survive controls, and which designs test themselves (`p2_21_evidence_ladder`)
+
+![Evidence ladder](figures/p2/evidence_ladder.png)
+
+A synthesis of earlier tables with one reading rule (M3): each driver is followed from the least to the most controlled specification of the notebook that tested it; it "holds" if its coefficient keeps its sign and stays below p = 0.05 at every rung. Separately, the three designs of the project with a test of their own assumption are read side by side.
+
+63. **Four of 18 associations hold at every rung.** In the panel (municipality and year effects, then municipality and region-year effects): foreign residents (+2.0% then +1.1% of price-to-income per standard deviation), completions (+2.3%, +0.8%), Brazilian residents (+1.6%, +0.8%) and Lusophone Africa residents (+1.5%, +0.6%). Six fade (other population change, Chinese residents, second homes, the 65+ share, short-term rentals, persons per household), one emerges (Eastern European residents) and seven are never significant, among them household growth, dwelling growth, the 25-44 share, the one-person share and UK residents.
+64. **What holds is regional.** The coefficients fall by a half to two thirds once region-year effects absorb where prices rose; completions have a positive sign, so they mark places that boomed, not supply that eased prices; the foreign-resident change that holds in the panel is not significant in the cross-section with every block in (p = 0.11, 0.21).
+65. **No relationship has a credible causal identification.** The IMI event study rejects its pre-trend (p = 0.024) and its effect is not distinguishable from zero; the mortgage-rate timing test does not reject its placebo (p = 0.67) but finds no effect; credit growth rejects its placebo (p = 0.003: credit follows prices). Identifying a policy effect would need a sharp rule change with a comparison group, transaction data by buyer and a window long enough to test pre-trends.
+
+Tables: `evidence_ladder.csv`, `evidence_ladder_rungs.csv`, `evidence_design_checks.csv`. Limits: the specifications of each ladder differ in sample and controls, so rungs are not all nested; 18 drivers is what was tested, not what matters; no correction for the number of tests.
 
 ## Limitations
 

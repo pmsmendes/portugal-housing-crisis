@@ -1,0 +1,41 @@
+driver,spec,coef,p,coef_per_sd
+Foreign residents,Municipality + year effects,0.0433,0.0,0.0205
+Foreign residents,Municipality + region-year effects,0.0306,0.0004,0.0111
+Completions,Municipality + year effects,0.0115,0.0,0.0228
+Completions,Municipality + region-year effects,0.0046,0.0082,0.008
+Other population change,Municipality + year effects,0.0098,0.0006,0.014
+Other population change,Municipality + region-year effects,0.0045,0.0972,0.005
+Share aged 65+,Municipality + year effects,-0.0072,0.2912,-0.0059
+Share aged 65+,Municipality + region-year effects,0.0042,0.5446,0.0023
+Short-term rentals,"Mainland, with rentals",0.0034,0.0,0.0177
+Short-term rentals,"Mainland, with rentals, region-year",0.0007,0.3663,0.0025
+Brazilian residents,Municipality + year effects,0.0788,0.0,0.0165
+Brazilian residents,Municipality + region-year effects,0.0485,0.0026,0.0079
+Lusophone Africa residents,Municipality + year effects,0.1051,0.0003,0.0151
+Lusophone Africa residents,Municipality + region-year effects,0.054,0.0376,0.0062
+UK residents,Municipality + year effects,-0.0132,0.3017,-0.0024
+UK residents,Municipality + region-year effects,-0.0155,0.3794,-0.002
+Chinese residents,Municipality + year effects,-0.158,0.0306,-0.006
+Chinese residents,Municipality + region-year effects,-0.1352,0.1012,-0.0048
+Eastern European residents,Municipality + year effects,0.0331,0.5504,0.0025
+Eastern European residents,Municipality + region-year effects,0.0869,0.0229,0.006
+Foreign residents (joint model),Same district,0.0124,0.1068,0.0571
+Foreign residents (joint model),"Same district, coast and density",0.0075,0.2125,0.0347
+Household growth,Same district,0.0065,0.2222,0.0412
+Household growth,"Same district, coast and density",0.0015,0.7696,0.0094
+Dwelling growth,Same district,-0.0125,0.0865,-0.0324
+Dwelling growth,"Same district, coast and density",-0.009,0.1755,-0.0232
+Second homes,"Change, same district",-0.0047,0.0007,-0.063
+Second homes,"Change, + coast and density",-0.0027,0.0773,-0.0362
+Share aged 25-44,"25-44 share, same district",0.0126,0.0692,0.0241
+Share aged 25-44,"25-44 share, + coast and density",0.004,0.5434,0.0077
+Share aged 25-44,"25-44 share, + foreign residents",-0.0125,0.1469,-0.0239
+Share aged 65+ (change),"65+ share, same district",-0.022,0.0459,-0.0479
+Share aged 65+ (change),"65+ share, + coast and density",-0.0169,0.1108,-0.0368
+Share aged 65+ (change),"65+ share, + foreign residents",-0.0069,0.5936,-0.0149
+One-person households,"one-person share, same district",-0.0157,0.2949,-0.0196
+One-person households,"one-person share, + coast and density",-0.0072,0.6345,-0.009
+One-person households,"one-person share, + 65+ and foreign residents",0.0013,0.9425,0.0016
+Persons per household,"persons per household, same district",0.4968,0.0042,0.0695
+Persons per household,"persons per household, + coast and density",0.2467,0.0928,0.0345
+Persons per household,"persons per household, + 65+ and foreign residents",0.1464,0.4049,0.0205

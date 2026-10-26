@@ -1,0 +1,19 @@
+driver,design,rungs_n,first_p,last_p,first_coef_per_sd,last_coef_per_sd,class
+Foreign residents,panel FE,2,0.0,0.0004,0.0205,0.0111,holds
+Completions,panel FE,2,0.0,0.0082,0.0228,0.008,holds
+Other population change,panel FE,2,0.0006,0.0972,0.014,0.005,fades
+Share aged 65+,panel FE,2,0.2912,0.5446,-0.0059,0.0023,never
+Short-term rentals,panel FE,2,0.0,0.3663,0.0177,0.0025,fades
+Brazilian residents,panel FE,2,0.0,0.0026,0.0165,0.0079,holds
+Lusophone Africa residents,panel FE,2,0.0003,0.0376,0.0151,0.0062,holds
+UK residents,panel FE,2,0.3017,0.3794,-0.0024,-0.002,never
+Chinese residents,panel FE,2,0.0306,0.1012,-0.006,-0.0048,fades
+Eastern European residents,panel FE,2,0.5504,0.0229,0.0025,0.006,emerges
+Foreign residents (joint model),cross-section,2,0.1068,0.2125,0.0571,0.0347,never
+Household growth,cross-section,2,0.2222,0.7696,0.0412,0.0094,never
+Dwelling growth,cross-section,2,0.0865,0.1755,-0.0324,-0.0232,never
+Second homes,cross-section,2,0.0007,0.0773,-0.063,-0.0362,fades
+Share aged 25-44,cross-section,3,0.0692,0.1469,0.0241,-0.0239,never
+Share aged 65+ (change),cross-section,3,0.0459,0.5936,-0.0479,-0.0149,fades
+One-person households,cross-section,3,0.2949,0.9425,-0.0196,0.0016,never
+Persons per household,cross-section,3,0.0042,0.4049,0.0695,0.0205,fades
