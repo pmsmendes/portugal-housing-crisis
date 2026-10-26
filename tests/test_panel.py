@@ -174,6 +174,8 @@ def test_add_spatial_lags_uses_neighbours_in_the_same_or_an_earlier_year():
 def test_national_annual_long_is_rebased_real_and_marks_incomplete_years():
     from pthousing.data import build_panel, harmonize, interim
 
+    if not interim.interim_path("ine_cpi").exists():
+        pytest.skip("needs data/interim (run scripts/run_pipeline.py)")
     a = build_panel.read("national_annual_long").set_index("year")
     assert a.index.min() == 1988 and a.index.is_unique
     assert a.loc[2015, ["hpi_nominal_b2015", "hpi_real_b2015", "rent_real_b2015"]].eq(100).all()
