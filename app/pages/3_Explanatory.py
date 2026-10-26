@@ -284,6 +284,98 @@ with tab_drivers:
         "decade of low building, so the two lines are a range, not a bound. Source: INE; own calculations (`p2_23`)."
     )
 
+    st.subheader("Rents: what goes with the rise in rents of new leases")
+    rent_nat = table("p2", "rents_sample_and_change").set_index("measure")["value"]
+    rent_class = table("p2", "rents_by_class").sort_values("rent_pct", ascending=False)
+    rent_coefs = table("p2", "rents_coefficients_per_sd")
+    SHORT_DRIVER = {
+        "Foreign residents (points)": "Foreign residents",
+        "Short-term rentals per 1,000 dwellings": "Short-term rentals",
+        "Population change (%)": "Population change",
+        "Completions per 1,000 dwellings": "Completions",
+        "Starting level (log)": "Starting level",
+    }
+    st.markdown(
+        f"INE publishes the median rent per m2 of new leases only where enough leases were signed: "
+        f"**{rent_nat['municipalities_n']:.0f} municipalities** have one in both 2020 and 2024 "
+        f"({rent_nat['population_share_2021_pct']:.0f}% of residents, mostly larger and more urban). "
+        "Foreign residents and registered short-term rentals go with where rents rose; population change and completions do not."
+    )
+    a, b, c = st.columns(3)
+    a.metric(
+        "Real rent, median municipality",
+        f"+{rent_nat['median_rent_change_pct']:.0f}%",
+        f"price +{rent_nat['median_price_change_pct']:.0f}%",
+        delta_color="off",
+        help="Median real change 2020-2024 of the rent per m2 of new leases, and of the price per m2, in the same municipalities.",
+    )
+    b.metric(
+        "Rents rose in",
+        f"{rent_nat['municipalities_with_rising_rent_pct']:.0f}%",
+        "of municipalities",
+        delta_color="off",
+    )
+    c.metric(
+        "Rent and price changes",
+        f"{rent_nat['rank_correlation_rent_price_change']:.2f}",
+        "rank correlation",
+        delta_color="off",
+        help="Across municipalities, the real rent change against the real price change 2020-2024.",
+    )
+    left, right = st.columns(2)
+    fig = go.Figure()
+    for col, name, color in (
+        ("price_pct", "Price per m2", style.BLUE),
+        ("rent_pct", "Rent per m2 (new leases)", style.ORANGE),
+    ):
+        fig.add_bar(
+            y=rent_class["segment"],
+            x=rent_class[col],
+            name=name,
+            orientation="h",
+            marker_color=color,
+            text=[f"{v:.0f}%" for v in rent_class[col]],
+            textposition="outside",
+        )
+    fig.update_layout(barmode="group", legend=dict(orientation="h", y=-0.2))
+    fig.update_yaxes(autorange="reversed")
+    fig.update_xaxes(title="Median real change 2020-2024 (%)", range=[0, 45])
+    left.plotly_chart(_style(fig, "Rents rose more evenly than prices"), width="stretch")
+    left.caption(
+        "Coastal urban places: prices +35%, rents +24%; inland rural: rents +21%, prices +8%. Classes are proxies (`p2_24`)."
+    )
+    fig = go.Figure()
+    for key, name, color in (
+        ("price", "Price", style.BLUE),
+        ("rent", "Rent", style.ORANGE),
+    ):
+        fig.add_trace(
+            go.Scatter(
+                x=rent_coefs[key],
+                y=rent_coefs["driver"].map(SHORT_DRIVER),
+                mode="markers",
+                name=name,
+                marker=dict(color=color, size=9),
+                error_x=dict(
+                    type="data",
+                    symmetric=False,
+                    array=rent_coefs[f"{key}_high"] - rent_coefs[key],
+                    arrayminus=rent_coefs[key] - rent_coefs[f"{key}_low"],
+                    color=color,
+                ),
+            )
+        )
+    fig.add_vline(x=0, line_color=style.MUTED, line_width=1)
+    fig.update_layout(legend=dict(orientation="h", y=-0.2))
+    fig.update_yaxes(autorange="reversed")
+    fig.update_xaxes(title="% per standard deviation")
+    right.plotly_chart(_style(fig, "Associations, 95% intervals"), width="stretch")
+    right.caption(
+        "All drivers together, same district with coast and density. Short-term rentals go with rents but not prices; "
+        "a negative starting level means catching up. Four years, places that publish a rent, today's registry of rentals: "
+        "adjusted associations, not effects, and a null is not evidence of no effect (`p2_24`)."
+    )
+
 # ---- regressions ---------------------------------------------------------------------------------
 with tab_reg:
     fe = table("p2", "fe_regressions_pti")
