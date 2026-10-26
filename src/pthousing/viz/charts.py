@@ -2548,3 +2548,39 @@ def funding_gain(result: pd.DataFrame, baseline_rise_years: float) -> Figure:
         head_in=1.3,
         foot_in=0.9,
     )
+
+
+def offset_cost(
+    offset: pd.DataFrame, labels: dict[str, str], housing_spending_bn: float, rise_years: float
+) -> Figure:
+    """Yearly cost of cancelling the baseline rise with each supply package, against today's housing spending.
+
+    ``offset`` is ``funding.offset_requirement`` (index: package; ``yearly_cost_bn``, ``yearly_cost_gdp_pct``,
+    ``yearly_cost_vs_housing_spending``), ``labels`` maps each package to its axis label, ``housing_spending_bn`` is the
+    yearly spending line and ``rise_years`` the rise being cancelled (title).
+    """
+    fig, ax = plt.subplots(figsize=(11, 4.4))
+    d = offset.loc[list(labels)]
+    y = np.arange(len(d))[::-1]
+    ax.barh(y, d["yearly_cost_bn"], 0.55, color=ORANGE, zorder=3)
+    ax.axvline(housing_spending_bn, color=BLUE, lw=1.6, zorder=4)
+    ax.annotate(f"housing spending today, {housing_spending_bn:.1f} bn", (housing_spending_bn, len(d) - 0.2), xytext=(6, 0),
+                textcoords="offset points", fontsize=8.5, color=BLUE, va="center")  # fmt: skip
+    for pos, (_, row) in zip(y, d.iterrows(), strict=True):
+        ax.annotate(f"{row['yearly_cost_bn']:.1f} bn a year, {row['yearly_cost_vs_housing_spending']:.1f}x spending, {row['yearly_cost_gdp_pct']:.1f}% of GDP",
+                    (row["yearly_cost_bn"], pos), xytext=(6, 0), textcoords="offset points", va="center", fontsize=9, color=INK_2)  # fmt: skip
+    ax.set_yticks(y, list(labels.values()), color=INK_2, fontsize=9.5)
+    ax.set_xlim(0, d["yearly_cost_bn"].max() * 1.75)
+    ax.set_ylim(-0.6, len(d) + 0.1)
+    ax.set_xlabel(
+        "Cost a year, 2027-2035, EUR billion (linear extrapolation of the simulator)", color=INK_2
+    )
+    return style.finish(
+        fig,
+        f"Cancelling a {rise_years:.1f}-year rise by supply alone would cost at least {d['yearly_cost_bn'].min():.1f} bn a year, "
+        f"{d['yearly_cost_vs_housing_spending'].min():.0f} times today's housing spending",
+        "Baseline scenario: each package scaled until its fall in 2035 price-to-income equals the baseline rise; arithmetic, not a forecast",
+        "Source: simulator (p4_02), Eurostat (GDP, housing spending), own calculations. Far outside the packages tested; unit costs are assumptions.",
+        head_in=1.3,
+        foot_in=0.9,
+    )

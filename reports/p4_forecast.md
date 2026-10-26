@@ -250,6 +250,19 @@ Tables: `rent_forecast_accuracy_by_horizon.csv`, `rent_forecast_accuracy_summary
 
 Tables: `funding_gain_by_budget.csv`. Limits: baseline scenario only, one lever at a time, mid unit costs, no source-side behaviour (the surcharge, the central budget) and no tax lever (cuts raise the ratio, `p4_02`).
 
+## Policy scorecard and what it would take (`p4_07`, RQ6.6, RQ8.3 partly)
+
+![Cost of cancelling the rise](figures/p4/policy_offset_cost.png)
+
+One table of every option the project has put a number on (`policy_scorecard.csv`): its fall in 2035 price-to-income (median, 80% range, baseline scenario), cost to 2035, gain per billion, who pays and what the evidence rests on. The vacant-home surcharge has no simulator effect and is listed with `p3_08`.
+
+- **Only supply improves the ratio; the tax cuts do the opposite.** Extra completions (10,000 a year) 0.27 years (0.19 to 0.37) for 2.9 bn; renovated vacant homes 0.32 (0.23 to 0.44) for 4.9 bn; public housing (5,000 a year) 0.16 (0.12 to 0.22) for 7.1 bn; the mix of the three 0.38 (0.28 to 0.50) for 7.5 bn. An IMI cut of 0.05 pp and an IMT cut of 1 pp worsen it by 0.07 and 0.08 years (2.3 and 2.6 bn of municipal revenue lost) at the capitalisation benchmark of `p3`, and have no effect at none.
+- **No package in view cancels the drift.** The baseline's ratio rises 4.6 years to 2035; the best package covers 8%. Scaling a package linearly until it cancels the rise (arithmetic far outside the 10,000-a-year range tested, not a forecast) takes 5.3 bn a year for extra completions (1.8% of GDP, 3.3 times today's 1.6 bn of housing spending, 167,000 extra completions a year, 1.3 times the 2002 peak of 126,000), 7.8 bn for renovation, 10.0 bn for the mix and 22.5 bn for public housing.
+- **So the answer to RQ6.6 is a direction, not a combination.** Within the model, the combination that improves the ratio most per euro is supply by building, then renovation, with public housing last on this indicator; tax cuts are the one set of measures that work against it, and the vacant-home surcharge is a source of money (55 to 221 EUR m a year at most, 3% to 13% of IMI), not a lever. The unintended consequences quantified are the price capitalisation of tax cuts and (`p3_08`) the small bite of the surcharge; crowding out, construction capacity, rent effects and the tenants of public housing are not.
+- **RQ8.3 (what could be cut) is not answered.** The scorecard ranks new options by gain per euro; no existing programme's spending or effect is in the data.
+
+Tables: `policy_scorecard.csv`, `policy_offset_requirement.csv`. Limits: one scenario, mid unit costs, a linear response, State funding assumed, no cost of raising the money.
+
 ## Next
 
 Rents and a tenure split in the simulator; a price-to-supply feedback once there is an estimate of the supply response; feeding the regional ranking into the simulator's median

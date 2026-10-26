@@ -1,0 +1,5 @@
+package,scale,cumulative_cost_bn,yearly_cost_bn,yearly_cost_gdp_pct,yearly_cost_vs_housing_spending,homes_a_year_n,units_a_year_gross,units_vs_peak_completions
+construction,16.74,48.05,5.34,1.83,3.31,126750.44,167398.08,1.33
+renovation,14.18,69.92,7.77,2.67,4.81,105129.54,141803.95,1.13
+public,28.39,202.3,22.48,7.72,13.92,141935.73,141935.73,1.13
+supply_mix,12.09,90.44,10.05,3.45,6.22,121087.67,151111.0,1.2

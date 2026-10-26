@@ -87,7 +87,7 @@ table = pd.DataFrame(
 )
 table["all_pct_of_imi"] = 100 * table["all_eur_m"] / national
 table["pressured_pct_of_imi"] = 100 * table["pressured_eur_m"] / national
-style.save_table(table.round(1).reset_index(), "p3", "vacant_surcharge_revenue")
+style.save_table(table.round(3).reset_index(), "p3", "vacant_surcharge_revenue")
 table.round(1)
 
 # %% [markdown]

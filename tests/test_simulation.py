@@ -265,3 +265,17 @@ def test_gain_for_budget_buys_units_at_mid_cost_and_gains_scale_with_the_budget(
     assert 0 < small["gain_p10"] <= small["gain_p50"] <= small["gain_p90"]
     assert large["gain_p50"] > 2 * small["gain_p50"]  # a larger budget buys more
     assert np.isnan(small["gain_share_of_rise_pct"])  # the synthetic baseline does not rise
+
+
+def test_offset_requirement_scales_the_package_to_cancel_the_rise():
+    effects = pd.DataFrame(
+        {"pti_gain_p50": [0.25], "cost_bn": [2.0], "homes_added_n_p50": [90_000.0]},
+        index=["construction"],
+    )
+    out = funding.offset_requirement(effects, 5.0, 10, 300_000.0, 1_500.0)
+    assert out.loc["construction", "scale"] == pytest.approx(20)
+    assert out.loc["construction", "cumulative_cost_bn"] == pytest.approx(40)
+    assert out.loc["construction", "yearly_cost_bn"] == pytest.approx(4)
+    assert out.loc["construction", "yearly_cost_gdp_pct"] == pytest.approx(100 * 4000 / 300_000)
+    assert out.loc["construction", "yearly_cost_vs_housing_spending"] == pytest.approx(4000 / 1500)
+    assert out.loc["construction", "homes_a_year_n"] == pytest.approx(90_000 * 20 / 10)

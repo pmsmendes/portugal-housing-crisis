@@ -534,3 +534,18 @@ def test_funding_gain_title_quotes_the_full_surcharge_gain_and_the_baseline_rise
             )
     title = _title(charts.funding_gain(pd.DataFrame(rows), 4.58))
     assert "0.22 years" in title and "4.6-year" in title
+
+
+def test_offset_cost_title_gives_the_rise_the_cheapest_cost_and_the_spending_multiple():
+    offset = pd.DataFrame(
+        {
+            "yearly_cost_bn": [5.4, 6.0],
+            "yearly_cost_gdp_pct": [1.8, 2.0],
+            "yearly_cost_vs_housing_spending": [3.3, 3.7],
+        },
+        index=["construction", "supply_mix"],
+    )
+    title = _title(
+        charts.offset_cost(offset, {"construction": "Building", "supply_mix": "Mix"}, 1.6, 4.58)
+    )
+    assert "4.6-year" in title and "5.4 bn" in title and "3 times" in title

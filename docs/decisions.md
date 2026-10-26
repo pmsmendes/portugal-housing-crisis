@@ -2,6 +2,12 @@
 
 Analytic and engineering choices, newest first. One short entry each: what, why, alternatives rejected.
 
+## 2026-10-25 — Policy scorecard and a linear offset requirement
+- **What:** `p4_07` assembles the simulator's package results (`policy_effects_baseline.csv`), the scenario spread and the surcharge (`p3_08`) in one table, and `funding.offset_requirement` scales each supply package until its fall in 2035 price-to-income equals the baseline rise, giving the yearly cost, share of GDP, multiple of housing spending and gross units a year (against the 2002 peak of completions).
+- **Why:** RQ6.6 asks for a combination, and the honest answer is that no option in the project comes near the drift; the extrapolation puts a number on the gap, with the capacity to build as the check.
+- **Reading:** arithmetic on a linear response far outside the packages tested (10,000 a year), with assumed unit costs and no capacity constraint, so a size of the gap, not a plan; the budget could not be spent at that scale in the model's own terms.
+- **Rejected:** a recommended mix (the ranking depends on assumed unit costs and an indicator that ignores tenants); extending the simulator with a capacity constraint (no estimate to cite).
+
 ## 2026-10-25 — Funding the levers from identified sources
 - **What:** `simulation/funding.py` (`gain_for_budget`) runs the simulator for a yearly budget at mid unit costs with and without it on the same draws; `p4_06` uses the surcharge revenue (`p3_08`), 10% of 2024 housing spending (`p3_06`) and the 0.5 bn EUR reference of `p4_02`.
 - **Why:** `p4_02` takes the budget as given; tying it to sources that exist in the project says what the policy room is worth in affordability terms.

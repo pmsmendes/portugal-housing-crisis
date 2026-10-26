@@ -49,3 +49,28 @@ def gain_for_budget(
             "cost_eur_p50": float(np.median(with_.end("cumulative_cost_eur"))),
         }
     )
+
+
+def offset_requirement(
+    effects: pd.DataFrame,
+    rise_years: float,
+    years: int,
+    gdp_eur_m: float,
+    housing_spending_eur_m: float,
+) -> pd.DataFrame:
+    """What it would take to cancel the baseline rise in price-to-income with each supply package, by linear extrapolation.
+
+    ``effects`` has one row per package (index) with ``pti_gain_p50`` (years of income), ``cost_bn`` (cumulative cost over
+    the policy years) and ``homes_added_n_p50``; the package is scaled by ``rise_years / pti_gain_p50``. Returns the scale
+    factor, the cumulative and yearly cost (EUR bn), the yearly cost as a share of GDP and as a multiple of housing
+    spending, and the scaled units. It is arithmetic on the simulator's linear response, not a forecast: the price
+    response, unit costs and the capacity to build are tested only near the packages of ``effects``.
+    """
+    scale = rise_years / effects["pti_gain_p50"]
+    out = pd.DataFrame({"scale": scale})
+    out["cumulative_cost_bn"] = effects["cost_bn"] * scale
+    out["yearly_cost_bn"] = out["cumulative_cost_bn"] / years
+    out["yearly_cost_gdp_pct"] = 100 * out["yearly_cost_bn"] * 1000 / gdp_eur_m
+    out["yearly_cost_vs_housing_spending"] = out["yearly_cost_bn"] * 1000 / housing_spending_eur_m
+    out["homes_a_year_n"] = effects["homes_added_n_p50"] * scale / years
+    return out
