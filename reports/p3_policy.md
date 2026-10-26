@@ -121,7 +121,7 @@ permanent 0.01 pp cut is **0.19%** (range 0.10% to 0.33%: assessed value 50% to 
 
 ## Context: how much revenue is at stake (`p3_04`, RQ7.1)
 
-National general-government revenue, accrual basis (Eurostat; no municipal series exists), in constant 2024 euros. Figure `reports/figures/p3/property_tax_revenue.png`.
+National general-government revenue, accrual basis (Eurostat; receipts by council exist for 2021-2023 only, see the section on `p3_12`), in constant 2024 euros. Figure `reports/figures/p3/property_tax_revenue.png`.
 
 - **IMT (with stamp duty) follows the market.** Real revenue fell 67% from 2007 to 2013, rose 377% from 2013 to 2025 and in 2025 is 2,051 EUR m, 0.68% of GDP (0.55% in 2007).
 - **IMI has not followed prices.** Real revenue rose 23% in 2013-2019 and fell 12% in 2019-2025 while nominal prices rose 86%; from 0.86% of GDP in 2015 it is 0.59% in 2025.
@@ -212,6 +212,19 @@ Portugal does not cap the rent of a new lease; it caps the yearly rise of an exi
 - **Reach.** 10 new leases of 2021 per 100 homes let in the 2021 census (median of 187 municipalities), so roughly nine in ten let homes keep a rent bounded by the coefficient (an upper bound of repricing: renewals and other regimes are not told apart). The 2023 ceiling saved a typical lease about 10 EUR a month (3.4% of the rent; 7 to 13 at 50 to 90 m2, the area of a let home being an assumption of 70 m2), at most 114 EUR m a year (81 to 146) if every one of the 923,000 let homes had been updated at the ceiling.
 
 Not covered: any effect of the rule (the gap would open also if market rents outran prices, and there is no comparison group), rental supply, maintenance, new building and conversion (RQ6.2), leases under older regimes, like-for-like new rents (medians of 191 municipalities with a rental market; size and quality change), the cost to the state of the landlord compensation. The 2023 ceiling (Lei 19/2022, leases before 2022) and its 5.43% formula value are confirmed by several press and professional sources; the coefficient table is transcribed from published notices and compilations, and the notices themselves were not opened.
+
+### What IMI and IMT bring each council (`p3_12`, RQ7.1, RQ7.2, RQ7.3, RQ7.6)
+
+![IMI and IMT by council](figures/p3/municipal_tax_revenue.png)
+
+Receipts of municipal councils by economic classification (DGAL via INE, 2021-2023, 307 of 308 councils): municipal IMI is 90% to 91% of the national accounts' tax on land and buildings (the rest is the State's AIMI) and municipal IMT 102% of the national IMT, so the two sources agree.
+
+- **A third of what councils collect.** IMI plus IMT were 34.0% (2021) to 31.9% (2023) of the current receipts of all councils; the median council draws 15.6% (2023), 33.0% in urban municipalities (IMI 17.1, IMT 13.3), 23.0% intermediate and 10.7% rural, 32.3% on the coast against 12.8% inland, 41.1% in tourist municipalities. 35% of councils draw more than a fifth; the highest are Portimao (69%), Loule (68%), Grandola (66%), Cascais (61%) and Lagos (61%), IMT above all.
+- **Room to cut IMI inside the law.** Cutting every urban rate to the 0.30% floor gives up 124 to 139 million euros a year (8.5% to 9.5% of municipal IMI), in line with `p3_05`; 180 to 190 of about 297 councils are at the floor. The cost is under 1% of current receipts for 200 councils and above for 97 (up to 10.4%): Vila Nova de Gaia 9.0 million (4.9% of its receipts), Mafra 6.6 (7.6%), Cascais 5.8 (1.9%), Portimao 5.5 (6.3%). The euros sit on the coast (61% of the room) and in urban and intermediate councils (47% and 41%), but the 97 councils for which the cost passes 1% of their receipts are spread out (56 inland, 39 rural).
+- **IMT grew much more.** 2021 to 2023 IMT rose 369 million euros (+27.5%), 2.7 times the national room to cut IMI and more than a council's own room in 65% of councils; 84% of councils gained, the median by 32.6% (Portimao +185%, Funchal +159%, Cascais +32%, Lisboa +16%). The largest rises are in coastal and tourist councils, the ones that depend most on IMT; they came with prices and sales, not as a response to a cut.
+- **The model behind the surcharge holds up.** The bottom-up IMI per dwelling of `p3_08` has a rank correlation of 0.88 with the actual IMI per dwelling (292 municipalities); the actual is 0.83 of the model in the median. The scale to the municipal receipts is 0.702 against 0.777 for the national accounts (which include AIMI), so the revenue of the tripled IMI on excess vacant homes is 51 to 203 million euros with the actual IMI per dwelling (50 to 198 with the model at the municipal scale) against 55 to 220 in `p3_08`: about 8% to 10% high, an upper bound as stated.
+
+Tables: `municipal_tax_national.csv`, `municipal_tax_by_place.csv`, `municipal_floor_room.csv`, `municipal_imt_windfall.csv`, `municipal_bottom_up_check.csv`, `municipal_surcharge_check.csv`. Limits: three years, one before the sales rise; receipts as published (basis not stated); IMI per dwelling includes commercial and rustic property, so it overstates the bill of a home; the room is accounting with the base held fixed and the rate of the year before the receipts (councils with parish rates have no row); Penedono is not in the source; no estimate of what a cut would do to sales or prices, and no comparison with the councils' budget balance or debt.
 
 ## Limitations
 

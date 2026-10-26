@@ -681,3 +681,47 @@ def test_building_works_check_accepts_consistent_totals_and_flags_a_broken_one()
     validate.schemas()["ine_building_works"].validate(ok)
     assert validate.check_building_works(ok) == [None, None, None, None]
     assert validate.check_building_works(_works(bad=True))[0] is not None
+
+
+def _revenue(years=(2021, 2022, 2023), drop="1812", **override):
+    codes = [c for c in CODES if c != drop]
+    df = pd.DataFrame([(c, y) for y in years for c in codes], columns=["muni_code", "year"])
+    parts = {
+        "iuc_eur": 1e5,
+        "imt_eur": 2e5,
+        "imi_eur": 3e5,
+        "local_surcharge_eur": 1e5,
+        "local_funds_eur": 2e5,
+        "decentralisation_fund_eur": 0.0,
+        "sales_eur": 1e5,
+        "other_current_eur": 1e5,
+    }
+    for col, value in parts.items():
+        df[col] = value
+    df["current_receipts_eur"] = sum(parts.values())
+    df["total_receipts_eur"] = df["current_receipts_eur"] * 1.2
+    for col, value in override.items():
+        df[col] = value
+    return df
+
+
+def test_municipal_revenue_table_passes_and_checks_coverage_and_items():
+    assert _failures("ine_municipal_revenue", _revenue()) == []
+    assert _failures("ine_municipal_revenue", _revenue(drop="9999")) != []  # all 308 present
+    assert _failures("ine_municipal_revenue", _revenue(imi_eur=-5.0)) != []
+    assert _failures("ine_municipal_revenue", _revenue(current_receipts_eur=3e6)) != []
+
+
+def test_municipal_tax_check_compares_the_sums_with_the_national_accounts():
+    rev = _revenue(years=(2022,))
+    n = len(rev)
+    euro = pd.DataFrame(
+        {
+            "year": [2022],
+            "imi_revenue_eur_m": [n * 3e5 / 0.9 / 1e6],
+            "imt_revenue_eur_m": [n * 2e5 / 1.0 / 1e6],
+        }
+    )
+    assert validate._municipal_tax_vs_national(rev, euro) is None
+    euro["imi_revenue_eur_m"] = n * 3e5 / 0.5 / 1e6  # municipal IMI only half of the national tax
+    assert "imi_eur" in validate._municipal_tax_vs_national(rev, euro)

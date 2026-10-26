@@ -129,7 +129,7 @@ policies:
       A transaction tax paid by the buyer lowers what the buyer can offer one for one if fully capitalised (price falls by
       the tax cut's share of the price); no Portuguese estimate. Both ends are run; mid is the midpoint of the bound.
 
-# Fiscal bases. National totals, because no municipal revenue series is available (docs/data_quality.md).
+# Fiscal bases. National totals; municipal receipts exist for 2021-2023 only (docs/data_catalog.md, ine_municipal_revenue).
 fiscal:
   imi_revenue_eur: 1630000000        # IMI assessed (liquidado) for 2024, Autoridade Tributaria via idealista (8.4 million urban properties)
   imt_revenue_eur: 1732800000        # IMT collected in 2024 (Execucao orcamental, press 2025-01-31); used for scale only

@@ -2,6 +2,11 @@
 
 Analytic and engineering choices, newest first. One short entry each: what, why, alternatives rejected.
 
+## 2026-10-26 — Municipal IMI and IMT receipts from INE (p3_12)
+- **What:** `ine_municipal_revenue` (INE 0013908, DGAL receipts by economic classification, 2021-2023, euros), `analysis/municipal_revenue.py`, `notebooks/p3_policy/p3_12`. The cost of an IMI cut to the floor is `IMI * (rate - 0.30) / rate` per council with the rate of the tax year before the year of receipts (IMI is paid the year after); IMT windfall is the change 2021-2023; the bottom-up IMI of `p3_08` is checked by rank correlation with the actual IMI per dwelling.
+- **Why:** the earlier search found municipal revenue only as PDFs; the INE indicator gives IMI and IMT as separate lines for 307 councils, which turns the national estimates (`p3_05`, `p3_08`, `p3_10`) into municipal ones and checks the model behind the surcharge.
+- **Rejected:** parsing the DGAL or OCC PDFs for earlier years (three years are enough for the cross-section and the PDFs would carry another basis); a trend or a design on three points; using the published total as the denominator (it does not equal current plus capital receipts); the national D29A as the scale (it includes the State's AIMI, 10% of it).
+
 ## 2026-10-26 — Lending series from the report's chart workbook
 - **What:** `data/sources/bp_lending_standards.py` reads the chart data (xlsx) of the Banco de Portugal macroprudential report of March 2026 with the standard library into `data/external/lending_series.csv` (yearly 2018 Q3-2025, maturity quarterly); `analysis/lending.standards_by_year`, `charts.lending_standards`, a step added to `p2_22`. The files are in `data/raw/bp_lending_standards/` (gitignored), listed in `config/sources.yaml`.
 - **Why:** the earlier search for BPstat series found none, and the hand transcription gave points only; the workbook published beside the report gives the series, and shows the 2025 loosening (State guarantee) that reverses "tighter in 2024 than in 2018".

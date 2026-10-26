@@ -3184,3 +3184,52 @@ def lending_standards(standards: pd.DataFrame, maturity: pd.DataFrame) -> Figure
     )
     fig.subplots_adjust(wspace=0.35)
     return fig
+
+
+def municipal_revenue(
+    shares: pd.DataFrame, actual: pd.Series, modelled: pd.Series, rank_r: float
+) -> Figure:
+    """What IMI and IMT are in a council's budget (left) and the modelled IMI per dwelling against the actual (right).
+
+    ``shares`` (index = place type): median ``imi_share_pct`` and ``imt_share_pct`` of current receipts, drawn as stacked
+    bars. ``actual`` and ``modelled`` (euros per dwelling, indexed by municipality) are the scatter, on log axes with the
+    line of equality; ``rank_r`` is the rank correlation printed on it.
+    """
+    fig, (left, right) = plt.subplots(1, 2, figsize=(11, 4.6), gridspec_kw={"width_ratios": [1, 1]})
+    y = np.arange(len(shares))[::-1]
+    left.grid(axis="x")
+    left.grid(axis="y", visible=False)
+    left.barh(y, shares["imi_share_pct"], 0.5, color=BLUE, zorder=3)
+    left.barh(y, shares["imt_share_pct"], 0.5, left=shares["imi_share_pct"], color=ORANGE, zorder=3)
+    for yi, a, b in zip(y, shares["imi_share_pct"], shares["imt_share_pct"], strict=True):
+        left.annotate(f"{a + b:.0f}%", (a + b, yi), xytext=(5, 0), textcoords="offset points", va="center", fontsize=9.5, color=INK)  # fmt: skip
+    left.set_yticks(y, list(shares.index), color=INK_2, fontsize=9.5)
+    left.xaxis.set_major_formatter(mticker.PercentFormatter(decimals=0))
+    left.set_xlim(0, (shares["imi_share_pct"] + shares["imt_share_pct"]).max() * 1.25)
+    _legend(
+        left,
+        [Patch(facecolor=BLUE, label="IMI"), Patch(facecolor=ORANGE, label="IMT")],
+        loc="lower right",
+    )
+    _panel_title(left, "Median share of a council's current receipts, 2023")
+    j = pd.concat([actual.rename("a"), modelled.rename("m")], axis=1).dropna()
+    j = j[(j > 0).all(axis=1)]
+    right.scatter(j["m"], j["a"], s=14, color=BLUE, alpha=0.7, zorder=3, linewidths=0)
+    lim = [min(j["m"].min(), j["a"].min()) * 0.8, max(j["m"].max(), j["a"].max()) * 1.25]
+    right.plot(lim, lim, color=MUTED, lw=1.2, ls="--", zorder=2)
+    right.set_xscale("log")
+    right.set_yscale("log")
+    right.set_xlim(lim)
+    right.set_ylim(lim)
+    right.set_xlabel("Modelled IMI per dwelling, euros (before scaling)", color=INK_2, fontsize=9.5)
+    right.set_ylabel("Actual IMI per dwelling, euros", color=INK_2, fontsize=9.5)
+    right.annotate(f"rank correlation {rank_r:.2f}\n{len(j)} municipalities", (0.05, 0.93), xycoords="axes fraction", va="top", fontsize=9.5, color=INK, fontweight="bold")  # fmt: skip
+    _panel_title(right, "Modelled against actual IMI per dwelling, 2023")
+    fig = style.finish(
+        fig,
+        f"IMI and IMT are a sixth of the median council's receipts and 30% in cities; the model of IMI per dwelling tracks the actual (rank {rank_r:.2f})",
+        "Left: median across municipalities by density class. Right: one dot per municipality; the dashed line is equality (the level differs by a scale factor)",
+        "Source: DGAL via INE (receipts of municipal councils, 2023), INE, Autoridade Tributaria (rates); own calculations.",
+    )
+    fig.subplots_adjust(wspace=0.3)
+    return fig

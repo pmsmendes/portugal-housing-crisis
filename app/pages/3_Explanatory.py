@@ -508,8 +508,8 @@ with tab_policy:
     st.divider()
     st.subheader("What is at stake: the money")
     st.markdown(
-        "IMI and IMT are **municipal** revenue, so a cut costs councils, not the central budget. National figures only: "
-        "no municipal revenue series exists (`p3_04`, `p3_05`)."
+        "IMI and IMT are **municipal** revenue, so a cut costs councils, not the central budget. These are national "
+        "figures (`p3_04`, `p3_05`); by council, IMI and IMT are about a sixth of the median council's receipts and 30% in cities (2021-2023, `p3_12`)."
     )
     revenue = table("p3", "property_tax_series").set_index("year")
     spend = table("p3", "housing_spending_series").set_index("year")

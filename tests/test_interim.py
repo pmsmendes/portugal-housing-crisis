@@ -481,3 +481,17 @@ def test_ine_building_works_names_projects_and_purposes_and_keeps_completed_from
     assert np.isnan(first["completed_buildings_n"])
     late = out[out["year"] == 2011].iloc[0]
     assert late["completed_buildings_n"] == 4.0 and np.isnan(late["licensed_buildings_n"])
+
+
+def test_municipal_revenue_converts_thousands_to_euros_and_picks_the_items(monkeypatch):
+    rows = []
+    for item, value in (("R", 120.0), ("R1", 100.0), ("R12", 10.0), ("R13", 25.0), ("R2", 20.0)):
+        rows.append(
+            {"muni_code": "0101", "period_start": "2022-01-01", "dim_3": item, "value": value}
+        )
+    _patch_municipal(monkeypatch, {"0013908": _ine(rows)})
+    out = interim.build_ine_municipal_revenue()
+    assert len(out) == 1 and "R2" not in out.columns
+    row = out.iloc[0]
+    assert row["imi_eur"] == 25_000.0 and row["imt_eur"] == 10_000.0
+    assert row["current_receipts_eur"] == 100_000.0 and row["total_receipts_eur"] == 120_000.0

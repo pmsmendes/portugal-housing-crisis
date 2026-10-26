@@ -147,6 +147,43 @@ def build_ine_median_rent_sqm() -> pd.DataFrame:
     return out.sort_values([MUNI_KEY, "year"], ignore_index=True)
 
 
+MUNICIPAL_REVENUE_ITEMS = {
+    "R": "total_receipts_eur",
+    "R1": "current_receipts_eur",
+    "R11": "iuc_eur",
+    "R12": "imt_eur",
+    "R13": "imi_eur",
+    "R14": "local_surcharge_eur",
+    "R15": "local_funds_eur",
+    "R16": "decentralisation_fund_eur",
+    "R17": "sales_eur",
+    "R18": "other_current_eur",
+}
+
+
+def build_ine_municipal_revenue() -> pd.DataFrame:
+    """Revenue of municipal councils by economic classification (DGAL via INE), annual 2021-2023, in euros.
+
+    INE publishes thousands of euros (``Potencia10`` 3); ``imi_eur`` is the municipal real estate tax (R13), ``imt_eur``
+    the tax on onerous transfers of real estate (R12), ``iuc_eur`` the single circulation tax (R11). One municipality
+    (Penedono) is not in the source. ``total_receipts_eur`` is the published total, which differs from current plus
+    capital receipts by up to 9.5 million euros in some municipalities; shares are taken of ``current_receipts_eur``.
+    """
+    df = _municipal("0013908")
+    df = df[df["dim_3"].isin(MUNICIPAL_REVENUE_ITEMS)]
+    wide = df.pivot_table(
+        index=[MUNI_KEY, "year"], columns="dim_3", values="value", aggfunc="first"
+    )
+    wide = (1000 * wide).rename(columns=MUNICIPAL_REVENUE_ITEMS)
+    cols = list(MUNICIPAL_REVENUE_ITEMS.values())
+    return (
+        wide.reindex(columns=cols)
+        .rename_axis(columns=None)
+        .reset_index()
+        .sort_values([MUNI_KEY, "year"], ignore_index=True)
+    )
+
+
 def build_ine_income() -> pd.DataFrame:
     """Gross reported income per tax household (IRS), mean and median, 2015-2024.
 
@@ -524,6 +561,7 @@ INE_CODES = (
     "0011748",  # construction cost index of new housing, monthly
     "0012246",  # median price per m2 (12 months) by tax residence of the buyer
     "0013234", "0013247",  # buildings licensed, completed by type of project and purpose
+    "0013908",  # revenue of municipal councils by economic classification (IMI, IMT, ...), 2021-2023
 )  # fmt: skip
 
 
@@ -676,6 +714,7 @@ def download(sources: list[str] | None = None, refresh: bool = False) -> None:
 BUILDERS: dict[str, Callable[[], pd.DataFrame]] = {
     "ine_median_price_sqm": build_ine_median_price_sqm,
     "ine_median_rent_sqm": build_ine_median_rent_sqm,
+    "ine_municipal_revenue": build_ine_municipal_revenue,
     "ine_income": build_ine_income,
     "ine_construction": build_ine_construction,
     "ine_bank_valuation": build_ine_bank_valuation,

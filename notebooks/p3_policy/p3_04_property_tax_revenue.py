@@ -17,7 +17,7 @@
 #
 # **Question:** RQ7.1 (how have IMI and IMT revenues evolved?). Groundwork for RQ7.2 (what a rate cut costs).
 #
-# No machine-readable municipal revenue exists (`docs/data_quality.md`), so this is national: general-government revenue from
+# This notebook is national (receipts by council, 2021-2023 only, are in `p3_12`): general-government revenue from
 # taxes on land and buildings (IMI) and from taxes on financial and capital transactions (IMT with stamp duty) in the national
 # accounts, 1995 to 2025, on an accrual basis. IMI revenue is a rate times an assessed base that follows tax values, not market
 # prices. IMT revenue applies a rate schedule to the value of homes sold, so it follows prices and the number of sales. The rate

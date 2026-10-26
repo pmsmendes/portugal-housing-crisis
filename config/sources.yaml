@@ -116,6 +116,14 @@ ine:
     notes: >
       New construction for family housing only. dim_3: T total, 1-4 bedrooms (0-1, 2, 3, 4+). 1995 series carry exact zeros
       for Vizela/Trofa/Odivelas before they existed: use harmonize.mask_pre_creation.
+  ine_municipal_revenue:
+    indicator_id: "0013908"          # receipts of municipal councils by economic classification (DGAL), annual 2021-2023, NUTS 2024
+    format: json
+    notes: >
+      Verified 2026-10-26: 307 of 308 municipalities every year (Penedono, 1812, is missing), thousands of euros (Potencia10 3),
+      items R total, R1 current, R11 single circulation tax, R12 IMT (local tax on onerous transfers), R13 IMI, R14 local surcharge,
+      R15 local funds, R16 Decentralisation Financing Fund, R17 sales, R18 other current, R2 capital. Municipal IMI is 90% to 91% of
+      the national accounts' tax on land and buildings (the rest is the State's AIMI), municipal IMT 102% of the national IMT.
   ine_cpi:
     indicator_id: "0014642"          # CPI base 2025, annual 1948 - 2025 (by geography and special aggregates)
     alt_indicator_ids:

@@ -1,0 +1,10 @@
+dimension,class,imi_share_pct,imt_share_pct,imi_imt_share_pct,councils_n
+density_class,intermediate,14.8,8.7,23.0,84
+density_class,rural,6.4,3.8,10.7,188
+density_class,urban,17.1,13.3,33.0,35
+coast_class,coast,16.5,14.4,32.3,87
+coast_class,estuary,15.8,14.3,32.0,9
+coast_class,inland,7.8,4.2,12.8,211
+tourist,other,9.7,4.7,14.2,242
+tourist,tourist,14.8,22.5,41.1,35
+tourist,unknown,8.5,7.5,16.0,30

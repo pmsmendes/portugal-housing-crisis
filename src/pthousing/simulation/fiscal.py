@@ -1,7 +1,7 @@
 """Direct fiscal effects of IMI/IMT reforms and housing expenditure (accounting effects only).
 
 Signs: a cost or revenue loss is positive ("cost to the budget"), a revenue gain negative. Amounts are in
-constant euros of the base year and national: no municipal revenue series exists (docs/data_quality.md).
+constant euros of the base year and national: municipal receipts cover 2021-2023 only (``analysis/municipal_revenue``).
 The price effects of a tax change (capitalisation) are behavioural; they are returned as a share of the
 price and applied by the engine, never mixed into the revenue figures. Revenue is held at the level of the
 base (no change in transactions or in assessed values), the usual accounting convention.

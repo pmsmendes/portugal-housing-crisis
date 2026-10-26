@@ -2,7 +2,7 @@
 
 National annual series only, 1995 to 2025: general-government revenue from taxes on land and buildings (IMI) and
 from taxes on capital transactions (IMT with stamp duty), both from the national accounts, so on an accrual basis.
-No municipal revenue series exists in machine-readable form (docs/data_quality.md).
+Municipal receipts exist for 2021-2023 only (``municipal_revenue``, ``ine_municipal_revenue``).
 
 IMI revenue is the product of a rate chosen by each council and an assessed base that follows the tax value of
 homes, not their market price; IMT revenue is a rate schedule applied to the value of homes sold, so it moves with

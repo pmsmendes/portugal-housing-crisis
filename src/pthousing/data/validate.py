@@ -64,6 +64,31 @@ def schemas() -> dict[str, DataFrameSchema]:
             unique=[MUNI_KEY, "year"],
             strict=True,
         ),
+        "ine_municipal_revenue": DataFrameSchema(
+            {
+                MUNI_KEY: muni,
+                "year": _year(2021, 2023),
+                **{
+                    col: _num(0, 5e9)
+                    for col in (
+                        "total_receipts_eur",
+                        "current_receipts_eur",
+                        "iuc_eur",
+                        "imt_eur",
+                        "imi_eur",
+                        "local_surcharge_eur",
+                        "local_funds_eur",
+                        "decentralisation_fund_eur",
+                        "sales_eur",
+                    )
+                },
+                "other_current_eur": _num(
+                    -1e6, 5e9
+                ),  # one correction of -99,000 euros (1406, 2023)
+            },
+            unique=[MUNI_KEY, "year"],
+            strict=True,
+        ),
         "ine_income": DataFrameSchema(
             {
                 MUNI_KEY: muni,
@@ -470,6 +495,24 @@ def check_rent(df: pd.DataFrame) -> list[str | None]:
     ]
 
 
+def check_municipal_revenue(df: pd.DataFrame) -> list[str | None]:
+    parts = ["iuc_eur", "imt_eur", "imi_eur", "local_surcharge_eur", "local_funds_eur"]
+    parts += ["decentralisation_fund_eur", "sales_eur", "other_current_eur"]
+    n = df.groupby("year")[MUNI_KEY].nunique()
+    off = (df[parts].sum(axis=1) - df["current_receipts_eur"]).abs()
+    return [
+        None
+        if (n == N_MUNICIPALITIES - 1).all()
+        else f"municipalities per year {n.to_dict()}, expected {N_MUNICIPALITIES - 1} (Penedono is not in the source)",
+        None
+        if (df["imi_eur"] + df["imt_eur"] <= df["current_receipts_eur"]).all()
+        else "IMI and IMT exceed current receipts",
+        None
+        if off.max() <= 1e5
+        else f"the items of current receipts differ from their total by up to {off.max():,.0f} euros",
+    ]
+
+
 def check_income(df: pd.DataFrame) -> list[str | None]:
     both = df.dropna(subset=["income_median_eur"])
     below = (both["income_mean_eur"] < both["income_median_eur"]).sum()
@@ -817,6 +860,7 @@ def check_at_imi_rates(df: pd.DataFrame) -> list[str | None]:
 CHECKS: dict[str, Callable[[pd.DataFrame], list[str | None]]] = {
     "ine_median_price_sqm": check_price,
     "ine_median_rent_sqm": check_rent,
+    "ine_municipal_revenue": check_municipal_revenue,
     "ine_income": check_income,
     "ine_construction": check_construction,
     "ine_bank_valuation": check_valuation,
@@ -932,6 +976,16 @@ def cross_checks(tables: dict[str, pd.DataFrame]) -> list[tuple[str, str | None]
             )
         )
 
+    if "ine_municipal_revenue" in tables and "eurostat_property_tax" in tables:
+        out.append(
+            (
+                "municipal_imi_imt_vs_national",
+                _municipal_tax_vs_national(
+                    tables["ine_municipal_revenue"], tables["eurostat_property_tax"]
+                ),
+            )
+        )
+
     pop = tables["ine_population"].query("sex == 'total' and age_group == 'total'")
     out.append(("population_covers_all_municipalities", _grid(pop, ["year"])))
     if "ine_population_change" in tables and "eurostat_demography" in tables:
@@ -944,6 +998,21 @@ def cross_checks(tables: dict[str, pd.DataFrame]) -> list[tuple[str, str | None]
             )
         )
     return out
+
+
+def _municipal_tax_vs_national(revenue: pd.DataFrame, euro: pd.DataFrame) -> str | None:
+    """Municipal IMI is 85% to 100% of the national tax on land and buildings (the rest is the State's AIMI), IMT 95% to 106%."""
+    muni = revenue.groupby("year")[["imi_eur", "imt_eur"]].sum() / 1e6
+    es = euro.set_index("year")
+    problems = []
+    for col, ref, low, high in (
+        ("imi_eur", "imi_revenue_eur_m", 0.85, 1.0),
+        ("imt_eur", "imt_revenue_eur_m", 0.95, 1.06),
+    ):
+        ratio = (muni[col] / es.loc[muni.index, ref]).dropna()
+        if not ratio.between(low, high).all():
+            problems.append(f"{col} / national {ratio.min():.2f}-{ratio.max():.2f}")
+    return None if not problems else "; ".join(problems)
 
 
 def _population_change_vs_eurostat(change: pd.DataFrame, euro: pd.DataFrame) -> str | None:
