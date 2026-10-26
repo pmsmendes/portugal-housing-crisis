@@ -2746,3 +2746,65 @@ def offset_cost(
         head_in=1.3,
         foot_in=0.9,
     )
+
+
+def household_size_change(
+    split: pd.DataFrame, groups: pd.DataFrame, size_share_pct: float
+) -> Figure:
+    """Households added 2011-2021 by source (left), the one-person share in both censuses by kind of place (right).
+
+    ``split``: one row per kind of place (index = label) with ``from_population_n`` and ``from_size_n``, households
+    per 1,000 households of 2011. ``groups``: ``label``, ``start`` and ``end`` (one-person households, % of households),
+    in drawing order. ``size_share_pct``: the national share of the added households due to the change of household size.
+    """
+    fig, (left, right) = plt.subplots(
+        1, 2, figsize=(11.5, 4.8), gridspec_kw={"width_ratios": [1.15, 1]}
+    )
+    s = split.iloc[::-1]
+    y = np.arange(len(s))
+    left.axvline(0, color=GRID, lw=1, zorder=1)
+    left.barh(y + 0.19, s["from_population_n"], 0.36, color=BLUE, zorder=3)
+    left.barh(y - 0.19, s["from_size_n"], 0.36, color=ORANGE, zorder=3)
+    for i, (pop, size) in enumerate(zip(s["from_population_n"], s["from_size_n"], strict=True)):
+        for off, value in ((0.19, pop), (-0.19, size)):
+            left.annotate(f"{value:+.0f}", (value, i + off), xytext=(4 if value >= 0 else -4, 0), textcoords="offset points",
+                          ha="left" if value >= 0 else "right", va="center", fontsize=8.5, color=INK_2)  # fmt: skip
+    left.set_yticks(y, s.index, color=INK_2, fontsize=9.5)
+    lim = np.abs(s[["from_population_n", "from_size_n"]].to_numpy()).max() * 1.3
+    left.set_xlim(-lim, lim)
+    left.set_ylim(-1.7, len(s) - 0.4)
+    left.grid(axis="x")
+    left.grid(axis="y", visible=False)
+    _legend(left, [Patch(facecolor=BLUE, label="Population change at the old household size"),
+                   Patch(facecolor=ORANGE, label="Change of household size")], loc="lower right")  # fmt: skip
+    _panel_title(left, "Households added, per 1,000 households of 2011")
+    g = groups.iloc[::-1].reset_index(drop=True)
+    light, dark = style.BLUE_RAMP[250], style.BLUE_RAMP[550]
+    right.grid(axis="x")
+    right.grid(axis="y", visible=False)
+    for i, row in g.iterrows():
+        right.plot(
+            [row["start"], row["end"]], [i, i], color=GRID, lw=3, zorder=1, solid_capstyle="round"
+        )
+        right.plot([row["start"]], [i], "o", ms=8, mfc=light, mec=SURFACE, mew=2, zorder=3)
+        right.plot([row["end"]], [i], "o", ms=8, mfc=dark, mec=SURFACE, mew=2, zorder=4)
+        right.annotate(f"{row['end']:.0f}%", (row["end"], i), xytext=(9, 0), textcoords="offset points",
+                       va="center", fontsize=9, color=INK_2)  # fmt: skip
+    right.set_yticks(range(len(g)), g["label"], color=INK_2, fontsize=9.5)
+    right.set_xlim(0, g[["start", "end"]].to_numpy().max() * 1.2)
+    right.set_ylim(-1.7, len(g) - 0.3)
+    right.spines["bottom"].set_visible(False)
+    right.xaxis.set_major_formatter(mticker.PercentFormatter(decimals=0))
+    _legend(right, [Line2D([], [], marker="o", ls="", ms=8, mfc=light, mec=SURFACE, label="2011"),
+                    Line2D([], [], marker="o", ls="", ms=8, mfc=dark, mec=SURFACE, label="2021")], loc="lower right")  # fmt: skip
+    _panel_title(right, "One-person households, share of all")
+    fig = style.finish(
+        fig,
+        f"Smaller households, not more people, added {size_share_pct:.0f}% of the new households",
+        "Households added 2011-2021 by source, per 1,000 households (left); one-person households by coast and density class (right)",
+        "Source: INE (censuses 2011 and 2021, resident population); own calculations. Classes: own proxies (data/external/muni_typology.csv).",
+        head_in=1.25,
+        foot_in=0.6,
+    )
+    fig.subplots_adjust(left=0.1, right=0.97, wspace=0.3)
+    return fig

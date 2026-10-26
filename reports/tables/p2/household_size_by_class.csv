@@ -1,0 +1,7 @@
+segment,households_2011_n,households_change_per_1000,from_population_per_1000,from_size_per_1000,persons_per_household_2011,persons_per_household_2021,one_person_2011_pct,one_person_2021_pct,one_person_change_pp
+coast / intermediate,695673,59.7,48.7,11.0,2.7,2.6,20.8,24.0,3.1
+coast / rural,179435,14.0,12.2,1.8,2.6,2.5,22.8,26.3,3.5
+coast / urban,1287678,36.8,49.3,-12.4,2.5,2.5,24.9,27.7,2.8
+inland / intermediate,592114,24.0,-33.3,57.3,2.8,2.6,17.2,21.1,3.9
+inland / rural,716664,-45.6,-96.5,50.9,2.5,2.4,22.8,26.7,3.9
+inland / urban,572162,56.6,20.4,36.2,2.8,2.7,16.7,20.4,3.6

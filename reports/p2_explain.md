@@ -2,7 +2,7 @@
 
 Why did affordability deteriorate, and where? This phase moves from description to association; nothing here is a
 causal claim. Figures: `reports/figures/p2/`, tables: `reports/tables/p2/`, notebooks: `notebooks/p2_explain/`
-(`p2_01` to `p2_19`). Methods: [methodology](../docs/methodology.md), choices:
+(`p2_01` to `p2_20`). Methods: [methodology](../docs/methodology.md), choices:
 [decisions](../docs/decisions.md).
 
 ## Summary
@@ -38,7 +38,7 @@ available, so a credible answer to "what would change affordability?" needs a po
 
 **Contents:** spatial autocorrelation (`p2_01`), fixed-effects regressions with foreign residents
 (`p2_02`, RQ3.3, RQ5.1), spillover tests (`p2_03`, RQ4.4), segmentation (`p2_04`, RQ4.6), supply against demand
-(`p2_05`, RQ2.1 to RQ2.4, RQ3.4, RQ4.5), second homes (`p2_06`, RQ5.3, RQ5.4) the synthesis (`p2_07`, RQ3.6), mortgage rates (`p2_08`, RQ1.7, RQ9.2, RQ9.5), wages and the labour market (`p2_09`, RQ9.1, RQ1.4), big municipalities against their surroundings (`p2_10`, RQ4.3), age structure (`p2_11`, RQ3.5) mortgage credit and household debt (`p2_12`, RQ9.2, RQ9.3) what wages and rates could finance (`p2_13`, RQ9.4) and foreign residents by nationality group (`p2_14`, RQ3.3) vacant dwellings against the shortfall (`p2_16`, RQ2.5) construction costs against prices and licensing (`p2_17`, RQ2.7) foreign buyers (`p2_18`, RQ5.2) and renovation of existing buildings (`p2_19`, RQ2.8).
+(`p2_05`, RQ2.1 to RQ2.4, RQ3.4, RQ4.5), second homes (`p2_06`, RQ5.3, RQ5.4) the synthesis (`p2_07`, RQ3.6), mortgage rates (`p2_08`, RQ1.7, RQ9.2, RQ9.5), wages and the labour market (`p2_09`, RQ9.1, RQ1.4), big municipalities against their surroundings (`p2_10`, RQ4.3), age structure (`p2_11`, RQ3.5) mortgage credit and household debt (`p2_12`, RQ9.2, RQ9.3) what wages and rates could finance (`p2_13`, RQ9.4) and foreign residents by nationality group (`p2_14`, RQ3.3) vacant dwellings against the shortfall (`p2_16`, RQ2.5) construction costs against prices and licensing (`p2_17`, RQ2.7) foreign buyers (`p2_18`, RQ5.2) renovation of existing buildings (`p2_19`, RQ2.8) and household size (`p2_20`, RQ3.4, RQ3.5).
 
 ## Key findings
 
@@ -376,6 +376,19 @@ INE counts buildings licensed (2002-2025) and completed (2011-2025) by type of p
 
 Tables: `renovation_national.csv`, `renovation_changes.csv`, `renovation_by_density.csv`, `renovation_by_coast.csv`, `renovation_association.csv`, `renovation_share_association.csv`, `renovation_years_to_clear.csv`. Limits: buildings not dwellings (a renovated block counts once), no licence-free works, extensions are in the same group as rehabilitation, no link between a work and a vacant home, no cost or quality, completions from 2011 only, an association across 308 municipalities.
 
+## Household size (`p2_20_household_size`)
+
+![Household size](figures/p2/household_size.png)
+
+The two censuses give households by number of persons (`ine_households_size`) and, with the resident population, persons per household (RQ3.4). Between them the change in households splits exactly into what the population change would add at the 2011 size and what comes from the change of size. Only 2011 and 2021 exist, so nothing is said of the years between.
+
+59. **Most new households are smaller households.** Households grew 2.6% (4.04 to 4.15 million) on a population that grew 0.4%; persons per household fell from 2.61 to 2.55. Of the 105,000 households added, 22,000 (21%) are what population growth gives at the old size and 83,000 (79%) come from smaller households. One-person households rose by 161,000 (21.4% to 24.8% of households), two-person by 105,000; households of three and of four or more fell by 71,000 and 90,000.
+60. **In the interior households grew without people.** 239 of 308 municipalities lost residents, 72 of them still gained households. Per 1,000 households of 2011, inland rural lost 96 through population and gained 51 through size, inland intermediate -33 and +57; coastal urban gained 49 through population and lost 12 to larger households.
+61. **The one-person share does not go with the rise in price-to-income (RQ3.5).** -1.6% per point (p = 0.30) within district, -0.7% (p = 0.63) with coast and density, +0.1% (p = 0.94) with the 65+ and foreign-resident changes; the foreign-resident change stays positive (+1.4% to +1.7% per point). Persons per household goes the other way (+0.50 log points per person within district, p = 0.004) but fades to +0.15 (p = 0.41) with the controls, so larger households mark the places migrants went to.
+62. **The one-person share is partly ageing.** Its change was 3.4 points in the third of municipalities that aged least and 4.4 in the third that aged most (correlation with the 65+ change 0.38).
+
+Tables: `household_size_national.csv`, `households_by_size_national.csv`, `household_size_by_class.csv`, `household_size_associations.csv`, `household_size_by_ageing_third.csv`. Limits: two census years; persons per household includes residents of collective homes; a one-person household is not a measure of choice or unmet demand; household change 2011-2021 and price window 2016-2024 differ; 271 mainland municipalities, one cross-section.
+
 ## Limitations
 
 - **A pattern, not a mechanism.** Spatial autocorrelation does not show that price changes spill over: shared
@@ -426,4 +439,4 @@ Tables: `renovation_national.csv`, `renovation_changes.csv`, `renovation_by_dens
 ## Questions answered
 
 RQ4.3 (large municipalities rose most, less further out; Lisboa itself less than its suburbs), RQ4.4 (little evidence of spillovers beyond the regional pattern), RQ4.6 (coastal and urban, not tourism as such), RQ2.1 to
-RQ3.5 (ageing and the 25-44 pool add nothing beyond the foreign-resident change; internal migration and single-person households not observable), RQ2.3 and RQ4.5 (supply against households) and RQ5.4 (second homes separated) are answered; RQ3.6 is answered as far as these data allow (demand differences cannot be told from the regional pattern); RQ2.5, RQ2.7, RQ2.8, RQ3.3, RQ5.1, RQ5.2, RQ5.3, RQ1.7, RQ9.1, RQ9.2 and RQ9.5 are partly answered; RQ1.4 is answered (income and wages) (see [research_questions](../docs/research_questions.md)).
+RQ3.5 (ageing, the 25-44 pool and the one-person share add nothing beyond the foreign-resident change; internal migration not observable), RQ3.4 (households grew by smaller households, 79% of the added), RQ2.3 and RQ4.5 (supply against households) and RQ5.4 (second homes separated) are answered; RQ3.6 is answered as far as these data allow (demand differences cannot be told from the regional pattern); RQ2.5, RQ2.7, RQ2.8, RQ3.3, RQ5.1, RQ5.2, RQ5.3, RQ1.7, RQ9.1, RQ9.2 and RQ9.5 are partly answered; RQ1.4 is answered (income and wages) (see [research_questions](../docs/research_questions.md)).
