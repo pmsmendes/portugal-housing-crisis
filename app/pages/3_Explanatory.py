@@ -202,6 +202,88 @@ with tab_drivers:
         "shows what goes with the rise, not what causes it. Source: INE, AIMA, census 2011 and 2021; own calculations."
     )
 
+    st.subheader("Supply: how much of what is built shows up in the dwelling count")
+    stock_nat = table("p2", "dwelling_stock_national").set_index("measure")["value"]
+    stock_class = table("p2", "dwelling_stock_by_class").sort_values(
+        "completions_per_1000", ascending=False
+    )
+    stock_path = table("p2", "dwelling_stock_path").dropna(subset=["growth_pct"])
+    st.markdown(
+        "The census counts dwellings only in 2011 and 2021; completions of new family dwellings are annual. "
+        "Setting the net change of the count against the completions in between shows where building does not "
+        "end up as a net addition (demolitions, merged or converted dwellings, census definitions: "
+        "the gap is a residual, not an estimate of any of them)."
+    )
+    a, b, c = st.columns(3)
+    a.metric(
+        "Count change, 2011-21",
+        f"+{stock_nat['net_addition_n']:,.0f}",
+        f"{stock_nat['completions_2012_2021_n']:,.0f} completed",
+        delta_color="off",
+        help="Net change of the census count of dwellings against the new family dwellings completed in 2012-2021.",
+    )
+    b.metric(
+        "Completions counted",
+        f"{100 * stock_nat['retention']:.0f}%",
+        f"{stock_nat['municipalities_losing_dwellings_n']:.0f} places lost dwellings",
+        delta_color="off",
+        help="Net change of the count over completions; the line under it counts the municipalities whose count fell between the censuses.",
+    )
+    c.metric(
+        "Stock in 2025",
+        f"{stock_path['stock_n'].iloc[-1] / 1e6:.2f} million",
+        f"up to {stock_path['stock_upper_n'].iloc[-1] / 1e6:.2f} million",
+        delta_color="off",
+        help="The 2021 count rolled along completions; the upper figure assumes one dwelling per completion.",
+    )
+    left, right = st.columns(2)
+    fig = go.Figure()
+    for col, name, color in (
+        ("completions_per_1000", "Dwellings completed 2012-2021", style.BLUE),
+        ("added_per_1000", "Net change of the census count", style.ORANGE),
+    ):
+        fig.add_bar(
+            y=stock_class["segment"],
+            x=stock_class[col],
+            name=name,
+            orientation="h",
+            marker_color=color,
+            text=[f"{v:.0f}" for v in stock_class[col]],
+            textposition="outside",
+        )
+    fig.update_layout(barmode="group", legend=dict(orientation="h", y=-0.2))
+    fig.update_yaxes(autorange="reversed")
+    fig.update_xaxes(title="Per 1,000 dwellings of 2011", range=[0, 40])
+    left.plotly_chart(_style(fig, "Built against counted, by kind of place"), width="stretch")
+    left.caption(
+        "Coastal urban municipalities completed 16 dwellings per 1,000 and gained 4 in the count; Lisboa and Porto "
+        "counted fewer dwellings in 2021 than in 2011. On the Algarve coast the count exceeds completions. "
+        "Classes are proxies (`p2_23`)."
+    )
+    fig = go.Figure(
+        [
+            go.Scatter(
+                x=stock_path["year"],
+                y=stock_path["growth_upper_pct"],
+                name="One dwelling per completion",
+                line=dict(color=style.MUTED, width=2, dash="dot"),
+            ),
+            go.Scatter(
+                x=stock_path["year"],
+                y=stock_path["growth_pct"],
+                name=f"{stock_nat['retention']:.2f} per completion (observed)",
+                line=dict(color=style.BLUE, width=3),
+            ),
+        ]
+    )
+    fig.update_layout(legend=dict(orientation="h", y=-0.2))
+    fig.update_yaxes(ticksuffix="%", rangemode="tozero")
+    right.plotly_chart(_style(fig, "Yearly growth of the dwelling stock"), width="stretch")
+    right.caption(
+        "Rolled from the 2021 count along national completions; before 2011 it extrapolates a retention measured in a "
+        "decade of low building, so the two lines are a range, not a bound. Source: INE; own calculations (`p2_23`)."
+    )
+
 # ---- regressions ---------------------------------------------------------------------------------
 with tab_reg:
     fe = table("p2", "fe_regressions_pti")
