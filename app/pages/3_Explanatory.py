@@ -524,23 +524,28 @@ with tab_policy:
 
     path = table("p3", "rent_update_path").set_index("year")
     gap = table("p3", "rent_update_gap_by_third").set_index("pti_third")
+    coef = table("p3", "rent_update_coefficients").set_index("year")
+    ceiling = coef[coef["legal_coefficient"] < coef["formula_coefficient"]].iloc[-1]
+    ceiling_year = int(ceiling.name)
+    base = int(path.index[0])
     st.subheader("Rents: sitting tenants and new tenants")
     left, right = st.columns(2)
     fig = go.Figure()
     for col, name, color, dash in (
         ("new_lease_rent_index", "Median rent of new leases", style.ORANGE, "solid"),
-        ("legal_rent_index", "Highest rent of a lease signed in 2020", style.BLUE, "solid"),
-        ("formula_rent_index", "Same, without the 2023 ceiling", style.BLUE, "dash"),
+        ("legal_rent_index", f"Highest rent of a lease signed in {base}", style.BLUE, "solid"),
+        ("formula_rent_index", f"Same, without the {ceiling_year} ceiling", style.BLUE, "dash"),
         ("cpi_index", "Consumer prices", style.MUTED, "solid"),
     ):
         fig.add_scatter(x=path.index, y=path[col], name=name, line=dict(color=color, dash=dash))
-    fig.update_yaxes(title="Index, 2020 = 100")
+    fig.update_yaxes(title=f"Index, {base} = 100")
     fig.update_xaxes(dtick=1)
     fig.update_layout(legend=dict(orientation="h", y=-0.2))
     left.plotly_chart(_style(fig, "What the law lets a landlord charge", 360), width="stretch")
     end = path.index[-1]
     left.caption(
-        f"An existing lease may rise only by the yearly coefficient (2% in 2023 instead of 5.43%): "
+        f"An existing lease may rise only by the yearly coefficient ({100 * (ceiling['legal_coefficient'] - 1):.0f}% in {ceiling_year} "
+        f"instead of {100 * (ceiling['formula_coefficient'] - 1):.2f}%): "
         f"{path.loc[end, 'legal_rent_index'] - 100:.1f}% by {end} against consumer prices {path.loc[end, 'cpi_index'] - 100:.1f}% "
         f"and new leases {path.loc[end, 'new_lease_rent_index'] - 100:.1f}%. The gap is arithmetic from the rules; "
         "it is not an estimate of what the rule caused (`p3_11`)."
@@ -554,12 +559,12 @@ with tab_policy:
         text=[f"{v:.0f}%" for v in gap["median_gap_pct"]],
         textposition="outside",
     )
-    fig.update_yaxes(title="New lease above the updated 2020 rent, %", rangemode="tozero")
+    fig.update_yaxes(title=f"New lease above the updated {base} rent, %", rangemode="tozero")
     right.plotly_chart(_style(fig, f"Gap in {end}, by price-to-income third", 360), width="stretch")
     right.caption(
-        f"Median municipality in each third ({int(gap['municipalities_n'].sum())} with a rent in 2020 and {end}). "
+        f"Median municipality in each third ({int(gap['municipalities_n'].sum())} with a rent in {base} and {end}). "
         f"Homes let: {gap.loc['most affordable', 'rented_share_pct']:.0f}% in the most affordable third, "
-        f"{gap.loc['least affordable', 'rented_share_pct']:.0f}% in the least. New leases a year per 100 let homes: "
+        f"{gap.loc['least affordable', 'rented_share_pct']:.0f}% in the least. New leases of 2021 per 100 homes let in the census: "
         f"{gap['median_new_leases_per_100_rented'].min():.0f} to {gap['median_new_leases_per_100_rented'].max():.0f} by third, so "
-        "most tenants keep a bounded rent, movers meet the market. New-lease medians are not like-for-like (`p3_11`)."
+        "roughly nine in ten tenants keep a bounded rent, movers meet the market. New-lease medians are not like-for-like (`p3_11`)."
     )

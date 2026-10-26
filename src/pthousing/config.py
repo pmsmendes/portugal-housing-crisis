@@ -37,6 +37,9 @@ EXPECTED_APPRECIATION_PCT = 2.0  # yearly nominal price growth with flat real pr
 IMI_URBAN_MIN_PCT = (
     0.30  # legal floor of the municipal urban IMI rate (CIMI); no rate in 2012-2025 is lower
 )
+# Rent update (analysis/rent_update.py): floor area of a let dwelling, an assumption (the census mean area of all dwellings is
+# larger because let homes are smaller); shown with sensitivity at 50 and 90.
+RENTED_DWELLING_AREA_SQM = 70
 # Vacancy (analysis/vacancy.py): the share of dwellings that are vacant at any time because homes are being sold, let,
 # inherited or repaired; vacancy above it is "excess". An assumption, shown with sensitivity (3 and 8).
 FRICTIONAL_VACANCY_PCT = 5.0

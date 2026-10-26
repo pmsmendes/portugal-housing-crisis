@@ -20,8 +20,11 @@ def read() -> pd.DataFrame:
 
 
 def cumulative(coefficients: pd.Series, first_year: int, last_year: int) -> float:
-    """Product of the yearly coefficients from ``first_year`` to ``last_year`` inclusive (1 if the range is empty)."""
-    return float(coefficients.loc[first_year:last_year].prod())
+    """Product of the yearly coefficients from ``first_year`` to ``last_year`` inclusive (1 if the range is empty).
+
+    A coefficient below 1 (2021: 0.9997) is taken as 1: the update is optional and a rent cannot fall by it.
+    """
+    return float(coefficients.loc[first_year:last_year].clip(lower=1.0).prod())
 
 
 def allowed_rise_pct(table: pd.DataFrame, base_year: int, year: int, column: str) -> float:
@@ -49,6 +52,19 @@ def national_path(
     return out
 
 
+def balanced_median(rent_sqm: pd.DataFrame, first_year: int, last_year: int) -> pd.Series:
+    """Median rent per m2 of new leases by year, over the municipalities with a rent in both ``first_year`` and ``last_year``.
+
+    A fixed set of places, so a year's median does not move because more or fewer municipalities publish a rent.
+    """
+    have = rent_sqm.dropna(subset=["rent_sqm_eur"])
+    both = set(have.loc[have["year"] == first_year, MUNI_KEY]) & set(
+        have.loc[have["year"] == last_year, MUNI_KEY]
+    )
+    kept = have[have[MUNI_KEY].isin(both) & have["year"].between(first_year, last_year)]
+    return kept.groupby("year")["rent_sqm_eur"].median()
+
+
 def market_gap(
     rent_sqm: pd.DataFrame, base_year: int, year: int, legal_cumulative: float
 ) -> pd.DataFrame:
@@ -67,17 +83,21 @@ def market_gap(
 
 
 def turnover(new_leases_n: pd.Series, rented_dwellings_n: pd.Series) -> pd.Series:
-    """New leases of a year per 100 rented dwellings: the share of the let stock that reprices to the market in a year (%)."""
+    """New leases of a year per 100 rented dwellings: a rough upper bound of the share of the let stock repriced in a year.
+
+    Renewals, other regimes and any change of the stock between the years are not told apart; use the census year of the stock.
+    """
     both = pd.concat([new_leases_n, rented_dwellings_n], axis=1, keys=["new", "rented"]).dropna()
     return (100 * both["new"] / both["rented"]).rename("new_leases_per_100_rented")
 
 
 def ceiling_saving(
-    rent_sqm_eur: pd.Series, area_sqm: pd.Series, legal: float, formula: float
+    rent_sqm_eur: pd.Series, area_sqm: float | pd.Series, legal: float, formula: float
 ) -> pd.DataFrame:
     """Monthly rent (EUR) a tenant at ``rent_sqm_eur`` saves in the year of a ceiling, municipality by municipality.
 
-    ``legal`` and ``formula`` are the coefficients of that year; the rent before the update is ``rent_sqm_eur * area_sqm``.
+    ``legal`` and ``formula`` are the coefficients of that year; the rent before the update is ``rent_sqm_eur * area_sqm``
+    (``area_sqm`` a number or a series by municipality).
     """
     before = (rent_sqm_eur * area_sqm).rename("rent_before_eur")
     out = pd.DataFrame({"rent_before_eur": before})
@@ -85,3 +105,43 @@ def ceiling_saving(
     out["without_ceiling_eur"] = before * formula
     out["saving_eur_month"] = out["without_ceiling_eur"] - out["with_ceiling_eur"]
     return out
+
+
+def gap_by_group(gap: pd.DataFrame, group: pd.Series) -> pd.DataFrame:
+    """Medians of the rise and the gap, share of homes let and median turnover by group of municipalities.
+
+    ``gap`` is ``market_gap`` output joined with ``rented_n``, ``dwellings_n`` and ``turnover``; ``group`` labels each
+    municipality (NaN is left out).
+    """
+    sub = gap[group.reindex(gap.index).notna()].groupby(group.dropna(), observed=True)
+    return pd.DataFrame(
+        {
+            "municipalities_n": sub.size(),
+            "median_market_rise_pct": sub["market_rise_pct"].median(),
+            "median_gap_pct": sub["gap_pct"].median(),
+            "rented_share_pct": 100 * sub["rented_n"].sum() / sub["dwellings_n"].sum(),
+            "median_new_leases_per_100_rented": sub["turnover"].median(),
+        }
+    )
+
+
+def rank_correlations(frame: pd.DataFrame, column: str, others: list[str]) -> pd.Series:
+    """Spearman rank correlation of ``column`` with each of ``others`` (pairwise complete)."""
+    return frame[[column, *others]].corr(method="spearman")[column].drop(column)
+
+
+def saving_summary(saving: pd.DataFrame, rented_dwellings_n: float) -> pd.DataFrame:
+    """Median lease before the update, its monthly saving and the stock-wide yearly saving if every let home had it (EUR m).
+
+    The stock figure is an upper bound: it assumes each let dwelling was updated at the ceiling.
+    """
+    med = saving.median()
+    return pd.DataFrame(
+        {
+            "median_rent_before_eur": [med["rent_before_eur"]],
+            "saving_eur_month": [med["saving_eur_month"]],
+            "saving_pct_of_rent": [100 * med["saving_eur_month"] / med["rent_before_eur"]],
+            "rented_dwellings_n": [rented_dwellings_n],
+            "upper_bound_eur_m_year": [12 * med["saving_eur_month"] * rented_dwellings_n / 1e6],
+        }
+    )

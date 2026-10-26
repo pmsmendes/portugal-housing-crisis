@@ -1,2 +1,4 @@
-median_rent_before_eur,saving_eur_month,rented_dwellings_n,upper_bound_eur_m_year
-526.64,18.06,922810.0,200.03
+median_rent_before_eur,saving_eur_month,saving_pct_of_rent,rented_dwellings_n,upper_bound_eur_m_year,area_sqm,municipalities_n
+214.0,7.34,3.43,922810.0,81.28,50,203
+299.6,10.28,3.43,922810.0,113.8,70,203
+385.2,13.21,3.43,922810.0,146.31,90,203
