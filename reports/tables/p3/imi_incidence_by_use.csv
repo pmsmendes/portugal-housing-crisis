@@ -1,0 +1,7 @@
+use,dwellings_n,dwellings_share_pct,bill_share_pct,cut_share_pct,cut_eur_m
+lived in by the owner,2900093.0,48.57,48.37,50.54,48.22
+let to a tenant,922810.0,15.46,18.17,17.85,17.03
+"lived in, other tenure",319678.0,5.35,5.55,5.62,5.36
+second home,1104881.0,18.51,16.24,15.19,14.49
+vacant,723215.0,12.11,11.67,10.79,10.29
+total,5970677.0,100.0,100.0,100.0,95.41

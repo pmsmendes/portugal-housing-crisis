@@ -2870,3 +2870,96 @@ def exemptions(score: pd.DataFrame) -> Figure:
     )
     fig.subplots_adjust(left=0.2, right=0.97, wspace=0.12)
     return fig
+
+
+def tax_cut_incidence(by_use: pd.DataFrame, by_third: pd.DataFrame) -> Figure:
+    """Who gets a cut: shares of dwellings and of an IMI cut by use of the dwelling (left); by third of price-to-income (right).
+
+    ``by_use`` (index = label of the use) has ``dwellings_share_pct`` and ``cut_share_pct``. ``by_third`` (index = third, least
+    affordable last) has ``dwellings_share_pct``, ``imi_cut_share_pct`` and ``imt_cut_share_pct``.
+    """
+    fig, (left, right) = plt.subplots(
+        1, 2, figsize=(11.5, 4.6), gridspec_kw={"width_ratios": [1.1, 1]}
+    )
+    s = by_use.iloc[::-1]
+    y = np.arange(len(s))
+    left.barh(y + 0.19, s["dwellings_share_pct"], 0.36, color=GRID, zorder=2)
+    left.barh(y - 0.19, s["cut_share_pct"], 0.36, color=BLUE, zorder=3)
+    for i, (dw, cut) in enumerate(zip(s["dwellings_share_pct"], s["cut_share_pct"], strict=True)):
+        left.annotate(
+            f"{dw:.0f}%",
+            (dw, i + 0.19),
+            xytext=(4, 0),
+            textcoords="offset points",
+            va="center",
+            fontsize=8.5,
+            color=INK_2,
+        )
+        left.annotate(f"{cut:.0f}%", (cut, i - 0.19), xytext=(4, 0), textcoords="offset points", va="center", fontsize=8.5, color=INK)  # fmt: skip
+    left.set_yticks(y, s.index, color=INK_2, fontsize=9.5)
+    left.set_xlim(0, max(s["dwellings_share_pct"].max(), s["cut_share_pct"].max()) * 1.2)
+    left.xaxis.set_major_formatter(mticker.PercentFormatter(decimals=0))
+    left.grid(axis="x")
+    left.grid(axis="y", visible=False)
+    left.set_ylim(-1.5, len(s) - 0.4)
+    _legend(left, [Patch(facecolor=GRID, label="Share of dwellings"),
+                   Patch(facecolor=BLUE, label="Share of an IMI cut (0.05 pp, within the legal floor)")], loc="lower right")  # fmt: skip
+    _panel_title(left, "By use of the dwelling")
+    g = by_third.reset_index()
+    labels = [str(v) for v in g.iloc[:, 0]]
+    yy = np.arange(len(g))[::-1]
+    right.grid(axis="x")
+    right.grid(axis="y", visible=False)
+    right.hlines(yy, g["dwellings_share_pct"], g["imt_cut_share_pct"], color=GRID, lw=3, zorder=1)
+    right.plot(
+        g["dwellings_share_pct"],
+        yy,
+        "o",
+        ms=9,
+        mfc=GRID,
+        mec=INK_2,
+        mew=1.5,
+        zorder=3,
+        label="Share of dwellings",
+    )
+    right.plot(
+        g["imi_cut_share_pct"],
+        yy + 0.13,
+        "o",
+        ms=9,
+        mfc=BLUE,
+        mec=SURFACE,
+        mew=2,
+        zorder=4,
+        label="Share of the IMI cut",
+    )
+    right.plot(
+        g["imt_cut_share_pct"],
+        yy - 0.13,
+        "o",
+        ms=9,
+        mfc=ORANGE,
+        mec=SURFACE,
+        mew=2,
+        zorder=4,
+        label="Share of an IMT cut",
+    )
+    right.set_yticks(yy, labels, color=INK_2, fontsize=9.5)
+    right.set_xlim(0, 100)
+    right.set_ylim(-0.7, len(g) - 0.3 + 0.6)
+    right.xaxis.set_major_formatter(mticker.PercentFormatter(decimals=0))
+    _legend(right, [Line2D([], [], marker="o", ls="", ms=8, mfc=GRID, mec=INK_2, label="Share of dwellings"),
+                    Line2D([], [], marker="o", ls="", ms=8, mfc=BLUE, mec=SURFACE, label="Share of the IMI cut"),
+                    Line2D([], [], marker="o", ls="", ms=8, mfc=ORANGE, mec=SURFACE, label="Share of an IMT cut of 1 pp")], loc="upper right")  # fmt: skip
+    _panel_title(right, "By third of municipalities (price-to-income)")
+    top = by_third["imi_cut_share_pct"].iloc[-1]
+    fig = style.finish(
+        fig,
+        f"A property-tax cut goes mostly to owners in the dearest places: {top:.0f}% of an IMI cut to the least affordable third",
+        "Shares of dwellings and of the cut by use of the dwelling (left) and by third of municipalities ranked on price-to-income (right), 2024",
+        "Source: INE (census 2021, prices, sales, income), AT (IMI rates), Eurostat (IMI); own calculations. The typical IMI bill per dwelling is scaled to national IMI.",
+        head_in=1.25,
+        foot_in=0.6,
+    )
+    fig.subplots_adjust(left=0.2, right=0.97, wspace=0.42)
+    return fig

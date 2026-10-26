@@ -2,6 +2,11 @@
 
 Analytic and engineering choices, newest first. One short entry each: what, why, alternatives rejected.
 
+## 2026-10-26 — Incidence of tax cuts by use of the dwelling and by municipality
+- **What:** `analysis/incidence.py`, `notebooks/p3_policy/p3_10`. The IMI cut of the simulator's package (0.05 pp, limited by the 0.30% floor, as in `p3_05`) is spread over the dwellings of each municipality by use (census 2021 tenure shares applied to the usual dwellings; second and vacant homes from the stock) at the municipality's typical IMI bill (`p3_08`, scaled to national IMI from Eurostat, 1,677 EUR m for 2024 against the 1,630 of the yaml); the IMT cut of 1 pp falls on the municipal value of sales.
+- **Why:** the municipal data give places and tenures, not households by income, so the question "who benefits" is answered for those groups, with the municipal median income and the price-to-income third standing in for place.
+- **Rejected:** a household-level incidence (no microdata); different bills by use (no assessed value by use); treating the cut as proportional to the bill in every council (ignores the legal floor, which leaves 198 of 300 councils unable to cut in full).
+
 ## 2026-10-26 — Targeted exemptions as average-rate equivalents with a break-even in homes
 - **What:** `simulation/exemptions.py`, `config/scenarios.yaml` block `exemptions`, `notebooks/p3_policy/p3_09`. Each exemption (youth IMT, new-home IMT, renovation IMI) is sized in euros a year and enters the simulator as the average IMT or IMI cut that costs the same; the result is the 2035 price-to-income at no, half and full capitalisation and the extra homes a year that cancel the rise.
 - **Why:** the simulator has one national price, so it cannot say where an exemption lands; what separates targeted from broad is incidence and a possible supply response, and no estimate of the response exists. A break-even states what it would have to be, without inventing it.

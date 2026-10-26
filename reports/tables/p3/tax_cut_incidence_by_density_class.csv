@@ -1,0 +1,4 @@
+density_class,dwellings_share_pct,imi_bill_share_pct,imi_cut_share_pct,sales_value_share_pct,imt_cut_share_pct,municipalities_n,income_median_eur,imi_bill_per_dwelling_eur,imi_bill_pct_of_income,imi_cut_per_owner_eur,imt_cut_per_sale_eur,imt_cut_per_sale_pct_of_income
+intermediate,33.15,33.17,34.47,29.44,29.44,84,12229.5,273.78,2.24,33.57,1726.54,14.12
+rural,26.63,13.95,10.36,10.46,10.46,189,11489.5,143.25,1.25,14.48,965.74,8.41
+urban,40.22,52.88,55.17,60.1,60.1,35,13168.0,359.61,2.73,42.52,2545.5,19.33

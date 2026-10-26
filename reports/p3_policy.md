@@ -189,6 +189,18 @@ Three exemptions sized from the data and press reports of the 2025 state account
 
 Not covered: take-up and eligibility rules, price ceilings, exemptions on rented homes, any estimate of buyers', builders' or owners' response, the VAT on works. The cost of the youth exemption and its buyers are press reports, not checked against the Conta Geral do Estado.
 
+### Who benefits from a property-tax cut (`p3_10`, RQ7.4)
+
+![Who benefits from a tax cut](figures/p3/tax_cut_incidence.png)
+
+Accounting incidence of the simulator's IMI cut (0.05 pp, limited by the legal floor) and of an IMT cut of one point of the price, by use of the dwelling (census 2021) and by third of municipalities; no behaviour. The IMI bill of a typical dwelling is the municipality's, scaled to national IMI (`p3_08`).
+
+- **Who holds the cut.** Inside the floor the IMI cut is 95 EUR m a year (102 of 300 councils can cut, 70 in full). 51% goes to owners living in the home (49% of dwellings), 18% to landlords, 6% to other tenure, 15% to second homes and 11% to vacant ones: a quarter to homes nobody lives in. Tenants (15% of dwellings, about a fifth of households) gain only if the landlord passes it on, which nothing measures.
+- **Where.** The third of municipalities with the highest price-to-income (67% of dwellings) gets 87% of an IMI cut and 88% of an IMT cut of 1 pp; the most affordable third (12%) 2%. By income the highest third (60% of dwellings) gets 79% and 76%, the lowest (18%) 3% and 6%. Urban municipalities (40% of dwellings) get 55% of an IMI cut and 60% of an IMT cut. A cut is regressive across places and reaches where housing is dearest.
+- **Pass-through.** An IMT cut of 294 EUR m (1,942 EUR a sale) stays with buyers if none is capitalised, half at the midpoint of the bound, and goes wholly to sellers if all is capitalised. The capitalisation of IMI is inconclusive (`p3_02`, `p3_03`), so the split between buyers, sellers and tenants is a bound.
+
+Not covered: households by income or age, the same bill for every use and owner, the response of landlords, the pass-through to tenants, IMT exemptions by buyer (see `p3_09`).
+
 ## Limitations
 
 - **Selection into treatment.** Rates are chosen after price booms, and the pre-trend test rejects. The design cannot separate the effect of the cut from mean reversion after
