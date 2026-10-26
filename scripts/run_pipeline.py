@@ -7,6 +7,7 @@ Thin wrapper only; all logic lives in src/pthousing/data/.
 import argparse
 
 from pthousing.data import build_panel, interim, typology, validate
+from pthousing.data.sources import bp_lending_standards
 from pthousing.viz import maps
 
 
@@ -24,12 +25,16 @@ def main() -> None:
 
     if not args.skip_download:
         interim.download(args.sources, refresh=args.refresh)
+    if not args.skip_download:
+        bp_lending_standards.fetch(refresh=args.refresh)
     paths = interim.build_all()
     print(f"Built {len(paths)} interim tables in data/interim")
     panels = build_panel.build_all()
     print(f"Built {len(panels)} panels in data/processed")
     print(f"Exported the dashboard geometry to {maps.export_web_geometry().name} in data/processed")
     print(f"Built the municipality typology ({len(typology.build())} rows) in data/external")
+    lending = bp_lending_standards.write()
+    print(f"Built the lending series ({len(lending)} values) in data/external")
     report = validate.validate_all(strict=False)
     failed = report[~report["ok"]]
     print(f"Validation: {int(report['ok'].sum())} of {len(report)} checks pass")
