@@ -2,6 +2,12 @@
 
 Analytic and engineering choices, newest first. One short entry each: what, why, alternatives rejected.
 
+## 2026-10-26 — Foreign buyers from INE prices by buyer residence: premium, presence and an adjusted association
+- **What:** `ine_price_by_buyer` (INE 0012246, last-12-month medians by tax residence of the buyer, 4Q2019 onward, national and municipal) feeds `analysis/foreign_buyers.py`: the national and within-municipality premium over domestic buyers; a *foreign market* is a municipality with a foreign-buyer price in at least four of the seven yearly (4th-quarter) snapshots; the outcome is domestic buyers' price growth 2019-2025 or the 2025 level, regressed on the flag with district effects, the log of 2019 sales and the coast, density and tourist classes, errors clustered by district.
+- **Why:** it is the only regional data on foreign buyers that is machine-readable. Domestic buyers' prices are the outcome so foreign prices do not enter it; sales are held fixed because a foreign price is published only with enough transactions; four years of seven is a middle value, with one, two and seven reported as sensitivity.
+- **Reading:** an association between where foreign buyers are frequent and where domestic buyers' prices are higher or rose more, in about 250 municipalities and 20 clusters; no investment flow (no counts, no values).
+- **Rejected:** the single-quarter indicator (0012239, thinner cells); Banco de Portugal real-estate FDI (not located in BPstat's domains 161, 162, 189); the share of foreign residents from `p2_14` as the exposure (residents are not buyers).
+
 ## 2026-10-26 — Construction costs from INE, annual, with a price-to-cost ratio
 - **What:** `ine_construction_costs` (INE 0011748, monthly 2000-2026, total / materials / labour, base 2021) feeds `analysis/construction.py`: yearly averages of complete years, rebased to 2015, deflated with the CPI like the price index; the price index change is split exactly into the cost change and the change in the price-to-cost ratio; licensing and completions are regressed on last year's real price and real cost changes (Newey-West, with the crisis and the cost surge left out as checks).
 - **Why:** it is the one national series of building costs and it separates labour from materials; Eurostat's version is the same total but stops in 2023, and the Eurostat building-permit series for Portugal has only the total from 2005 (nothing beyond `ine_construction`).

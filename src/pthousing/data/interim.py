@@ -28,6 +28,7 @@ OECD_COLUMNS = {
 SIZE = {"T": "total", "1": "br_0_1", "2": "br_2", "3": "br_3", "4": "br_4plus"}
 PRICE_CATEGORY = {"H1": "total", "H11": "new", "H12": "existing"}
 COST_FACTOR = {"T": "total", "1": "materials", "2": "labour"}
+BUYER = {"T": "total", "1": "domestic", "2": "foreign", "21": "eu", "22": "other_foreign"}
 VALUATION_TYPE = {"T": "total", "1": "flats", "2": "villas"}
 SEX = {"T": "total", "1": "m", "2": "f"}
 NATIONALITY_SPECIAL = {"T": "total", "TOP": "other"}  # the other codes are ISO 3166 alpha-2
@@ -87,6 +88,30 @@ def build_ine_median_price_sqm() -> pd.DataFrame:
     out = _quarter(out)
     cols = [MUNI_KEY, "period_start", "year", "quarter", "category", "method"]
     return out[[*cols, "price_sqm_eur", "sales_12m_n"]].sort_values(cols, ignore_index=True)
+
+
+def build_ine_price_by_buyer() -> pd.DataFrame:
+    """Median sale price per m2 (last 12 months) by municipality, quarter and tax residence of the buyer, 4Q2019 onward.
+
+    ``buyer`` is total, domestic (national territory), foreign (EU plus other countries), eu or other_foreign. Cells
+    with too few transactions are blank in the source and dropped here, so a municipality-quarter with a foreign price
+    is one with enough foreign purchases; no counts by buyer are published.
+    """
+    df = _municipal("0012246")
+    df = _quarter(df.assign(buyer=df["dim_3"].map(BUYER))).dropna(subset=["value"])
+    df = df.rename(columns={"value": "price_sqm_eur"})
+    cols = [MUNI_KEY, "period_start", "year", "quarter", "buyer"]
+    return df[[*cols, "price_sqm_eur"]].sort_values(cols, ignore_index=True)
+
+
+def build_ine_price_by_buyer_national() -> pd.DataFrame:
+    """National median sale price per m2 (last 12 months) by tax residence of the buyer, quarterly from 4Q2019."""
+    df = ine.read_indicator("0012246")
+    df = df[(df["geocod"] == "PT") & df["dim_3"].isin(BUYER)]
+    df = _quarter(df.assign(buyer=df["dim_3"].map(BUYER))).dropna(subset=["value"])
+    df = df.rename(columns={"value": "price_sqm_eur"})
+    cols = ["period_start", "year", "quarter", "buyer"]
+    return df[[*cols, "price_sqm_eur"]].sort_values(cols, ignore_index=True)
 
 
 def build_ine_median_rent_sqm() -> pd.DataFrame:
@@ -476,6 +501,7 @@ INE_CODES = (
     "0008273", "0014642", "0014640", "0014765",  # population, CPI annual / monthly, HPI
     "0008269", "0008270", "0008271",  # net migration, natural increase, population change
     "0011748",  # construction cost index of new housing, monthly
+    "0012246",  # median price per m2 (12 months) by tax residence of the buyer
 )  # fmt: skip
 
 
@@ -639,6 +665,8 @@ BUILDERS: dict[str, Callable[[], pd.DataFrame]] = {
     "ine_cpi_monthly": build_ine_cpi_monthly,
     "ine_hpi": build_ine_hpi,
     "ine_construction_costs": build_ine_construction_costs,
+    "ine_price_by_buyer": build_ine_price_by_buyer,
+    "ine_price_by_buyer_national": build_ine_price_by_buyer_national,
     "ine_population_change": build_ine_population_change,
     "ine_households_size": build_ine_households_size,
     "aima_foreigners": build_aima_foreigners,

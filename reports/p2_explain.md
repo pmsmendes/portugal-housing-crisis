@@ -2,7 +2,7 @@
 
 Why did affordability deteriorate, and where? This phase moves from description to association; nothing here is a
 causal claim. Figures: `reports/figures/p2/`, tables: `reports/tables/p2/`, notebooks: `notebooks/p2_explain/`
-(`p2_01` to `p2_17`). Methods: [methodology](../docs/methodology.md), choices:
+(`p2_01` to `p2_18`). Methods: [methodology](../docs/methodology.md), choices:
 [decisions](../docs/decisions.md).
 
 ## Summary
@@ -38,7 +38,7 @@ available, so a credible answer to "what would change affordability?" needs a po
 
 **Contents:** spatial autocorrelation (`p2_01`), fixed-effects regressions with foreign residents
 (`p2_02`, RQ3.3, RQ5.1), spillover tests (`p2_03`, RQ4.4), segmentation (`p2_04`, RQ4.6), supply against demand
-(`p2_05`, RQ2.1 to RQ2.4, RQ3.4, RQ4.5), second homes (`p2_06`, RQ5.3, RQ5.4) the synthesis (`p2_07`, RQ3.6), mortgage rates (`p2_08`, RQ1.7, RQ9.2, RQ9.5), wages and the labour market (`p2_09`, RQ9.1, RQ1.4), big municipalities against their surroundings (`p2_10`, RQ4.3), age structure (`p2_11`, RQ3.5) mortgage credit and household debt (`p2_12`, RQ9.2, RQ9.3) what wages and rates could finance (`p2_13`, RQ9.4) and foreign residents by nationality group (`p2_14`, RQ3.3) vacant dwellings against the shortfall (`p2_16`, RQ2.5) and construction costs against prices and licensing (`p2_17`, RQ2.7).
+(`p2_05`, RQ2.1 to RQ2.4, RQ3.4, RQ4.5), second homes (`p2_06`, RQ5.3, RQ5.4) the synthesis (`p2_07`, RQ3.6), mortgage rates (`p2_08`, RQ1.7, RQ9.2, RQ9.5), wages and the labour market (`p2_09`, RQ9.1, RQ1.4), big municipalities against their surroundings (`p2_10`, RQ4.3), age structure (`p2_11`, RQ3.5) mortgage credit and household debt (`p2_12`, RQ9.2, RQ9.3) what wages and rates could finance (`p2_13`, RQ9.4) and foreign residents by nationality group (`p2_14`, RQ3.3) vacant dwellings against the shortfall (`p2_16`, RQ2.5) construction costs against prices and licensing (`p2_17`, RQ2.7) and foreign buyers (`p2_18`, RQ5.2).
 
 ## Key findings
 
@@ -352,6 +352,18 @@ INE's cost index of new housing (monthly, materials and labour; 2000 to 2025 as 
 
 Tables: `construction_episodes.csv`, `construction_supply_response.csv`, `construction_labour_vs_wages.csv`. Limits: an input-cost index only (no land price, margin or financing; the level of the cost per m2 is not in the data), national, annual and 24 yearly changes over two cycles (the intervals are wide and the cost and price changes are correlated), association not a supply elasticity. Land availability, planning rules and licensing times are not in the project, so RQ2.7 is only partly answered.
 
+## What foreign buyers pay, and where they buy (`p2_18_foreign_buyers`)
+
+![Foreign buyers](figures/p2/foreign_buyers.png)
+
+INE's median sale price per m2 by the buyer's tax residence (national territory, EU, other countries), nationally and by municipality, 4Q2019 to 2Q2026 (RQ5.2). There is no count of sales by buyer, and a cell is blank when there are too few transactions: the premium is a price gap, not a measure of investment, and a municipality with a foreign-buyer price is one with enough foreign purchases, the only signal of where they buy. The euro flow of foreign real-estate investment (Banco de Portugal) was not found in BPstat and is not measured.
+
+53. **Foreign buyers pay more, and the gap has halved.** Nationally the median foreign buyer paid 69% more per m2 than a domestic buyer in 4Q2019 and 35% more in 4Q2025 (33% in 2Q2026): buyers from other countries 132% to 54% more, EU buyers 56% to 19%. Domestic buyers' median rose 92% (1,071 to 2,051 EUR/m2), foreign buyers' 53% (1,810 to 2,765), so domestic prices converged on the foreign ones.
+54. **Most of the gap is geography.** Inside a municipality the median premium is 25% (2019) and 18% (2025), and foreign buyers paid more in 87% to 97% of the municipalities where a foreign price is published. Only 37 to 67 of about 300 municipalities have one in a year, but they hold 44% to 61% of all sales. 49 municipalities (a foreign price in at least four of seven yearly snapshots) are the foreign markets: 50% of coastal municipalities, 4% of inland ones, 74% of tourist ones.
+55. **Foreign markets are dearer, but the data do not show they rose more.** Domestic buyers' prices are 84% higher in foreign markets (46% within a district) but the difference is 3.6% (-11.8 to 19.1) once 2019 sales are held fixed and -8.1% (-24.2 to 8.0) with place types as well; their 2019-2025 growth is 8.6 log points higher raw, 1.2 (-3.8 to 6.2) within district and -4.4 (-16.0 to 7.2) with sales and typology. The result does not move when a foreign market needs one, two, four or seven years of foreign prices.
+
+Tables: `foreign_buyer_premium.csv`, `foreign_markets_by_year.csv`, `foreign_markets_by_typology.csv`, `foreign_markets_price_growth.csv`, `foreign_markets_price_level.csv`, `foreign_markets_sensitivity.csv`. Limits: prices without counts, seven years, 255 to 278 municipalities (20 district clusters), cells blank where sales are few (so presence favours big markets, the reason sales are controlled), no purchase value or number of homes, an association between where foreign buyers are active and where domestic buyers' prices are higher or rose more, not an effect of their buying (who buys where is not random).
+
 ## Limitations
 
 - **A pattern, not a mechanism.** Spatial autocorrelation does not show that price changes spill over: shared
@@ -402,4 +414,4 @@ Tables: `construction_episodes.csv`, `construction_supply_response.csv`, `constr
 ## Questions answered
 
 RQ4.3 (large municipalities rose most, less further out; Lisboa itself less than its suburbs), RQ4.4 (little evidence of spillovers beyond the regional pattern), RQ4.6 (coastal and urban, not tourism as such), RQ2.1 to
-RQ3.5 (ageing and the 25-44 pool add nothing beyond the foreign-resident change; internal migration and single-person households not observable), RQ2.3 and RQ4.5 (supply against households) and RQ5.4 (second homes separated) are answered; RQ3.6 is answered as far as these data allow (demand differences cannot be told from the regional pattern); RQ2.5, RQ2.7, RQ3.3, RQ5.1, RQ5.3, RQ1.7, RQ9.1, RQ9.2 and RQ9.5 are partly answered; RQ1.4 is answered (income and wages) (see [research_questions](../docs/research_questions.md)).
+RQ3.5 (ageing and the 25-44 pool add nothing beyond the foreign-resident change; internal migration and single-person households not observable), RQ2.3 and RQ4.5 (supply against households) and RQ5.4 (second homes separated) are answered; RQ3.6 is answered as far as these data allow (demand differences cannot be told from the regional pattern); RQ2.5, RQ2.7, RQ3.3, RQ5.1, RQ5.2, RQ5.3, RQ1.7, RQ9.1, RQ9.2 and RQ9.5 are partly answered; RQ1.4 is answered (income and wages) (see [research_questions](../docs/research_questions.md)).

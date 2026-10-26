@@ -1,0 +1,5 @@
+specification,coef,ci_low,ci_high,p_value,r2,n,foreign_markets_n
+no controls,84.304,63.881,104.727,0.0,0.301,278,49
+district,45.933,32.335,59.53,0.0,0.733,278,49
+"district, sales",3.622,-11.808,19.051,0.645,0.85,278,49
+"district, sales, typology",-8.058,-24.152,8.036,0.326,0.877,255,45

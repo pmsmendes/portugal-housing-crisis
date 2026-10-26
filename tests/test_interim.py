@@ -440,3 +440,26 @@ def test_ine_construction_costs_names_the_factors_and_keeps_the_national_rows(mo
     assert sorted(out.index) == ["labour", "materials", "total"]
     assert out.loc["labour", "construction_cost_b2021"] == 110.0
     assert (out["month"] == 3).all()
+
+
+def test_ine_price_by_buyer_national_names_the_buyers_and_drops_blank_cells(monkeypatch):
+    rows = [
+        {"geocod": "PT", "dim_3": "2", "period_start": "2025-10-01", "value": 2765.0},
+        {"geocod": "PT", "dim_3": "1", "period_start": "2025-10-01", "value": 2051.0},
+        {"geocod": "PT", "dim_3": "T", "period_start": "2025-10-01", "value": np.nan},
+        {"geocod": "1234567", "dim_3": "2", "period_start": "2025-10-01", "value": 1.0},
+    ]
+    monkeypatch.setattr(interim.ine, "read_indicator", lambda code: _ine(rows))
+    out = interim.build_ine_price_by_buyer_national().set_index("buyer")
+    assert sorted(out.index) == ["domestic", "foreign"]  # the blank total is dropped
+    assert out.loc["foreign", "price_sqm_eur"] == 2765.0 and (out["quarter"] == 4).all()
+
+
+def test_ine_price_by_buyer_keeps_published_municipal_cells_only(monkeypatch):
+    rows = [
+        {"muni_code": "0101", "dim_3": "2", "period_start": "2025-10-01", "value": 2000.0},
+        {"muni_code": "0101", "dim_3": "21", "period_start": "2025-10-01", "value": np.nan},
+    ]
+    monkeypatch.setattr(interim, "_municipal", lambda code: _ine(rows))
+    out = interim.build_ine_price_by_buyer()
+    assert out["buyer"].tolist() == ["foreign"]

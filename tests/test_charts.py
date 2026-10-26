@@ -566,3 +566,22 @@ def test_construction_costs_title_gives_the_change_in_prices_and_in_costs_since_
     )
     title = _title(charts.construction_costs(frame))
     assert f"+{100 * (1.08**12 - 1):.0f}%" in title and f"+{100 * (1.03**12 - 1):.0f}%" in title
+
+
+def test_foreign_buyers_title_gives_the_premium_at_both_ends():
+    q = pd.date_range("2019-10-01", "2026-04-01", freq="QS")
+    n = len(q)
+    premium = pd.DataFrame(
+        {
+            "domestic": np.linspace(1000, 2000, n),
+            "eu": np.linspace(1500, 2400, n),
+            "other_foreign": np.linspace(2400, 3200, n),
+            "premium_foreign_pct": np.linspace(70, 35, n),
+        },
+        index=pd.Index(q, name="period_start"),
+    )
+    markets = pd.DataFrame(
+        {"median_premium_pct": [25.0, 22.0, 19.0, 18.0, 17.0, 17.0, 18.0]}, index=range(2019, 2026)
+    )
+    title = _title(charts.foreign_buyers(premium, markets))
+    assert "70% more" in title and "4Q2019" in title and "35% more" in title and "2Q2026" in title

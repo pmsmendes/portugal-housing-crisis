@@ -214,6 +214,29 @@ def schemas() -> dict[str, DataFrameSchema]:
             unique=["period_start", "factor"],
             strict=True,
         ),
+        "ine_price_by_buyer": DataFrameSchema(
+            {
+                MUNI_KEY: muni,
+                "period_start": Column("datetime64[ns]", coerce=True),
+                "year": _year(2019),
+                "quarter": Column(int, Check.in_range(1, 4), coerce=True),
+                "buyer": _cat({"total", "domestic", "foreign", "eu", "other_foreign"}),
+                "price_sqm_eur": _num(50, 20_000, nullable=False),
+            },
+            unique=[MUNI_KEY, "period_start", "buyer"],
+            strict=True,
+        ),
+        "ine_price_by_buyer_national": DataFrameSchema(
+            {
+                "period_start": Column("datetime64[ns]", coerce=True),
+                "year": _year(2019),
+                "quarter": Column(int, Check.in_range(1, 4), coerce=True),
+                "buyer": _cat({"total", "domestic", "foreign", "eu", "other_foreign"}),
+                "price_sqm_eur": _num(100, 20_000, nullable=False),
+            },
+            unique=["period_start", "buyer"],
+            strict=True,
+        ),
         "bp_mortgage": DataFrameSchema(
             {
                 "date": Column("datetime64[ns]", coerce=True),
@@ -629,6 +652,31 @@ def check_construction_costs(df: pd.DataFrame) -> list[str | None]:
     ]
 
 
+def check_price_by_buyer(df: pd.DataFrame) -> list[str | None]:
+    """The foreign median is the weighted blend of EU and other countries, so it lies between the two."""
+    wide = df.pivot_table(index=[MUNI_KEY, "period_start"], columns="buyer", values="price_sqm_eur")
+    both = wide.dropna(subset=["eu", "other_foreign", "foreign"])
+    lo = both[["eu", "other_foreign"]].min(axis=1)
+    hi = both[["eu", "other_foreign"]].max(axis=1)
+    outside = ((both["foreign"] < lo - 1) | (both["foreign"] > hi + 1)).mean() if len(both) else 0.0
+    return [
+        None
+        if outside < 0.05
+        else f"{outside:.0%} of foreign medians lie outside the EU and other-country medians"
+    ]
+
+
+def check_price_by_buyer_national(df: pd.DataFrame) -> list[str | None]:
+    wide = df.pivot(index="period_start", columns="buyer", values="price_sqm_eur")
+    gaps = wide.index.to_series().diff().dropna().le(pd.Timedelta(days=92)).all()
+    return [
+        None if gaps else "quarterly series has gaps",
+        None
+        if (wide["foreign"] > wide["domestic"]).all()
+        else "foreign buyers do not pay more than domestic ones nationally",
+    ]
+
+
 def _gaps_quarterly(s: pd.Series) -> str | None:
     return (
         None
@@ -742,6 +790,8 @@ CHECKS: dict[str, Callable[[pd.DataFrame], list[str | None]]] = {
     "ine_cpi_monthly": check_cpi_monthly,
     "ine_hpi": check_hpi,
     "ine_construction_costs": check_construction_costs,
+    "ine_price_by_buyer": check_price_by_buyer,
+    "ine_price_by_buyer_national": check_price_by_buyer_national,
     "bp_mortgage": check_bp,
     "bp_household_debt": check_bp_household_debt,
     "eurostat_hpi": check_eurostat_hpi,

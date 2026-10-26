@@ -614,3 +614,44 @@ def test_construction_costs_check_flags_a_missing_month_and_a_wrong_base():
     assert gap[2] is not None
     shifted = _costs().assign(construction_cost_b2021=lambda d: d["construction_cost_b2021"] + 5)
     assert validate.check_construction_costs(shifted)[0] is not None
+
+
+def _buyer_prices(foreign=3000.0):
+    t = pd.Timestamp("2025-10-01")
+    prices = (("domestic", 2000.0), ("eu", 2500.0), ("other_foreign", 3500.0), ("foreign", foreign))
+    rows = [
+        {
+            "muni_code": CODES[0],
+            "period_start": t,
+            "year": 2025,
+            "quarter": 4,
+            "buyer": b,
+            "price_sqm_eur": v,
+        }
+        for b, v in prices
+    ]
+    return pd.DataFrame(rows)
+
+
+def test_price_by_buyer_check_accepts_a_blend_and_flags_a_foreign_median_outside_its_parts():
+    ok = _buyer_prices()
+    validate.schemas()["ine_price_by_buyer"].validate(ok)
+    assert validate.check_price_by_buyer(ok) == [None]
+    assert validate.check_price_by_buyer(_buyer_prices(foreign=9000.0))[0] is not None
+
+
+def test_price_by_buyer_national_check_flags_a_missing_quarter_and_a_foreign_discount():
+    t = pd.date_range("2025-01-01", periods=4, freq="QS")
+    rows = [
+        {"period_start": q, "year": 2025, "quarter": q.quarter, "buyer": b, "price_sqm_eur": v}
+        for q in t
+        for b, v in (("domestic", 2000.0), ("foreign", 2500.0))
+    ]
+    df = pd.DataFrame(rows)
+    validate.schemas()["ine_price_by_buyer_national"].validate(df)
+    assert validate.check_price_by_buyer_national(df) == [None, None]
+    assert validate.check_price_by_buyer_national(df[df["period_start"] != t[1]])[0] is not None
+    cheap = df.assign(
+        price_sqm_eur=lambda d: d["price_sqm_eur"].where(d["buyer"] == "domestic", 1500.0)
+    )
+    assert validate.check_price_by_buyer_national(cheap)[1] is not None

@@ -1997,6 +1997,67 @@ def construction_costs(frame: pd.DataFrame) -> Figure:
     )
 
 
+def _quarter_label(t: pd.Timestamp) -> str:
+    return f"{t.quarter}Q{t.year}"
+
+
+def foreign_buyers(premium: pd.DataFrame, markets: pd.DataFrame) -> Figure:
+    """Median price per m2 by the buyer's tax residence (left) and the foreign premium (right), quarterly from 4Q2019.
+
+    ``premium`` is ``foreign_buyers.national_premium`` (medians by buyer and premiums in %), ``markets`` is
+    ``foreign_buyers.foreign_markets`` (yearly; ``median_premium_pct`` is the premium within each municipality that has a
+    foreign-buyer price, median over those municipalities). Left: domestic buyers, EU buyers and buyers from other countries.
+    Right: the national premium of foreign over domestic buyers, and the within-municipality premium.
+    """
+    fig, (left, right) = plt.subplots(1, 2, figsize=(11, 4.6))
+    series = (
+        ("domestic", BLUE, "Domestic buyers"),
+        ("eu", MUTED, "EU buyers"),
+        ("other_foreign", ORANGE, "Buyers from other countries"),
+    )
+    for col, color, _ in series:
+        line = premium[col].dropna()
+        _line(left, line.index, line, color, width=LINE_WIDTH if color != MUTED else 1.6)
+        _end_dot(left, line.index[-1], line.iloc[-1], color)
+    _thousands(left)
+    left.set_ylim(0, None)
+    left.set_xlim(
+        premium.index.min() - pd.Timedelta(days=60), premium.index.max() + pd.Timedelta(days=500)
+    )
+    _quarter_axis(left, premium.index.to_series(), base=1)
+    _legend(
+        left,
+        [Line2D([], [], color=c, lw=LINE_WIDTH, label=n) for _, c, n in series],
+        loc="upper left",
+    )
+    _panel_title(left, "Median price per m2, last 12 months (euros)")
+    nat = premium["premium_foreign_pct"].dropna()
+    inside = markets["median_premium_pct"].dropna()
+    inside_x = pd.to_datetime(inside.index.astype(str) + "-10-01")
+    _line(right, nat.index, nat, BLUE)
+    _end_dot(right, nat.index[-1], nat.iloc[-1], BLUE)
+    _line(right, inside_x, inside, ORANGE)
+    _end_dot(right, inside_x[-1], inside.iloc[-1], ORANGE)
+    right.set_ylim(0, None)
+    right.yaxis.set_major_formatter(mticker.PercentFormatter(decimals=0))
+    right.set_xlim(
+        nat.index.min() - pd.Timedelta(days=60), nat.index.max() + pd.Timedelta(days=500)
+    )
+    _quarter_axis(right, nat.index.to_series(), base=1)
+    _legend(right, [Line2D([], [], color=BLUE, lw=LINE_WIDTH, label="Nationally"),
+                    Line2D([], [], color=ORANGE, lw=LINE_WIDTH, label="Within a municipality (median of those with a foreign price)")], loc="lower left")  # fmt: skip
+    _panel_title(right, "Foreign buyers' premium over domestic buyers")
+    first, last = nat.iloc[0], nat.iloc[-1]
+    return style.finish(
+        fig,
+        f"Foreign buyers paid {first:.0f}% more per m2 than domestic buyers in {_quarter_label(nat.index[0])} and {last:.0f}% more in {_quarter_label(nat.index[-1])}",
+        f"National and municipal medians of sales in the last 12 months, quarterly, {nat.index[0].year} to {nat.index[-1].year}; by tax residence of the buyer",
+        "Source: INE (statistics on house prices at local level), own calculations. A price gap, not a measure of investment: it mixes where, what and how much is bought. Municipal premiums only where a foreign-buyer price is published.",
+        head_in=1.3,
+        foot_in=0.6,
+    )
+
+
 def property_tax_revenue(frame: pd.DataFrame) -> Figure:
     """Real IMI and IMT revenue (left) and both against the real house price index, 2015 = 100 (right).
 

@@ -1,0 +1,17 @@
+min_years,markets_n,outcome,specification,coef,ci_low,ci_high
+1,78,growth,district,-1.23,-5.26,2.79
+1,78,growth,"district, sales, typology",-6.07,-15.1,2.97
+1,78,level,district,38.24,28.64,47.85
+1,78,level,"district, sales, typology",-7.09,-21.02,6.83
+2,64,growth,district,-1.78,-6.14,2.59
+2,64,growth,"district, sales, typology",-7.46,-16.25,1.32
+2,64,level,district,41.41,31.22,51.6
+2,64,level,"district, sales, typology",-6.76,-19.7,6.18
+4,49,growth,district,1.18,-3.81,6.18
+4,49,growth,"district, sales, typology",-4.37,-15.96,7.21
+4,49,level,district,45.93,32.34,59.53
+4,49,level,"district, sales, typology",-8.06,-24.15,8.04
+7,35,growth,district,-0.11,-7.55,7.33
+7,35,growth,"district, sales, typology",-8.93,-18.93,1.07
+7,35,level,district,47.74,35.42,60.06
+7,35,level,"district, sales, typology",-11.79,-28.97,5.39

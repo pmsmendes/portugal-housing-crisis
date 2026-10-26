@@ -132,6 +132,19 @@ ine:
       Verified 2026-10-26: dim_3 T total, 1 materials, 2 manpower (labour); national only. Fetch one period at a time like
       the other monthly series. Input costs of building new family housing, not what builders charge and not land.
       Eurostat's sts_copi_q/a carries the same total (Portugal reports identical cost and producer-price indices) but stops in 2023.
+  ine_price_by_buyer:
+    indicator_id: "0012246"          # median sale price per m2, last 12 months, by tax residence of the purchaser, quarterly 4Q2019 - 2Q2026, NUTS 2024
+    alt_indicator_ids:
+      quarter_only: "0012239"        # same, single quarter, from 1Q2019 (thinner cells)
+      by_institutional_sector: "0012240"   # by institutional sector of the purchaser
+    format: json
+    notes: >
+      Verified 2026-10-26: dim_3 T total, 1 national territory, 21 European Union, 22 other countries, 2 foreign (EU plus other).
+      Municipal rows (7-char geocod, 308 x 5), NUTS III, regions, parishes (9-char) and PT. Prices only: INE publishes no count
+      of sales by buyer residence, and a cell is blank when there are too few transactions, so a municipality with a foreign-buyer
+      price is one with enough foreign purchases (the total count of sales is `ine_median_price_sqm.sales_12m_n`).
+      Banco de Portugal's real-estate direct investment (about 3.9 bn euros in 2025, press reports) was not located in BPstat's
+      datasets (domains 161, 162 and 189 hold no activity split): unresolved.
 
 bportugal:
   # API base https://bpstat.bportugal.pt/data/v1 (301 -> trailing slash; send a User-Agent, urllib's default gets 403).
