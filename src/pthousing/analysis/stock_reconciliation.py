@@ -1,12 +1,14 @@
 """Dwelling stock: how much of what was completed shows up in the census count, and the stock between censuses (RQ2.4).
 
-The census counts conventional dwellings only in 2011 and 2021 (``ine_census_stock``); completions of new family
-dwellings are annual (``ine_construction``). Between the censuses the net change in the count is set against the
-dwellings completed in the years in between. The difference is what completions do not explain: demolitions, merged
-or split dwellings, conversions to and from other uses, dwellings added by works on existing buildings (not counted as
-completions here) and differences in what each census counts. It is an accounting gap, not an estimate of any one of
-those. Rolling the stock along the completions then gives a yearly path, valid only as far as the retention held
-outside the window it was measured in. Functions take tables; nothing here reads files.
+The census counts conventional dwellings only in 2001, 2011 and 2021 (``ine_census_stock``); completions of new family
+dwellings are annual. Between two censuses the net change in the count is set against the dwellings completed in the
+years in between. The difference is what completions do not explain: demolitions, merged or split dwellings,
+conversions to and from other uses, dwellings added by works on existing buildings (not counted as completions here)
+and differences in what each census counts. It is an accounting gap, not an estimate of any one of those, and it is not
+constant: the count rose by 1.25 dwellings per completion in 2002-2011 and 0.89 in 2012-2021. Rolling the stock along the
+completions with each decade's own retention gives a yearly path that meets every census; before the first and after
+the last, the retention of the nearest decade is an extrapolation and a band is drawn. Functions take tables; nothing
+here reads files.
 """
 
 import pandas as pd
@@ -70,14 +72,15 @@ def roll_stock(
     completions: pd.Series,
     anchor_year: int,
     anchor_stock: float,
-    retention: float,
+    retention: float | pd.Series,
 ) -> pd.Series:
-    """Yearly dwelling stock: the anchor count, moved along the completions at a constant retention.
+    """Yearly dwelling stock: the anchor count, moved along the completions at a retention.
 
-    ``completions`` is indexed by year. Forward, ``stock[t] = stock[t-1] + retention * completions[t]``; backward,
-    ``stock[t-1] = stock[t] - retention * completions[t]``. A retention of 1 means every completion adds one
-    dwelling and nothing is lost. The result covers the years of ``completions``; the anchor year holds
-    ``anchor_stock`` exactly.
+    ``completions`` is indexed by year; ``retention`` is one number or a series by year (the retention that applies to
+    the completions of that year). Forward, ``stock[t] = stock[t-1] + retention[t] * completions[t]``; backward,
+    ``stock[t-1] = stock[t] - retention[t] * completions[t]``. A retention of 1 means every completion adds one dwelling
+    and nothing is lost. The result covers the years of ``completions``; the anchor year holds ``anchor_stock``
+    exactly.
     """
     years = sorted(completions.index)
     flow = completions.astype(float) * retention
@@ -92,15 +95,45 @@ def roll_stock(
     return stock
 
 
-def stock_path(completions: pd.Series, anchors: dict[int, float], retention: float) -> pd.DataFrame:
-    """The rolled stock and its yearly growth (%), with the retention applied and the census years marked.
+def interval_retentions(completions: pd.Series, anchors: dict[int, float]) -> pd.Series:
+    """Net addition over completions between each pair of consecutive census years, indexed by the later year.
 
-    ``anchors`` maps a census year to its count; the path is anchored on the later one, and the earlier one is
-    returned as ``census_n`` for comparison (it is exactly met only at a retention that closes the gap).
+    Completions are those of the years after the earlier census year up to and including the later one.
     """
-    anchor = max(anchors)
-    stock = roll_stock(completions, anchor, anchors[anchor], retention)
-    out = pd.DataFrame({"completed_n": completions, "stock_n": stock})
+    years = sorted(anchors)
+    out = {}
+    for a, b in zip(years[:-1], years[1:], strict=True):
+        out[b] = (anchors[b] - anchors[a]) / completions.loc[a + 1 : b].sum()
+    return pd.Series(out)
+
+
+def stock_path(
+    completions: pd.Series,
+    anchors: dict[int, float],
+    outside: tuple[float, float] | None = None,
+) -> pd.DataFrame:
+    """The stock rolled along completions, meeting every census, with its yearly growth (%).
+
+    ``anchors`` maps a census year to its count. Inside each interval between censuses the retention is the one observed
+    there (``interval_retentions``), so the path equals every census count. Before the first census the retention of the
+    first interval applies and after the last that of the last interval, unless ``outside`` = (before, after) gives
+    other values (an extrapolation, so the caller draws a band). Columns: ``completed_n``, ``retention`` (the one used
+    that year), ``stock_n``, ``growth_pct`` and ``census_n``.
+    """
+    cens = sorted(anchors)
+    observed = interval_retentions(completions, anchors)
+    before, after = outside or (observed.iloc[0], observed.iloc[-1])
+    per_year = {}
+    for year in completions.index:
+        if year <= cens[0]:
+            per_year[year] = before
+        elif year > cens[-1]:
+            per_year[year] = after
+        else:
+            per_year[year] = observed[min(c for c in observed.index if c >= year)]
+    retention = pd.Series(per_year)
+    stock = roll_stock(completions, cens[-1], anchors[cens[-1]], retention)
+    out = pd.DataFrame({"completed_n": completions, "retention": retention, "stock_n": stock})
     out["growth_pct"] = 100 * out["stock_n"].pct_change()
     out["census_n"] = pd.Series(anchors)
     return out

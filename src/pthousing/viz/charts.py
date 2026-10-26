@@ -2810,52 +2810,79 @@ def household_size_change(
     return fig
 
 
-def stock_reconciliation(groups: pd.DataFrame, path: pd.DataFrame, retention: float) -> Figure:
-    """Dwellings completed against the net change of the census count by kind of place (left); the stock's yearly growth (right).
+def stock_reconciliation(
+    by_class: pd.DataFrame,
+    path: pd.DataFrame,
+    periods: tuple[str, str],
+    national: tuple[float, float],
+) -> Figure:
+    """Dwellings added to the census count per completion, by kind of place and decade (left); the stock's yearly growth (right).
 
-    ``groups`` (index = label, drawing order top first): ``completions_per_1000`` and ``added_per_1000``, per 1,000
-    dwellings of the first census. ``path`` (index = year): ``growth_pct`` at the observed retention and
-    ``growth_upper_pct`` at a retention of 1. ``retention``: the national net addition over completions, 2011-2021.
+    ``by_class`` (index = label, top first): ``retention_first`` and ``retention_second``, the net change of the count over the
+    completions in the earlier and the later decade. ``path`` (index = year): ``growth_pct`` (each decade at its own retention),
+    ``growth_low_pct`` and ``growth_high_pct`` (the band where the retention is extrapolated, before the first census and after
+    the last; equal to ``growth_pct`` in between) and ``census_year`` markers in the column ``is_census``. ``periods``: the two
+    decades' labels; ``national``: their national retentions.
     """
     fig, (left, right) = plt.subplots(
-        1, 2, figsize=(11.5, 4.8), gridspec_kw={"width_ratios": [1.1, 1]}
+        1, 2, figsize=(11.5, 4.8), gridspec_kw={"width_ratios": [1, 1.1]}
     )
-    s = groups.iloc[::-1]
-    y = np.arange(len(s))
-    left.axvline(0, color=GRID, lw=1, zorder=1)
-    left.barh(y + 0.19, s["completions_per_1000"], 0.36, color=BLUE, zorder=3)
-    left.barh(y - 0.19, s["added_per_1000"], 0.36, color=ORANGE, zorder=3)
-    for i, (done, added) in enumerate(
-        zip(s["completions_per_1000"], s["added_per_1000"], strict=True)
+    g = by_class.iloc[::-1]
+    y = np.arange(len(g))
+    light, dark = style.BLUE_RAMP[250], style.BLUE_RAMP[550]
+    left.axvline(1.0, color=MUTED, lw=1, ls=(0, (4, 3)), zorder=1)
+    for i, (first, second) in enumerate(
+        zip(g["retention_first"], g["retention_second"], strict=True)
     ):
-        for off, value in ((0.19, done), (-0.19, added)):
-            left.annotate(f"{value:.0f}", (value, i + off), xytext=(4, 0), textcoords="offset points",
-                          ha="left", va="center", fontsize=8.5, color=INK_2)  # fmt: skip
-    left.set_yticks(y, s.index, color=INK_2, fontsize=9.5)
-    left.set_xlim(0, s[["completions_per_1000", "added_per_1000"]].to_numpy().max() * 1.2)
+        left.plot([first, second], [i, i], color=GRID, lw=3, zorder=1, solid_capstyle="round")
+        left.plot([first], [i], "o", ms=8, mfc=light, mec=SURFACE, mew=2, zorder=3)
+        left.plot([second], [i], "o", ms=8, mfc=dark, mec=SURFACE, mew=2, zorder=4)
+        left.annotate(f"{second:.2f}", (second, i), xytext=(0, 9), textcoords="offset points",
+                      ha="center", va="bottom", fontsize=8.5, color=INK_2)  # fmt: skip
+        left.annotate(f"{first:.2f}", (first, i), xytext=(0, -9), textcoords="offset points",
+                      ha="center", va="top", fontsize=8.5, color=INK_2)  # fmt: skip
+    left.set_yticks(y, g.index, color=INK_2, fontsize=9.5)
+    left.set_xlim(0, g[["retention_first", "retention_second"]].to_numpy().max() * 1.15)
+    left.set_ylim(-0.8, len(g) - 0.4)
     left.grid(axis="x")
     left.grid(axis="y", visible=False)
-    _legend(left, [Patch(facecolor=BLUE, label="Dwellings completed 2012-2021"),
-                   Patch(facecolor=ORANGE, label="Net change of the census count")], loc="lower right")  # fmt: skip
-    _panel_title(left, "Per 1,000 dwellings of 2011")
+    left.legend(handles=[Line2D([], [], marker="o", ls="", ms=8, mfc=light, mec=SURFACE, label=periods[0]),
+                         Line2D([], [], marker="o", ls="", ms=8, mfc=dark, mec=SURFACE, label=periods[1])],
+                loc="upper center", bbox_to_anchor=(0.45, -0.1), ncol=2, fontsize=9, frameon=False,
+                labelcolor=INK_2)  # fmt: skip
+    _panel_title(left, "Dwellings added to the census count per completion")
     last = path.index[-1]
-    _line(right, path.index, path["growth_upper_pct"], MUTED, width=1.0, z=2)
-    right.lines[-1].set_linestyle((0, (4, 3)))
+    right.fill_between(
+        path.index,
+        path["growth_low_pct"],
+        path["growth_high_pct"],
+        color=BLUE,
+        alpha=0.15,
+        lw=0,
+        zorder=1,
+    )
     _line(right, path.index, path["growth_pct"], BLUE, z=3)
+    census = path[path["is_census"]]
+    right.plot(
+        census.index, census["growth_pct"], "o", ms=7, mfc=SURFACE, mec=BLUE, mew=2, zorder=4
+    )
     _end_dot(right, last, path.loc[last, "growth_pct"], BLUE)
     _label(right, last, path.loc[last, "growth_pct"], f"{path.loc[last, 'growth_pct']:.2f}%")
-    right.set_xticks([y for y in path.index if y % 5 == 0])
+    right.set_xticks([yr for yr in path.index if yr % 5 == 0])
     right.set_xlim(path.index[0] - 0.5, last + 2.2)
-    right.set_ylim(0, path[["growth_pct", "growth_upper_pct"]].to_numpy().max() * 1.4)
+    right.set_ylim(0, path["growth_high_pct"].max() * 1.15)
     right.yaxis.set_major_formatter(mticker.PercentFormatter(decimals=1))
-    _legend(right, [Line2D([], [], color=BLUE, lw=LINE_WIDTH, label=f"Each completion adds {retention:.2f} dwellings (2012-2021)"),
-                    Line2D([], [], color=MUTED, lw=1.0, ls=(0, (4, 3)), label="Each completion adds one dwelling")], loc="upper right")  # fmt: skip
+    _legend(right, [Line2D([], [], color=BLUE, lw=LINE_WIDTH, label="Each decade at its own retention"),
+                    Patch(facecolor=BLUE, alpha=0.15, label="Outside the censuses: either decade's retention"),
+                    Line2D([], [], marker="o", ls="", ms=7, mfc=SURFACE, mec=BLUE, mew=2, label="Census year")], loc="upper right")  # fmt: skip
     _panel_title(right, "Yearly growth of the dwelling stock")
     return style.finish(
         fig,
-        f"Only {100 * retention:.0f}% of the dwellings completed in 2012-2021 show up in the census count, and in coastal cities far fewer",
-        "Dwellings completed against the net change of the census count, by coast and density class (left); the stock rolled along completions, 1996-2025 (right)",
-        "Source: INE (censuses 2011 and 2021, completions of new family dwellings); own calculations. Classes: own proxies (data/external/muni_typology.csv).",
+        f"Completions explained the census count only loosely: {national[0]:.2f} dwellings added per completion in {periods[0]}, {national[1]:.2f} in {periods[1]}",
+        "Net change of the census count over dwellings completed, by coast and density class and decade (left); the stock rolled along completions, 1996-2025 (right)",
+        "Source: INE (censuses 2001, 2011 and 2021, completions of new family dwellings); own calculations. Classes: own proxies (data/external/muni_typology.csv).",
+        head_in=1.25,
+        foot_in=0.9,
     )
 
 

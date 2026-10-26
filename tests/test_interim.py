@@ -405,6 +405,69 @@ def test_census_stock_households_use_only_the_total_rows(monkeypatch):
     assert totals["value"].tolist() == [20.0]
 
 
+def test_census_stock_has_the_three_censuses_and_no_2001_area(monkeypatch):
+    def dwellings(year, cells):
+        return _ine(
+            [
+                {"muni_code": "0101", "period_start": f"{year}-01-01", "dim_3": code, "value": v}
+                for code, v in cells.items()
+            ]
+        )
+
+    frames = {
+        # 2001: vacant total is "2"; its parts 21 to 24 must not be added again
+        "0000729": dwellings(
+            2001, {"T": 100.0, "1": 70.0, "11": 60.0, "12": 10.0, "2": 30.0, "21": 10.0, "24": 20.0}
+        ),
+        "0006304": dwellings(2011, {"T": 120.0, "11": 80.0, "12": 20.0, "2": 20.0}),
+        "0012502": dwellings(2021, {"T": 130.0, "1": 90.0, "2": 20.0, "3": 12.0, "4": 8.0}),
+        "0000676": _ine(
+            [{"muni_code": "0101", "period_start": "2001-01-01", "dim_3": "T", "value": 65.0}]
+        ),
+        "0006457": _ine(
+            [
+                {
+                    "muni_code": "0101",
+                    "period_start": "2011-01-01",
+                    "dim_3": "T",
+                    "dim_4": "T",
+                    "dim_5": "T",
+                    "value": 85.0,
+                }
+            ]
+        ),
+        "0012856": _ine(
+            [
+                {
+                    "muni_code": "0101",
+                    "period_start": "2021-01-01",
+                    "dim_3": "T",
+                    "dim_4": "T",
+                    "dim_5": "T",
+                    "value": 95.0,
+                }
+            ]
+        ),
+        "0006988": _ine([{"muni_code": "0101", "period_start": "2011-01-01", "value": 90.0}]),
+        "0012518": _ine([{"muni_code": "0101", "period_start": "2021-01-01", "value": 95.0}]),
+    }
+    _patch_municipal(monkeypatch, frames)
+    out = interim.build_ine_census_stock().set_index("census_year")
+    assert list(out.index) == [2001, 2011, 2021]
+    assert out.loc[2001, "dwellings_n"] == 100.0
+    assert out.loc[2001, "dwellings_vacant_n"] == 30.0
+    assert (
+        out.loc[2001, "dwellings_usual_n"]
+        + out.loc[2001, "dwellings_secondary_n"]
+        + out.loc[2001, "dwellings_vacant_n"]
+        == out.loc[2001, "dwellings_n"]
+    )
+    assert out.loc[2001, "households_n"] == 65.0
+    assert pd.isna(out.loc[2001, "dwelling_area_sqm"])
+    assert out.loc[2021, "dwellings_vacant_n"] == 20.0  # categories 3 and 4 are summed in 2021
+    assert out.loc[2011, "dwelling_area_sqm"] == 90.0
+
+
 def test_eurostat_property_tax_peers_one_row_per_country_and_year(monkeypatch):
     taxes = pd.DataFrame(
         [

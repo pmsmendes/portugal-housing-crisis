@@ -149,13 +149,13 @@ def schemas() -> dict[str, DataFrameSchema]:
         "ine_census_stock": DataFrameSchema(
             {
                 MUNI_KEY: muni,
-                "census_year": Column(int, Check.isin([2011, 2021]), coerce=True),
+                "census_year": Column(int, Check.isin([2001, 2011, 2021]), coerce=True),
                 "dwellings_n": _num(1, 2_000_000, nullable=False),
                 "dwellings_usual_n": _num(0, 2_000_000, nullable=False),
                 "dwellings_secondary_n": _num(0, 2_000_000, nullable=False),
                 "dwellings_vacant_n": _num(0, 2_000_000, nullable=False),
                 "households_n": _num(1, 2_000_000, nullable=False),
-                "dwelling_area_sqm": _num(40, 250, nullable=False),
+                "dwelling_area_sqm": _num(40, 250),  # NaN for 2001
             },
             unique=[MUNI_KEY, "census_year"],
             strict=True,
@@ -969,6 +969,7 @@ def cross_checks(tables: dict[str, pd.DataFrame]) -> list[tuple[str, str | None]
             tables["ine_households_size"].groupby([MUNI_KEY, "census_year"])["households_n"].sum()
         )
         stock = tables["ine_census_stock"].set_index([MUNI_KEY, "census_year"])["households_n"]
+        stock = stock.loc[stock.index.isin(by_size.index)]  # 2001 has no household sizes
         out.append(
             (
                 "households_by_size_sum_to_census_total",

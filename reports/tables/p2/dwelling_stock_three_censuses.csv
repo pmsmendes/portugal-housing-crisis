@@ -1,0 +1,4 @@
+census_year,dwellings_n,usual_pct,secondary_pct,vacant_pct,dwellings_usual_n,households_n,dwellings_change_pct,households_change_pct,dwellings_per_household
+2001,5019425,70.75,18.42,10.83,3551229,3650757,,,1.37
+2011,5859540,68.11,19.34,12.55,3991112,4043726,16.74,10.76,1.45
+2021,5970677,69.38,18.51,12.11,4142581,4149096,1.9,2.61,1.44

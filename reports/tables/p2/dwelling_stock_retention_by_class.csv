@@ -1,0 +1,7 @@
+segment,retention_2002_2011,retention_2012_2021
+coast / intermediate,1.294,1.293
+inland / intermediate,1.136,1.09
+inland / urban,1.058,1.043
+coast / rural,1.381,0.966
+inland / rural,1.155,0.785
+coast / urban,1.408,0.252

@@ -298,11 +298,12 @@ def build_ine_households_size() -> pd.DataFrame:
 
 
 def build_ine_census_stock() -> pd.DataFrame:
-    """Census 2011 and 2021: dwellings by occupancy, private households and mean useful area.
+    """Census 2001, 2011 and 2021: dwellings by occupancy, private households and mean useful area.
 
     ``dwellings_n`` are conventional dwellings; ``dwellings_vacant_n`` sums every vacant category (for
     sale, for rent, other reasons). ``households_n`` are private households (2011: classic families).
-    ``dwelling_area_sqm`` is the mean useful area of dwellings of usual residence.
+    ``dwelling_area_sqm`` is the mean useful area of dwellings of usual residence (2011 and 2021 only; NaN
+    for 2001, where the area table was not located).
     """
     occupancy = {  # (census year, dim_3 code) -> column
         (2011, "T"): "dwellings_n",
@@ -314,9 +315,13 @@ def build_ine_census_stock() -> pd.DataFrame:
         (2021, "2"): "dwellings_secondary_n",
         (2021, "3"): "dwellings_vacant_n",
         (2021, "4"): "dwellings_vacant_n",
+        (2001, "T"): "dwellings_n",
+        (2001, "11"): "dwellings_usual_n",
+        (2001, "12"): "dwellings_secondary_n",
+        (2001, "2"): "dwellings_vacant_n",  # the total of vacant; 21 to 24 are its parts
     }
     parts = []
-    for code in ("0006304", "0012502"):
+    for code in ("0000729", "0006304", "0012502"):
         df = _municipal(code)
         df = df.assign(
             col=[occupancy.get((y, d)) for y, d in zip(df["year"], df["dim_3"], strict=True)]
@@ -327,7 +332,7 @@ def build_ine_census_stock() -> pd.DataFrame:
     households = pd.concat(
         [
             _only_totals(_municipal(c)).set_index([MUNI_KEY, "year"])["value"]
-            for c in ("0006457", "0012856")
+            for c in ("0000676", "0006457", "0012856")
         ]
     ).rename("households_n")
     area = pd.concat(
@@ -655,6 +660,10 @@ def build_eurostat_property_tax_peers() -> pd.DataFrame:
 
 # Census tables that exceed INE's row limit as a whole: only the totals of the dimensions we do not split by.
 INE_FILTERED = {
+    "0000729": {
+        "Dim4": "T"
+    },  # conventional dwellings 2001 by occupancy status (all periods of construction)
+    "0000676": {"Dim3": "T"},  # private households 2001 (all age groups of the reference person)
     "0006304": {"Dim4": "T", "Dim5": "T"},  # conventional dwellings 2011 by occupancy status
     "0012502": {"Dim4": "T", "Dim5": "T"},  # conventional dwellings 2021 by occupancy status
     "0006457": {"Dim3": "T", "Dim4": "T", "Dim5": "T"},  # private households 2011
