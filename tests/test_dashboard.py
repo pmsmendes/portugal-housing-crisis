@@ -66,3 +66,36 @@ def test_fit_line_recovers_a_slope():
     assert fit["r"] == pytest.approx(1.0)
     assert fit["y"][0] == pytest.approx(3 * fit["x"][0] + 2)
     assert D.fit_line(x, np.log10(x), log_x=True)["r"] == pytest.approx(1.0)
+
+
+def test_value_text_carries_the_unit_for_levels_and_changes():
+    pti = D.INDICATORS["pti_years"]
+    assert D.value_text(pti, 9.46) == "9.5 years of income"
+    assert D.value_text(pti, 1.44, "diff") == "+1.4 years of income"
+    assert D.value_text(pti, 25.2, "pct") == "+25%"
+    burden = D.INDICATORS["mortgage_burden_pct"]
+    assert D.value_text(burden, 45.3) == "45% of income"
+    assert D.value_text(burden, 17.2, "diff") == "+17 pp"
+
+
+def test_every_indicator_has_a_short_unit():
+    assert set(D.INDICATORS) <= set(D.SHORT_UNITS)
+
+
+def test_group_guide_names_every_class_in_the_typology(panel):
+    for by, guide in D.GROUP_GUIDE.items():
+        stored = set(panel[by].dropna()) - {"unknown"}
+        assert stored <= set(guide["classes"]), by
+        assert guide["title"] and guide["intro"]
+        assert D.class_label(by, next(iter(guide["classes"]))) != ""
+
+
+def test_group_counts_match_the_lines_of_group_trend(panel):
+    for by in D.GROUP_GUIDE:
+        trend = D.group_trend(panel, "pti_years", by)
+        counts = D.group_counts(panel, "pti_years", by)
+        assert list(trend.columns) == [
+            c for c in D.GROUP_GUIDE[by]["classes"] if c in trend.columns
+        ]
+        assert set(trend.columns) <= set(counts.index)
+        assert (counts[trend.columns] > 0).all()

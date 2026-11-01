@@ -12,7 +12,14 @@ import numpy as np
 import pandas as pd
 
 from pthousing.analysis import descriptive
-from pthousing.config import MUNI_KEY, TABLES, YEAR_KEY
+from pthousing.config import (
+    DENSITY_RURAL_PER_KM2,
+    DENSITY_URBAN_PER_KM2,
+    MUNI_KEY,
+    TABLES,
+    TOURIST_AL_PER_1000,
+    YEAR_KEY,
+)
 from pthousing.data import build_panel, typology
 from pthousing.viz import maps, style
 
@@ -20,7 +27,6 @@ MIN_MUNIS = (
     100  # a year is offered for an indicator only if at least this many municipalities have a value
 )
 TERRITORIES = {"continente": "Mainland", "azores": "Azores", "madeira": "Madeira"}
-GROUPS = {"coast_class": "Coast", "density_class": "Density", "tourist": "Tourism"}
 
 
 @dataclass(frozen=True)
@@ -66,6 +72,82 @@ INDICATORS: dict[str, Indicator] = {
 }  # fmt: skip
 
 TREND_GROUPS = list(dict.fromkeys(i.group for i in INDICATORS.values()))
+
+SHORT_UNITS = {  # the unit written after a number, so a bare value is never shown without its meaning
+    "pti_years": "years of income",
+    "rti_pct": "% of income",
+    "mortgage_burden_pct": "% of income",
+    "price_sqm_eur_real": "EUR per m²",
+    "rent_sqm_eur_real": "EUR per m² a month",
+    "income_median_eur_real": "EUR a year",
+    "completed_per_1000": "per 1,000 dwellings",
+    "population_n": "residents",
+    "pop_65plus_pct": "% of residents",
+    "foreign_residents_pct": "% of residents",
+    "imi_urban_pct": "% of assessed value",
+}
+
+
+def value_text(ind: Indicator, value: float, change: str | None = None) -> str:
+    """A value with its unit: the level ("9.5 years of income"), an absolute change ("+1.4 years of income",
+    "+17 pp" for a share) or a relative change ("+25%"). ``change`` is None, "diff" or "pct"."""
+    if change == "pct":
+        return f"{value:+.0f}%"
+    short = SHORT_UNITS.get(ind.column, ind.unit)
+    fmt = ind.fmt if change is None else ind.fmt.replace("{:", "{:+")
+    if change == "diff" and short.startswith("%"):
+        return f"{fmt.format(value)} pp"
+    return f"{fmt.format(value)}{'' if short.startswith('%') else ' '}{short}"
+
+
+GROUP_GUIDE = {  # what each way of grouping municipalities means, for the Trends page
+    "coast_class": {
+        "title": "Coast: sea, estuary or inland",
+        "intro": "Whether the municipality borders the sea.",
+        "classes": {
+            "coast": ("Coastal", "Has a stretch of Atlantic coast (every island municipality counts as coastal)."),
+            "estuary": (
+                "Estuary",
+                "Sits on the banks of the Tejo or Sado estuary but not on the open sea (Lisboa, Loures, "
+                "Moita, Palmela and five others). Kept apart so Lisboa is not counted as inland.",
+            ),
+            "inland": ("Inland", "No coastline at all."),
+        },
+    },
+    "density_class": {
+        "title": "Density: urban or rural",
+        "intro": "How many people live per square kilometre in 2021, as a stand-in for urban and rural.",
+        "classes": {
+            "urban": ("Urban", f"{DENSITY_URBAN_PER_KM2} or more residents per km²: the big cities and their suburbs."),
+            "intermediate": (
+                "Intermediate",
+                f"{DENSITY_RURAL_PER_KM2} to {DENSITY_URBAN_PER_KM2} residents per km²: mid-sized towns and their surroundings.",
+            ),
+            "rural": ("Rural", f"Fewer than {DENSITY_RURAL_PER_KM2} residents per km²: villages and the sparsely settled interior."),
+        },
+    },
+    "tourist": {
+        "title": "Tourism: short-term rentals",
+        "intro": (
+            "How many homes are registered as short-term rentals (alojamento local, such as Airbnb-style lets) "
+            "per 1,000 dwellings. Mainland only: the islands keep their own registers."
+        ),
+        "classes": {
+            "tourist": (
+                "Tourist-heavy",
+                f"{TOURIST_AL_PER_1000} or more registered short-term rentals per 1,000 dwellings "
+                "(most of the Algarve coast, Lisboa and Porto, the Nazaré-Peniche-Óbidos stretch, and a few "
+                "small inland towns such as Marvão or Terras de Bouro).",
+            ),
+            "other": ("Other", f"Fewer than {TOURIST_AL_PER_1000} registered short-term rentals per 1,000 dwellings."),
+        },
+    },
+}  # fmt: skip
+
+
+def class_label(by: str, raw: str) -> str:
+    """Reader-facing name of a class of municipalities (``raw`` is the value stored in the typology)."""
+    return GROUP_GUIDE[by]["classes"].get(raw, (raw.capitalize(), ""))[0]
 
 
 def load_panel() -> pd.DataFrame:
@@ -131,15 +213,27 @@ def trend_band(panel: pd.DataFrame, column: str) -> pd.DataFrame:
     return q[q["n"] >= MIN_MUNIS]
 
 
-def group_trend(panel: pd.DataFrame, column: str, by: str) -> pd.DataFrame:
-    """Median of ``column`` by year for each class of ``by``, over the municipalities with a value in
-    every year the indicator has data (so a line never moves because the sample changed)."""
+def _group_sample(panel: pd.DataFrame, column: str, by: str) -> pd.DataFrame:
+    """Rows of the municipalities with a value in every year the indicator has data and a known class."""
     years = years_with_data(panel, column)
     d = panel[panel[YEAR_KEY].isin(years)].dropna(subset=[column, by])
     d = d[d[by] != "unknown"]
     full = d.groupby(MUNI_KEY)[YEAR_KEY].nunique()
-    d = d[d[MUNI_KEY].isin(full[full == len(years)].index)]
-    return descriptive.group_median(d, column, by)
+    return d[d[MUNI_KEY].isin(full[full == len(years)].index)]
+
+
+def group_trend(panel: pd.DataFrame, column: str, by: str) -> pd.DataFrame:
+    """Median of ``column`` by year for each class of ``by``, over the municipalities with a value in
+    every year the indicator has data (so a line never moves because the sample changed). Columns follow
+    the order of ``GROUP_GUIDE``."""
+    trend = descriptive.group_median(_group_sample(panel, column, by), column, by)
+    order = [c for c in GROUP_GUIDE[by]["classes"] if c in trend.columns]
+    return trend[order + [c for c in trend.columns if c not in order]]
+
+
+def group_counts(panel: pd.DataFrame, column: str, by: str) -> pd.Series:
+    """Number of municipalities behind each line of ``group_trend``."""
+    return _group_sample(panel, column, by).groupby(by)[MUNI_KEY].nunique()
 
 
 def driver_frame(panel: pd.DataFrame, start: int = 2016, end: int = 2024) -> pd.DataFrame:

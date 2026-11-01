@@ -26,8 +26,9 @@ p = panel()
 
 st.title("Where is housing least affordable?")
 st.markdown(
-    "Municipality maps of affordability, prices, income and supply. Hover for values; pick a different "
-    "indicator, year, or the change between two years in the sidebar."
+    "Each of Portugal's 308 municipalities coloured by one measure at a time. Hover over the map for a "
+    "municipality's value; use the sidebar to pick another measure, another year, or the change between "
+    "two years. The box below always says what is on the map, in which unit and how to read the colours."
 )
 
 # ---- inputs --------------------------------------------------------------------------------------
@@ -68,20 +69,55 @@ if since is not None and not relative:
 shown = frame[frame["territory"] == territory]
 n_missing = int(shown["value"].isna().sum())
 
-# ---- headline numbers ----------------------------------------------------------------------------
+# ---- what the map shows ---------------------------------------------------------------------------
 vals = frame["value"].dropna()
 what = f"{ind.label}, {year}" if since is None else f"{ind.label}, {since} to {year}"
 fmt = ind.fmt if since is None else ind.fmt.replace("{:", "{:+")  # changes carry a sign
+if since is None:
+    reading = "Darker blue means a higher value."
+    if ind.tone == "worse_high":
+        reading += " Higher is worse for affordability."
+    elif ind.tone == "better_high":
+        reading += " Higher is better for affordability."
+elif relative:
+    reading = (
+        f"Each municipality's value in {year} compared with {since}, as a percentage. "
+        "Red marks the direction that is worse for affordability, blue the direction that is better, "
+        "and white means little change."
+        if ind.tone != "neutral"
+        else f"Each municipality's value in {year} compared with {since}, as a percentage (white: little change)."
+    )
+else:
+    reading = (
+        f"Each municipality's value in {year} minus its value in {since}, in the unit above. "
+        "Red marks the direction that is worse for affordability, blue the direction that is better, "
+        "and white means little change."
+        if ind.tone != "neutral"
+        else f"Each municipality's value in {year} minus its value in {since}, in the unit above (white: little change)."
+    )
+with st.container(border=True):
+    st.markdown(f"**You are looking at: {what}.** {ind.note}")
+    st.markdown(
+        f"**Unit:** {unit}.  \n**How to read the colours:** {reading}  \n"
+        f"**Available years:** {years[0]} to {years[-1]}."
+    )
+    if ind.group == "Affordability":
+        st.caption(
+            "Affordability levels depend on the income concept and the assumed dwelling size, so read the "
+            "ranking and the change between years more than the exact level."
+        )
+
+# ---- headline numbers ----------------------------------------------------------------------------
 cols = st.columns(4)
-cols[0].metric("Median municipality", f"{fmt.format(vals.median())}")
-cols[0].caption(unit)
+cols[0].metric("Median municipality", fmt.format(vals.median()))
+cols[0].caption(f"{unit}. Half of the municipalities are above this, half below.")
 hi = frame.loc[frame["value"].idxmax()]
 lo = frame.loc[frame["value"].idxmin()]
-cols[1].metric("Highest", f"{fmt.format(hi['value'])}")
-cols[1].caption(hi["muni_name"])
-cols[2].metric("Lowest", f"{fmt.format(lo['value'])}")
-cols[2].caption(lo["muni_name"])
-cols[3].metric("Municipalities with a value", f"{len(vals)} of {len(frame)}")
+cols[1].metric("Highest", fmt.format(hi["value"]))
+cols[1].caption(f"{unit}: {hi['muni_name']}")
+cols[2].metric("Lowest", fmt.format(lo["value"]))
+cols[2].caption(f"{unit}: {lo['muni_name']}")
+cols[3].metric("Municipalities with data", f"{len(vals)} of {len(frame)}")
 cols[3].caption("The rest are not published or not observed that year.")
 
 # ---- map -----------------------------------------------------------------------------------------
@@ -151,14 +187,5 @@ with right:
     st.dataframe(ranked[["Municipality", "District", unit]].tail(top_n).iloc[::-1], hide_index=True)
 
 st.caption(
-    f"**About this indicator.** {ind.note} "
-    + (
-        "Red is the direction that is worse for affordability."
-        if ind.tone != "neutral" and since is not None
-        else ""
-    )
-)
-st.caption(
-    "Source: INE, Banco de Portugal, AT, AIMA; own calculations (see `docs/methodology.md`). Price-to-income "
-    "levels depend on the income concept and dwelling size: read rankings and changes, not the exact level."
+    "Source: INE, Banco de Portugal, AT, AIMA; own calculations (see `docs/methodology.md`)."
 )
