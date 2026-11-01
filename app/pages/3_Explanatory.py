@@ -15,7 +15,12 @@ st.set_page_config(page_title="Explanatory · Portugal's Housing Crisis", layout
 TRANSPARENT = "rgba(0,0,0,0)"
 GRID = "rgba(137,135,129,0.25)"
 START, END = 2016, 2024
-DIMENSIONS = {"coast_class": "Coast", "density_class": "Density", "tourist": "Tourism"}
+DIMENSIONS = {by: guide["title"] for by, guide in D.GROUP_GUIDE.items()}
+
+
+def _short(by: str) -> str:
+    """'coast', 'density' or 'tourism' for a chart title."""
+    return D.GROUP_GUIDE[by]["title"].split(":")[0].lower()
 
 
 @st.cache_data
@@ -57,21 +62,47 @@ st.markdown(
     "is an **adjusted association, not a causal effect**; the one design that could identify a cause "
     "(municipal tax cuts) did not pass its checks (last tab)."
 )
+with st.container(border=True):
+    st.markdown(
+        "**How to read this page**\n"
+        f"- **The question.** Price-to-income (years of income needed to buy a home) rose in the typical "
+        f"municipality between {START} and {END}, but by very different amounts from place to place. "
+        "Which places saw the biggest rises, and which factors go with that?\n"
+        "- **Association, not cause.** When a factor *goes with* the rise, places with more of it saw "
+        "bigger rises. That does not prove it caused them: coast, jobs or wealth may drive both.\n"
+        '- **"Variation explained" (R²).** A percentage from 0% to 100%: how much of the *differences '
+        "between municipalities* a set of factors accounts for. 0% means they tell you nothing; "
+        "100% means they predict every municipality exactly.\n"
+        "- **The five tabs.** *Where*: which kinds of place rose most. *Drivers*: supply, rents and "
+        "other factors one by one. *Regressions*: the same factors tested together and followed over "
+        "time. *Wages, rates and credit*: the national picture. *A policy test*: whether cutting a "
+        "property tax moved prices, and what the money at stake is."
+    )
+
 cols = st.columns(3)
 cols[0].metric("Explained by geography", f"{100 * first['r2']:.0f}%", help=first["block"])
-cols[0].caption("District, coast and density classes together")
+cols[0].caption(
+    f"of the differences between municipalities in how much price-to-income rose {START}-{END}, "
+    "knowing only district, coast and density class"
+)
 cols[1].metric(
     "Added by every driver together",
     f"{100 * (last['r2'] - first['r2']):.1f} points",
     help="Demand, supply, tourism and second homes, entered after geography.",
 )
-cols[1].caption("Demand, supply, tourism and second homes")
+cols[1].caption(
+    "percentage points of extra variation explained by demand (immigration, population), supply "
+    "(building), tourism and second homes once geography is known: almost nothing"
+)
 cols[2].metric(
     "Municipalities compared",
     f"{int(last['n_obs'])}",
     help="Mainland municipalities with a value in both years.",
 )
-cols[2].caption(f"Change in price-to-income {START} to {END}")
+cols[2].caption(
+    f"mainland municipalities with a price-to-income in both {START} and {END} (the islands and places "
+    "without a published price are left out)"
+)
 
 tab_where, tab_drivers, tab_reg, tab_macro, tab_policy = st.tabs(
     ["Where", "Drivers", "Regressions", "Wages, rates and credit", "A policy test"]
@@ -79,6 +110,20 @@ tab_where, tab_drivers, tab_reg, tab_macro, tab_policy = st.tabs(
 
 # ---- where ---------------------------------------------------------------------------------------
 with tab_where:
+    st.markdown(
+        "**What this tab answers: where did affordability get worse?** The left chart asks how much of "
+        "the differences between municipalities can be accounted for by their location, and how much "
+        "more is accounted for when other factors are added. The right chart shows the same rise "
+        "split by kind of place, so you can see it for yourself."
+    )
+    st.markdown(
+        f"**Left chart, how to read it.** Each bar is the share of the differences between municipalities "
+        f"(in how much price-to-income rose) accounted for by everything listed *up to and including* that "
+        f"bar. Geography alone accounts for {100 * first['r2']:.0f}%. Each further bar adds the small "
+        f"amount written in brackets, in percentage points (pts): {', '.join(f'{b.split(" (")[0].lower()} +{100 * a:.1f}' for b, a in zip(ladder['block'][1:], ladder['r2_added'][1:], strict=True))}. "
+        "The order matters: factors that mostly describe the same dense coastal places add little once "
+        "geography is already in."
+    )
     left, right = st.columns(2)
     # variance explained ladder
     lad = ladder.copy()
@@ -111,9 +156,13 @@ with tab_where:
     dim = right.radio("Compare", list(DIMENSIONS), format_func=DIMENSIONS.get, horizontal=True)
     seg = segments[segments["dimension"].str.startswith(dim.split("_")[0])]
     seg = seg.assign(
-        group=seg["group"].str.capitalize(),
+        group=seg["group"].map(lambda g: D.class_label(dim, g)),
         label=lambda x: x["group"] + " (" + x["municipalities_n"].astype(str) + ")",
     )
+    with right.container(border=True):
+        st.markdown(f"**{DIMENSIONS[dim]}.** {D.GROUP_GUIDE[dim]['intro']}")
+        for label, meaning in D.GROUP_GUIDE[dim]["classes"].values():
+            st.markdown(f"- **{label}:** {meaning}")
     fig = go.Figure(
         [
             go.Bar(
@@ -139,22 +188,45 @@ with tab_where:
     fig.update_layout(barmode="group", legend=dict(orientation="h", y=-0.2))
     fig.update_yaxes(ticksuffix="%")
     right.plotly_chart(
-        _style(fig, f"Change {START} to {END}, median municipality, by {DIMENSIONS[dim].lower()}"),
+        _style(fig, f"Change {START} to {END}, median municipality, by {_short(dim)}"),
         width="stretch",
+    )
+    right.markdown(
+        "**Right chart, how to read it.** For each kind of place the three bars give the change between "
+        f"{START} and {END} of the *middle* municipality of the group, in percent: the real price per m² "
+        "(blue, after inflation), real household income (grey) and price-to-income (orange, which is "
+        "prices relative to income). Where the blue bar towers over the grey one, homes got dearer "
+        "much faster than incomes."
     )
     right.caption(
         "Number of municipalities in brackets. Income grew by a similar amount everywhere; prices did not."
     )
 
     st.markdown(
-        "**Neighbours resemble each other, but that is regional, not a spillover.** Global Moran's I of "
-        "price-to-income is 0.63 to 0.76 (strong clustering). Within a region no clustering is left, and "
-        "last year's neighbours predict a municipality about as well as next year's (a placebo), so there is "
-        "no evidence that price pressure spreads from one municipality to the next (`p2_01`, `p2_03`)."
+        "**Neighbours resemble each other, but that is regional, not a spillover.** Nearby municipalities "
+        "have similar price-to-income: the statistic that measures this (global Moran's I) is 0.63 to "
+        "0.76, where 0 would mean no pattern and 1 a perfect one. But once the region is taken into "
+        "account no clustering is left. As a further check, last year's neighbours predict a "
+        "municipality about as well as *next* year's (which cannot be a cause), so there is no evidence "
+        "that price pressure spreads from one municipality to the next (`p2_01`, `p2_03`)."
     )
 
 # ---- drivers -------------------------------------------------------------------------------------
 with tab_drivers:
+    st.markdown(
+        "**What this tab answers: do the usual suspects go with where prices rose?** Pick a candidate "
+        "explanation (density, immigration, building, second homes, empty homes) and see it against the "
+        "rise in price-to-income, one dot per municipality. Below, two closer looks: how much of what "
+        "is built ends up in the dwelling count (supply), and what goes with the rise in rents."
+    )
+    st.markdown(
+        "**Chart below, how to read it.** Each dot is a mainland municipality. Left to right is the "
+        "candidate explanation you picked; bottom to top is how much its price-to-income rose between "
+        f"{START} and {END}, in percent. The dotted line is the overall tilt of the cloud: if it rises, "
+        "places with more of the factor saw bigger rises. The *correlation* under the chart summarises "
+        "that tilt from -1 (opposite) through 0 (no relation) to +1 (perfect). Colours show the kind of "
+        "place, which often explains the pattern better than the factor itself."
+    )
     d = drivers()
     c1, c2 = st.columns([2, 1])
     key = c1.selectbox("Candidate explanation", list(D.DRIVERS), format_func=D.DRIVERS.get)
@@ -207,10 +279,15 @@ with tab_drivers:
     stock_ret = table("p2", "dwelling_stock_retention_by_class")
     stock_path = table("p2", "dwelling_stock_path").dropna(subset=["growth_pct"])
     st.markdown(
-        "The census counts dwellings only in 2001, 2011 and 2021; completions of new family dwellings are annual. "
-        "Setting the net change of the count against the completions in between shows how far building ends up as a "
-        "net addition (demolitions, merged or converted dwellings, census definitions and coverage: the gap is a "
-        "residual, not an estimate of any of them). The ratio was not stable: more than one in the boom, less than one since."
+        "**The question.** Every year builders complete new homes, but the number of homes in the "
+        "country does not simply rise by that much: some are demolished, merged, or converted to other "
+        "uses. Every ten years the census counts all dwellings, which lets us compare the *net* change of "
+        "the count with the new homes completed in between.\n\n"
+        "**The measure: dwellings added per completion.** Above 1 means the count grew by more than what "
+        "was completed (for example through conversions, split dwellings or a more complete census); below 1 "
+        "means part of what was built replaced homes that disappeared, or the count fell. "
+        "The gap is a residual, not an estimate of demolitions or conversions. The ratio was not "
+        "stable: more than one in the boom, less than one since."
     )
     early, late = stock_nat.loc["retention", "2002-2011"], stock_nat.loc["retention", "2012-2021"]
     a, b, c = st.columns(3)
@@ -234,6 +311,14 @@ with tab_drivers:
         f"up to {stock_path['stock_high_n'].iloc[-1] / 1e6:.2f} million",
         delta_color="off",
         help="The 2021 count rolled along completions at the retention of 2012-2021; the upper figure uses that of 2002-2011.",
+    )
+    st.markdown(
+        "**Charts below, how to read them.** *Left:* for each kind of place, the grey dot is "
+        "2002-2011 and the blue dot 2012-2021; the dotted vertical line is 1.0 (every completion adds one "
+        "dwelling to the count). A blue dot far left of its grey dot means the count stopped following "
+        "building. *Right:* the yearly growth of the national stock of dwellings, in percent, rolled "
+        "forward from the censuses; the shaded band shows the range if the earlier or the later "
+        "decade's ratio applied."
     )
     left, right = st.columns(2)
     ret = stock_ret.sort_values("retention_2012_2021")
@@ -316,10 +401,12 @@ with tab_drivers:
         "Starting level (log)": "Starting level",
     }
     st.markdown(
-        f"INE publishes the median rent per m2 of new leases only where enough leases were signed: "
-        f"**{rent_nat['municipalities_n']:.0f} municipalities** have one in both 2020 and 2024 "
+        "**The question.** Prices get most attention, but what do tenants face? INE publishes the median "
+        "rent per m² of *new* leases (what someone signing a contract today pays) only where enough leases "
+        f"were signed: **{rent_nat['municipalities_n']:.0f} municipalities** have one in both 2020 and 2024 "
         f"({rent_nat['population_share_2021_pct']:.0f}% of residents, mostly larger and more urban). "
-        "Foreign residents and registered short-term rentals go with where rents rose; population change and completions do not."
+        "Foreign residents and registered short-term rentals go with where rents rose; population change "
+        "and completions do not."
     )
     a, b, c = st.columns(3)
     a.metric(
@@ -329,18 +416,38 @@ with tab_drivers:
         delta_color="off",
         help="Median real change 2020-2024 of the rent per m2 of new leases, and of the price per m2, in the same municipalities.",
     )
+    a.caption(
+        "Change 2020-2024 after inflation, with the price change in the same places below it."
+    )
     b.metric(
         "Rents rose in",
         f"{rent_nat['municipalities_with_rising_rent_pct']:.0f}%",
         "of municipalities",
         delta_color="off",
     )
+    b.caption(
+        "Share of the municipalities with a published rent where the real rent was higher in 2024."
+    )
     c.metric(
         "Rent and price changes",
         f"{rent_nat['rank_correlation_rent_price_change']:.2f}",
         "rank correlation",
         delta_color="off",
-        help="Across municipalities, the real rent change against the real price change 2020-2024.",
+        help="Across municipalities, the real rent change against the real price change 2020-2024. "
+        "1 means places rank identically on both, 0 means no relation.",
+    )
+    c.caption(
+        "Do places where rents rose most also have the biggest price rises? 1 = identical ranking, "
+        "0 = unrelated."
+    )
+    st.markdown(
+        "**Charts below, how to read them.** *Left:* the change in real rent and real price 2020-2024 "
+        "(median of each kind of place, in percent, after inflation). *Right:* each dot is the "
+        "association of one factor with the rise in rent (orange) or price (blue), per *standard "
+        "deviation* of the factor (a typical difference between municipalities, so factors measured in "
+        "different units can be compared). A dot to the right of the vertical zero line means places "
+        "with more of the factor saw bigger rises; the horizontal bar is a 95% interval, and when it "
+        "crosses zero the data cannot tell the association from no association."
     )
     left, right = st.columns(2)
     fig = go.Figure()
@@ -398,6 +505,25 @@ with tab_drivers:
 
 # ---- regressions ---------------------------------------------------------------------------------
 with tab_reg:
+    st.markdown(
+        "**What this tab answers: do the factors still go with price-to-income when they are tested "
+        "together and followed over time?** The earlier tabs compare municipalities at one moment. Here "
+        "the method (a *fixed-effects regression*) compares each municipality **with itself** from year to "
+        "year, so that permanent differences between places (beach, big city, history) cannot "
+        "produce the result. Drivers are measured so that you can compare them: each result is the "
+        "percentage change in price-to-income that goes with a *standard deviation* increase of the "
+        "driver, meaning a typical year-to-year change within one municipality.\n\n"
+        "**How to read the chart.** Each dot is a driver. Right of the vertical zero line, more of the "
+        "driver goes with higher price-to-income; left, with lower. The bar is a 95% interval: the range "
+        "the true association probably lies in. A **blue** dot has p < 0.05, meaning the association is "
+        "unlikely to be chance; a **grey** dot cannot be told from zero. The *p-value* is the chance of "
+        "seeing an association this large if there were really none.\n\n"
+        "**The specification menu** changes the controls to test robustness: *region-year effects* "
+        "also remove whatever hit a whole region in a given year (the strictest test); *errors clustered by "
+        "region* widen the intervals to allow for municipalities in a region moving together; *lagged* "
+        "uses last year's driver; the last options leave out Lisboa, Setúbal and Porto, stop in 2022 "
+        "(before the 2023 jump in foreign-resident titles), or add short-term rentals (mainland only)."
+    )
     fe = table("p2", "fe_regressions_pti")
     specs = [
         s
@@ -473,6 +599,22 @@ with tab_macro:
         "credit did not drive the recovery.** The gap below is everything wages and mortgage rates do not account "
         "for (credit rationing, richer, cash or foreign buyers, supply, expectations): it is not a measure of a bubble."
     )
+    st.markdown(
+        "**What this tab answers: is the national price rise what wages and borrowing costs would "
+        "justify?** It builds a benchmark: if households could always spend the same share of the "
+        "average wage on a mortgage payment, what price would wages and the interest rate allow? Then "
+        "it compares the benchmark with the actual price, and looks at credit and lending rules. "
+        "Everything here is national and yearly or quarterly (not by municipality).\n\n"
+        "**Left chart, how to read it.** Blue is the actual house price index and grey the price the "
+        "benchmark allows, both nominal with 2015 = 100. Blue above grey means prices ran ahead of what "
+        "wages and rates support; blue below grey, behind.\n\n"
+        "**Right chart, how to read it.** For each period the bars split the price change into the part "
+        "that wage growth accounts for (blue), the part due to the change in the mortgage rate (grey; "
+        "positive when rates fell, which allowed higher prices, negative when they rose) and what is "
+        "left (orange). The dot is "
+        "the actual change. The unit is *log points*: close to percent for small changes (60 log points "
+        "is a rise of about 82%), but additive, which is why parts add up to the total."
+    )
     fp = table("p2", "financeable_price")
     parts = table("p2", "price_change_parts")
     left, right = st.columns([3, 2])
@@ -528,6 +670,13 @@ with tab_macro:
         "Parts add up to the price change. Source: BIS, INE, Banco de Portugal, Eurostat; own calculations."
     )
 
+    st.subheader("Credit: did borrowing push prices up?")
+    st.markdown(
+        "**How to read the chart.** All three lines use 2010 = 100 and real values (inflation removed). "
+        "Blue is house prices; orange is the total amount households owe on housing loans; grey is loans "
+        "divided by prices, a rough gauge of how much credit there is per euro of house value. If credit "
+        "had fuelled the price rise, the orange line would climb with or before the blue one."
+    )
     cq = table("p2", "credit_quarterly")
     cq["period_start"] = pd.to_datetime(cq["period_start"])
     fig = go.Figure(
@@ -562,6 +711,17 @@ with tab_macro:
     )
 
     st.subheader("Lending terms: what a longer loan and a guarantee change")
+    st.markdown(
+        "Banks and the State set the rules for who can borrow how much, so these also shape "
+        "affordability. Three charts. **Left, 'What a longer term buys':** if a household keeps the same "
+        "monthly payment but repays over a longer term (the average term of new loans or the longest "
+        "allowed, 40 years) instead of 30 years, how much more can it borrow, in percent? **Right, "
+        "'Cash on the day of purchase':** the deposit and buying costs (taxes, fees) a household needs "
+        "at different loan-to-value ratios (the loan as a share of the home's value), in years of "
+        "income; the State guarantee for borrowers up to 35 allows a 100% loan. **Bottom:** the share "
+        "of new loans that are very large against the home's value (above 90%) or *high-risk* (monthly "
+        "debt payments above 60% of income and/or a loan above 90% of the value), 2018-2025."
+    )
     mat = table("p2", "lending_maturity_capacity")
     cash = table("p2", "lending_cash_needed").set_index("ltv")
     burden = table("p2", "lending_burden")
@@ -654,10 +814,29 @@ with tab_macro:
 # ---- policy test ---------------------------------------------------------------------------------
 with tab_policy:
     st.markdown(
+        "**What this tab answers: what did one housing policy do, and what money is at stake?** The first "
+        "half tests whether cutting the municipal property tax moved prices. The second half sets out "
+        "who collects property taxes, what the State spends on housing, how Portugal compares abroad, "
+        "and what happens to tenants under rent rules."
+    )
+    st.markdown(
         "**Did cutting the municipal property tax (IMI) raise prices?** In theory a lasting tax cut is capitalised "
         "into prices. The test compares prices around municipal rate cuts with the year before the cut. It is "
         "**inconclusive**: the estimates before the cut already differ (the pre-trend test is rejected), and the "
         "interval after the cut contains both zero and full capitalisation."
+    )
+    st.markdown(
+        "**Plain words.** *IMI* (Imposto Municipal sobre Imóveis) is the yearly property tax, set by each "
+        "council within a legal range. *Capitalisation* means that when owning a home gets cheaper "
+        "(a lower tax), buyers are willing to pay more for it, so the saving ends up in the price. "
+        "*Full capitalisation* is the extreme where the whole tax saving is added to the price. "
+        "A *pre-trend test* checks whether prices were already moving differently before the cut: if they "
+        "were, the later difference cannot be credited to the cut, which is why the test is inconclusive.\n\n"
+        "**Chart below, how to read it.** The horizontal axis counts years since a council cut its rate "
+        "(year -1, the year before, is the reference at zero). Each dot is the difference in real price "
+        "per m² compared with that year, with a 95% interval, for a cut of 0.01 percentage points. "
+        "A credible test needs the dots *before* the cut to sit around zero; the dashed orange line is "
+        "what full capitalisation would imply."
     )
     ev = table("p3", "event_study_main")
     ev = ev[(ev["version"] == "dose") & (ev["estimator"] == "stacked regression")].sort_values("k")
@@ -703,7 +882,16 @@ with tab_policy:
     st.subheader("What is at stake: the money")
     st.markdown(
         "IMI and IMT are **municipal** revenue, so a cut costs councils, not the central budget. These are national "
-        "figures (`p3_04`, `p3_05`); the receipts of each council, 2021-2023, are further down (`p3_12`)."
+        "figures (`p3_04`, `p3_05`); the receipts of each council, 2021-2023, are further down (`p3_12`).\n\n"
+        "**Plain words.** *IMT* (Imposto Municipal sobre as Transmissões) is the tax paid once, when a "
+        "property changes hands, so it rises and falls with sales and prices. IMI is paid every year "
+        "on the property's assessed value, which is updated slowly, so it does not follow prices. "
+        "All amounts are in millions of euros at constant prices (inflation removed).\n\n"
+        "**Charts below, how to read them.** *Top left:* yearly revenue from the two taxes. *Top right:* "
+        "State spending on housing, split into building and allowances. *Bottom left:* how many "
+        "councils charge the lowest rate the law allows (0.30%), and so cannot cut any further. "
+        "*Bottom right:* Portugal (blue) against five peer countries on price rise, property tax and "
+        "housing support, each in its own panel."
     )
     revenue = table("p3", "property_tax_series").set_index("year")
     spend = table("p3", "housing_spending_series").set_index("year")
@@ -820,13 +1008,21 @@ with tab_policy:
         f"({muni_nat.loc[first_year, 'imi_imt_share_pct']:.0f}% in {first_year}), and {muni_nat.loc[last_year, 'median_council_share_pct']:.0f}% "
         "for the median council. The cost of a cut falls on the council that collects, and councils differ a lot."
     )
+    st.markdown(
+        "**Charts below, how to read them.** *Left:* what share of a council's yearly current receipts "
+        "comes from IMI (blue) and IMT (orange), for the middle council of each kind of place (the "
+        "groups are defined on the Trends page, Groups tab). *Right:* if every council charged only the "
+        "lowest legal IMI rate, how the lost revenue would be spread across kinds of place, as a share "
+        "of the total cost. The brackets count councils for which that cost would pass 1% of everything "
+        "they receive, which is a noticeable hole in a budget."
+    )
     order = [
         ("density_class", "urban", "Urban"),
         ("density_class", "intermediate", "Intermediate"),
         ("density_class", "rural", "Rural"),
-        ("coast_class", "coast", "Coast"),
+        ("coast_class", "coast", "Coastal"),
         ("coast_class", "inland", "Inland"),
-        ("tourist", "tourist", "Tourist"),
+        ("tourist", "tourist", "Tourist-heavy"),
         ("tourist", "other", "Other places"),
     ]
     rows = [
@@ -861,7 +1057,7 @@ with tab_policy:
         "urban": "Urban",
         "intermediate": "Intermediate",
         "rural": "Rural",
-        "coast": "Coast",
+        "coast": "Coastal",
         "estuary": "Estuary",
         "inland": "Inland",
     }
@@ -921,6 +1117,17 @@ with tab_policy:
     ceiling_year = int(ceiling.name)
     base = int(path.index[0])
     st.subheader("Rents: sitting tenants and new tenants")
+    st.markdown(
+        "**The question.** Portuguese law caps how much a landlord can raise the rent of an *existing* "
+        "lease each year (a legal coefficient published each year), but not the rent of a *new* lease. So "
+        "someone already renting and someone signing today can pay very different amounts for the same "
+        "home. **Left chart:** all lines start at 100 in the first year. Blue is the most a landlord could "
+        "have charged on a lease signed then, orange the median rent of new leases, grey consumer prices; "
+        "the dashed blue line shows what the law would have allowed without the temporary 2023 ceiling. "
+        "**Right chart:** by how many percent a new lease costs more than the legally updated old rent, "
+        "for municipalities grouped by affordability. This is arithmetic from the rules, not a measure of "
+        "what the rules caused."
+    )
     left, right = st.columns(2)
     fig = go.Figure()
     for col, name, color, dash in (
