@@ -2,7 +2,8 @@
 .venv/
 uv.toml
 .env
-.claude/settings.local.json
+.claude/
+.streamlit/secrets.toml
 __pycache__/
 *.py[cod]
 .pytest_cache/
