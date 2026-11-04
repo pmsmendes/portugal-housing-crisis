@@ -75,7 +75,7 @@ cols[2].metric(
     help="Median municipality, constant 2024 euros.",
 )
 cols[2].caption(
-    "Median sale price per square metre, in 2024 euros: the change is real, with inflation removed."
+    "Median sale price per square meter, in 2024 euros: the change is real, with inflation removed."
 )
 st.caption(
     f"The figures above are for the median municipality (half of the municipalities are above, half "
@@ -154,7 +154,7 @@ with right:
         "- **Levels are indicative.** Affordability figures depend on how income and home size are "
         "measured. Rankings and changes are more reliable than any single level.\n"
         "- **Some places have no data.** Small municipalities often have too few sales or leases to "
-        "publish a price or rent; they show in grey on the maps."
+        "publish a price or rent; they show in gray on the maps."
     )
 
 st.caption(

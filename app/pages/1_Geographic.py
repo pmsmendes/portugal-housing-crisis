@@ -26,9 +26,9 @@ p = panel()
 
 st.title("Where is housing least affordable?")
 st.markdown(
-    "Each of Portugal's 308 municipalities coloured by one measure at a time. Hover over the map for a "
+    "Each of Portugal's 308 municipalities colored by one measure at a time. Hover over the map for a "
     "municipality's value; use the sidebar to pick another measure, another year, or the change between "
-    "two years. The box below always says what is on the map, in which unit and how to read the colours."
+    "two years. The box below always says what is on the map, in which unit and how to read the colors."
 )
 
 # ---- inputs --------------------------------------------------------------------------------------
@@ -98,7 +98,7 @@ else:
 with st.container(border=True):
     st.markdown(f"**You are looking at: {what}.** {ind.note}")
     st.markdown(
-        f"**Unit:** {unit}.  \n**How to read the colours:** {reading}  \n"
+        f"**Unit:** {unit}.  \n**How to read the colors:** {reading}  \n"
         f"**Available years:** {years[0]} to {years[-1]}."
     )
     if ind.group == "Affordability":
@@ -137,7 +137,7 @@ fig = px.choropleth(
 missing = shown[shown["value"].isna()]
 if len(
     missing
-):  # drawn as grey outlines so a municipality without a value reads as "no data", not a hole
+):  # drawn as gray outlines so a municipality without a value reads as "no data", not a hole
     fig.add_trace(
         go.Choropleth(
             geojson=geometry(),
@@ -168,7 +168,7 @@ left, right = st.columns([3, 2])
 left.plotly_chart(fig, width="stretch")
 if n_missing:
     left.caption(
-        f"{n_missing} municipalities in this area have no value for {what.lower()} and show in grey."
+        f"{n_missing} municipalities in this area have no value for {what.lower()} and show in gray."
     )
 
 # ---- rankings ------------------------------------------------------------------------------------

@@ -55,7 +55,7 @@ st.title("Scenario simulator")
 st.markdown(
     f"National paths of housing affordability to **{a.end_year}** for the median municipality. The first three years are the "
     f"validated ETS forecast (p4_01); later years are **scenarios, not forecasts**. Direct effects (homes, euros) are accounting; "
-    f"every price response is a behavioural parameter shown with its range and status under *Assumptions*."
+    f"every price response is a behavioral parameter shown with its range and status under *Assumptions*."
 )
 with st.container(border=True):
     st.markdown(
@@ -88,7 +88,7 @@ with st.sidebar:
         index=1,
         help="Optimistic = low pressure on affordability (slower household growth, more building, "
         "cheaper credit, faster incomes, a short-lived demand boom). Pessimistic = high pressure. "
-        "The names describe pressure on affordability, not a judgement on migration or anything else.",
+        "The names describe pressure on affordability, not a judgment on migration or anything else.",
     )
     sc = a.scenarios[name]
     migration = st.slider(
@@ -109,7 +109,7 @@ with st.sidebar:
         0.25,
         key=f"{name}-inc",
         help="Yearly growth of household income after inflation. Faster growth lets households "
-        "afford dearer homes, but also pulls prices up.",
+        "afford more expensive homes, but also pulls prices up.",
     )
     rate = st.slider(
         "Mortgage rate in 3 years (%)",
@@ -196,8 +196,8 @@ with st.sidebar:
         "Do tax changes show up in prices?",
         ["Unknown (0 to full)", "Not at all", "Fully"],
         help="When buying a home gets cheaper through a lower tax, buyers may bid prices up so the "
-        "saving ends up in the price (capitalisation). Phase 3 could not tell: every interval "
-        "contains both zero and full capitalisation.",
+        "saving ends up in the price (capitalization). Phase 3 could not tell: every interval "
+        "contains both zero and full capitalization.",
     )
 
 scenario = {
@@ -377,11 +377,11 @@ with tab1:
         "means homes are getting harder to afford.\n"
         "- **Mortgage burden** (right): the share of income taken by loan payments, which rises with "
         "prices *and* with the interest rate.\n"
-        f"- **Real house price index** (bottom): prices after inflation, with {a.start_year} = 100. The grey "
+        f"- **Real house price index** (bottom): prices after inflation, with {a.start_year} = 100. The gray "
         "diamonds are the statistical forecast (ETS, tested on past data) for the first years, with "
         "their 80% range; the lines follow it for the first three years.\n\n"
         "**Solid line and shaded band.** The solid line is the median result of the 500 simulations and "
-        "the band the 80% range. With a policy selected, the grey line is the same scenario *without* "
+        "the band the 80% range. With a policy selected, the gray line is the same scenario *without* "
         "the policy and the blue line *with* it, so the gap between them is the policy's effect."
     )
     left, right = st.columns(2)
@@ -401,7 +401,7 @@ with tab1:
     )
     st.caption(
         "Median municipality; the national price, income and mortgage-rate paths move it proportionally, so regional differences "
-        "(coastal and urban places rose most, see phase 2) are not modelled. Bands are parameter uncertainty only. "
+        "(coastal and urban places rose most, see phase 2) are not modeled. Bands are parameter uncertainty only. "
         "A mortgage burden above 100% means ownership is out of reach, not that anyone pays that."
     )
 
@@ -460,7 +460,7 @@ with tab2:
         )
         st.dataframe(spend.round(2), hide_index=True)
         st.caption(
-            "Costs are public spending or lost revenue, in 2024 euros, summed from the policy start year, without discounting; a negative figure is revenue gained. Behavioural revenue effects (changes in transactions or assessed values) are not included."
+            "Costs are public spending or lost revenue, in 2024 euros, summed from the policy start year, without discounting; a negative figure is revenue gained. Behavioral revenue effects (changes in transactions or assessed values) are not included."
         )
     else:
         st.info("Choose a policy lever in the sidebar to see its cost.")
@@ -486,7 +486,7 @@ with tab3:
         "number from within its range, which is where the shaded bands come from."
     )
     st.markdown(
-        "**Behavioural parameters.** Uncertainty runs draw each one from a triangular distribution over its range. *literature*: a published estimate; *project*: from earlier phases; *assumption*: no estimate exists, the range is a bound."
+        "**Behavioral parameters.** Uncertainty runs draw each one from a triangular distribution over its range. *literature*: a published estimate; *project*: from earlier phases; *assumption*: no estimate exists, the range is a bound."
     )
     st.dataframe(reg, hide_index=True)
     st.markdown("**Sources and reasoning**")
@@ -512,16 +512,14 @@ with tab4:
         "zero means the input does not affect the baseline path (it only matters for a policy). "
         "The two policy columns show how much the input changes what a policy "
         f"achieves, using {used}.\n\n"
-        "**Reading the columns.** *Scenario input*: one of the five sliders. *Behavioural assumption*: "
+        "**Reading the columns.** *Scenario input*: one of the five sliders. *Behavioral assumption*: "
         "one of the uncertain numbers on the Assumptions tab. Price-to-income is in years of "
         f"income; *policy effect* is the years taken off price-to-income in {a.end_year} "
         "(a larger number means a bigger improvement)."
     )
     table = sens.assign(
         parameter=sens["parameter"].map(PARAM_LABELS).fillna(sens["parameter"]),
-        kind=sens["kind"].map(
-            {"scenario": "Scenario input", "behaviour": "Behavioural assumption"}
-        ),
+        kind=sens["kind"].map({"scenario": "Scenario input", "behaviour": "Behavioral assumption"}),
     )[
         [
             "parameter",
@@ -549,13 +547,13 @@ with tab5:
     st.markdown(
         "**Where will affordability worsen more than elsewhere?** A validated trend extrapolation (phase 4, "
         "`p4_03`), stated *relative to the median municipality*: it ranks places, it does not give their level, "
-        "which is the scenario above. Coloured: the 80% interval (from past errors) excludes zero."
+        "which is the scenario above. Colored: the 80% interval (from past errors) excludes zero."
     )
     st.markdown(
         "**How to read the chart.** Each dot is a group of municipalities. Its position is how many "
         "percentage points *more* (right, orange) or *fewer* (left, blue) its price-to-income is expected "
         "to rise to 2026 than in the median municipality. The bar is an 80% range based on how wrong the "
-        "method was in the past. Grey dots have a range that includes zero, so the data cannot say "
+        "method was in the past. Gray dots have a range that includes zero, so the data cannot say "
         "whether they will do better or worse than the median. The method simply continues the 2016-2024 "
         "trend of each group, and that was one boom period, so treat it as a ranking, not a forecast of "
         "levels. *Coast and density together* combines the groups defined on the Trends page (for example "

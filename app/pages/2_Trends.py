@@ -73,10 +73,10 @@ with tab_nat:
         "**What this is.** The official house price index of Statistics Portugal (INE) follows what "
         "homes sell for across the country. It is an *index*: the value in 2025 is set to 100, so a "
         "reading of 50 means prices were half of what they are in 2025 and 120 would mean 20% above.\n\n"
-        "**Two lines.** The grey *nominal* line is in the euros of each year. The blue *real* line removes "
+        "**Two lines.** The gray *nominal* line is in the euros of each year. The blue *real* line removes "
         "general inflation (everything costing more), so it shows what a home costs compared with other "
         "things you could buy. The gap between the two is inflation. When the real line rises, homes "
-        "really became dearer, not just money less valuable."
+        "really became more expensive, not just money less valuable."
     )
     fig = go.Figure()
     fig.add_trace(
@@ -236,7 +236,7 @@ with tab_muni:
         "**What this is.** One measure over time for the places you pick, set against all 308 "
         "municipalities. Choose a measure and up to six municipalities below.\n\n"
         "**How to read the chart.** The *dotted line* is the median municipality: half of the "
-        "municipalities are above it and half below. The *grey band* is where the middle 80% sit "
+        "municipalities are above it and half below. The *gray band* is where the middle 80% sit "
         "(from the 10th to the 90th percentile), so a line far above the band belongs to a place that "
         "is unusual. A place's *own* line shows whether it follows the typical path or departs from it."
     )

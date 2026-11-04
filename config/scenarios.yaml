@@ -1,9 +1,9 @@
 # Scenario assumptions for the Phase 4 simulator (read by src/pthousing/simulation/scenarios.py).
-# Every number is explained in docs/decisions.md ("Phase 4 simulator"). Status of each behavioural parameter:
+# Every number is explained in docs/decisions.md ("Phase 4 simulator"). Status of each behavioral parameter:
 #   literature  = a published estimate or survey range (source given)
 #   project     = an estimate or fact from earlier phases of this project
 #   assumption  = no estimate exists; low/high are bounds, mid is a central value, and results are shown over the range
-# Scenario names describe pressure on affordability ("optimistic" = favourable to affordability), not a judgement on
+# Scenario names describe pressure on affordability ("optimistic" = favorable to affordability), not a judgment on
 # migration or any other input.
 
 horizon_years: 10
@@ -46,7 +46,7 @@ scenarios:
 # about two years), 126,000 in 2002. Half-life of the "other demand" boom (tourism, foreign buyers, credit, expectations):
 # assumption, the single least certain scenario input.
 
-# Behavioural parameters of prices and construction: low / mid / high, drawn as a triangular distribution in uncertainty runs.
+# Behavioral parameters of prices and construction: low / mid / high, drawn as a triangular distribution in uncertainty runs.
 behaviour:
   price_flexibility_balance:   # % real price per 1% of households that dwellings fail to cover, per year
     low: 1.0
@@ -63,7 +63,7 @@ behaviour:
     status: assumption
     source: >-
       1.0 is the long-run benchmark; Portuguese evidence (AIMS Net Assets and Real Estate, 2024) finds prices inelastic to
-      income, and prices rose 51% against incomes 29% in 2016-2024 (reports/p2_explain.md). 0.5 to 1.0, mid at the centre.
+      income, and prices rose 51% against incomes 29% in 2016-2024 (reports/p2_explain.md). 0.5 to 1.0, mid at the center.
   mortgage_rate_semi_elasticity:  # % fall in real prices per +1 pp of the mortgage rate, spread over two years
     low: 3.0
     mid: 4.0
@@ -86,7 +86,7 @@ behaviour:
     status: project
     source: Census 2011-2021 net change in dwellings (+111,000) over completions 2012-2021 (124,600).
 
-# Policy levers. Sizes are chosen by the user; the entries here are unit costs and behavioural responses.
+# Policy levers. Sizes are chosen by the user; the entries here are unit costs and behavioral responses.
 policies:
   construction_boost:      # incentives or simplification that raise completions
     cost_per_unit_eur: {low: 12000, mid: 25000, high: 60000}   # public cost per additional unit
@@ -112,21 +112,21 @@ policies:
     source: >-
       Cost: 50,000 EUR (1.o Direito average, mixed works), 159,000 EUR (17 new dwellings for 2.7 million EUR, Cantanhede),
       252,000 EUR (60 dwellings for 15.1 million EUR, Loulé) from press reports of PRR projects. Crowd-out: no estimate;
-      0 to 0.5, mid at the centre.
+      0 to 0.5, mid at the center.
   imi_reform:             # change in the national average municipal IMI rate (pp); negative is a cut
     tax_value_ratio: {low: 0.5, mid: 0.75, high: 1.0}          # assessed value (VPT) over market price
     discount_rate: {low: 0.03, mid: 0.04, high: 0.05}          # perpetuity rate
     capitalisation_share: {low: 0.0, mid: 0.5, high: 1.0}      # share of the cut that shows up in the price
     status: project
     source: >-
-      reports/p3_policy.md: capitalisation is not identified (every interval contains zero and full capitalisation), so
-      both ends are run; the mid value is only the midpoint of the bound, not an estimate. Full capitalisation of a 0.01 pp
+      reports/p3_policy.md: capitalization is not identified (every interval contains zero and full capitalization), so
+      both ends are run; the mid value is only the midpoint of the bound, not an estimate. Full capitalization of a 0.01 pp
       cut is 0.19% of the price (0.10% to 0.33%).
   imt_reform:             # change in the average IMT rate on dwelling purchases (pp of the price)
     capitalisation_share: {low: 0.0, mid: 0.5, high: 1.0}
     status: assumption
     source: >-
-      A transaction tax paid by the buyer lowers what the buyer can offer one for one if fully capitalised (price falls by
+      A transaction tax paid by the buyer lowers what the buyer can offer one for one if fully capitalized (price falls by
       the tax cut's share of the price); no Portuguese estimate. Both ends are run; mid is the midpoint of the bound.
 
 # Fiscal bases. National totals; municipal receipts exist for 2021-2023 only (docs/data_catalog.md, ine_municipal_revenue).

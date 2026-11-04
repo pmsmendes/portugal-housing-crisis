@@ -1,6 +1,6 @@
 """Data access and indicator definitions shared by the dashboard pages (``app/``).
 
-Pages only import from here: the indicator catalogue, the panel with the typology attached, the web
+Pages only import from here: the indicator catalog, the panel with the typology attached, the web
 geometry, the values behind the map and the p2 report tables. Everything reads committed files
 (``data/processed``, ``data/external``, ``reports/tables``), never ``data/raw`` or ``data/interim``.
 """
@@ -136,7 +136,7 @@ GROUP_GUIDE = {  # what each way of grouping municipalities means, for the Trend
     "tourist": {
         "title": "Tourism: short-term rentals",
         "intro": (
-            "How many homes are registered as short-term rentals (alojamento local, such as Airbnb-style lets) "
+            "How many homes are registered as short-term rentals (alojamento local, such as Airbnb-style rentals) "
             "per 1,000 dwellings. Mainland only: the islands keep their own registers."
         ),
         "classes": {
@@ -214,7 +214,7 @@ def map_frame(
 
 
 def colour_scale(tone: str, change: bool) -> tuple[list[str], float | None]:
-    """Plotly colour scale and midpoint. Red is always the direction that is worse for affordability."""
+    """Plotly color scale and midpoint. Red is always the direction that is worse for affordability."""
     if change:
         ramp = style.diverging_ramp(3)  # blue (fall) ... red (rise)
         if tone == "better_high":
