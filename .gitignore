@@ -3,6 +3,7 @@
 uv.toml
 .env
 .claude/
+CLAUDE.md
 .streamlit/secrets.toml
 __pycache__/
 *.py[cod]
