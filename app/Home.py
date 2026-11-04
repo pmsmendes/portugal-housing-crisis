@@ -90,16 +90,18 @@ st.markdown("Use the sidebar to move between pages. They follow the four phases 
 a, b = st.columns(2)
 with a.container(border=True):
     st.markdown(
-        "#### 1. Evidence: Geographic and Trends\n"
-        "*What happened?* **Geographic** maps every municipality for one measure at a time (price against "
+        "#### 1. What happened?\n"
+        "*Pages: Geographic and Trends.*\n\n"
+        "**Geographic** maps every municipality for one measure at a time (price against "
         "income, rents, payment burden, new building, foreign residents and more) and ranks the highest "
         "and lowest. **Trends** shows the same measures over time: the whole country, one municipality "
         "against all the others, and kinds of places (coastal or inland, urban or rural, tourist or not)."
     )
 with b.container(border=True):
     st.markdown(
-        "#### 2. Explanation: Explanatory\n"
-        "*Why did it happen, and where?* Tests which factors go with the rise in unaffordability: where "
+        "#### 2. Why did it happen, and where?\n"
+        "*Page: Explanatory.*\n\n"
+        "Tests which factors go with the rise in unaffordability: where "
         "it happened, supply, population and immigration, tourism and second homes, wages, interest "
         "rates and credit. Every result is an **adjusted association**, not a proven cause, and the page "
         "says how far each association survives extra checks."
@@ -107,15 +109,17 @@ with b.container(border=True):
 a, b = st.columns(2)
 with a.container(border=True):
     st.markdown(
-        "#### 3. Policy: last tab of Explanatory\n"
-        "*Did a policy work?* The one policy that could be tested, cuts in the municipal property tax "
+        "#### 3. Did a policy work?\n"
+        '*Page: Explanatory, last tab ("A policy test").*\n\n'
+        "The one policy that could be tested, cuts in the municipal property tax "
         "(IMI), plus what IMI and the transfer tax (IMT) bring in, what the State spends on housing, "
         "how Portugal compares with other countries, and who would gain from tax cuts."
     )
 with b.container(border=True):
     st.markdown(
-        "#### 4. Forecast and simulate: Simulator\n"
-        "*What next?* Scenario paths to 2035 for the median municipality. Move the sliders for "
+        "#### 4. What could happen next?\n"
+        "*Page: Simulator.*\n\n"
+        "Scenario paths to 2035 for the median municipality. Move the sliders for "
         "migration, income growth, interest rates and building, add policy levers (more homes, "
         "renovation, public housing, tax changes) and see the effect on affordability, with its cost and "
         "its uncertainty. These are **scenarios, not predictions**."
