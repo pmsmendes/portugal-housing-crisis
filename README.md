@@ -15,6 +15,24 @@ policies have worked, and what alternative interventions could achieve — and c
 - **Building collapsed.** From 93,000 dwellings a year (1995-2004) to 16,000 (2015-2025); in the simulator only supply levers lower price-to-income, and none comes close to cancelling the baseline rise.
 - **The one policy test is inconclusive.** Municipal property-tax rate cuts cannot be told from zero or from full capitalisation, and the design fails its pre-trend test; nothing here is claimed as causal.
 
+## Dashboard
+Five pages that explain themselves in plain language (what each chart shows, in which unit, and how far to trust it). Run it locally with `uv run streamlit run app/Home.py`; it reads only the committed processed data. Click a page to see it in full.
+
+<table>
+  <tr>
+    <td width="50%"><a href="reports/figures/dashboard/home.png"><img src="reports/figures/dashboard/home.png" alt="Home: the short answer, what is on each page, terms and caveats"></a><br><b>Home.</b> The short answer, what each page covers, terms and caveats.</td>
+    <td width="50%"><a href="reports/figures/dashboard/geographic.png"><img src="reports/figures/dashboard/geographic.png" alt="Geographic: map of price-to-income by municipality with ranking"></a><br><b>Geographic.</b> Any indicator on a map of the 308 municipalities, with rankings.</td>
+  </tr>
+  <tr>
+    <td width="50%"><a href="reports/figures/dashboard/trends.png"><img src="reports/figures/dashboard/trends.png" alt="Trends: national house price index and thirty-year view"></a><br><b>Trends.</b> The national picture, one municipality against all others, kinds of places.</td>
+    <td width="50%"><a href="reports/figures/dashboard/explanatory.png"><img src="reports/figures/dashboard/explanatory.png" alt="Explanatory: what explains where affordability worsened"></a><br><b>Explanatory.</b> What goes with the rise, wages, rates and credit, and the policy test.</td>
+  </tr>
+  <tr>
+    <td width="50%"><a href="reports/figures/dashboard/simulator.png"><img src="reports/figures/dashboard/simulator.png" alt="Simulator: scenarios to 2035 with policy levers"></a><br><b>Simulator.</b> Scenarios to 2035 with policy levers, their cost and uncertainty.</td>
+    <td width="50%"></td>
+  </tr>
+</table>
+
 ## Key figures
 ![House prices and rents after inflation, price-to-income since 1995](reports/figures/p1/long_run_prices.png)
 
@@ -102,3 +120,6 @@ app/         Streamlit dashboards
 reports/     phase write-ups, figures, tables
 tests/       unit tests
 ```
+
+## License
+Released under the [MIT License](LICENSE). The data belong to their publishers; see [docs/data_catalog.md](docs/data_catalog.md) for the source of each dataset.

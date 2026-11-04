@@ -2,6 +2,11 @@
 
 Analytic and engineering choices, newest first. One short entry each: what, why, alternatives rejected.
 
+## 2026-11-04 — Dashboard text, README screenshots and a clean public repo
+- **What:** every dashboard page explains itself in plain language (what a chart shows, its unit, how to read it) in American English; group names are Coastal / Estuary / Inland, Urban / Intermediate / Rural, Tourist-heavy / Other (`viz/dashboard.py` `GROUP_GUIDE`); `scripts/capture_dashboard.py` screenshots the five pages into `reports/figures/dashboard/` for the README; the ten notebooks that had no saved outputs were executed so GitHub renders them; machine paths were removed from four notebook outputs; `tests/test_notebooks.py` fails if a notebook has no outputs, an error or a machine path; MIT license; `.claude/` and `.streamlit/secrets.toml` are ignored.
+- **Why:** a public portfolio piece is read by people who did not build it: a bare number or an empty notebook reads as unfinished, and an absolute path leaks the author's machine layout.
+- **Rejected:** a live-demo link written into the README before the app is deployed (a dead link is worse than none); renaming code identifiers such as `colour_scale` for spelling (no reader sees them); pinning Streamlit screenshots to the light theme (they follow the browser default).
+
 ## 2026-10-26 — Rents of new leases as an outcome (p2_24)
 - **What:** `analysis/rents.py`, `notebooks/p2_explain/p2_24`, `charts.rents_and_prices`. Outcome: log change of the real rent per m2 of new leases 2020-2024 for the municipalities with a rent in both years; drivers: foreign-resident change (2020-2023, the register ends in 2023), population change, completions 2021-2024 per 1,000 dwellings, registered short-term rentals per 1,000 dwellings, plus the starting rent; mainland, same-district comparisons, HC3 errors (`supply.associations`); the same specifications on the real price change in the same places for comparison. Reading rule (sign kept and p < 0.05 in the joint model with and without coast and density) fixed before running.
 - **Why:** RQ3.3 and RQ5.1 asked about rents and p2_02 and p2_14 only covered price-to-income; four rent years are enough for one cross-section.
