@@ -102,16 +102,23 @@ def value_text(ind: Indicator, value: float, change: str | None = None) -> str:
 
 GROUP_GUIDE = {  # what each way of grouping municipalities means, for the Trends page
     "coast_class": {
-        "title": "Coast: sea, estuary or inland",
-        "intro": "Whether the municipality borders the sea.",
+        "title": "Location: coast, river mouth or inland",
+        "intro": (
+            "Where the municipality sits relative to the water: on the Atlantic coast, on the banks of "
+            "the Tejo or Sado river mouths, or away from both."
+        ),
         "classes": {
-            "coast": ("Coastal", "Has a stretch of Atlantic coast (every island municipality counts as coastal)."),
-            "estuary": (
-                "Estuary",
-                "Sits on the banks of the Tejo or Sado estuary but not on the open sea (Lisboa, Loures, "
-                "Moita, Palmela and five others). Kept apart so Lisboa is not counted as inland.",
+            "coast": (
+                "Coastal",
+                "Borders the Atlantic Ocean: it has a stretch of open-sea coastline (island municipalities included).",
             ),
-            "inland": ("Inland", "No coastline at all."),
+            "estuary": (
+                "River mouth",
+                "On the banks of the wide river mouths of the Tejo (Lisbon area) or Sado (Setúbal area) "
+                "but with no open-sea coastline of its own: Lisboa, Loures, Moita, Palmela and five "
+                "others. Shown apart so that Lisboa is not counted as inland.",
+            ),
+            "inland": ("Inland", "No coastline at all, neither sea nor the Tejo or Sado river mouths."),
         },
     },
     "density_class": {
@@ -143,6 +150,15 @@ GROUP_GUIDE = {  # what each way of grouping municipalities means, for the Trend
         },
     },
 }  # fmt: skip
+
+
+def segment_label(segment: str) -> str:
+    """Reader-facing name of a coast / density segment such as ``coast / urban`` ("Coastal, urban")."""
+    parts = [x.strip() for x in segment.split("/")]
+    if len(parts) != 2:
+        return segment
+    coast = class_label("coast_class", parts[0])
+    return f"{coast}, {class_label('density_class', parts[1]).lower()}"
 
 
 def class_label(by: str, raw: str) -> str:

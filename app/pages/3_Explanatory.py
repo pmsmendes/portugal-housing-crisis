@@ -1058,7 +1058,7 @@ with tab_policy:
         "intermediate": "Intermediate",
         "rural": "Rural",
         "coast": "Coastal",
-        "estuary": "Estuary",
+        "estuary": "River mouth",
         "inland": "Inland",
     }
     fig = go.Figure(

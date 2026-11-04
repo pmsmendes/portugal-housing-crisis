@@ -99,3 +99,9 @@ def test_group_counts_match_the_lines_of_group_trend(panel):
         ]
         assert set(trend.columns) <= set(counts.index)
         assert (counts[trend.columns] > 0).all()
+
+
+def test_segment_label_reads_as_words():
+    assert D.segment_label("coast / urban") == "Coastal, urban"
+    assert D.segment_label("inland / intermediate") == "Inland, intermediate"
+    assert D.segment_label("somewhere else") == "somewhere else"

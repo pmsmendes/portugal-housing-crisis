@@ -7,6 +7,7 @@ import streamlit as st
 
 from pthousing.config import TABLES
 from pthousing.simulation import engine as E
+from pthousing.viz import dashboard as D
 from pthousing.viz import style
 
 st.set_page_config(page_title="Simulator · Portugal's Housing Crisis", layout="wide")
@@ -557,12 +558,14 @@ with tab5:
         "method was in the past. Grey dots have a range that includes zero, so the data cannot say "
         "whether they will do better or worse than the median. The method simply continues the 2016-2024 "
         "trend of each group, and that was one boom period, so treat it as a ranking, not a forecast of "
-        "levels. *Coast x density class* combines the groups defined on the Trends page (for example "
+        "levels. *Coast and density together* combines the groups defined on the Trends page (for example "
         "coastal and urban); *NUTS 3 region* uses the official statistical regions."
     )
-    unit = st.radio("Group by", ["Coast x density class", "NUTS 3 region"], horizontal=True)
+    unit = st.radio("Group by", ["Coast and density together", "NUTS 3 region"], horizontal=True)
     name, col = ("classes", "segment") if unit.startswith("Coast") else ("regions", "region")
     out = pd.read_csv(TABLES / "p4" / f"regional_outlook_{name}.csv").sort_values("relative")
+    if col == "segment":
+        out[col] = out[col].map(D.segment_label)
     sure = (out["relative_lo80"] > 0) | (out["relative_hi80"] < 0)
     colors = [
         (style.ORANGE if r > 0 else style.BLUE) if k else style.MUTED
