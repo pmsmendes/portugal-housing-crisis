@@ -102,10 +102,10 @@ def value_text(ind: Indicator, value: float, change: str | None = None) -> str:
 
 GROUP_GUIDE = {  # what each way of grouping municipalities means, for the Trends page
     "coast_class": {
-        "title": "Location: coast, river mouth or inland",
+        "title": "Location: coast, estuary or inland",
         "intro": (
             "Where the municipality sits relative to the water: on the Atlantic coast, on the banks of "
-            "the Tejo or Sado river mouths, or away from both."
+            "the Tejo or Sado estuaries, or away from both."
         ),
         "classes": {
             "coast": (
@@ -113,12 +113,12 @@ GROUP_GUIDE = {  # what each way of grouping municipalities means, for the Trend
                 "Borders the Atlantic Ocean: it has a stretch of open-sea coastline (island municipalities included).",
             ),
             "estuary": (
-                "River mouth",
-                "On the banks of the wide river mouths of the Tejo (Lisbon area) or Sado (Setúbal area) "
-                "but with no open-sea coastline of its own: Lisboa, Loures, Moita, Palmela and five "
+                "Estuary",
+                "On the banks of the wide estuaries (river mouths) of the Tejo (Lisbon area) or Sado "
+                "(Setúbal area) but with no open-sea coastline of its own: Lisboa, Loures, Moita, Palmela and five "
                 "others. Shown apart so that Lisboa is not counted as inland.",
             ),
-            "inland": ("Inland", "No coastline at all, neither sea nor the Tejo or Sado river mouths."),
+            "inland": ("Inland", "No coastline at all, neither sea nor the Tejo or Sado estuaries."),
         },
     },
     "density_class": {
